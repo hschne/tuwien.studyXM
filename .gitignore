@@ -1,3 +1,4 @@
+#This file specifies which files are ignored by git it has to be placed in the IntelliJ/Maven Project
 .idea/
 *.iml
 *.iws
