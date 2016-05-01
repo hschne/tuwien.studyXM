@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="${project.name}">
+    <bannerLeft>
+        <name>Best Practice Software Engineering</name>
+        <src>images/bpse_ss16_sepm_qse_18_logo.png</src>
+        <href>http://best-practice-software-engineering.ifs.tuwien.ac.at/index.html</href>
+    </bannerLeft>
+    <bannerRight>
+        <name>TU Wien, Faculty for Informatics</name>
+        <href>http://www.cs.tuwien.ac.at</href>
+        <src>images/fak_tu.gif</src>
+    </bannerRight>
+
+    <body>
+    	
+    	<breadcrumbs>
+      		<item name="Best Practices" href="../index.html" />
+      		<item name="BPSE-Basic" href="arch-ss16_sepm_qse_18.html" />
+    	</breadcrumbs>
+    
+        <links>
+            <item name="IFS" href="http://ifs.tuwien.ac.at/"/>
+            <item name="Best Practice SE BLOG" href="http://best-practice-software-engineering.blogspot.com/" />
+            <item name="BPSE Buch" href="bpse_buch.html"/>
+        </links>
+
+        <menu name="BPSE-Basic">
+            <item name="About" href="arch-ss16_sepm_qse_18.html" />
+            <item name="Download" href="download.html" />
+     		<item name="Development Setup" href="setup.html"/>
+        	<item name="Project Plugins" href="plugins.html" />
+        	<item name="Dependencies" href="dependencies.html" />
+     		<item name="Project Reports" href="project-reports.html">
+            	<item name="Source Xref" href="xref/index.html"/>
+            	<item name="Test Source Xref" href="xref-test/index.html"/>
+            	<item name="Javadocs" href="apidocs/index.html"/>
+            	<item name="Test Javadocs" href="testapidocs/index.html"/>
+            	<item name="Surefire Test Report" href="surefire-report.html"/>
+            </item>
+        </menu>
+        
+    </body>
+</project>
