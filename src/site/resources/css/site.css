@@ -1,0 +1,11 @@
+table.bodyTable {
+  border-width: medium 0;
+  border-style: solid;
+  border-collapse:collapse;
+}
+
+table.bodyTable tr {
+ border-style: none;
+ border-width: 0px;
+ border-color: white;
+}

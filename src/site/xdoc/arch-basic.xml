@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document>
+  <properties>
+    <title>About</title>
+    <author></author>
+  </properties>
+  <body>
+    <section name="About BPSE-Basic">
+        <p>The ss16_sepm_qse_18 sample application shows how to create a simple application that fulfills 
+          the following
+          <strong>functional requirements</strong>
+          :</p>
+        <p>
+          <div align="center">
+            <img src="images/Usecase_Basic.png" />
+          </div>
+        </p>
+        This table gives an short description about the different use cases.
+        <table>
+          <tr>
+            <td>Create Student</td>
+            <td>Create and add new students to the system</td>
+          </tr>
+          <tr>
+            <td>Delete Student</td>
+            <td>Remove a selected student from the system</td>
+          </tr>
+          <tr>
+            <td>Edit Student Data</td>
+            <td>Edit and update a selected student</td>
+          </tr>
+          <tr>
+            <td>Show Students</td>
+            <td>Show a list of students available in the system</td>
+          </tr>
+		  <tr>
+		  	<td>Show Student Data</td>
+			<td>Show the data of a selected student</td>
+		  </tr>
+          <tr>
+            <td>Sort</td>
+            <td>Sort the list of students by a given sort order</td>
+          </tr>
+		  <tr>
+		  	<td>Change SortOrder</td>
+			<td>Change the order of the list to matrikel number or last name</td>
+		  </tr>
+          <tr>
+            <td>Export students</td>
+            <td>The generated list can be exported in different formats, including HTML and XML</td>
+          </tr>
+        </table>
+        <ul>
+          <li>Create a simple Graphical User Interface (GUI) that interacts with a relational database to read and write data.</li>
+          <li>Display the data as table (Java Swing
+            <code>JTable</code>
+            ) in your GUI.</li>
+          <li>The user must be able to choose a field to sort the rows in the table.</li>
+          <li>The user must be allowed to export the data in two formats (XML and HTML).</li>
+          <li>While exporting, the user can use standard dialogs to choose the file to export the data to.</li>
+          <li>After exporting, the status of the export should be shown to the user by dialog.</li>
+          <li>The user can create new rows, edit existing rows and remove rows from the table.</li>
+        </ul>
+        <p>The user interface looks somewhat like this:</p>
+        <p>
+          <div align="center">
+            <img src="images/swing_main.png" />
+          </div>
+        </p>
+        <p>
+          <strong>Technical features:</strong>
+          <ul>
+            <li>Lifecycle Management with Maven</li>
+            <li>Relational database HSqlDB</li>
+            <li>Full inline documentation (Javadoc)</li>
+            <li>Unittesting with JUnit</li>
+            <li>Logging via Log4J Framework</li>
+            <li>Persistence Layer utilizing Data Access Object Pattern in combination with JDBC Templates of the Spring framework and Dependency Injection</li>
+            <li>Modular Export/Import capabilities (it is possible to add a new export or import filter without modifying the existing code)</li>
+            <li>User Interface using Java Swing (coded manually without using a graphical UI builder!)</li>
+            <li>Full I18n to support multiple languages and string externalization</li>
+          </ul>
+        </p>
+        <p>
+          <strong>Documentation requirements:</strong>
+          <ul>
+            <li>The Java API documentation must be created using the Maven Javadoc plugin and the
+              <code>mvn site</code>
+              task</li>
+            <li>All classes, variables and methods have to be documented in English</li>
+            <li>Each package has to be documented. 
+              A
+              <code>package-info.java</code>
+              file has to be delivered for every package directory
+              containing information what the package is used for.</li>
+          </ul>
+        </p>
+        Your programed ss16_sepm_qse_18 sample should later be used as a foundation for further development.
+      <subsection name="Architecture">
+        <p>
+          <div align="center">
+            <img src="images/Architecture_Basic.png"/>
+          </div>
+        </p>
+        <p>The above illustration shows the two building blocks of the ss16_sepm_qse_18 example:
+          The core package and the ss16_sepm_qse_18 package. The core package consits of several 
+          interfaces
+          that define the behaviour/functionality of a couple of services 
+          (they act as "contract"). These interfaces are implemented by the 
+          the services of the ss16_sepm_qse_18 package. If you use this services in your code,
+          they can be exchanged through any other package which implements the 
+          interfaces of the core package.</p>
+        <p>The core package also contains the
+          <em>data objects</em>
+          (often refered to as
+          <em>model</em>
+          ,
+          <em>transfer objects</em>
+          or
+          <em>value objects</em>
+          ). The data objects do nothing but hold the data; they represent the
+          entities in the system. They are read from the database, modified in the business layer and sent to the presentation layer to be shown to the user. They are common to all
+          the examples (ss16_sepm_qse_18, medium and advanced).</p>
+        <p>To separate the concerns, this sample uses the MVC (ModelViewController) pattern. In the MVC, our data objects are the model, the (Spring) services are the controller
+          and the Swing presentation layer is the view. If you are unfamiliar with the MVC pattern, this page might give you a short introduction:
+          <a href="http://java.sun.com/blueprints/patterns/MVC.html">http://java.sun.com/blueprints/patterns/MVC.html</a>
+          . For  in-depth discussions, check out:
+          <a href="http://c2.com/cgi/wiki?ModelViewController">http://c2.com/cgi/wiki?ModelViewController</a>
+          .</p>
+        <p>The code is heavily documented and also containts Javadoc comments. It makes sense to read the code or look at the Javadoc.</p>
+      </subsection>
+      <subsection name="Used technology">
+        <p>This example uses the following technologies:</p>
+        <ul>
+          <li>
+            <a href="technology/tech-swing.html">Swing</a>
+            for the presentation layer</li>
+          <li>
+            <a href="technology/spring_jdbctemplates.html">Springs JDBC Templates</a>
+            for simplified DAOs and reuse of service code</li>
+          <li>
+            <a href="technology/tech-junit.html">jUnit</a>
+            for automated tests</li>
+          <li>
+            <a href="technology/tech-log4j.html">Log4J</a>
+            as logging framework</li>
+          <li>
+            <a href="technology/tech-hsqldb.html">HSQLdb</a>
+            as a lightweight in-memory database</li>
+          <li>
+            <a href="technology/tech-maven.html">Maven</a>
+            and its practices for code organization and lifecycle management (building, testing, packaging, documenting)</li>
+        </ul>
+      </subsection>
+      <subsection name="Used patterns">
+        <p>Patterns are essential for any architecture in terms of
+          understanding and extending source code.
+          Basically you should get familiar with every pattern 
+          described in the
+          <a href="patterns.html">Software Patterns</a>
+          section. In general, the ss16_sepm_qse_18 example makes
+          use of these Patterns:
+          <ul>
+            <li>
+              <a href="patterns/dependency_injection.html">Dependency Injection</a>
+              to externalize configuration concerns from the code</li>
+            <li>The
+              <a href="patterns/dao.html">Data Access Object Pattern</a>
+              to enhance the independence of the used database</li>
+            <li>
+              <a href="patterns/transfer_object.html">Transfer Object</a>
+              (POJOs used to transfer data from and to database),</li>
+            <li>
+              <a href="patterns/dependency_injection.html">Dependency Injection</a>
+              (Data Access Objects),</li>
+            <li>
+              <a href="patterns/dependency_injection.html">Interface</a>
+              (Import/Export) and</li>
+            <li>
+              <a href="patterns/dependency_injection.html">Delegation</a>
+              (Logging)</li>
+          </ul>
+        </p>
+      </subsection>
+      <subsection name="Build and run the Application">
+        <p>The following steps must be taken to run the Basic Sample.</p>
+        <ol>
+          <li>Prerequisits:
+            <ul>
+              <li>Java, Eclipse and
+                <a href="technology/tech-maven-ss16_sepm_qse_18s.html" title="BPSE Maven Basics - How to install and use Maven">Maven</a>
+                downloaded and installed</li>
+              <li>
+                <a href="download.html" title="Download page for the examples">Basic Sample</a>
+                downloaded and unzipped</li>
+            </ul>
+          </li>
+          <li>Open a command line window and change to the folder where you unzipped the sample (contains at least a
+            <code>pom.xml</code>
+            ).</li>
+          <li>Create the necessary Eclipse project files by typing and running
+            <code>mvn eclipse:eclipse</code>
+            within that folder.</li>
+          <li>Start Eclipse and choose a workspace if you use it for the first time.</li>
+          <li>Setup Maven repository variable:
+            <ul>
+              <li>Choose
+                <a href="images/ss16_sepm_qse_18-eclipse-preferences.png">
+                  <em>Window - Preferences</em>
+                </a>
+                from the menu.</li>
+              <li>Choose
+                <a href="images/ss16_sepm_qse_18-classpath-variables.png">
+                  <em>Java - Build Path - Classpath Variables</em>
+                </a>
+                from the tree view.</li>
+              <li>Select
+                <a href="images/ss16_sepm_qse_18-m2-variable.png">
+                  <em>New</em>
+                </a>
+                , enter
+                <code>M2_REPO</code>
+                as Name and choose the path of your Maven repository in the Dialog window.</li>
+            </ul>
+          </li>
+          <li>Import Basic Sample to Eclipse:
+            <ul>
+              <li>Right-click into the package explorer on the left side and choose
+                <a href="images/ss16_sepm_qse_18-newproject.png">
+                  <em>New - Java Project</em>
+                </a>
+                .</li>
+              <li>
+                <a href="images/ss16_sepm_qse_18-project-preferences.png">Enter</a>
+                a project name (e.g. bpse-sample-ss16_sepm_qse_18) and choose the path to the directory of your prior unzipped project.</li>
+            </ul>
+          </li>
+          <li>Run tests and application:
+            <ul>
+              <li>Choose package
+                <code>at.ac.tuwien.sepm.test</code>
+                from the
+                <code>src/test/java</code>
+                folder.</li>
+              <li>Right-click on
+                <code>AllTests.java</code>
+                and
+                <a href="images/ss16_sepm_qse_18-start-tests.png">
+                  <em>Run as - JUnit Test</em>
+                </a>
+                .</li>
+              <li>Choose package
+                <code>at.ac.tuwien.sepm</code>
+                from the
+                <code>src/main/java</code>
+                folder.</li>
+              <li>Right-click on
+                <code>Basis.java</code>
+                and
+                <a href="images/ss16_sepm_qse_18-start-app.png">
+                  <em>Run as - Java Application</em>
+                </a>
+                .</li>
+            </ul>
+          </li>
+        </ol>
+      </subsection>
+    </section>
+  </body>
+</document>
