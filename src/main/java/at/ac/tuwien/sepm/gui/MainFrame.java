@@ -425,7 +425,7 @@ public class MainFrame extends JFrame implements ActionListener {
 	 * 
 	 * @param order
 	 *            the new order
-	 * @see StudentenTableModel#//hier wurde ein Error angezeigt von Zhang Haixiang auskommentiert setSortOrder(String)
+	 * @see StudentenTableModel#setSortOrder(SortOrder)
 	 */
 	private void sortOrderChanged(String order) {
 		log.info("Sort Order Changed to \"" + order + "\"");

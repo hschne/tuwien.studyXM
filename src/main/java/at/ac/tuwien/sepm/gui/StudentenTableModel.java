@@ -103,7 +103,7 @@ public class StudentenTableModel extends AbstractTableModel {
 	/**
 	 * Read the Students from the Database with given order.
 	 * 
-	 * @see //hier wurde ein Error angezeigt von Zhang Haixiang auskommentiert StudentDAO#getStudents(String)
+	 * @see at.ac.tuwien.sepm.dao.JdbcStudentDAO#getStudents(SortOrder)
 	 */
 	private void readData() {
 		studenten = studentDAO.getStudents(sortOrder);
