@@ -1,6 +1,6 @@
-package at.ac.tuwien.sepm.ss16.qseXX.gui;
+package at.ac.tuwien.sepm.ss16.qse18.gui;
 
-import at.ac.tuwien.sepm.ss16.qseXX.service.AnswerService;
+import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;

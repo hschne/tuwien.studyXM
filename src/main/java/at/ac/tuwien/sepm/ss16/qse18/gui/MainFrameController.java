@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qseXX.gui;
+package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;

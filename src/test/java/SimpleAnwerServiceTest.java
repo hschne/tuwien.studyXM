@@ -1,5 +1,5 @@
-import at.ac.tuwien.sepm.ss16.qseXX.service.AnswerService;
-import at.ac.tuwien.sepm.ss16.qseXX.service.SimpleAnswerService;
+import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
+import at.ac.tuwien.sepm.ss16.qse18.service.SimpleAnswerService;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -73,7 +73,7 @@
 
 
 	<properties>
-		<project.mainClass>at.ac.tuwien.sepm.ss16.qseXX.application.MainApplication</project.mainClass>
+		<project.mainClass>at.ac.tuwien.sepm.ss16.qse18.application.MainApplication</project.mainClass>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>1.8</java.version>
 		<maven-compiler-plugin.version>3.5.1</maven-compiler-plugin.version>

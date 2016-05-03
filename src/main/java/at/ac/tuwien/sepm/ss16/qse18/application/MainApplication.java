@@ -1,6 +1,6 @@
-package at.ac.tuwien.sepm.ss16.qseXX.application;
+package at.ac.tuwien.sepm.ss16.qse18.application;
 
-import at.ac.tuwien.sepm.ss16.qseXX.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.application.Application;
 import javafx.scene.Parent;
