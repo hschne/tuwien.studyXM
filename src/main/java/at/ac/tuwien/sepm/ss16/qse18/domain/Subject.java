@@ -1,7 +1,11 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
-public interface Subject {
+public class Subject {
 
-    String getName();
+    private String name;
+
+    private double ects;
+
+    private String semster;
 
 }
