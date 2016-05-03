@@ -11,7 +11,9 @@ public class SubjectServiceImpl implements SubjectService{
 
     @Override
     public Subject getSubject(int id) {
-        return new Subject();
+        Subject sub = new Subject();
+        sub.setName("Testing");
+        return sub;
     }
 
     @Override

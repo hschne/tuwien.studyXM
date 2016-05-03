@@ -1,5 +1,5 @@
-import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
-import at.ac.tuwien.sepm.ss16.qse18.service.SimpleAnswerService;
+import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
+import at.ac.tuwien.sepm.ss16.qse18.service.SubjectServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -8,16 +8,16 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 public class SimpleAnwerServiceTest {
 
-    private AnswerService answerService;
+    private SubjectService answerService;
 
     @Before
     public void before() {
-        answerService = new SimpleAnswerService();
+        answerService = new SubjectServiceImpl();
     }
 
     @Test
     public void testIfTheSimpleAnswerServiceReturnsTheCorrectAnswer() {
-        assertThat(answerService.getTheAnswer(), is("42"));
+        assertThat(answerService.getSubjects().size(), is(0));
     }
 
 }

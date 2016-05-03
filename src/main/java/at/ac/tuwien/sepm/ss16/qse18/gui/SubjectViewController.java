@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
-import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
+import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -19,25 +19,25 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class QuestionAnswerFrameController {
+public class SubjectViewController {
 
-    private Logger LOG = LoggerFactory.getLogger(QuestionAnswerFrameController.class);
+    private Logger LOG = LoggerFactory.getLogger(SubjectViewController.class);
 
-    private AnswerService answerService;
+    private SubjectService subjectService;
 
     @Autowired
-    public QuestionAnswerFrameController(AnswerService answerService) {
-        this.answerService = answerService;
+    public SubjectViewController(SubjectService subjectService) {
+        this.subjectService = subjectService;
     }
 
     @FXML
-    private void getTheAnswerAction() {
+    public void getTheAnswerAction() {
         LOG.debug("Get The Answer pressed");
         new AlertBuilder()
                 .alertType(Alert.AlertType.INFORMATION)
                 .title("SEPM - SS16 - Spring/Maven/FXML Sample")
-                .headerText("The answer to life the universe and everything")
-                .contentText(answerService.getTheAnswer())
+                .headerText("Subject retrieved")
+                .contentText(subjectService.getSubject(1).getName())
                 .modality(Modality.APPLICATION_MODAL)
                 .build()
                 .showAndWait();
