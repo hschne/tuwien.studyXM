@@ -21,7 +21,7 @@ public class SubjectServiceImpl implements SubjectService{
         ArrayList<Subject> subjects = new ArrayList<>();
         Subject subjectToAdd = new Subject();
         subjectToAdd.setName("TEsting");
-        subjectToAdd.setSemster("WS15");
+        subjectToAdd.setSemester("WS15");
         subjectToAdd.setEcts(3.0);
         subjects.add(subjectToAdd);
         return subjects;
