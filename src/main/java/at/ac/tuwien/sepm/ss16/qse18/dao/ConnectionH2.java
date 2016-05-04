@@ -15,11 +15,11 @@ public class ConnectionH2 {
     private static final Logger LOGGER = LogManager.getLogger();
     private static Connection connection;
 
-    /*
-    Opens up a new connection to the H2-database, if the connection is null or has been closed.
-    @param path the filepath to the H2-database
-    @param user the username of the H2-database
-    @param password the password of the H2-database
+    /**
+    * Opens up a new connection to the H2-database, if the connection is null or has been closed.
+    * @param path the filepath to the H2-database
+    * @param user the username of the H2-database
+    * @param password the password of the H2-database
     */
     private static void openConnection(String path, String user, String password) throws SQLException{
         LOGGER.info("entering openConnection() with " + path + " " + user + " "+ password);
@@ -29,42 +29,41 @@ public class ConnectionH2 {
                 Class.forName("org.h2.Driver");
             }
             catch (ClassNotFoundException e) {
-                System.err.println("ERROR: unable to load org.h2.Driver. "+e.getMessage());
+                LOGGER.debug("ERROR: unable to load org.h2.Driver. "+e.getMessage());
                 return;
             }
             connection = DriverManager.getConnection(path, user, password);
         }
     }
-    //------------------------------------------------------------------------------------------------------------------
 
-    /*
-    Returns the connection to the H2-database.
-    If the connection is null or has been closed a new connection is opened up.
-    @return connection to the H2-database
+    /**
+    *   Returns the connection to the H2-database.
+    *   If the connection is null or has been closed a new connection is opened up.
+    *   @return connection to the H2-database
     */
-    public static Connection getConnection()throws SQLException{
+    public static Connection getConnection() throws SQLException{
         if(connection==null || connection.isClosed())
         {
             openConnection("jdbc:h2:tcp://localhost/~/studyXmDatabase", "studyXm", "xm");
         }
         return connection;
     }
-    //------------------------------------------------------------------------------------------------------------------
 
-    //closes the existing connection to the h2 database.
-    public static void closeConnection() {
+    /**
+    * closes the existing connection to the h2 database.
+    */
+    public static void closeConnection() throws SQLException{
         LOGGER.info("entering closeConnection()");
 
         try {
-            if(!(connection==null || connection.isClosed()))
-            {
+            if(!(connection==null || connection.isClosed())) {
                 connection.close();
             }
         }
         catch(SQLException e) {
-            System.err.println("ERROR: unable to connect to database. " +e.getMessage());
+            LOGGER.debug("ERROR: unable to connect to database. " +e.getMessage());
         }
 
     }
-    //------------------------------------------------------------------------------------------------------------------
+
 }
