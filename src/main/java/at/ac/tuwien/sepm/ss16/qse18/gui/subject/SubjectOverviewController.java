@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -30,17 +31,18 @@ import java.io.IOException;
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectOverviewController {
 
 
+    @FXML public TableView<Subject> subjects;
+    @FXML public TableColumn<Subject, String> nameColumn;
+    private ObservableList<Subject> subjectList;
     private MainFrameController parentController;
     private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
-
-    @FXML public TableView<Subject> subjects;
-    @FXML public TableColumn<Subject, String> nameColumn;
     private Logger logger = LoggerFactory.getLogger(SubjectOverviewController.class);
     private SubjectService subjectService;
 
 
-    @Autowired public SubjectOverviewController(MainFrameController controller,SubjectService subjectService) {
+    @Autowired public SubjectOverviewController(MainFrameController controller,
+        SubjectService subjectService) {
         parentController = controller;
         this.springFXMLLoader = controller.getSpringFXMLLoader();
         this.primaryStage = controller.getPimaryStage();
@@ -48,30 +50,49 @@ import java.io.IOException;
     }
 
     @FXML public void initialize() {
-        subjects.setItems(FXCollections.observableArrayList(subjectService.getSubjects()));
+        subjectList = FXCollections.observableArrayList(subjectService.getSubjects());
+        subjects.setItems(subjectList);
         nameColumn
             .setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getName()));
     }
 
-    @FXML
-    public void newSubject() throws IOException{
+    @FXML public void newSubject() throws IOException {
         Stage stage = new Stage();
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
-            springFXMLLoader.loadAndWrap("/fxml/subject/subjectEdit.fxml", SubjectEditController.class);
-        editSubjectWrapper.getController().setSubject(null);
-        stage.setTitle("Edit Subject");
-        stage.setScene(new Scene((Parent) this.springFXMLLoader.load("/fxml/subject/subjectEdit.fxml"), 600, 400));
+            springFXMLLoader
+                .loadAndWrap("/fxml/subject/subjectEdit.fxml", SubjectEditController.class);
+        SubjectEditController childController = editSubjectWrapper.getController();
+        childController.setSubject(null);
+        childController.setStage(stage);
+        configureStage(stage, "New Subject", editSubjectWrapper);
+    }
+
+    @FXML public void deleteSubject() {
+        Subject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
+        subjectService.deleteSubject(subjectToDelete);
+        subjectList.remove(subjectToDelete);
+    }
+
+    @FXML public void editSubject() throws IOException {
+        Subject subject = subjects.getSelectionModel().getSelectedItem();
+        Stage stage = new Stage();
+        SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
+            springFXMLLoader
+                .loadAndWrap("/fxml/subject/subjectEdit.fxml", SubjectEditController.class);
+        SubjectEditController childController = editSubjectWrapper.getController();
+        childController.setSubject(subject);
+        childController.setStage(stage);
+        configureStage(stage, "Edit Subject", editSubjectWrapper);
+    }
+
+    private void configureStage(Stage stage, String title,
+        SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper)
+        throws IOException {
+        stage.setTitle(title);
+        stage.setScene(new Scene((Parent) editSubjectWrapper.getLoadedObject(), 400, 300));
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(this.primaryStage);
         stage.showAndWait();
-    }
-
-    @FXML public void deleteSubject(){
-
-    }
-
-    @FXML public void editSubject(){
-
     }
 
 

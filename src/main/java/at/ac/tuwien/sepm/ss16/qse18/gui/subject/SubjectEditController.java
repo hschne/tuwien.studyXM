@@ -13,7 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectEditController {
 
-    private final Stage primaryStage;
+    private Stage dialogStage;
+
     private final SubjectService subjectService;
 
     private Subject subject;
@@ -24,10 +25,16 @@ import org.springframework.stereotype.Component;
 
     @FXML TextField ects;
 
+    private SubjectOverviewController overviewController;
+
     @Autowired
-    public SubjectEditController(MainFrameController controller,SubjectService subjectService) {
-        this.primaryStage = controller.getPimaryStage();
+    public SubjectEditController(SubjectOverviewController controller, SubjectService subjectService) {
+        this.overviewController = controller;
         this.subjectService = subjectService;
+    }
+
+    public void setStage(Stage stage){
+        this.dialogStage = stage;
     }
 
     public void setSubject(Subject subject){
@@ -37,5 +44,17 @@ import org.springframework.stereotype.Component;
         else{
             this.subject = new Subject();
         }
+    }
+
+    @FXML public void handleOk(){
+        subjectService.updateSubject(subject);
+    }
+
+    @FXML public void handleCancel(){
+        dialogStage.close();
+    }
+
+    public void initalizeFields(){
+        name.setText(this.subject.getName());
     }
 }

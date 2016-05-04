@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class SimpleAnwerServiceTest {
+public class SubjectServiceTest {
 
     private SubjectService answerService;
 
@@ -17,7 +17,7 @@ public class SimpleAnwerServiceTest {
 
     @Test
     public void testIfTheSimpleAnswerServiceReturnsTheCorrectAnswer() {
-        assertThat(answerService.getSubjects().size(), is(0));
+        assertThat(answerService.getSubjects().size(), is(1));
     }
 
 }

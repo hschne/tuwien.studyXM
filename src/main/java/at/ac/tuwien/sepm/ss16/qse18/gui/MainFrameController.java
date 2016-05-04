@@ -24,6 +24,8 @@ public class MainFrameController {
     private Logger LOG = LoggerFactory.getLogger(MainFrameController.class);
 
     private SpringFXMLLoader springFXMLLoader;
+
+
     private Stage primaryStage;
 
     @Autowired
