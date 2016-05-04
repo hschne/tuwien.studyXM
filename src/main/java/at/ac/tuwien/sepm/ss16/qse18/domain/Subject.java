@@ -2,11 +2,21 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 public class Subject {
 
+    private int fid;
+
     private String name;
 
     private double ects;
 
-    private String semster;
+    private String semester;
+
+    public int getFid() {
+        return fid;
+    }
+
+    public void setFid(int fid) {
+        this.fid = fid;
+    }
 
     public String getName() {
         return name;
@@ -24,11 +34,11 @@ public class Subject {
         this.ects = ects;
     }
 
-    public String getSemster() {
-        return semster;
+    public String getSemester() {
+        return semester;
     }
 
-    public void setSemster(String semster) {
-        this.semster = semster;
+    public void setSemester(String semster) {
+        this.semester = semster;
     }
 }

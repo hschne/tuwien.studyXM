@@ -6,14 +6,14 @@ import java.util.List;
 
 public interface SubjectDao {
 
-    Subject getSubject(int id);
+    Subject getSubject(int id) throws DaoException;
 
-    List<Subject> getSubjects();
+    List<Subject> getSubjects()throws DaoException;
 
-    Subject createSubject(Subject subject);
+    void createSubject(Subject subject)throws DaoException;
 
-    Subject deleteSubject(Subject subject);
+    void deleteSubject(Subject subject)throws DaoException;
 
-    Subject updateSubject(Subject subject);
+    void updateSubject(Subject subject)throws DaoException;
 
 }
