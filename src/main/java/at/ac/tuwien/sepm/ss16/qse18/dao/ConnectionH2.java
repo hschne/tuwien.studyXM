@@ -1,18 +1,18 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+
 /**
  * @author Julian Strohmayer
  * @date 04.05.2016.
  * @info this class represents the connection to the H2-database, implemented as Singleton.
  */
-public class ConnectionH2 {
-
-    private static final Logger LOGGER = LogManager.getLogger();
+public class ConnectionH2 implements DataBaseConnection {
+    private static final Logger LOG = LogManager.getLogger();
     private static Connection connection;
 
     /**
@@ -21,15 +21,15 @@ public class ConnectionH2 {
     * @param user the username of the H2-database
     * @param password the password of the H2-database
     */
-    private static void openConnection(String path, String user, String password) throws SQLException{
-        LOGGER.info("entering openConnection() with " + path + " " + user + " "+ password);
+    private static void openConnection(String path, String user, String password)
+        throws SQLException {
+        LOG.info("Entering openConnection() with " + path + " " + user + " " + password);
 
-        if (connection == null || connection.isClosed()) {
+        if(connection == null || connection.isClosed()) {
             try {
                 Class.forName("org.h2.Driver");
-            }
-            catch (ClassNotFoundException e) {
-                LOGGER.debug("ERROR: unable to load org.h2.Driver. "+e.getMessage());
+            } catch (ClassNotFoundException e) {
+                LOG.error("Unable to load org.h2.Driver. " + e.getMessage());
                 return;
             }
             connection = DriverManager.getConnection(path, user, password);
@@ -41,9 +41,9 @@ public class ConnectionH2 {
     *   If the connection is null or has been closed a new connection is opened up.
     *   @return connection to the H2-database
     */
-    public static Connection getConnection() throws SQLException{
-        if(connection==null || connection.isClosed())
-        {
+    public Connection getConnection() throws SQLException {
+        if(connection == null || connection.isClosed()) {
+            //TODO: use config file instead of hardcoded credentials?
             openConnection("jdbc:h2:tcp://localhost/~/studyXmDatabase", "studyXm", "xm");
         }
         return connection;
@@ -52,18 +52,15 @@ public class ConnectionH2 {
     /**
     * closes the existing connection to the h2 database.
     */
-    public static void closeConnection() throws SQLException{
-        LOGGER.info("entering closeConnection()");
+    public void closeConnection() {
+        LOG.info("Closing H2 Database Connection");
 
         try {
-            if(!(connection==null || connection.isClosed())) {
+            if(connection != null && !connection.isClosed()) {
                 connection.close();
             }
+        } catch(SQLException e) {
+            LOG.error("Unable to close database connection. " + e.getMessage());
         }
-        catch(SQLException e) {
-            LOGGER.debug("ERROR: unable to connect to database. " +e.getMessage());
-        }
-
     }
-
 }
