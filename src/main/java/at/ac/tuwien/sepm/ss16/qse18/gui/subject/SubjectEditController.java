@@ -19,6 +19,8 @@ import org.springframework.stereotype.Component;
 
     private Subject subject;
 
+    private boolean isNew;
+
     @FXML TextField name;
 
     @FXML TextField semester;
@@ -40,14 +42,26 @@ import org.springframework.stereotype.Component;
     public void setSubject(Subject subject){
         if(subject != null){
             this.subject = subject;
+            initalizeFields();
+            isNew = false;
         }
         else{
             this.subject = new Subject();
+            isNew = true;
         }
     }
 
     @FXML public void handleOk(){
-        subjectService.updateSubject(subject);
+        if(isNew){
+            subjectService.createSubject(subject);
+            overviewController.addSubject(subject);
+        }
+        else{
+            subject.setName(name.getText());
+            subjectService.updateSubject(subject);
+            overviewController.initialize();
+        }
+        dialogStage.close();
     }
 
     @FXML public void handleCancel(){

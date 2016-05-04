@@ -56,7 +56,7 @@ import java.io.IOException;
             .setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getName()));
     }
 
-    @FXML public void newSubject() throws IOException {
+    @FXML public void handleNew() throws IOException {
         Stage stage = new Stage();
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
             springFXMLLoader
@@ -67,13 +67,13 @@ import java.io.IOException;
         configureStage(stage, "New Subject", editSubjectWrapper);
     }
 
-    @FXML public void deleteSubject() {
+    @FXML public void handleDelete() {
         Subject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
         subjectService.deleteSubject(subjectToDelete);
         subjectList.remove(subjectToDelete);
     }
 
-    @FXML public void editSubject() throws IOException {
+    @FXML public void handleEdit() throws IOException {
         Subject subject = subjects.getSelectionModel().getSelectedItem();
         Stage stage = new Stage();
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
@@ -89,12 +89,17 @@ import java.io.IOException;
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper)
         throws IOException {
         stage.setTitle(title);
-        stage.setScene(new Scene((Parent) editSubjectWrapper.getLoadedObject(), 400, 300));
+        stage.setScene(new Scene((Parent) editSubjectWrapper.getLoadedObject(), 400, 400));
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(this.primaryStage);
         stage.showAndWait();
     }
 
+
+
+    public void addSubject(Subject subject) {
+        subjectList.add(subject);
+    }
 
 
 }

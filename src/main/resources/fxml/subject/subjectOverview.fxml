@@ -12,9 +12,9 @@
   <bottom>
     <AnchorPane prefHeight="50.0" prefWidth="-1.0">
       <children>
-        <Button layoutX="371.0" layoutY="14.0" mnemonicParsing="false" onAction="#newSubject" text="New" />
-        <Button layoutX="521.0" layoutY="15.0" mnemonicParsing="false" text="Delete" />
-        <Button layoutX="447.0" layoutY="14.0" mnemonicParsing="false" text="Edit" />
+        <Button layoutX="371.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleNew" text="New" />
+        <Button layoutX="521.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleDelete" text="Delete" />
+        <Button layoutX="447.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleEdit" text="Edit" />
       </children>
       <BorderPane.margin>
         <Insets />
