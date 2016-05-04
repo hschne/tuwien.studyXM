@@ -24,6 +24,8 @@ public class MainFrameController {
     private Logger LOG = LoggerFactory.getLogger(MainFrameController.class);
 
     private SpringFXMLLoader springFXMLLoader;
+
+
     private Stage primaryStage;
 
     @Autowired
@@ -32,11 +34,11 @@ public class MainFrameController {
     }
 
     @FXML
-    private void helloWorldAction() throws IOException {
+    public void helloWorldAction() throws IOException {
         LOG.debug("Hello World pressed");
         Stage stage = new Stage();
-        stage.setTitle("SEPM - SS16 - Spring/Maven/FXML Sample");
-        stage.setScene(new Scene((Parent) this.springFXMLLoader.load("/fxml/questionAnswerFrame.fxml"), 600, 150));
+        stage.setTitle("Study XM");
+        stage.setScene(new Scene((Parent) this.springFXMLLoader.load("/fxml/subject/subjectOverview.fxml"), 600, 400));
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(this.primaryStage);
         stage.showAndWait();
@@ -44,6 +46,14 @@ public class MainFrameController {
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public Stage getPimaryStage(){
+        return this.primaryStage;
+    }
+
+    public SpringFXMLLoader getSpringFXMLLoader(){
+        return this.springFXMLLoader;
     }
 
 }

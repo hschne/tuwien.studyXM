@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.BorderPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController">
+  <bottom>
+    <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0">
+      <children>
+        <Button layoutX="241.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+        <Button layoutX="320.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleOk" text="Ok" />
+      </children>
+    </AnchorPane>
+  </bottom>
+  <center>
+    <AnchorPane prefHeight="200.0" prefWidth="400.0">
+      <children>
+        <Label layoutX="14.0" layoutY="14.0" minHeight="6.0" prefHeight="33.0" prefWidth="66.0" text="Name" />
+        <TextField fx:id="name" layoutX="67.0" layoutY="20.0" prefWidth="200.0" />
+      </children>
+    </AnchorPane>
+  </center>
+</BorderPane>
