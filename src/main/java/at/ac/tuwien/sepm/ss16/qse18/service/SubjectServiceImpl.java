@@ -18,7 +18,13 @@ public class SubjectServiceImpl implements SubjectService{
 
     @Override
     public List<Subject> getSubjects() {
-        return new ArrayList<>();
+        ArrayList<Subject> subjects = new ArrayList<>();
+        Subject subjectToAdd = new Subject();
+        subjectToAdd.setName("TEsting");
+        subjectToAdd.setSemster("WS15");
+        subjectToAdd.setEcts(3.0);
+        subjects.add(subjectToAdd);
+        return subjects;
     }
 
     @Override

@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
-import at.ac.tuwien.sepm.util.AlertBuilder;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.stage.Modality;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,34 +15,26 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
- * A controller for questionAnswerFrame, to deliver all the answers.
+ * A controller for subjectView, to create, delete, and edit subjects.
  *
- * @author Dominik Moser
+ * @author Hans-Joerg Schroedl
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class SubjectViewController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectViewController {
 
-    private Logger LOG = LoggerFactory.getLogger(SubjectViewController.class);
-
+    @FXML public TableView<Subject> subjects;
+    @FXML public TableColumn<Subject, String> nameColumn;
+    private Logger logger = LoggerFactory.getLogger(SubjectViewController.class);
     private SubjectService subjectService;
 
-    @Autowired
-    public SubjectViewController(SubjectService subjectService) {
+
+    @Autowired public SubjectViewController(SubjectService subjectService) {
         this.subjectService = subjectService;
     }
 
-    @FXML
-    public void getTheAnswerAction() {
-        LOG.debug("Get The Answer pressed");
-        new AlertBuilder()
-                .alertType(Alert.AlertType.INFORMATION)
-                .title("SEPM - SS16 - Spring/Maven/FXML Sample")
-                .headerText("Subject retrieved")
-                .contentText(subjectService.getSubject(1).getName())
-                .modality(Modality.APPLICATION_MODAL)
-                .build()
-                .showAndWait();
+    @FXML public void initialize() {
+        subjects.setItems(FXCollections.observableArrayList(subjectService.getSubjects()));
+        nameColumn
+            .setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getName()));
     }
 
 }

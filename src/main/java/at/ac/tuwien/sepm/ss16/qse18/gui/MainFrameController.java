@@ -35,8 +35,8 @@ public class MainFrameController {
     private void helloWorldAction() throws IOException {
         LOG.debug("Hello World pressed");
         Stage stage = new Stage();
-        stage.setTitle("SEPM - SS16 - Spring/Maven/FXML Sample");
-        stage.setScene(new Scene((Parent) this.springFXMLLoader.load("/fxml/questionAnswerFrame.fxml"), 600, 150));
+        stage.setTitle("Study XM");
+        stage.setScene(new Scene((Parent) this.springFXMLLoader.load("/fxml/subjectView.fxml"), 600, 400));
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(this.primaryStage);
         stage.showAndWait();
