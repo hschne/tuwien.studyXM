@@ -17,6 +17,7 @@ public class AlertBuilder {
 
     private Logger LOG = LoggerFactory.getLogger(AlertBuilder.class);
 
+
     private Alert.AlertType alertType;
     private String title;
     private String headerText;
