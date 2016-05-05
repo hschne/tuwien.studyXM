@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import javafx.beans.property.DoubleProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
@@ -10,8 +9,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController {
 
     @FXML TextField name;
     @FXML TextField semester;
@@ -42,7 +40,7 @@ import org.springframework.stereotype.Component;
     }
 
     @FXML public void handleOk() {
-        fillFields();
+        fillDto();
         if (isNew) {
             overviewController.addSubject(subject);
         } else {
@@ -51,18 +49,20 @@ import org.springframework.stereotype.Component;
         dialogStage.close();
     }
 
-    private void fillFields() {
+    private void fillDto() {
         subject.setName(name.getText());
         subject.setEcts(parseDouble());
         subject.setSemester(semester.getText());
         subject.setAuthor(author.getText());
     }
 
-    private Double parseDouble(){
-        if(ects.getText().isEmpty()){
+    private Double parseDouble() {
+        try {
+            return Double.parseDouble(ects.getText());
+
+        } catch (NumberFormatException e) {
             return 0.0;
         }
-        return Double.parseDouble(ects.getText());
     }
 
     @FXML public void handleCancel() {
@@ -71,5 +71,8 @@ import org.springframework.stereotype.Component;
 
     public void initalizeFields() {
         name.setText(this.subject.getName());
+        semester.setText(this.subject.getSemester());
+        ects.setText(Double.toString(this.subject.getEcts()));
+        name.setText(this.subject.getAuthor());
     }
 }

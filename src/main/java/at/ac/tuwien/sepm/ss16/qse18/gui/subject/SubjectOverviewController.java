@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
+import javafx.beans.property.DoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -32,6 +33,10 @@ import java.util.stream.Collectors;
 
     @FXML public TableView<ObservableSubject> subjects;
     @FXML public TableColumn<ObservableSubject, String> nameColumn;
+    @FXML public TableColumn<ObservableSubject, String> semesterColumn;
+    @FXML public TableColumn<ObservableSubject, Number> ectsColumn;
+    @FXML public TableColumn<ObservableSubject, String> authorColumn;
+    @FXML public TableColumn<ObservableSubject, Number> timeSpentColumn;
     private ObservableList<ObservableSubject> subjectList;
     private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
@@ -51,7 +56,11 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList()));
         subjects.setItems(subjectList);
         nameColumn
-            .setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getName()));
+            .setCellValueFactory(param -> param.getValue().nameProperty());
+        semesterColumn.setCellValueFactory(param -> param.getValue().semesterProperty());
+        ectsColumn.setCellValueFactory(param -> param.getValue().ectsProperty());
+        authorColumn.setCellValueFactory(param -> param.getValue().authorProperty());
+        timeSpentColumn.setCellValueFactory(param -> param.getValue().timeSpentProperty());
     }
 
     @FXML public void handleNew() throws IOException {

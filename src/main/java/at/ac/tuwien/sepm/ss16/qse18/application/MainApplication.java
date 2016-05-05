@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.application;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.application.Application;
@@ -40,7 +39,7 @@ public class MainApplication extends Application {
         SpringFXMLLoader.FXMLWrapper<Object, SubjectOverviewController> mfWrapper =
                 springFXMLLoader.loadAndWrap("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
         mfWrapper.getController().setPrimaryStage(primaryStage);
-        primaryStage.setTitle("SEPM - SS16 - Spring/Maven/FXML Sample");
+        primaryStage.setTitle("Study XM");
         primaryStage.setScene(new Scene((Parent) mfWrapper.getLoadedObject(), 800, 400));
         primaryStage.show();
     }
