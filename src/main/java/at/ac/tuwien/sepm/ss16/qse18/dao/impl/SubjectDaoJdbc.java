@@ -4,7 +4,6 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,12 +14,6 @@ import java.util.List;
 
 public class SubjectDaoJdbc implements SubjectDao {
 
-    private ConnectionH2 database;
-
-    @Autowired public SubjectDaoJdbc(ConnectionH2 c) {
-        this.database = c;
-    }
-
     @Override public Subject getSubject(int id) throws DaoException {
 
         Subject res = null;
@@ -28,7 +21,7 @@ public class SubjectDaoJdbc implements SubjectDao {
         ResultSet rs = null;
 
         try {
-            s = database.getConnection().createStatement();
+            s = ConnectionH2.getConnection().createStatement();
             rs = s.executeQuery("SELECT * FROM Fach WHERE fid = " + id);
 
             if (rs.next()) {
@@ -69,7 +62,7 @@ public class SubjectDaoJdbc implements SubjectDao {
         ResultSet rs = null;
 
         try {
-            s = database.getConnection().createStatement();
+            s = ConnectionH2.getConnection().createStatement();
             rs = s.executeQuery("SELECT * FROM Fach");
 
             while (rs.next()) {
@@ -113,7 +106,8 @@ public class SubjectDaoJdbc implements SubjectDao {
         PreparedStatement ps = null;
 
         try {
-            ps = database.getConnection().prepareStatement("INSERT INTO Fach VALUES (?,?,?,?,?,?)");
+            ps = ConnectionH2.getConnection()
+                .prepareStatement("INSERT INTO Fach VALUES (?,?,?,?,?,?)");
             ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setFloat(3, subject.getEcts());
@@ -146,7 +140,7 @@ public class SubjectDaoJdbc implements SubjectDao {
         PreparedStatement ps = null;
 
         try {
-            ps = database.getConnection().prepareStatement(
+            ps = ConnectionH2.getConnection().prepareStatement(
                 "DELETE FROM Fach WHERE fid = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
             ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
@@ -180,7 +174,7 @@ public class SubjectDaoJdbc implements SubjectDao {
         PreparedStatement ps = null;
 
         try {
-            ps = database.getConnection().prepareStatement(
+            ps = ConnectionH2.getConnection().prepareStatement(
                 "UPDATE Fach SET name = ?, ects = ?, semester = ?, time_spent = ?, author = ? WHERE fid = ?");
             ps.setString(1, subject.getName());
             ps.setFloat(2, subject.getEcts());

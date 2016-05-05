@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class ConnectionH2 {
 
     private static final Logger LOGGER = LogManager.getLogger();
-    private Connection connection;
+    private static Connection connection;
 
     /*
     Opens up a new connection to the H2-database, if the connection is null or has been closed.
@@ -23,7 +23,7 @@ public class ConnectionH2 {
     @param user the username of the H2-database
     @param password the password of the H2-database
     */
-    private void openConnection(String path, String user, String password) throws SQLException{
+    private static void openConnection(String path, String user, String password) throws SQLException{
         LOGGER.info("entering openConnection() with " + path + " " + user + " "+ password);
 
         if (connection == null || connection.isClosed()) {
@@ -44,7 +44,7 @@ public class ConnectionH2 {
     If the connection is null or has been closed a new connection is opened up.
     @return connection to the H2-database
     */
-    public Connection getConnection()throws SQLException{
+    public static Connection getConnection()throws SQLException{
         if(connection==null || connection.isClosed())
         {
             openConnection("jdbc:h2:tcp://localhost/~/studyXmDatabase", "studyXm", "xm");
@@ -54,7 +54,7 @@ public class ConnectionH2 {
     //------------------------------------------------------------------------------------------------------------------
 
     //closes the existing connection to the h2 database.
-    public void closeConnection() {
+    public static void closeConnection() {
         LOGGER.info("entering closeConnection()");
 
         try {

@@ -9,8 +9,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.mockito.stubbing.Answer;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.mockito.Mockito.*;
 
@@ -19,33 +22,37 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
-@RunWith(MockitoJUnitRunner.class) public class SubjectDaoJdbcTest {
+@RunWith(PowerMockRunner.class) @PrepareForTest(ConnectionH2.class)
+@PowerMockIgnore("javax.management.*") public class SubjectDaoJdbcTest {
 
     private SubjectDaoJdbc sdao;
-    @Mock private ConnectionH2 mockDatabase;
     @Mock private Connection mockConnection;
     @Mock private Statement mockStatement;
     @Mock private PreparedStatement mockPreparedStatement;
     @Mock private ResultSet mockResultSet;
 
     @Before public void setUp() throws Exception {
+        PowerMockito.mockStatic(ConnectionH2.class);
+
+        when(ConnectionH2.getConnection()).thenReturn(mockConnection);
+
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
         when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
         when(mockConnection.createStatement()).thenReturn(mockStatement);
-        when(mockDatabase.getConnection()).thenReturn(mockConnection);
-        sdao = new SubjectDaoJdbc(mockDatabase);
+        sdao = new SubjectDaoJdbc();
     }
 
     // Testing getSubject(int) method
     // -------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_getSubject_withNoDatabaseConnection_Fail()
         throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+        when(ConnectionH2.getConnection()).thenThrow(SQLException.class);
 
         sdao.getSubject(2);
 
-        verify(mockDatabase).getConnection();
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
     }
 
     @Test public void test_getSubject_withTooBigInt_Fail() throws Exception {
@@ -102,11 +109,12 @@ import static org.junit.Assert.*;
 
     @Test(expected = DaoException.class)
     public void test_getSubjects_withNoDatabaseConnection_Fail() throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+        when(ConnectionH2.getConnection()).thenThrow(SQLException.class);
 
         sdao.getSubjects();
 
-        verify(mockDatabase).getConnection();
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
     }
 
     @Test public void test_getSubjects_withTenElementsInDatabase() throws Exception {
@@ -159,11 +167,12 @@ import static org.junit.Assert.*;
     // -------------------------------------------------------------------------------
     @Test(expected = DaoException.class)
     public void test_createSubject_withNoDatabaseConnection_Fail() throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+        when(ConnectionH2.getConnection()).thenThrow(SQLException.class);
 
         sdao.createSubject(new Subject());
 
-        verify(mockDatabase).getConnection();
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
     }
 
     @Test(expected = DaoException.class) public void test_createSubject_withAlreadyExistingId_Fail()
@@ -175,7 +184,9 @@ import static org.junit.Assert.*;
 
         sdao.createSubject(s);
 
-        verify(mockDatabase).getConnection();
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
+
         verify(mockConnection).prepareStatement(anyString());
         verify(mockPreparedStatement).setInt(anyInt(), anyInt());
         verify(mockPreparedStatement).setString(anyInt(), anyString());
@@ -216,7 +227,9 @@ import static org.junit.Assert.*;
 
         sdao.updateSubject(s);
 
-        verify(mockDatabase).getConnection();
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
+
         verify(mockConnection).prepareStatement(anyString());
         verify(mockPreparedStatement).setInt(anyInt(), anyInt());
         verify(mockPreparedStatement).setString(anyInt(), anyString());
@@ -225,9 +238,12 @@ import static org.junit.Assert.*;
 
     @Test(expected = DaoException.class)
     public void test_updateSubject_withNoDatabaseConnection_Fail() throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+        when(ConnectionH2.getConnection()).thenThrow(SQLException.class);
 
         sdao.updateSubject(new Subject());
+
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
     }
 
     @Test public void test_updateSubject_withValidSubject() throws Exception {
@@ -256,7 +272,9 @@ import static org.junit.Assert.*;
 
         sdao.deleteSubject(new Subject());
 
-        verify(mockDatabase).getConnection();
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
+
         verify(mockConnection).prepareStatement(anyString());
         verify(mockPreparedStatement).setInt(anyInt(), anyInt());
         verify(mockPreparedStatement).setString(anyInt(), anyString());
@@ -265,9 +283,12 @@ import static org.junit.Assert.*;
 
     @Test(expected = DaoException.class)
     public void test_deleteSubject_withNoDatabaseConnection_Fail() throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+        when(ConnectionH2.getConnection()).thenThrow(SQLException.class);
 
         sdao.deleteSubject(new Subject());
+
+        PowerMockito.verifyStatic();
+        ConnectionH2.getConnection();
     }
 
     @Test public void test_deleteSubject_withValidSubject() throws Exception {
