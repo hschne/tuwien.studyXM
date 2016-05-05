@@ -22,9 +22,6 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override public Subject getSubject(int id) throws DaoException {
-        if (id < 1) {
-            throw new DaoException("Subject id cannot be lower than one");
-        }
 
         Subject res = null;
         Statement s = null;
@@ -141,6 +138,11 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override public void deleteSubject(Subject subject) throws DaoException {
+
+        if (subject == null) {
+            throw new DaoException("Subject must not be null");
+        }
+
         PreparedStatement ps = null;
 
         try {
@@ -170,6 +172,11 @@ public class SubjectDaoJdbc implements SubjectDao {
     }
 
     @Override public void updateSubject(Subject subject) throws DaoException {
+
+        if (subject == null) {
+            throw new DaoException("Subject must not be null");
+        }
+
         PreparedStatement ps = null;
 
         try {

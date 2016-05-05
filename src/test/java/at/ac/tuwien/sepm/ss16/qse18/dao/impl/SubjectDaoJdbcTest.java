@@ -39,11 +39,6 @@ import static org.junit.Assert.*;
 
     // Testing getSubject(int) method
     // -------------------------------------------------------------------------------
-    @Test(expected = DaoException.class) public void test_getSubject_withNegativeId_Fail()
-        throws Exception {
-        sdao.getSubject(-3);
-    }
-
     @Test(expected = DaoException.class) public void test_getSubject_withNoDatabaseConnection_Fail()
         throws Exception {
         when(mockDatabase.getConnection()).thenThrow(SQLException.class);
@@ -137,7 +132,7 @@ import static org.junit.Assert.*;
         when(mockResultSet.getInt(anyString())).thenReturn(12).thenReturn(8);
         when(mockResultSet.getFloat(anyString())).thenReturn(4.0f).thenReturn(2.0f);
         when(mockResultSet.getString(anyString())).thenReturn("TEST").thenReturn("SS33")
-            .thenReturn("OTHER").thenReturn("WS17");
+            .thenReturn("Cem").thenReturn("OTHER").thenReturn("WS17").thenReturn("Tester");
 
         List<Subject> list = sdao.getSubjects();
         assertEquals("The size of the resulting list should be 2", list.size(), 2);
@@ -171,7 +166,7 @@ import static org.junit.Assert.*;
         verify(mockDatabase).getConnection();
     }
 
-    @Test(expected = DaoException.class) public void test_createSubject_withExistingId_Fail()
+    @Test(expected = DaoException.class) public void test_createSubject_withAlreadyExistingId_Fail()
         throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
 
@@ -192,7 +187,7 @@ import static org.junit.Assert.*;
         sdao.createSubject(null);
     }
 
-    @Test public void test_createSubject_withValidSubject1() throws Exception {
+    @Test public void test_createSubject_withValidSubject() throws Exception {
         Subject s = new Subject();
         s.setSubjectId(42);
         s.setName("TESTER");
@@ -207,13 +202,88 @@ import static org.junit.Assert.*;
 
     // Testing updateSubject(Subject)
     // -------------------------------------------------------------------------------
+    @Test(expected = DaoException.class) public void test_updateSubject_withNull_Fail()
+        throws Exception {
+        sdao.updateSubject(null);
+    }
 
+    @Test(expected = DaoException.class) public void test_updateSubject_withNotExistingId_Fail()
+        throws Exception {
+        when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
+
+        Subject s = new Subject();
+        s.setSubjectId(9999999);
+
+        sdao.updateSubject(s);
+
+        verify(mockDatabase).getConnection();
+        verify(mockConnection).prepareStatement(anyString());
+        verify(mockPreparedStatement).setInt(anyInt(), anyInt());
+        verify(mockPreparedStatement).setString(anyInt(), anyString());
+        verify(mockPreparedStatement).setFloat(anyInt(), anyFloat());
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_updateSubject_withNoDatabaseConnection_Fail() throws Exception {
+        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+
+        sdao.updateSubject(new Subject());
+    }
+
+    @Test public void test_updateSubject_withValidSubject() throws Exception {
+        Subject s = new Subject();
+        s.setSubjectId(11);
+        s.setName("TEST");
+        s.setEcts(4.3f);
+        s.setSemester("SS25");
+
+        sdao.updateSubject(s);
+
+        verify(mockPreparedStatement).executeUpdate();
+    }
     // -------------------------------------------------------------------------------
 
     // Testing deleteSubject(Subject)
     // -------------------------------------------------------------------------------
-    // -------------------------------------------------------------------------------
-    @After public void tearDown() throws Exception {
+    @Test(expected = DaoException.class) public void test_deleteSubject_withNull_Fail()
+        throws Exception {
+        sdao.deleteSubject(null);
+    }
 
+    @Test(expected = DaoException.class)
+    public void test_deleteSubject_withNotExistingSubject_Fail() throws Exception {
+        when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
+
+        sdao.deleteSubject(new Subject());
+
+        verify(mockDatabase).getConnection();
+        verify(mockConnection).prepareStatement(anyString());
+        verify(mockPreparedStatement).setInt(anyInt(), anyInt());
+        verify(mockPreparedStatement).setString(anyInt(), anyString());
+        verify(mockPreparedStatement).setFloat(anyInt(), anyFloat());
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_deleteSubject_withNoDatabaseConnection_Fail() throws Exception {
+        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+
+        sdao.deleteSubject(new Subject());
+    }
+
+    @Test public void test_deleteSubject_withValidSubject() throws Exception {
+        Subject s = new Subject();
+        s.setSubjectId(1);
+        s.setName("TESTING");
+        s.setEcts(1.0f);
+        s.setSemester("WS10");
+
+        sdao.createSubject(s);
+
+        verify(mockPreparedStatement).executeUpdate();
+    }
+    // -------------------------------------------------------------------------------
+
+    @After public void tearDown() throws Exception {
+        // nothing to tear down
     }
 }
