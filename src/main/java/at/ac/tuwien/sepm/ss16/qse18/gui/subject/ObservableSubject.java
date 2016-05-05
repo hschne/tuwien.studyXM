@@ -3,7 +3,11 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import javafx.beans.property.*;
 
-
+/**
+ * A FXML Wrapper around the Subject DTO
+ *
+ * @author Hans-Joerg Schroedl
+ */
 public class ObservableSubject {
 
     private final StringProperty name;
@@ -39,7 +43,7 @@ public class ObservableSubject {
         return ects.get();
     }
 
-    public void setEcts(double ects) {
+    public void setEcts(float ects) {
         this.ects.set(ects);
         subject.setEcts(ects);
     }

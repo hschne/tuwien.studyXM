@@ -1,12 +1,19 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+import java.text.MessageFormat;
+
+/**
+ * Dto Class for subject
+ *
+ * @author Hans-Joerg Schroedl
+ */
 public class Subject {
 
-    private int fid;
+    private int subjectId;
 
     private String name;
 
-    private double ects;
+    private float ects;
 
     private String semester;
 
@@ -14,12 +21,12 @@ public class Subject {
 
     private String author;
 
-    public int getFid() {
-        return fid;
+    public int getSubjectId() {
+        return subjectId;
     }
 
-    public void setFid(int fid) {
-        this.fid = fid;
+    public void setSubjectId(int subjectId) {
+        this.subjectId = subjectId;
     }
 
     public String getName() {
@@ -30,11 +37,11 @@ public class Subject {
         this.name = name;
     }
 
-    public double getEcts() {
+    public float getEcts() {
         return ects;
     }
 
-    public void setEcts(double ects) {
+    public void setEcts(float ects) {
         this.ects = ects;
     }
 
@@ -61,5 +68,11 @@ public class Subject {
 
     public void setTimeSpent(int timeSpent) {
         this.timeSpent = timeSpent;
+    }
+
+    @Override
+    public String toString() {
+        return MessageFormat.format("[Id:{0},Name:{1},Ects:{2},Semester:{3},Author:{4}]",
+            getSubjectId(), getName(), getEcts(), getSemester(), getAuthor());
     }
 }

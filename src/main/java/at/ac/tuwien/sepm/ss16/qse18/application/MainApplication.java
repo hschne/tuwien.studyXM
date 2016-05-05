@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 
 /**
- * The starting point of the sample application.
+ * The starting point of Study XM
  *
- * @author Dominik Moser
+ * @author Hans-Joerg Schroedl
  */
 @Configuration
 @ComponentScan("at.ac.tuwien.sepm")

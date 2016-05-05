@@ -17,10 +17,10 @@ public class MainTmp {
             List<Subject> s = sdao.getSubjects();
             System.out.println("DAVOR");
             for (Subject i : s) {
-                System.out.println(i.getFid() + ":   " + i.getName() + "   " + i.getEcts() + " ECTS   " + i.getSemester());
+                System.out.println(i.getSubjectId() + ":   " + i.getName() + "   " + i.getEcts() + " ECTS   " + i.getSemester());
             }
             Subject toCreate = new Subject();
-            toCreate.setFid(4);
+            toCreate.setSubjectId(4);
             toCreate.setName("pp");
             toCreate.setEcts(5);
             toCreate.setSemester("WS14");
@@ -28,7 +28,7 @@ public class MainTmp {
             s = sdao.getSubjects();
             System.out.println("DANACH");
             for (Subject i : s) {
-                System.out.println(i.getFid() + ":   " + i.getName() + "   " + i.getEcts() + " ECTS   " + i.getSemester());
+                System.out.println(i.getSubjectId() + ":   " + i.getName() + "   " + i.getEcts() + " ECTS   " + i.getSemester());
             }
 
         } catch (DaoException e) {

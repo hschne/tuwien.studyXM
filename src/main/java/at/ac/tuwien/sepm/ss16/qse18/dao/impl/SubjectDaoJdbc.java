@@ -29,7 +29,7 @@ public class SubjectDaoJdbc implements SubjectDao {
             ResultSet rs = s.executeQuery("SELECT * FROM Fach WHERE fid = " + id);
 
             if (rs.next()) {
-                res.setFid(rs.getInt("fid"));
+                res.setSubjectId(rs.getInt("fid"));
                 res.setEcts(rs.getInt("ects"));
                 res.setName(rs.getString("name"));
                 res.setSemester(rs.getString("semester"));
@@ -52,7 +52,7 @@ public class SubjectDaoJdbc implements SubjectDao {
 
             while (rs.next()) {
                 Subject tmp = new Subject();
-                tmp.setFid(rs.getInt("fid"));
+                tmp.setSubjectId(rs.getInt("fid"));
                 tmp.setEcts(rs.getInt("ects"));
                 tmp.setName(rs.getString("name"));
                 tmp.setSemester(rs.getString("semester"));
@@ -73,7 +73,7 @@ public class SubjectDaoJdbc implements SubjectDao {
         try {
             PreparedStatement ps =
                 database.getConnection().prepareStatement("INSERT INTO Fach VALUES (?,?,?,?)");
-            ps.setInt(1, subject.getFid());
+            ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setDouble(3, subject.getEcts());
             ps.setString(4, subject.getSemester());
@@ -82,7 +82,7 @@ public class SubjectDaoJdbc implements SubjectDao {
             ps.close();
         } catch (SQLException e) {
             throw new DaoException(
-                "Could not create subject with values (" + subject.getFid() + ", " + subject
+                "Could not create subject with values (" + subject.getSubjectId() + ", " + subject
                     .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + ")");
         }
     }
@@ -91,7 +91,7 @@ public class SubjectDaoJdbc implements SubjectDao {
         try {
             PreparedStatement ps = database.getConnection().prepareStatement(
                 "DELETE FROM Fach WHERE fid = ? AND name = ? AND ects = ? AND semester = ?");
-            ps.setInt(1, subject.getFid());
+            ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setDouble(3, subject.getEcts());
             ps.setString(4, subject.getSemester());
@@ -100,7 +100,7 @@ public class SubjectDaoJdbc implements SubjectDao {
             ps.close();
         } catch (SQLException e) {
             throw new DaoException(
-                "Could not delete subject with values (" + subject.getFid() + ", " + subject
+                "Could not delete subject with values (" + subject.getSubjectId() + ", " + subject
                     .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + ")");
         }
     }
@@ -112,14 +112,14 @@ public class SubjectDaoJdbc implements SubjectDao {
             ps.setString(1, subject.getName());
             ps.setDouble(2, subject.getEcts());
             ps.setString(3, subject.getSemester());
-            ps.setInt(4, subject.getFid());
+            ps.setInt(4, subject.getSubjectId());
 
             ps.executeUpdate();
 
             ps.close();
         } catch (SQLException e) {
             throw new DaoException(
-                "Could not update subject with id (" + subject.getFid() + ") to values (" + subject.getFid() + ", " + subject
+                "Could not update subject with id (" + subject.getSubjectId() + ") to values (" + subject.getSubjectId() + ", " + subject
                     .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + ")");
         }
     }

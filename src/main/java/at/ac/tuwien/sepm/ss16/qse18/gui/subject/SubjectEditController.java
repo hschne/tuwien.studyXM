@@ -9,6 +9,12 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * A controller for the subject detail view, in order to edit details or
+ * add details for newly created subjects.
+ *
+ * @author Hans-Joerg Schroedl
+ */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController {
 
     @FXML TextField name;
@@ -56,12 +62,12 @@ import org.springframework.stereotype.Component;
         subject.setAuthor(author.getText());
     }
 
-    private Double parseDouble() {
+    private float parseDouble() {
         try {
-            return Double.parseDouble(ects.getText());
+            return Float.parseFloat(ects.getText());
 
         } catch (NumberFormatException e) {
-            return 0.0;
+            return 0.0f;
         }
     }
 
