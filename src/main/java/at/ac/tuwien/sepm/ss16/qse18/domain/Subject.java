@@ -10,6 +10,10 @@ public class Subject {
 
     private String semester;
 
+    private int timeSpent;
+
+    private String author;
+
     public int getFid() {
         return fid;
     }
@@ -40,5 +44,22 @@ public class Subject {
 
     public void setSemester(String semster) {
         this.semester = semster;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(String author) {
+        this.author = author;
+
+    }
+
+    public int getTimeSpent() {
+        return timeSpent;
+    }
+
+    public void setTimeSpent(int timeSpent) {
+        this.timeSpent = timeSpent;
     }
 }
