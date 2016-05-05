@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
+package at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import javafx.beans.property.*;

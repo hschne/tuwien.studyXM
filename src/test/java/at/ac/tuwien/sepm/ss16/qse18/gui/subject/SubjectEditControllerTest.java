@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.JavaFxThreadingRule;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import org.junit.Before;
