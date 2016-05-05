@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController {
 
-    @FXML TextField name;
-    @FXML TextField semester;
-    @FXML TextField ects;
-    @FXML TextField author;
+    @FXML public TextField name;
+    @FXML public TextField semester;
+    @FXML public TextField ects;
+    @FXML public TextField author;
     private Stage dialogStage;
     private ObservableSubject subject;
     private boolean isNew;
@@ -75,7 +75,7 @@ import org.springframework.stereotype.Component;
         dialogStage.close();
     }
 
-    public void initalizeFields() {
+    private void initalizeFields() {
         name.setText(this.subject.getName());
         semester.setText(this.subject.getSemester());
         ects.setText(Double.toString(this.subject.getEcts()));
