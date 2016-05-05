@@ -1,25 +1,45 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.lang.*?>
+<?import javafx.geometry.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.layout.BorderPane?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/2.2" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController">
-  <bottom>
-    <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0">
-      <children>
-        <Button layoutX="241.0" layoutY="15.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
-        <Button layoutX="320.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleOk" text="Ok" />
-      </children>
-    </AnchorPane>
-  </bottom>
-  <center>
-    <AnchorPane prefHeight="200.0" prefWidth="400.0">
-      <children>
-        <Label layoutX="14.0" layoutY="14.0" minHeight="6.0" prefHeight="33.0" prefWidth="66.0" text="Name" />
-        <TextField fx:id="name" layoutX="67.0" layoutY="20.0" prefWidth="200.0" />
-      </children>
-    </AnchorPane>
-  </center>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController">
+    <bottom>
+        <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0">
+            <children>
+                <Button layoutX="262.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleCancel" text="Cancel" />
+                <Button layoutX="350.0" layoutY="13.0" mnemonicParsing="false" onAction="#handleOk" text="Ok" />
+            </children>
+        </AnchorPane>
+    </bottom>
+    <center>
+        <GridPane BorderPane.alignment="CENTER">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            </columnConstraints>
+            <rowConstraints>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            </rowConstraints>
+            <children>
+                <Label text="Name" />
+                <Label text="Semester" GridPane.rowIndex="1" />
+                <Label text="ECTS" GridPane.rowIndex="2" />
+                <TextField fx:id="name" GridPane.columnIndex="1" />
+                <TextField fx:id="semester" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                <TextField fx:id="ects" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                <Label text="Autor" GridPane.rowIndex="3" />
+                <TextField fx:id="author" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            </children>
+            <BorderPane.margin>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </BorderPane.margin>
+        </GridPane>
+    </center>
 </BorderPane>

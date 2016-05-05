@@ -23,6 +23,8 @@ public class SubjectServiceImpl implements SubjectService{
         subjectToAdd.setName("TEsting");
         subjectToAdd.setSemester("WS15");
         subjectToAdd.setEcts(3.0f);
+        subjectToAdd.setAuthor("Barry");
+        subjectToAdd.setTimeSpent(120);
         subjects.add(subjectToAdd);
         return subjects;
     }

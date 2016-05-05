@@ -1,10 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -22,41 +19,50 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.stream.Collectors;
 
 /**
  * A controller for subjectView, to create, delete, and edit subjects.
  *
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectOverviewController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectOverviewController {
 
 
-    @FXML public TableView<Subject> subjects;
-    @FXML public TableColumn<Subject, String> nameColumn;
-    private ObservableList<Subject> subjectList;
-    private MainFrameController parentController;
+    @FXML public TableView<ObservableSubject> subjects;
+    @FXML public TableColumn<ObservableSubject, String> nameColumn;
+    @FXML public TableColumn<ObservableSubject, String> semesterColumn;
+    @FXML public TableColumn<ObservableSubject, Number> ectsColumn;
+    @FXML public TableColumn<ObservableSubject, String> authorColumn;
+    @FXML public TableColumn<ObservableSubject, Number> timeSpentColumn;
+    private Logger logger = LoggerFactory.getLogger(SubjectOverviewController.class);
+    private ObservableList<ObservableSubject> subjectList;
     private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
-    private Logger logger = LoggerFactory.getLogger(SubjectOverviewController.class);
     private SubjectService subjectService;
 
 
-    @Autowired public SubjectOverviewController(MainFrameController controller,
+    @Autowired public SubjectOverviewController(SpringFXMLLoader springFXMLLoader,
         SubjectService subjectService) {
-        parentController = controller;
-        this.springFXMLLoader = controller.getSpringFXMLLoader();
-        this.primaryStage = controller.getPimaryStage();
+        this.springFXMLLoader = springFXMLLoader;
         this.subjectService = subjectService;
     }
 
     @FXML public void initialize() {
-        subjectList = FXCollections.observableArrayList(subjectService.getSubjects());
+        logger.debug("Initializing subject table");
+        subjectList = FXCollections.observableArrayList(
+            subjectService.getSubjects().stream().map(ObservableSubject::new)
+                .collect(Collectors.toList()));
         subjects.setItems(subjectList);
-        nameColumn
-            .setCellValueFactory(param -> new SimpleStringProperty(param.getValue().getName()));
+        nameColumn.setCellValueFactory(param -> param.getValue().nameProperty());
+        semesterColumn.setCellValueFactory(param -> param.getValue().semesterProperty());
+        ectsColumn.setCellValueFactory(param -> param.getValue().ectsProperty());
+        authorColumn.setCellValueFactory(param -> param.getValue().authorProperty());
+        timeSpentColumn.setCellValueFactory(param -> param.getValue().timeSpentProperty());
     }
 
     @FXML public void handleNew() throws IOException {
+        logger.debug("Create new subject");
         Stage stage = new Stage();
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
             springFXMLLoader
@@ -68,13 +74,15 @@ import java.io.IOException;
     }
 
     @FXML public void handleDelete() {
-        Subject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
-        subjectService.deleteSubject(subjectToDelete);
+        logger.debug("Delete subject from table");
+        ObservableSubject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
+        subjectService.deleteSubject(subjectToDelete.getSubject());
         subjectList.remove(subjectToDelete);
     }
 
     @FXML public void handleEdit() throws IOException {
-        Subject subject = subjects.getSelectionModel().getSelectedItem();
+        logger.debug("Editing selected subject");
+        ObservableSubject subject = subjects.getSelectionModel().getSelectedItem();
         Stage stage = new Stage();
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
             springFXMLLoader
@@ -85,6 +93,20 @@ import java.io.IOException;
         configureStage(stage, "Edit Subject", editSubjectWrapper);
     }
 
+    public void addSubject(ObservableSubject subject) {
+        subjectList.add(subject);
+        subjectService.createSubject(subject.getSubject());
+    }
+
+    public void updatesubject(ObservableSubject subject) {
+        subjectService.updateSubject(subject.getSubject());
+    }
+
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
+
     private void configureStage(Stage stage, String title,
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper)
         throws IOException {
@@ -94,12 +116,4 @@ import java.io.IOException;
         stage.initOwner(this.primaryStage);
         stage.showAndWait();
     }
-
-
-
-    public void addSubject(Subject subject) {
-        subjectList.add(subject);
-    }
-
-
 }
