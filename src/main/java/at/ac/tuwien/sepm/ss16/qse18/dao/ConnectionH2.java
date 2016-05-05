@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @info this class represents the connection to the H2-database, implemented as Singleton.
  */
 public class ConnectionH2 implements DataBaseConnection {
-    private static final Logger LOG = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     private static Connection connection;
 
     /**
@@ -23,13 +23,13 @@ public class ConnectionH2 implements DataBaseConnection {
     */
     private static void openConnection(String path, String user, String password)
         throws SQLException {
-        LOG.info("Entering openConnection() with " + path + " " + user + " " + password);
+        logger.info("Entering openConnection() with " + path + " " + user + " " + password);
 
         if(connection == null || connection.isClosed()) {
             try {
                 Class.forName("org.h2.Driver");
             } catch (ClassNotFoundException e) {
-                LOG.error("Unable to load org.h2.Driver. " + e.getMessage());
+                logger.error("Unable to load org.h2.Driver. " + e.getMessage());
                 return;
             }
             connection = DriverManager.getConnection(path, user, password);
@@ -53,14 +53,14 @@ public class ConnectionH2 implements DataBaseConnection {
     * closes the existing connection to the h2 database.
     */
     public void closeConnection() {
-        LOG.info("Closing H2 Database Connection");
+        logger.info("Closing H2 Database Connection");
 
         try {
             if(connection != null && !connection.isClosed()) {
                 connection.close();
             }
         } catch(SQLException e) {
-            LOG.error("Unable to close database connection. " + e.getMessage());
+            logger.error("Unable to close database connection. " + e.getMessage());
         }
     }
 }
