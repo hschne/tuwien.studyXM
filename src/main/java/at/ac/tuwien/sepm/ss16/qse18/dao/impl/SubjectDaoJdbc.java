@@ -36,10 +36,12 @@ public class SubjectDaoJdbc implements SubjectDao {
 
             if (rs.next()) {
                 res = new Subject();
-                res.setSubjectid(rs.getInt("fid"));
+                res.setSubjectId(rs.getInt("fid"));
                 res.setEcts(rs.getFloat("ects"));
                 res.setName(rs.getString("name"));
                 res.setSemester(rs.getString("semester"));
+                res.setTimeSpent(rs.getInt("time_spent"));
+                res.setAuthor(rs.getString("author"));
             }
         } catch (SQLException e) {
             throw new DaoException("Could not get subject with id (" + id + ")");
@@ -75,10 +77,12 @@ public class SubjectDaoJdbc implements SubjectDao {
 
             while (rs.next()) {
                 Subject tmp = new Subject();
-                tmp.setSubjectid(rs.getInt("fid"));
+                tmp.setSubjectId(rs.getInt("fid"));
                 tmp.setEcts(rs.getFloat("ects"));
                 tmp.setName(rs.getString("name"));
                 tmp.setSemester(rs.getString("semester"));
+                tmp.setTimeSpent(rs.getInt("time_spent"));
+                tmp.setAuthor(rs.getString("author"));
                 res.add(tmp);
             }
         } catch (SQLException e) {
@@ -112,16 +116,19 @@ public class SubjectDaoJdbc implements SubjectDao {
         PreparedStatement ps = null;
 
         try {
-            ps = database.getConnection().prepareStatement("INSERT INTO Fach VALUES (?,?,?,?)");
-            ps.setInt(1, subject.getSubjectid());
+            ps = database.getConnection().prepareStatement("INSERT INTO Fach VALUES (?,?,?,?,?,?)");
+            ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setFloat(3, subject.getEcts());
             ps.setString(4, subject.getSemester());
+            ps.setInt(5, subject.getTimeSpent());
+            ps.setString(6, subject.getAuthor());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException(
-                "Could not create subject with values (" + subject.getSubjectid() + ", " + subject
-                    .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + ")");
+                "Could not create subject with values (" + subject.getSubjectId() + ", " + subject
+                    .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + subject
+                    .getTimeSpent() + subject.getAuthor() + ")");
         } finally {
             if (ps != null) {
                 try {
@@ -138,16 +145,19 @@ public class SubjectDaoJdbc implements SubjectDao {
 
         try {
             ps = database.getConnection().prepareStatement(
-                "DELETE FROM Fach WHERE fid = ? AND name = ? AND ects = ? AND semester = ?");
-            ps.setInt(1, subject.getSubjectid());
+                "DELETE FROM Fach WHERE fid = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
+            ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setFloat(3, subject.getEcts());
             ps.setString(4, subject.getSemester());
+            ps.setInt(5, subject.getTimeSpent());
+            ps.setString(6, subject.getAuthor());
             ps.executeUpdate();
         } catch (SQLException e) {
             throw new DaoException(
-                "Could not delete subject with values (" + subject.getSubjectid() + ", " + subject
-                    .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + ")");
+                "Could not delete subject with values (" + subject.getSubjectId() + ", " + subject
+                    .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + subject
+                    .getTimeSpent() + subject.getAuthor() + ")");
         } finally {
             if (ps != null) {
                 try {
@@ -163,21 +173,24 @@ public class SubjectDaoJdbc implements SubjectDao {
         PreparedStatement ps = null;
 
         try {
-            ps = database.getConnection()
-                .prepareStatement("UPDATE Fach SET name = ?, ects = ?, semester = ? WHERE fid = ?");
+            ps = database.getConnection().prepareStatement(
+                "UPDATE Fach SET name = ?, ects = ?, semester = ?, time_spent = ?, author = ? WHERE fid = ?");
             ps.setString(1, subject.getName());
             ps.setFloat(2, subject.getEcts());
             ps.setString(3, subject.getSemester());
-            ps.setInt(4, subject.getSubjectid());
+            ps.setInt(4, subject.getTimeSpent());
+            ps.setString(5, subject.getAuthor());
+            ps.setInt(6, subject.getSubjectId());
 
             ps.executeUpdate();
 
             ps.close();
         } catch (SQLException e) {
             throw new DaoException(
-                "Could not update subject with id (" + subject.getSubjectid() + ") to values ("
-                    + subject.getSubjectid() + ", " + subject.getName() + ", " + subject.getEcts()
-                    + ", " + subject.getSemester() + ")");
+                "Could not update subject with id (" + subject.getSubjectId() + ") to values ("
+                    + subject.getSubjectId() + ", " + subject.getName() + ", " + subject.getEcts()
+                    + ", " + subject.getSemester() + subject.getTimeSpent() + subject.getAuthor()
+                    + ")");
         } finally {
             if (ps != null) {
                 try {

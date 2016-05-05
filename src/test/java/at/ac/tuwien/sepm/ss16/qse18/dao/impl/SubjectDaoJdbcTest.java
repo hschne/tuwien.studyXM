@@ -67,7 +67,7 @@ import static org.junit.Assert.*;
         Subject s = sdao.getSubject(4);
 
         assertTrue("There should be exactly one element found", s != null);
-        assertEquals("Found subject should have the ID 4", s.getSubjectid(), 4);
+        assertEquals("Found subject should have the ID 4", s.getSubjectId(), 4);
         assertTrue("Found subject should have 6.5 ects", s.getEcts() == 6.5f);
         assertEquals("Found subject should have the name SEPM", s.getName(), "SEPM");
         assertEquals("Found subject should be in semester SS16", s.getSemester(), "SS16");
@@ -85,7 +85,7 @@ import static org.junit.Assert.*;
 
         assertFalse("Subjects with different ID should not be the same Objects", s1 == s2);
         assertFalse("The results of 2 different ID-searches should not have the same ID",
-            s1.getSubjectid() == s2.getSubjectid());
+            s1.getSubjectId() == s2.getSubjectId());
         assertFalse("In this case the subject's ects should differ", s1.getEcts() == s2.getEcts());
         assertFalse("In this case the subject's ects should differ",
             s1.getName().equals(s2.getName()));
@@ -147,12 +147,12 @@ import static org.junit.Assert.*;
 
         assertFalse("Both found elements should differ", first == second);
 
-        assertEquals("ID of first element should be 12", first.getSubjectid(), 12);
+        assertEquals("ID of first element should be 12", first.getSubjectId(), 12);
         assertTrue("ECTS of first element should be 4.0f", first.getEcts() == 4.0f);
         assertTrue("Name of first element should be TEST", first.getName().equals("TEST"));
         assertTrue("Semester of first element should be SS33", first.getSemester().equals("SS33"));
 
-        assertEquals("ID of second element should be 8", second.getSubjectid(), 8);
+        assertEquals("ID of second element should be 8", second.getSubjectId(), 8);
         assertTrue("ECTS of second element should be 2.0f", second.getEcts() == 2.0f);
         assertTrue("Name of second element should be OTHER", second.getName().equals("OTHER"));
         assertTrue("Semester of second element should be WS17",
@@ -176,7 +176,7 @@ import static org.junit.Assert.*;
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
 
         Subject s = new Subject();
-        s.setSubjectid(1);
+        s.setSubjectId(1);
 
         sdao.createSubject(s);
 
@@ -194,7 +194,7 @@ import static org.junit.Assert.*;
 
     @Test public void test_createSubject_withValidSubject1() throws Exception {
         Subject s = new Subject();
-        s.setSubjectid(42);
+        s.setSubjectId(42);
         s.setName("TESTER");
         s.setEcts(99.9f);
         s.setSemester("WS99");
@@ -207,6 +207,7 @@ import static org.junit.Assert.*;
 
     // Testing updateSubject(Subject)
     // -------------------------------------------------------------------------------
+
     // -------------------------------------------------------------------------------
 
     // Testing deleteSubject(Subject)
