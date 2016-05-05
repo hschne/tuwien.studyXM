@@ -2,20 +2,20 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 public class Subject {
 
-    private int fid;
+    private int subjectid;
 
     private String name;
 
-    private double ects;
+    private float ects;
 
     private String semester;
 
-    public int getFid() {
-        return fid;
+    public int getSubjectid() {
+        return subjectid;
     }
 
-    public void setFid(int fid) {
-        this.fid = fid;
+    public void setSubjectid(int fid) {
+        this.subjectid = fid;
     }
 
     public String getName() {
@@ -26,11 +26,11 @@ public class Subject {
         this.name = name;
     }
 
-    public double getEcts() {
+    public float getEcts() {
         return ects;
     }
 
-    public void setEcts(double ects) {
+    public void setEcts(float ects) {
         this.ects = ects;
     }
 
