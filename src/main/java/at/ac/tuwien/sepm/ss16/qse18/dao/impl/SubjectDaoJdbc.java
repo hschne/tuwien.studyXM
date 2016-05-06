@@ -12,6 +12,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * JDBC implementation of the CRUD methods from SubjectDao. This class has access to the h2 database
+ * that is defined in the ConnectionH2 class.
+ *
+ * @author Cem Bicer
+ */
 public class SubjectDaoJdbc implements SubjectDao {
 
     @Override public Subject getSubject(int id) throws DaoException {

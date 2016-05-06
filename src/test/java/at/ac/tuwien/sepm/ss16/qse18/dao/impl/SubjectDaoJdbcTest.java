@@ -22,6 +22,12 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * Tests for the JDBC implementation in SubjectDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
+ * @author Cem Bicer
+ */
 @RunWith(PowerMockRunner.class) @PrepareForTest(ConnectionH2.class)
 @PowerMockIgnore("javax.management.*") public class SubjectDaoJdbcTest {
 
