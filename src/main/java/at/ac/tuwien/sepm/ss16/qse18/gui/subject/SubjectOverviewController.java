@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
@@ -50,16 +51,19 @@ import java.util.stream.Collectors;
     }
 
     @FXML public void initialize() {
-        logger.debug("Initializing subject table");
-        subjectList = FXCollections.observableArrayList(
-            subjectService.getSubjects().stream().map(ObservableSubject::new)
-                .collect(Collectors.toList()));
-        subjects.setItems(subjectList);
-        nameColumn.setCellValueFactory(param -> param.getValue().nameProperty());
-        semesterColumn.setCellValueFactory(param -> param.getValue().semesterProperty());
-        ectsColumn.setCellValueFactory(param -> param.getValue().ectsProperty());
-        authorColumn.setCellValueFactory(param -> param.getValue().authorProperty());
-        timeSpentColumn.setCellValueFactory(param -> param.getValue().timeSpentProperty());
+        try {
+            logger.debug("Initializing subject table");
+            subjectList = FXCollections.observableArrayList(
+                subjectService.getSubjects().stream().map(ObservableSubject::new).collect(Collectors.toList()));
+            subjects.setItems(subjectList);
+            nameColumn.setCellValueFactory(param -> param.getValue().nameProperty());
+            semesterColumn.setCellValueFactory(param -> param.getValue().semesterProperty());
+            ectsColumn.setCellValueFactory(param -> param.getValue().ectsProperty());
+            authorColumn.setCellValueFactory(param -> param.getValue().authorProperty());
+            timeSpentColumn.setCellValueFactory(param -> param.getValue().timeSpentProperty());
+        }catch (ServiceException e){
+            e.getMessage();
+        }
     }
 
     @FXML public void handleNew() throws IOException {
@@ -75,10 +79,14 @@ import java.util.stream.Collectors;
     }
 
     @FXML public void handleDelete() {
-        logger.debug("Delete subject from table");
-        ObservableSubject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
-        subjectService.deleteSubject(subjectToDelete.getSubject());
-        subjectList.remove(subjectToDelete);
+        try {
+            logger.debug("Delete subject from table");
+            ObservableSubject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
+            subjectService.deleteSubject(subjectToDelete.getSubject());
+            subjectList.remove(subjectToDelete);
+        }catch (ServiceException e){
+            e.getMessage();
+        }
     }
 
     @FXML public void handleEdit() throws IOException {
@@ -95,12 +103,20 @@ import java.util.stream.Collectors;
     }
 
     public void addSubject(ObservableSubject subject) {
-        subjectList.add(subject);
-        subjectService.createSubject(subject.getSubject());
+        try {
+            subjectList.add(subject);
+            subjectService.createSubject(subject.getSubject());
+        }catch (ServiceException e){
+            e.getMessage();
+        }
     }
 
     public void updatesubject(ObservableSubject subject) {
-        subjectService.updateSubject(subject.getSubject());
+        try {
+            subjectService.updateSubject(subject.getSubject());
+        }catch (ServiceException e){
+            e.getMessage();
+        }
     }
 
     public void setPrimaryStage(Stage primaryStage) {

@@ -105,30 +105,7 @@ public class SubjectDaoJdbc implements SubjectDao {
 
         PreparedStatement ps = null;
 
-        try {
-            ps = ConnectionH2.getConnection()
-                .prepareStatement("INSERT INTO Fach VALUES (?,?,?,?,?,?)");
-            ps.setInt(1, subject.getSubjectId());
-            ps.setString(2, subject.getName());
-            ps.setFloat(3, subject.getEcts());
-            ps.setString(4, subject.getSemester());
-            ps.setInt(5, subject.getTimeSpent());
-            ps.setString(6, subject.getAuthor());
-            ps.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(
-                "Could not create subject with values (" + subject.getSubjectId() + ", " + subject
-                    .getName() + ", " + subject.getEcts() + ", " + subject.getSemester() + subject
-                    .getTimeSpent() + subject.getAuthor() + ")");
-        } finally {
-            if (ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    throw new DaoException("Could not close preparedstatement");
-                }
-            }
-        }
+
     }
 
     @Override public void deleteSubject(Subject subject) throws DaoException {

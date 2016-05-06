@@ -6,14 +6,14 @@ import java.util.List;
 
 public interface SubjectService {
 
-    Subject getSubject(int id);
+    Subject getSubject(int id) throws ServiceException;
 
-    List<Subject> getSubjects();
+    List<Subject> getSubjects()throws ServiceException;
 
-    Subject createSubject(Subject subject);
+    Subject createSubject(Subject subject)throws ServiceException;
 
-    boolean deleteSubject(Subject subject);
+    boolean deleteSubject(Subject subject)throws ServiceException;
 
-    Subject updateSubject(Subject subject);
+    Subject updateSubject(Subject subject)throws ServiceException;
 
 }

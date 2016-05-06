@@ -50,7 +50,7 @@ public class SubjectOverviewControllerTest {
         controller.timeSpentColumn = new TableColumn<>();
     }
 
-    @Test public void testInitialzeOk(){
+    @Test public void testInitialzeOk() throws Exception{
         when(mockSubjectService.getSubjects()).thenReturn(CreateSubjectList());
 
         controller.initialize();
