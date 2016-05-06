@@ -18,6 +18,13 @@ import static org.mockito.Mockito.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+
+/**
+ * Tests for the subject layer implementation. Mocks were used to verify that the right methods in the subject Dao
+ * were called
+ *
+ * @author  Zhang Haixiang
+ */
 @RunWith(MockitoJUnitRunner.class) public class SubjectServiceTest {
 
     @Mock private SubjectServiceImpl mockServiceImpl;

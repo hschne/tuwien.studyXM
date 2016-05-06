@@ -4,6 +4,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 
 import java.util.List;
 
+/*
+* Interface that defines the service layer of subject
+* */
 public interface SubjectService {
 
     Subject getSubject(int id) throws ServiceException;

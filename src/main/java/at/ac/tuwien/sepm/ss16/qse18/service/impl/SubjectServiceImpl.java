@@ -7,10 +7,16 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+* Implementation of the subject service layer. This class contains the business logic and delegates certain
+* methods(CRUD) to the subject Dao
+*
+* @author Zhang Haixiang
+*
+* */
 @Service
 public class SubjectServiceImpl implements SubjectService {
     private SubjectDao sd;
