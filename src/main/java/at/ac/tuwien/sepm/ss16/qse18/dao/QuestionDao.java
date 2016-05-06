@@ -10,9 +10,9 @@ public interface QuestionDao {
 
     List<Question> getQuestions();
 
-    Question createQuestion(Question subject);
+    Question createQuestion(Question q);
 
-    Question deleteQuestion(Question subject);
+    Question deleteQuestion(Question q);
 
-    Question updateQuestion(Question subject);
+    Question updateQuestion(Question q);
 }
