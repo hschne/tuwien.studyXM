@@ -4,7 +4,9 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import org.springframework.stereotype.Service;
 
+import javax.xml.ws.ServiceMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import java.util.List;
  *
  * @author Cem Bicer
  */
+@Service
 public class SubjectDaoJdbc implements SubjectDao {
 
     @Override public Subject getSubject(int id) throws DaoException {
