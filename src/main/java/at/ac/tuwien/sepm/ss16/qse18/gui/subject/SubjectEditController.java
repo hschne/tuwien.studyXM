@@ -83,6 +83,6 @@ import org.springframework.stereotype.Component;
         name.setText(this.subject.getName());
         semester.setText(this.subject.getSemester());
         ects.setText(Double.toString(this.subject.getEcts()));
-        name.setText(this.subject.getAuthor());
+        author.setText(this.subject.getAuthor());
     }
 }

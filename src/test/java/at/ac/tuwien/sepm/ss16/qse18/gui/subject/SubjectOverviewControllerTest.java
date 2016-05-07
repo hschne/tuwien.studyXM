@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.JavaFxThreadingRule;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
+import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -30,10 +31,12 @@ import static org.mockito.Mockito.when;
 
     @Mock private SubjectService mockSubjectService;
 
+    @Mock private AlertBuilder mockAlertBuilder;
+
     private SubjectOverviewController controller;
 
     @Before public void setUp() {
-        controller = new SubjectOverviewController(mockSpringFXMLLoader, mockSubjectService);
+        controller = new SubjectOverviewController(mockSpringFXMLLoader, mockSubjectService, mockAlertBuilder);
 
         controller.subjects = new TableView<>();
         controller.nameColumn = new TableColumn<>();
@@ -51,24 +54,6 @@ import static org.mockito.Mockito.when;
         assertTrue(controller.subjects.getItems().size() == 1);
     }
 
-    @Test public void testHandleNew() throws Exception {
-    }
-
-    @Test public void testHandleDelete() throws Exception {
-
-    }
-
-    @Test public void testHandleEdit() throws Exception {
-
-    }
-
-    @Test public void testAddSubject() throws Exception {
-
-    }
-
-    @Test public void testUpdatesubject() throws Exception {
-
-    }
 
     private List<Subject> CreateSubjectList() {
         List<Subject> subjects = new ArrayList<>();

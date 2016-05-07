@@ -47,7 +47,8 @@ import java.util.Objects;
     }
 
     @Override public Subject createSubject(Subject subject) throws ServiceException {
-        verifySubject(subject);
+        verifyCreate(subject);
+        verifyUpdate(subject);
         try {
             sd.createSubject(subject);
             return subject;
@@ -69,7 +70,7 @@ import java.util.Objects;
     }
 
     @Override public Subject updateSubject(Subject subject) throws ServiceException {
-        verifySubject(subject);
+        verifyUpdate(subject);
         try {
             sd.updateSubject(subject);
             return subject;
@@ -79,12 +80,15 @@ import java.util.Objects;
         }
     }
 
-    private void verifySubject(Subject subject) throws ServiceException {
-        if (subject.getName().isEmpty()) {
-            throw new ServiceException("Subject name must not be empty");
-        }
+    private void verifyCreate(Subject subject) throws ServiceException {
         if (getSubjects().stream().anyMatch(p -> Objects.equals(p.getName(), subject.getName()))) {
             throw new ServiceException("Subject name already taken");
+        }
+    }
+
+    private void verifyUpdate(Subject subject) throws ServiceException {
+        if (subject.getName().isEmpty()) {
+            throw new ServiceException("Subject name must not be empty");
         }
         if (subject.getEcts() < 0) {
             throw new ServiceException("ECTS cannot be negative");
