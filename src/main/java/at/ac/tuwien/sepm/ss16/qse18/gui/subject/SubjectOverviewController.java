@@ -88,8 +88,10 @@ import java.util.stream.Collectors;
         try {
             logger.debug("Delete subject from table");
             ObservableSubject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
-            subjectService.deleteSubject(subjectToDelete.getSubject());
-            subjectList.remove(subjectToDelete);
+            if(subjectToDelete != null){
+                subjectService.deleteSubject(subjectToDelete.getSubject());
+                subjectList.remove(subjectToDelete);
+            }
         } catch (ServiceException e) {
             showAlert(e);
         }
