@@ -206,9 +206,9 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>${maven-surefire-plugin.version}</version>
 				<configuration>
-					<systemPropertyVariables>
-						<java.awt.headless>true</java.awt.headless>
-					</systemPropertyVariables>
+					<excludes>
+						<exclude>**/gui/**/*.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
