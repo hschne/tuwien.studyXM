@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.application;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -15,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
 import java.io.IOException;
 
 /**
- * The starting point of the sample application.
+ * The starting point of Study XM
  *
- * @author Dominik Moser
+ * @author Hans-Joerg Schroedl
  */
 @Configuration
 @ComponentScan("at.ac.tuwien.sepm")
@@ -36,11 +36,11 @@ public class MainApplication extends Application {
         LOG.info("Starting Application");
         applicationContext = new AnnotationConfigApplicationContext(MainApplication.class);
         SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
-        SpringFXMLLoader.FXMLWrapper<Object, MainFrameController> mfWrapper =
-                springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);
+        SpringFXMLLoader.FXMLWrapper<Object, SubjectOverviewController> mfWrapper =
+                springFXMLLoader.loadAndWrap("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
         mfWrapper.getController().setPrimaryStage(primaryStage);
-        primaryStage.setTitle("SEPM - SS16 - Spring/Maven/FXML Sample");
-        primaryStage.setScene(new Scene((Parent) mfWrapper.getLoadedObject(), 800, 200));
+        primaryStage.setTitle("Study XM");
+        primaryStage.setScene(new Scene((Parent) mfWrapper.getLoadedObject(), 800, 400));
         primaryStage.show();
     }
 
