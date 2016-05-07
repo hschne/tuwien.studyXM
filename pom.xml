@@ -88,6 +88,7 @@
 		<!-- test -->
 		<junit.version>4.12</junit.version>
 		<mockito-all.version>2.0.2-beta</mockito-all.version>
+		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -198,6 +199,16 @@
 				<version>${exec-maven-plugin.version}</version>
 				<configuration>
 					<mainClass>${project.mainClass}</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<systemPropertyVariables>
+						<java.awt.headless>true</java.awt.headless>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 			<plugin>
