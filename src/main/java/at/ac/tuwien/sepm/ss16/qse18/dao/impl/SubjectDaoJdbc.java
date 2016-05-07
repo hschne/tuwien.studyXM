@@ -6,7 +6,6 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import org.springframework.stereotype.Service;
 
-import javax.xml.ws.ServiceMode;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -20,8 +19,7 @@ import java.util.List;
  *
  * @author Cem Bicer
  */
-@Service
-public class SubjectDaoJdbc implements SubjectDao {
+@Service public class SubjectDaoJdbc implements SubjectDao {
 
     @Override public Subject getSubject(int id) throws DaoException {
 
@@ -31,11 +29,11 @@ public class SubjectDaoJdbc implements SubjectDao {
 
         try {
             s = ConnectionH2.getConnection().createStatement();
-            rs = s.executeQuery("SELECT * FROM Fach WHERE fid = " + id);
+            rs = s.executeQuery("SELECT * FROM SUBJECT WHERE SUBJECTID = " + id);
 
             if (rs.next()) {
                 res = new Subject();
-                res.setSubjectId(rs.getInt("fid"));
+                res.setSubjectId(rs.getInt("subjectId"));
                 res.setEcts(rs.getFloat("ects"));
                 res.setName(rs.getString("name"));
                 res.setSemester(rs.getString("semester"));
@@ -72,11 +70,11 @@ public class SubjectDaoJdbc implements SubjectDao {
 
         try {
             s = ConnectionH2.getConnection().createStatement();
-            rs = s.executeQuery("SELECT * FROM Fach");
+            rs = s.executeQuery("SELECT * FROM SUBJECT");
 
             while (rs.next()) {
                 Subject tmp = new Subject();
-                tmp.setSubjectId(rs.getInt("fid"));
+                tmp.setSubjectId(rs.getInt("subjectid"));
                 tmp.setEcts(rs.getFloat("ects"));
                 tmp.setName(rs.getString("name"));
                 tmp.setSemester(rs.getString("semester"));
@@ -116,7 +114,7 @@ public class SubjectDaoJdbc implements SubjectDao {
 
         try {
             ps = ConnectionH2.getConnection()
-                .prepareStatement("INSERT INTO Fach VALUES (?,?,?,?,?,?)");
+                .prepareStatement("INSERT INTO SUBJECT VALUES (?,?,?,?,?,?)");
             ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setFloat(3, subject.getEcts());
@@ -150,7 +148,7 @@ public class SubjectDaoJdbc implements SubjectDao {
 
         try {
             ps = ConnectionH2.getConnection().prepareStatement(
-                "DELETE FROM Fach WHERE fid = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
+                "DELETE FROM SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
             ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setFloat(3, subject.getEcts());
@@ -184,7 +182,7 @@ public class SubjectDaoJdbc implements SubjectDao {
 
         try {
             ps = ConnectionH2.getConnection().prepareStatement(
-                "UPDATE Fach SET name = ?, ects = ?, semester = ?, time_spent = ?, author = ? WHERE fid = ?");
+                "UPDATE SUBJECT SET name = ?, ects = ?, semester = ?, time_spent = ?, author = ? WHERE SUBJECTID = ?");
             ps.setString(1, subject.getName());
             ps.setFloat(2, subject.getEcts());
             ps.setString(3, subject.getSemester());
