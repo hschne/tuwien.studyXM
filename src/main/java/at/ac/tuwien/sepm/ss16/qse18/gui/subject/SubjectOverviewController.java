@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
@@ -54,14 +55,15 @@ import java.util.stream.Collectors;
         try {
             logger.debug("Initializing subject table");
             subjectList = FXCollections.observableArrayList(
-                subjectService.getSubjects().stream().map(ObservableSubject::new).collect(Collectors.toList()));
+                subjectService.getSubjects().stream().map(ObservableSubject::new)
+                    .collect(Collectors.toList()));
             subjects.setItems(subjectList);
             nameColumn.setCellValueFactory(param -> param.getValue().nameProperty());
             semesterColumn.setCellValueFactory(param -> param.getValue().semesterProperty());
             ectsColumn.setCellValueFactory(param -> param.getValue().ectsProperty());
             authorColumn.setCellValueFactory(param -> param.getValue().authorProperty());
             timeSpentColumn.setCellValueFactory(param -> param.getValue().timeSpentProperty());
-        }catch (ServiceException e){
+        } catch (ServiceException e) {
             e.getMessage();
         }
     }
@@ -84,7 +86,7 @@ import java.util.stream.Collectors;
             ObservableSubject subjectToDelete = subjects.getSelectionModel().getSelectedItem();
             subjectService.deleteSubject(subjectToDelete.getSubject());
             subjectList.remove(subjectToDelete);
-        }catch (ServiceException e){
+        } catch (ServiceException e) {
             e.getMessage();
         }
     }
@@ -104,17 +106,9 @@ import java.util.stream.Collectors;
 
     public void addSubject(ObservableSubject subject) {
         try {
-            subjectList.add(subject);
             subjectService.createSubject(subject.getSubject());
-        }catch (ServiceException e){
-            e.getMessage();
-        }
-    }
-
-    public void updatesubject(ObservableSubject subject) {
-        try {
-            subjectService.updateSubject(subject.getSubject());
-        }catch (ServiceException e){
+            subjectList.add(subject);
+        } catch (ServiceException e) {
             e.getMessage();
         }
     }
@@ -132,5 +126,21 @@ import java.util.stream.Collectors;
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(this.primaryStage);
         stage.showAndWait();
+    }
+
+    public void updateSubject(ObservableSubject observableSubject, Subject subject) {   
+        try {
+            subjectService.updateSubject(subject);
+            updateEntry(observableSubject, subject);
+        } catch (ServiceException e) {
+            e.getMessage();
+        }
+    }
+
+    private void updateEntry(ObservableSubject observableSubject, Subject subject) {
+        observableSubject.setName(subject.getName());
+        observableSubject.setEcts(subject.getEcts());
+        observableSubject.setSemester(subject.getSemester());
+        observableSubject.setAuthor(subject.getAuthor());
     }
 }

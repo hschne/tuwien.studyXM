@@ -47,20 +47,23 @@ import org.springframework.stereotype.Component;
     }
 
     @FXML public void handleOk() {
-        fillDto();
+        Subject newSubject = newSubjectFromFields();
         if (isNew) {
-            overviewController.addSubject(subject);
+            overviewController.addSubject(new ObservableSubject(newSubject));
         } else {
-            overviewController.updatesubject(subject);
+            newSubject.setSubjectId(subject.getSubject().getSubjectId());
+            overviewController.updateSubject(subject,newSubject);
         }
         dialogStage.close();
     }
 
-    private void fillDto() {
-        subject.setName(name.getText());
-        subject.setEcts(parseDouble());
-        subject.setSemester(semester.getText());
-        subject.setAuthor(author.getText());
+    private Subject newSubjectFromFields() {
+        Subject newSubject = new Subject();
+        newSubject.setName(name.getText());
+        newSubject.setEcts(parseDouble());
+        newSubject.setSemester(semester.getText());
+        newSubject.setAuthor(author.getText());
+        return newSubject;
     }
 
     private float parseDouble() {

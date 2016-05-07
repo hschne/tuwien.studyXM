@@ -1,86 +1,86 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.SubjectDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
-import static org.mockito.Mockito.*;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
-
+import static org.mockito.Mockito.verify;
 
 /**
  * Tests for the subject layer implementation. Mocks were used to verify that the right methods in the subject Dao
  * were called
  *
- * @author  Zhang Haixiang
+ * @author Zhang Haixiang
  */
 @RunWith(MockitoJUnitRunner.class) public class SubjectServiceTest {
 
-    @Mock private SubjectServiceImpl mockServiceImpl;
     @Mock private SubjectDaoJdbc mockDaoJdbc;
 
-    private Subject testSubject1;
+    private SubjectServiceImpl subjectService;
 
-    @Before
-    public void setUp() {
-        mockServiceImpl = new SubjectServiceImpl(mockDaoJdbc);
+    @Before public void setUp() {
+        subjectService = new SubjectServiceImpl(mockDaoJdbc);
 
-        testSubject1 = new Subject();
-        testSubject1.setAuthor("Testauthor");
-        testSubject1.setEcts(3);
-        testSubject1.setName("SEPM");
-        testSubject1.setSemester("SS16");
-        testSubject1.setSubjectId(1000);
-        testSubject1.setTimeSpent(800);
     }
 
     //Testing getSubject(int)
-    @Test
-    public void testIf_getSubject_callsRightMethodInDao() throws Exception{
-        mockServiceImpl.getSubject(1);
+    @Test public void testIf_getSubject_callsRightMethodInDao() throws Exception {
+        subjectService.getSubject(1);
         verify(mockDaoJdbc).getSubject(1);
     }
 
-    //Testing getSubjects()
-    @Test
-    public void testIf_getSubjects_callsRightMethodInDao() throws Exception{
-        mockServiceImpl.getSubjects();
+    @Test public void testIf_getSubjects_callsRightMethodInDao() throws Exception {
+        subjectService.getSubjects();
         verify(mockDaoJdbc).getSubjects();
     }
 
-    //Testing createSubject()
-    @Test
-    public void testIf_createSubject_callsRightMethodInDao() throws Exception{
-        mockServiceImpl.createSubject(testSubject1);
-        verify(mockDaoJdbc).createSubject(testSubject1);
+    @Test public void testIf_createSubject_callsRightMethodInDao() throws Exception {
+        Subject subject = createDummySubject();
+        subjectService.createSubject(subject);
+        verify(mockDaoJdbc).createSubject(subject);
     }
 
-    //Testing updateSubject()
-    @Test
-    public void testIf_updateSubject_callsRightMethodInDao() throws Exception{
-        mockServiceImpl.updateSubject(testSubject1);
-        verify(mockDaoJdbc).updateSubject(testSubject1);
+    @Test(expected = ServiceException.class)
+    public void test_createSubject_invalidNameThrowsException() throws Exception {
+        Subject subject = createDummySubject("", 3.0f);
+        subjectService.updateSubject(subject);
     }
 
-    //Testing deleteSubject()
-    @Test
-    public void testIf_deleteSubject_callsRightMethodInDao() throws Exception{
-        mockServiceImpl.deleteSubject(testSubject1);
-        verify(mockDaoJdbc).deleteSubject(testSubject1);
+    @Test(expected = ServiceException.class)
+    public void test_createSubject_invalidEctsThrowsException() throws Exception {
+        Subject subject = createDummySubject("SEPM", -3.0f);
+        subjectService.updateSubject(subject);
     }
 
-    @After public void tearDown(){
-        //nothing to tear down
+    @Test public void testIf_updateSubject_callsRightMethodInDao() throws Exception {
+        Subject subject = createDummySubject();
+        subjectService.updateSubject(subject);
+        verify(mockDaoJdbc).updateSubject(subject);
+    }
+
+    @Test public void testIf_deleteSubject_callsRightMethodInDao() throws Exception {
+        Subject subject = createDummySubject();
+        subjectService.deleteSubject(subject);
+        verify(mockDaoJdbc).deleteSubject(subject);
+    }
+
+    private Subject createDummySubject() {
+        return createDummySubject("SEPM", 6.0f);
+    }
+
+    private Subject createDummySubject(String name, float ects) {
+        Subject subject = new Subject();
+        subject.setName(name);
+        subject.setEcts(ects);
+        subject.setAuthor("Author");
+        subject.setSemester("SS16");
+        subject.setSubjectId(1000);
+        subject.setTimeSpent(800);
+        return subject;
     }
 }

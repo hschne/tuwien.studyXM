@@ -6,10 +6,13 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.impl.SubjectDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Implementation of the subject service layer. This class contains the business logic and delegates certain
@@ -18,8 +21,8 @@ import java.util.List;
  * @author Zhang Haixiang
  */
 @Service public class SubjectServiceImpl implements SubjectService {
+    private final Logger logger = LogManager.getLogger(this.getClass());
     private SubjectDao sd;
-
 
     @Autowired public SubjectServiceImpl(SubjectDaoJdbc sd) {
         this.sd = sd;
@@ -29,6 +32,7 @@ import java.util.List;
         try {
             return sd.getSubject(id);
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -37,16 +41,18 @@ import java.util.List;
         try {
             return sd.getSubjects();
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override public Subject createSubject(Subject subject) throws ServiceException {
-
+        verifySubject(subject);
         try {
             sd.createSubject(subject);
             return subject;
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e.getMessage());
         }
 
@@ -57,17 +63,31 @@ import java.util.List;
             sd.deleteSubject(subject);
             return true;
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override public Subject updateSubject(Subject subject) throws ServiceException {
+        verifySubject(subject);
         try {
             sd.updateSubject(subject);
             return subject;
         } catch (DaoException e) {
+            logger.error(e);
             throw new ServiceException(e.getMessage());
         }
+    }
 
+    private void verifySubject(Subject subject) throws ServiceException {
+        if (subject.getName().isEmpty()) {
+            throw new ServiceException("Subject name must not be empty");
+        }
+        if (getSubjects().stream().anyMatch(p -> Objects.equals(p.getName(), subject.getName()))) {
+            throw new ServiceException("Subject name already taken");
+        }
+        if (subject.getEcts() < 0) {
+            throw new ServiceException("ECTS cannot be negative");
+        }
     }
 }

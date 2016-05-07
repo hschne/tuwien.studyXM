@@ -1,30 +1,27 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
-import java.util.concurrent.CountDownLatch;
-
-import javax.swing.SwingUtilities;
-
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
-
 import org.junit.Rule;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
 
+import javax.swing.*;
+import java.util.concurrent.CountDownLatch;
+
 /**
- *
  * A JUnit {@link Rule} for running tests on the JavaFX thread and performing
  * JavaFX initialisation.  To include in your test case, add the following code:
- *
+ * <p>
  * <pre>
  * {@literal @}Rule
  * public JavaFXThreadingRule jfxRule = new JavaFXThreadingRule();
  * </pre>
- *
+ * <p>
  * File taken from here: http://andrewtill.blogspot.co.at/2012/10/junit-rule-for-javafx-controller-testing.html
- * @author Hans-Joerg Schroedl
  *
+ * @author Hans-Joerg Schroedl
  */
 public class JavaFxThreadingRule implements TestRule {
 
@@ -33,8 +30,7 @@ public class JavaFxThreadingRule implements TestRule {
      */
     private static boolean jfxIsSetup;
 
-    @Override
-    public Statement apply(Statement statement, Description description) {
+    @Override public Statement apply(Statement statement, Description description) {
 
         return new OnJFXThreadStatement(statement);
     }
@@ -42,17 +38,15 @@ public class JavaFxThreadingRule implements TestRule {
     private static class OnJFXThreadStatement extends Statement {
 
         private final Statement statement;
+        private Throwable rethrownException = null;
 
         public OnJFXThreadStatement(Statement aStatement) {
             statement = aStatement;
         }
 
-        private Throwable rethrownException = null;
+        @Override public void evaluate() throws Throwable {
 
-        @Override
-        public void evaluate() throws Throwable {
-
-            if(!jfxIsSetup) {
+            if (!jfxIsSetup) {
                 setupJavaFX();
 
                 jfxIsSetup = true;
@@ -73,7 +67,7 @@ public class JavaFxThreadingRule implements TestRule {
 
             // if an exception was thrown by the statement during evaluation,
             // then re-throw it to fail the test
-            if(rethrownException != null) {
+            if (rethrownException != null) {
                 throw rethrownException;
             }
         }
@@ -93,7 +87,8 @@ public class JavaFxThreadingRule implements TestRule {
 
             System.out.println("javafx initialising...");
             latch.await();
-            System.out.println("javafx is initialised in " + (System.currentTimeMillis() - timeMillis) + "ms");
+            System.out.println(
+                "javafx is initialised in " + (System.currentTimeMillis() - timeMillis) + "ms");
         }
 
     }

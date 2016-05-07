@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -47,10 +48,10 @@ import static org.mockito.Mockito.verify;
         controller.setSubject(subjectToUpdate);
         controller.handleOk();
 
-        verify(mockSubjectOverviewController).updatesubject(subjectToUpdate);
+        verify(mockSubjectOverviewController).updateSubject(eq(subjectToUpdate), any());
     }
 
-    @Test public void testHandleCancelClosesDialogStage() throws Exception{
+    @Test public void testHandleCancelClosesDialogStage() throws Exception {
         controller.handleCancel();
 
         verify(mockDialogStage).close();
