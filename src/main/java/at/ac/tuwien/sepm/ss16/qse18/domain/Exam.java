@@ -1,15 +1,17 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 /**
- * Created by Zhang Haixiang on 10.05.2016.
+ * @author Zhang Haixiang
  */
 public class Exam {
     private int examid;
     private Timestamp created;
     private boolean passed;
     private String author;
+    private ArrayList<Question> examQuestions = new ArrayList<Question>();
 
     public int getExamid(){
         return this.examid;
@@ -41,5 +43,13 @@ public class Exam {
 
     public void setAuthor(String author){
         this.author = author;
+    }
+
+    public ArrayList<Question> getExamQuestions() {
+        return examQuestions;
+    }
+
+    public void setExamQuestions(ArrayList<Question> examQuestions) {
+        this.examQuestions = examQuestions;
     }
 }
