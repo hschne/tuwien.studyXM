@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.ResultSet;
@@ -17,6 +19,7 @@ import java.util.List;
  */
 public class QuestionDaoJdbc implements QuestionDao {
     private ConnectionH2 database;
+    private Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
 
     @Autowired QuestionDaoJdbc(ConnectionH2 database){
         this.database = database;
@@ -27,6 +30,7 @@ public class QuestionDaoJdbc implements QuestionDao {
     }
 
     @Override public List<Question> getQuestions() throws DaoException {
+        logger.debug("entering method getQuestions()");
         List<Question> questions = new ArrayList<>();
         Statement stmt = null;
         ResultSet rs = null;
@@ -44,6 +48,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             }
         }
         catch (SQLException e){
+            logger.error("SQL Exception getQuestions()",e);
             throw new DaoException("SQL Exception while getting all Questions");
         }
         finally {
@@ -51,6 +56,7 @@ public class QuestionDaoJdbc implements QuestionDao {
                 try {
                     rs.close();
                 } catch (SQLException e) {
+                    logger.error("ResultSet couldn't close properly",e);
                     throw new DaoException("ResultSet couldn't close properly");
                 }
             }
@@ -58,6 +64,7 @@ public class QuestionDaoJdbc implements QuestionDao {
                 try {
                     stmt.close();
                 } catch (SQLException e) {
+                    logger.error("Statement couldn't close properly",e);
                     throw new DaoException("Statement couldn't close properly");
                 }
             }
