@@ -8,6 +8,8 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,8 +20,9 @@ import java.util.Vector;
 /**
  * Created by Felix on 06.05.2016.
  */
+@Service
 public class AnswerDaoJdbc implements AnswerDao {
-    private DataBaseConnection con = new ConnectionH2();
+    private DataBaseConnection con;
     private Logger logger = LogManager.getLogger(AnswerDaoJdbc.class);
     private final String GET_SINGLE_ANSWER = "SELECT * FROM ENTITY_ANSWER WHERE ANSWERID=?";
     private final String GET_ALL_ANSWERS = "SELECT * FROM ENTITY_ANSWER";
@@ -30,12 +33,22 @@ public class AnswerDaoJdbc implements AnswerDao {
                                             "VALUES (?, ?, ?)";
     private final String DELETE_ANSWER = "DELETE FROM ENTITY_ANSWER WHERE ANSWERID=?";
 
-    public AnswerDaoJdbc() {
+    @Autowired
+    public AnswerDaoJdbc(DataBaseConnection db) throws DaoException {
+        if(db == null) {
+            throw new DaoException("Database Connection must not be null");
+        }
 
+        this.con = db;
     }
 
     @Override public Answer getAnswer(int answerId) throws DaoException {
         logger.info("Trying to fetch answer from database by id " + answerId);
+        if(answerId < 0) {
+            logger.warn("Answers with id smaller than 0 are not in the database");
+            return null;
+        }
+
         try {
             PreparedStatement ps = con.getConnection().prepareStatement(GET_SINGLE_ANSWER);
             ps.setString(1, Integer.toString(answerId));

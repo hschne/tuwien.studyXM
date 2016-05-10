@@ -1,5 +1,5 @@
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
-import at.ac.tuwien.sepm.ss16.qse18.service.SubjectServiceImpl;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 
