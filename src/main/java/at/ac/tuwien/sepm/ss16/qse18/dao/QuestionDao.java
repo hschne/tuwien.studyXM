@@ -8,7 +8,7 @@ public interface QuestionDao {
 
     Question getQuestion(int id);
 
-    List<Question> getQuestions();
+    List<Question> getQuestions() throws DaoException;
 
     Question createQuestion(Question q);
 
