@@ -15,11 +15,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
+ * JDBC Implementation of the CRUD-Method of the
+ *
  * @author Zhang Haixiang
  */
 public class ExamDaoJdbc implements ExamDao{
     private ConnectionH2 database;
-    private ExamQuestionDao examQuestionDao = new ExamQuestionDaoJdbc(database);
+    private final ExamQuestionDao examQuestionDao = new ExamQuestionDaoJdbc(database);
     private static final Logger logger = LogManager.getLogger();
 
     @Autowired ExamDaoJdbc(ConnectionH2 database){
@@ -30,13 +32,13 @@ public class ExamDaoJdbc implements ExamDao{
         logger.debug("entering method create with parameters {}", exam);
 
         if(!DTOValidator.validate(exam)){
-            throw new DaoException("");
+            throw new DaoException("Invalid values, please check your input");
         }
 
         PreparedStatement pstmt = null;
 
         try{
-            pstmt.getConnection().prepareStatement("Insert into Exam Values(?, ?, ?, ?)");
+            pstmt = database.getConnection().prepareStatement("Insert into Exam Values(?, ?, ?, ?)");
             pstmt.setInt(1, exam.getExamid());
             pstmt.setTimestamp(2, exam.getCreated());
             pstmt.setBoolean(3, exam.getPassed());

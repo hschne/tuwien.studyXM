@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.util.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,6 +26,11 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
 
     @Override public void create(Exam exam, Question question) throws DaoException {
         logger.debug("entering method create with parameters {}", exam, question);
+
+        if(!DTOValidator.validate(exam) || !DTOValidator.validate(question)){
+            throw new DaoException("Invalid values, please check your input");
+        }
+
         PreparedStatement pstm = null;
 
         try{
@@ -36,7 +42,8 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             pstm.executeUpdate();
 
         }catch (SQLException e){
-            throw new DaoException("");
+            throw new DaoException("Could not create ExamQuestion with values("
+                + exam.getExamid() + ", " + question.getQuestionid() + ")");
 
         }finally {
             try {
