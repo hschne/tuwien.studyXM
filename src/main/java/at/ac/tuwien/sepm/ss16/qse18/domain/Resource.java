@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
-import jdk.management.resource.ResourceType;
-
 /**
  * Created by Felix on 10.05.2016.
  */

@@ -8,8 +8,8 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
