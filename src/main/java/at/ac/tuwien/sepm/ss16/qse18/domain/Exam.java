@@ -11,6 +11,7 @@ public class Exam {
     private Timestamp created;
     private boolean passed;
     private String author;
+    private int subject;
     private ArrayList<Question> examQuestions = new ArrayList<Question>();
 
     public int getExamid(){
@@ -23,6 +24,14 @@ public class Exam {
 
     public Timestamp getCreated(){
         return this.created;
+    }
+
+    public int getSubject() {
+        return subject;
+    }
+
+    public void setSubject(int subject) {
+        this.subject = subject;
     }
 
     public void setCreated(Timestamp created){

@@ -21,22 +21,27 @@ public class ExamServiceImpl implements ExamService {
 
 
     @Override public Exam getExam(int id) throws ServiceException {
+        //TODO
         return null;
     }
 
     @Override public List<Exam> getExams() throws ServiceException {
+        //TODO
         return null;
     }
 
     @Override public Exam createExam(Exam exam) throws ServiceException {
+        //TODO
         return null;
     }
 
     @Override public boolean deleteExam(Exam exam) throws ServiceException {
+        //TODO
         return false;
     }
 
     @Override public Exam updateExam(Exam exam) throws ServiceException {
+        //TODO
         return null;
     }
 }

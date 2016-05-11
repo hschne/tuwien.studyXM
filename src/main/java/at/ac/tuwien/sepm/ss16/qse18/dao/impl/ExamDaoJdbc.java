@@ -21,28 +21,31 @@ import java.sql.SQLException;
  */
 public class ExamDaoJdbc implements ExamDao{
     private ConnectionH2 database;
-    private final ExamQuestionDao examQuestionDao = new ExamQuestionDaoJdbc(database);
+    private final ExamQuestionDao examQuestionDao;
     private static final Logger logger = LogManager.getLogger();
 
-    @Autowired ExamDaoJdbc(ConnectionH2 database){
+    @Autowired public ExamDaoJdbc(ConnectionH2 database){
         this.database = database;
+        examQuestionDao = new ExamQuestionDaoJdbc(this.database);
     }
 
     @Override public Exam create(Exam exam) throws DaoException {
         logger.debug("entering method create with parameters {}", exam);
 
         if(!DTOValidator.validate(exam)){
+            logger.error("Dao Exception create() {}", exam);
             throw new DaoException("Invalid values, please check your input");
         }
 
         PreparedStatement pstmt = null;
 
         try{
-            pstmt = database.getConnection().prepareStatement("Insert into Exam Values(?, ?, ?, ?)");
+            pstmt = database.getConnection().prepareStatement("Insert into Exam Values(?, ?, ?, ?, ?)");
             pstmt.setInt(1, exam.getExamid());
             pstmt.setTimestamp(2, exam.getCreated());
             pstmt.setBoolean(3, exam.getPassed());
             pstmt.setString(4, exam.getAuthor());
+            pstmt.setInt(5, exam.getSubject());
             pstmt.executeUpdate();
 
             for(Question q: exam.getExamQuestions()){
@@ -50,6 +53,7 @@ public class ExamDaoJdbc implements ExamDao{
             }
 
         }catch (SQLException e){
+            logger.error("SQL Exception in create with parameters {}", exam, e);
             throw new DaoException("Could not create Exam with values("
                 + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
                 + ", " + exam.getAuthor() +")");
@@ -59,6 +63,7 @@ public class ExamDaoJdbc implements ExamDao{
                 try{
                     pstmt.close();
                 }catch (SQLException e){
+                    logger.error("SQL Exception in create with parameters {}", exam, e);
                     throw new DaoException("Prepared Statement could not be closed");
                 }
             }
