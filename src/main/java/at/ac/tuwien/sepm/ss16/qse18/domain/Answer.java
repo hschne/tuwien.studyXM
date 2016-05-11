@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableAnswer;
+
 /**
  * Created by Felix on 06.05.2016.
  */
@@ -8,6 +10,8 @@ public class Answer {
     private QuestionType type;
     private String answer;
     private boolean isCorrect;
+
+    public Answer(){/*this constructor is left empty on purpose*/}
 
     public Answer(int answerId, QuestionType type, String answer, boolean isCorrect) {
         this.answerId = answerId;
@@ -64,5 +68,12 @@ public class Answer {
             ", answer='" + answer + '\'' +
             ", isCorrect=" + isCorrect +
             '}';
+    }
+
+    @Override
+    public boolean equals(Object that){
+        if (this == that) return true;
+        if (!(that instanceof Answer)) return false;
+        return ((Answer) that).getAnswerId() == this.getAnswerId();
     }
 }

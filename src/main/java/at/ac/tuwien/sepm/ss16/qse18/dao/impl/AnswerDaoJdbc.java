@@ -51,7 +51,7 @@ public class AnswerDaoJdbc implements AnswerDao {
 
         try {
             PreparedStatement ps = con.getConnection().prepareStatement(GET_SINGLE_ANSWER);
-            ps.setString(1, Integer.toString(answerId));
+            ps.setInt(1, answerId);
             ResultSet result = ps.executeQuery();
             if (result.next()) {
                 Answer a = new Answer(result.getInt(1),
@@ -97,7 +97,7 @@ public class AnswerDaoJdbc implements AnswerDao {
             throw new DaoException("Answer must not be null");
         }
 
-        if(a.getAnswerId() < 0) {
+        if(a.getAnswerId() > 0) {
             throw new DaoException("Answer ID already in use");
         }
 
@@ -106,11 +106,10 @@ public class AnswerDaoJdbc implements AnswerDao {
             ps.setInt(1, a.getType().getValue());
             ps.setString(2, a.getAnswer());
             ps.setBoolean(3, a.isCorrect());
-
             ps.executeUpdate();
             ResultSet key = ps.getGeneratedKeys();
-            key.next();
-            a.setAnswerId(key.getInt(1));
+            if(key.next())
+                a.setAnswerId(key.getInt(1));
             logger.debug("Inserted Answer " + a.toString());
         } catch(Exception e) {
             logger.debug(e.getMessage());
@@ -161,7 +160,7 @@ public class AnswerDaoJdbc implements AnswerDao {
         try {
             PreparedStatement ps = con.getConnection().prepareStatement(DELETE_ANSWER);
             ps.setInt(1, a.getAnswerId());
-            ps.executeQuery();
+            ps.executeUpdate();
             a.setAnswerId(-1);
             return a;
         } catch(Exception e) {

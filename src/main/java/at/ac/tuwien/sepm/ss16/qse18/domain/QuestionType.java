@@ -19,13 +19,13 @@ public enum QuestionType {
     private int value;
     private static Map<Integer, QuestionType> hm = new HashMap<>();
 
-    private QuestionType(int type) {
-        this.value = value;
+    QuestionType(int type) {
+        this.value = type;
     }
 
     static {
         for(QuestionType type : QuestionType.values()) {
-            hm.put(type.value, type);
+            hm.put(type.value,type);
         }
     }
 
