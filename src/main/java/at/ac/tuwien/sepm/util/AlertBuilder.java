@@ -6,6 +6,7 @@ import javafx.stage.StageStyle;
 import javafx.stage.Window;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 /**
  * A helper class to create any kind of {@link Alert} dialogs.
@@ -13,6 +14,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Dominik Moser
  */
+@Component
 public class AlertBuilder {
 
     private Logger LOG = LoggerFactory.getLogger(AlertBuilder.class);

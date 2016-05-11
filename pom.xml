@@ -88,6 +88,7 @@
 		<!-- test -->
 		<junit.version>4.12</junit.version>
 		<mockito-all.version>2.0.2-beta</mockito-all.version>
+		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -157,6 +158,24 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>1.6.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-core</artifactId>
+			<version>1.6.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-module-junit4</artifactId>
+			<version>1.6.5</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-api</artifactId>
 			<version>2.5</version>
@@ -180,6 +199,16 @@
 				<version>${exec-maven-plugin.version}</version>
 				<configuration>
 					<mainClass>${project.mainClass}</mainClass>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<excludes>
+						<exclude>**/gui/**/*.java</exclude>
+					</excludes>
 				</configuration>
 			</plugin>
 			<plugin>
