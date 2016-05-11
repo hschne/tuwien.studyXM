@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service public class SubjectDaoJdbc implements SubjectDao {
 
-    private final static Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     private ConnectionH2 database;
 
@@ -51,7 +51,7 @@ import java.util.List;
                     rs.getString("semester"), rs.getInt("time_spent"), rs.getString("author"));
             }
         } catch (SQLException e) {
-            logger.error("Could not get subject with id (" + id + ")");
+            logger.error("Could not get subject with id (" + id + "): " + e);
             throw new DaoException("Could not get subject with id (" + id + ")");
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
@@ -78,7 +78,7 @@ import java.util.List;
                 res.add(tmp);
             }
         } catch (SQLException e) {
-            logger.error("Could not get all subjects");
+            logger.error("Could not get all subjects: " + e);
             throw new DaoException("Could not get all subjects");
         } finally {
             closeStatementsAndResultSets(new Statement[] {s}, new ResultSet[] {rs});
@@ -104,9 +104,10 @@ import java.util.List;
                 subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());
             ps.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Could not create subject with values (" + subjectValues(subject));
+            logger
+                .error("Could not create subject with values " + subjectValues(subject) + ": " + e);
             throw new DaoException(
-                "Could not create subject with values (" + subjectValues(subject));
+                "Could not create subject with values " + subjectValues(subject));
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, null);
         }
@@ -134,7 +135,8 @@ import java.util.List;
             ps.setString(6, subject.getAuthor());
             ps.executeUpdate();
         } catch (SQLException e) {
-            logger.error("Could not delete subject with values " + subjectValues(subject));
+            logger
+                .error("Could not delete subject with values " + subjectValues(subject) + ": " + e);
             throw new DaoException(
                 "Could not delete subject with values " + subjectValues(subject));
         } finally {
@@ -168,10 +170,10 @@ import java.util.List;
             ps.close();
         } catch (SQLException e) {
             logger.error(
-                "Could not update subject with id (" + subject.getSubjectId() + ") to values ("
-                    + subjectValues(subject));
+                "Could not update subject with id (" + subject.getSubjectId() + ") to values "
+                    + subjectValues(subject) + ": " + e);
             throw new DaoException(
-                "Could not update subject with id (" + subject.getSubjectId() + ") to values ("
+                "Could not update subject with id (" + subject.getSubjectId() + ") to values "
                     + subjectValues(subject));
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, null);
@@ -211,25 +213,21 @@ import java.util.List;
         throws DaoException {
         if (statements != null) {
             for (Statement s : statements) {
-                if (s != null) {
-                    try {
-                        s.close();
-                    } catch (SQLException e) {
-                        logger.error("Could not close statement " + e.getMessage());
-                        throw new DaoException("Could not close statement " + e.getMessage());
-                    }
+                try {
+                    s.close();
+                } catch (SQLException e) {
+                    logger.error("Could not close statement " + e.getMessage());
+                    throw new DaoException("Could not close statement " + e.getMessage());
                 }
             }
         }
         if (resultSets != null) {
             for (ResultSet rs : resultSets) {
-                if (rs != null) {
-                    try {
-                        rs.close();
-                    } catch (SQLException e) {
-                        logger.error("Could not close resultset " + e.getMessage());
-                        throw new DaoException("Could not close resultset " + e.getMessage());
-                    }
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    logger.error("Could not close resultset " + e.getMessage());
+                    throw new DaoException("Could not close resultset " + e.getMessage());
                 }
             }
         }
