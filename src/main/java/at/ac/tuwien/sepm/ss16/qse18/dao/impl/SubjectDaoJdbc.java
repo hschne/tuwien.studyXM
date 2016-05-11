@@ -213,21 +213,25 @@ import java.util.List;
         throws DaoException {
         if (statements != null) {
             for (Statement s : statements) {
-                try {
-                    s.close();
-                } catch (SQLException e) {
-                    logger.error("Could not close statement " + e.getMessage());
-                    throw new DaoException("Could not close statement " + e.getMessage());
+                if (s != null) {
+                    try {
+                        s.close();
+                    } catch (SQLException e) {
+                        logger.error("Could not close statement " + e.getMessage());
+                        throw new DaoException("Could not close statement " + e.getMessage());
+                    }
                 }
             }
         }
         if (resultSets != null) {
             for (ResultSet rs : resultSets) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    logger.error("Could not close resultset " + e.getMessage());
-                    throw new DaoException("Could not close resultset " + e.getMessage());
+                if (rs != null) {
+                    try {
+                        rs.close();
+                    } catch (SQLException e) {
+                        logger.error("Could not close resultset " + e.getMessage());
+                        throw new DaoException("Could not close resultset " + e.getMessage());
+                    }
                 }
             }
         }
