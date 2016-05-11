@@ -37,10 +37,10 @@ public class MainApplication extends Application {
         applicationContext = new AnnotationConfigApplicationContext(MainApplication.class);
         SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
         SpringFXMLLoader.FXMLWrapper<Object, SubjectOverviewController> mfWrapper =
-                springFXMLLoader.loadAndWrap("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
+                springFXMLLoader.loadAndWrap("/mainFrame.fxml", SubjectOverviewController.class);
         mfWrapper.getController().setPrimaryStage(primaryStage);
         primaryStage.setTitle("Study XM");
-        primaryStage.setScene(new Scene((Parent) mfWrapper.getLoadedObject(), 800, 400));
+        primaryStage.setScene(new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720));
         primaryStage.show();
     }
 
