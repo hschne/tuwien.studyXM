@@ -61,15 +61,7 @@ import java.io.IOException;
 
     @FXML public void handleHome() {
         logger.debug("Loading home view");
-        //TODO: Properly load using setSubView
-        paneContent.getChildren().clear();
-        try {
-            paneContent.getChildren().clear();
-            paneContent.getChildren()
-                .add((Pane) fxmlLoader.load("/fxml/createMultipleChoiceQuestion.fxml"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        setSubView("/fxml/questions/whichQuestion.fxml");
     }
 
     @FXML public void handleSubjects() {
