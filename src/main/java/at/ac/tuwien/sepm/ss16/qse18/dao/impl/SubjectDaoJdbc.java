@@ -41,7 +41,7 @@ import java.util.List;
 
         try {
             ps = database.getConnection()
-                .prepareStatement("SELECT * FROM SUBJECT WHERE SUBJECTID = ?");
+                .prepareStatement("SELECT * FROM ENTITY_SUBJECT WHERE SUBJECTID = ?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
@@ -69,7 +69,7 @@ import java.util.List;
 
         try {
             s = database.getConnection().createStatement();
-            rs = s.executeQuery("SELECT * FROM SUBJECT");
+            rs = s.executeQuery("SELECT * FROM ENTITY_SUBJECT");
 
             while (rs.next()) {
                 Subject tmp = new Subject();
@@ -99,7 +99,7 @@ import java.util.List;
 
         try {
             ps = database.getConnection()
-                .prepareStatement("INSERT INTO SUBJECT VALUES (?,?,?,?,?,?)");
+                .prepareStatement("INSERT INTO ENTITY_SUBJECT VALUES (?,?,?,?,?,?)");
             fillPreparedStatement(ps, subject.getSubjectId(), subject.getName(), subject.getEcts(),
                 subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());
             ps.executeUpdate();
@@ -126,7 +126,7 @@ import java.util.List;
 
         try {
             ps = database.getConnection().prepareStatement(
-                "DELETE FROM SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
+                "DELETE FROM ENTITY_SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
             ps.setInt(1, subject.getSubjectId());
             ps.setString(2, subject.getName());
             ps.setFloat(3, subject.getEcts());
@@ -157,7 +157,7 @@ import java.util.List;
 
         try {
             ps = database.getConnection().prepareStatement(
-                "UPDATE SUBJECT SET name = ?, ects = ?, semester = ?, time_spent = ?, author = ? WHERE SUBJECTID = ?");
+                "UPDATE ENTITY_SUBJECT SET name = ?, ects = ?, semester = ?, time_spent = ?, author = ? WHERE SUBJECTID = ?");
             ps.setString(1, subject.getName());
             ps.setFloat(2, subject.getEcts());
             ps.setString(3, subject.getSemester());
