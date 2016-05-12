@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,11 +27,11 @@ public class AnswerDaoJdbc implements AnswerDao {
     private Logger logger = LogManager.getLogger(AnswerDaoJdbc.class);
     private final String GET_SINGLE_ANSWER = "SELECT * FROM ENTITY_ANSWER WHERE ANSWERID=?";
     private final String GET_ALL_ANSWERS = "SELECT * FROM ENTITY_ANSWER";
-    private final String UPDATE_ANSWER = "UPDATE ENTITY_ANSWER SET TYPE=?, ANSWER=?, IS_CORRECT=?" +
-                                            " WHERE ANSWERID=?";
+    private final String UPDATE_ANSWER = "UPDATE ENTITY_ANSWER SET TYPE=?, ANSWER=?, IS_CORRECT=?, "
+                                        + "QUESTION=? WHERE ANSWERID=?";
     private final String CREATE_ANSWER = "INSERT INTO ENTITY_ANSWER " +
-                                            "(TYPE, ANSWER, IS_CORRECT) " +
-                                            "VALUES (?, ?, ?)";
+                                            "(TYPE, ANSWER, IS_CORRECT, QUESTION) " +
+                                            "VALUES (?, ?, ?, ?)";
     private final String DELETE_ANSWER = "DELETE FROM ENTITY_ANSWER WHERE ANSWERID=?";
 
     @Autowired
@@ -57,7 +58,8 @@ public class AnswerDaoJdbc implements AnswerDao {
                 Answer a = new Answer(result.getInt(1),
                                         QuestionType.valueOf(result.getInt(2)),
                                         result.getString(3),
-                                        result.getBoolean(4));
+                                        result.getBoolean(4),
+                                        this.getCorrespondingQuestion(result.getInt(5)));
                 logger.info("Found answer: " + a.toString());
                 return a;
             } else {
@@ -80,7 +82,8 @@ public class AnswerDaoJdbc implements AnswerDao {
                 Answer a = new Answer(result.getInt(1),
                     QuestionType.valueOf(result.getInt(2)),
                     result.getString(3),
-                    result.getBoolean(4));
+                    result.getBoolean(4),
+                    this.getCorrespondingQuestion(result.getInt(5)));
                 logger.info("Found answer: " + a.toString());
                 answerList.add(a);
             }
@@ -101,11 +104,16 @@ public class AnswerDaoJdbc implements AnswerDao {
             throw new DaoException("Answer ID already in use");
         }
 
+        if(a.getQuestion() == null || a.getQuestion().getQuestionId() < 0) {
+            throw new DaoException("Can not create answer without corresponding question");
+        }
+
         try {
             PreparedStatement ps = con.getConnection().prepareStatement(CREATE_ANSWER);
             ps.setInt(1, a.getType().getValue());
             ps.setString(2, a.getAnswer());
             ps.setBoolean(3, a.isCorrect());
+            ps.setInt(4, a.getQuestion().getQuestionId());
             ps.executeUpdate();
             ResultSet key = ps.getGeneratedKeys();
             if(key.next())
@@ -135,9 +143,9 @@ public class AnswerDaoJdbc implements AnswerDao {
             ps.setInt(1, a.getType().getValue());
             ps.setString(2, a.getAnswer());
             ps.setBoolean(3, a.isCorrect());
-            ps.setInt(4, a.getAnswerId());
-
-            ps.executeQuery();
+            ps.setInt(4, a.getQuestion().getQuestionId());
+            ps.setInt(5, a.getAnswerId());
+            ps.executeUpdate();
 
             return this.getAnswer(a.getAnswerId());
         } catch(Exception e) {
@@ -167,5 +175,9 @@ public class AnswerDaoJdbc implements AnswerDao {
             logger.debug(e.getMessage());
             throw new DaoException("Could not delete answer");
         }
+    }
+
+    private Question getCorrespondingQuestion(int questionId) throws DaoException {
+        return new QuestionDaoJdbc(this.con).getQuestion(questionId);
     }
 }

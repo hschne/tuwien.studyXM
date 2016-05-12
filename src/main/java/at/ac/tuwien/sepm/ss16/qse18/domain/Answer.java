@@ -10,14 +10,16 @@ public class Answer {
     private QuestionType type;
     private String answer;
     private boolean isCorrect;
+    private Question q;
 
     public Answer(){/*this constructor is left empty on purpose*/}
 
-    public Answer(int answerId, QuestionType type, String answer, boolean isCorrect) {
+    public Answer(int answerId, QuestionType type, String answer, boolean isCorrect, Question q) {
         this.answerId = answerId;
         this.type = type;
         this.answer = answer;
         this.isCorrect = isCorrect;
+        this.q = q;
     }
 
     public Answer(QuestionType type, String answer, boolean isCorrect) {
@@ -26,6 +28,16 @@ public class Answer {
         this.type = type;
         this.answer = answer;
         this.isCorrect = isCorrect;
+        this.q = null;
+
+    }
+
+    public Question getQuestion() {
+        return q;
+    }
+
+    public void setQuestion(Question q) {
+        this.q = q;
     }
 
     public int getAnswerId() {
@@ -60,13 +72,13 @@ public class Answer {
         isCorrect = correct;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Answer{" +
             "answerId=" + answerId +
             ", type=" + type +
             ", answer='" + answer + '\'' +
             ", isCorrect=" + isCorrect +
+            ", q=" + q +
             '}';
     }
 

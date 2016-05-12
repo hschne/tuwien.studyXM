@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
+import at.ac.tuwien.sepm.ss16.qse18.dao.AnswerDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
@@ -19,10 +20,12 @@ import java.util.List;
  */
 public class QuestionServiceImpl implements QuestionService {
     private QuestionDao qdao;
+    private AnswerDao adao;
     private Logger logger = LogManager.getLogger(QuestionServiceImpl.class);
 
-    @Autowired public QuestionServiceImpl(QuestionDao qd) {
+    @Autowired public QuestionServiceImpl(QuestionDao qd, AnswerDao ad) {
         this.qdao = qd;
+        this.adao = ad;
     }
 
     @Override public Question getQuestion(int questionId) throws ServiceException {
@@ -72,13 +75,31 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override public boolean setCorrespondingAnswers(Question q, List<Answer> al)
         throws ServiceException {
-        //TODO
+        try {
+            for(Answer a : al) {
+                a.setQuestion(q);
+                adao.updateAnswer(a);
+            }
+            return true;
+        } catch(DaoException e) {
+            logger.error("Could not set corresponding answers: " + e.getMessage());
+        }
         return false;
     }
 
     @Override public List<Answer> getCorrespondingAnswers(Question q) throws ServiceException {
-        //TODO
-        return null;
+        try {
+            List<Answer> al = adao.getAnswer();
+            for(Answer a : al) {
+                if(!a.getQuestion().equals(q)) {
+                    al.remove(a);
+                }
+            }
+            return al;
+        } catch(DaoException e) {
+            logger.error("Could not get corresponding answers: " + e.getMessage());
+            throw new ServiceException("Could not get corresponding answers");
+        }
     }
 
     @Override public boolean setCorrespondingTopic(Question q, Topic t) throws ServiceException {

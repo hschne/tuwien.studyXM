@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.junit.runner.RunWith;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
@@ -99,6 +100,7 @@ import static org.mockito.Mockito.*;
         when(mockResultSet.getInt(2)).thenReturn(2);
         when(mockResultSet.getString(3)).thenReturn("TestAnswer");
         when(mockResultSet.getBoolean(4)).thenReturn(true);
+        when(mockResultSet.getInt(5)).thenReturn(-1);
 
         List<Answer> answers = adao.getAnswer();
         Answer first = answers.get(0);
@@ -106,8 +108,8 @@ import static org.mockito.Mockito.*;
         Answer third = answers.get(2);
         Answer fourth = answers.get(3);
         Answer fifth = answers.get(4);
-        assertTrue("Size of the List should be 5",answers.size() == 5);
-        assertFalse("All answers should have a different id",first.equals(second.equals(third.equals(fourth.equals(fifth)))));
+        assertTrue("Size of the List should be 5", answers.size() == 5);
+        assertFalse("All answers should have a different id", first.equals(second.equals(third.equals(fourth.equals(fifth)))));
     }
 
     @Test(expected = DaoException.class)
@@ -121,7 +123,8 @@ import static org.mockito.Mockito.*;
     @Test(expected = DaoException.class)
     public void test_createAnswer_withAlreadyExistingId_Fail() throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        Answer a = new Answer(1,QuestionType.MULTIPLECHOICE,"Testanswer",true);
+        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE);
+        Answer a = new Answer(1, QuestionType.MULTIPLECHOICE,"Testanswer", true, q);
         adao.createAnswer(a);
         PowerMockito.verifyStatic();
         mockDatabase.getConnection();
@@ -134,7 +137,8 @@ import static org.mockito.Mockito.*;
 
     @Test
     public void test_createAnswer_withValidAnswer() throws Exception {
-        Answer a = new Answer(QuestionType.MULTIPLECHOICE,"Testanswer",true);
+        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE);
+        Answer a = new Answer(-1, QuestionType.MULTIPLECHOICE,"Testanswer", true, q);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         adao.createAnswer(a);
@@ -165,7 +169,7 @@ import static org.mockito.Mockito.*;
 
     @Test
     public void test_deleteAnswer_withValidAnswer() throws Exception {
-        Answer a = new Answer(1,QuestionType.MULTIPLECHOICE,"Testanswer", true);
+        Answer a = new Answer(1,QuestionType.MULTIPLECHOICE,"Testanswer", true, new Question());
         adao.deleteAnswer(a);
         verify(mockPreparedStatement).executeUpdate();
     }

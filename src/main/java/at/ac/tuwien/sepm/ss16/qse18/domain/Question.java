@@ -5,6 +5,10 @@ public class Question {
     private String question;
     private QuestionType type;
 
+    public Question() {
+
+    }
+
     public Question(int questionId, String question, QuestionType type) {
         this.questionId = questionId;
         this.question = question;
@@ -49,5 +53,21 @@ public class Question {
             ", question='" + question + '\'' +
             ", type=" + type +
             '}';
+    }
+
+    @Override public boolean equals(Object o) {
+        if (this == o)
+            return true;
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        Question question1 = (Question) o;
+
+        if (questionId != question1.questionId)
+            return false;
+        if (question != null ? !question.equals(question1.question) : question1.question != null)
+            return false;
+        return type == question1.type;
+
     }
 }

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.apache.logging.log4j.Logger;
@@ -183,5 +184,14 @@ public class QuestionDaoJdbc implements QuestionDao {
             logger.error("Could not update question " + e.getMessage());
             throw new DaoException("Could not update question");
         }
+    }
+
+    @Override public boolean relateQuestionWithAnswers(Question q, List<Answer> al)
+        throws DaoException {
+        return false;
+    }
+
+    @Override public List<Answer> getRelatedAnswers(Question q) throws DaoException {
+        return null;
     }
 }
