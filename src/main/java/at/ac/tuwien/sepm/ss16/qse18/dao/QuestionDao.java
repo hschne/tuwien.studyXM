@@ -6,13 +6,13 @@ import java.util.List;
 
 public interface QuestionDao {
 
-    Question getQuestion(int id);
+    Question getQuestion(int id) throws DaoException;
 
-    List<Question> getQuestions();
+    List<Question> getQuestions() throws DaoException;
 
-    Question createQuestion(Question subject);
+    Question createQuestion(Question q) throws DaoException;
 
-    Question deleteQuestion(Question subject);
+    Question deleteQuestion(Question q) throws DaoException;
 
-    Question updateQuestion(Question subject);
+    Question updateQuestion(Question q) throws DaoException;
 }

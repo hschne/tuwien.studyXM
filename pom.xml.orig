@@ -172,7 +172,11 @@
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
+<<<<<<< HEAD
 			<version>1.6.5</version>
+=======
+			<version>1.5.6</version>
+>>>>>>> 5370
 			<scope>test</scope>
 		</dependency>
 		<dependency>
