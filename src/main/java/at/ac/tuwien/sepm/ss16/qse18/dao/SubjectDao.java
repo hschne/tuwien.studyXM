@@ -38,7 +38,7 @@ public interface SubjectDao {
      * @throws DaoException if there is no connection to the resource or a subject with the
      *                      subjectid of {@param subject} already exists
      */
-    void createSubject(Subject subject) throws DaoException;
+    Subject createSubject(Subject subject) throws DaoException;
 
     /**
      * Deletes an existing subject. All the information is stored in {@param subject}.
@@ -47,7 +47,7 @@ public interface SubjectDao {
      * @throws DaoException if there is no connection to the resource or a subject with the
      *                      subjectid of {@param subject} does not exist
      */
-    void deleteSubject(Subject subject) throws DaoException;
+    Subject deleteSubject(Subject subject) throws DaoException;
 
     /**
      * Updates an existing subject. All the information is stored in {@param subject}.
@@ -56,6 +56,6 @@ public interface SubjectDao {
      * @throws DaoException if there is no connection to the resource or a subject with the
      *                      subjectid of {@param subject} does not exist
      */
-    void updateSubject(Subject subject) throws DaoException;
+    Subject updateSubject(Subject subject) throws DaoException;
 
 }
