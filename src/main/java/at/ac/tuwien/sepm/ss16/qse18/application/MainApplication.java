@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.application;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.application.Application;
 import javafx.scene.Parent;
@@ -19,11 +19,10 @@ import java.io.IOException;
  *
  * @author Hans-Joerg Schroedl
  */
-@Configuration
-@ComponentScan("at.ac.tuwien.sepm")
-public class MainApplication extends Application {
+@Configuration @ComponentScan("at.ac.tuwien.sepm") public class MainApplication
+    extends Application {
 
-    private Logger LOG = LoggerFactory.getLogger(MainApplication.class);
+    private Logger logger = LoggerFactory.getLogger(MainApplication.class);
 
     private AnnotationConfigApplicationContext applicationContext = null;
 
@@ -31,22 +30,20 @@ public class MainApplication extends Application {
         Application.launch(args);
     }
 
-    @Override
-    public void start(Stage primaryStage) throws IOException {
-        LOG.info("Starting Application");
+    @Override public void start(Stage primaryStage) throws IOException {
+        logger.info("Starting Application");
         applicationContext = new AnnotationConfigApplicationContext(MainApplication.class);
         SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
-        SpringFXMLLoader.FXMLWrapper<Object, SubjectOverviewController> mfWrapper =
-                springFXMLLoader.loadAndWrap("/mainFrame.fxml", SubjectOverviewController.class);
+        SpringFXMLLoader.FXMLWrapper<Object, MainFrameController> mfWrapper =
+            springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);
         mfWrapper.getController().setPrimaryStage(primaryStage);
         primaryStage.setTitle("Study XM");
         primaryStage.setScene(new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720));
         primaryStage.show();
     }
 
-    @Override
-    public void stop() throws Exception {
-        LOG.info("Stopping Application");
+    @Override public void stop() throws Exception {
+        logger.info("Stopping Application");
         if (this.applicationContext != null && applicationContext.isRunning()) {
             this.applicationContext.close();
         }

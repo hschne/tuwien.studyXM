@@ -46,7 +46,7 @@
                      <children>
                         <ImageView fx:id="imageViewIcon" fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" >
                          <image>
-                             <Image url="icons/checkbox.png" />
+                             <Image url="/icons/checkbox.png" />
                          </image></ImageView>
                      </children>
                   </GridPane>
