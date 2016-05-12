@@ -1,0 +1,17 @@
+.button {
+    -fx-background-color: #22374A;
+    -fx-text-fill: white;
+}
+
+.list-view {
+    -fx-background-insets: 0;
+}
+
+.header1 {
+    -fx-font: 18px "Arial";
+    -fx-font-weight: bold;
+}
+.header2{
+    -fx-font: 14px "Arial";
+    -fx-font-weight: bold;
+}

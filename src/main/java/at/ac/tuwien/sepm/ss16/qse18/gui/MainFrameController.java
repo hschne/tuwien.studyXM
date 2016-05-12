@@ -49,7 +49,10 @@ import java.io.IOException;
             SubjectOverviewController controller = mfWrapper.getController();
             controller.setPrimaryStage(primaryStage);
             paneContent.getChildren().clear();
-            paneContent.getChildren().add((Pane) mfWrapper.getLoadedObject());
+            Pane pane = (Pane) mfWrapper.getLoadedObject();
+            pane.setPrefWidth(paneContent.getWidth());
+            pane.setPrefHeight(paneContent.getHeight());
+            paneContent.getChildren().add(pane);
         } catch (IOException e) {
             logger.error(e);
             Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
@@ -65,8 +68,9 @@ import java.io.IOException;
         paneContent.getChildren().clear();
         try {
             paneContent.getChildren().clear();
+            Pane subRoot = (Pane) fxmlLoader.load("/fxml/createMultipleChoiceQuestion.fxml");
             paneContent.getChildren()
-                .add((Pane) fxmlLoader.load("/fxml/createMultipleChoiceQuestion.fxml"));
+                .add(subRoot);
         } catch (IOException e) {
             e.printStackTrace();
         }

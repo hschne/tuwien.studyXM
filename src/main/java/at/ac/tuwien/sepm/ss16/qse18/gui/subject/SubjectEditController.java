@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * A controller for the subject detail view, in order to edit details or
- * add details for newly created subjects.
+ * add details for newly created subjectListView.
  *
  * @author Hans-Joerg Schroedl
  */

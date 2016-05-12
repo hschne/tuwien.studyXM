@@ -78,8 +78,8 @@ import java.util.List;
                 res.add(tmp);
             }
         } catch (SQLException e) {
-            logger.error("Could not get all subjects: " + e);
-            throw new DaoException("Could not get all subjects");
+            logger.error("Could not get all subjectListView: " + e);
+            throw new DaoException("Could not get all subjectListView");
         } finally {
             closeStatementsAndResultSets(new Statement[] {s}, new ResultSet[] {rs});
         }
@@ -100,7 +100,7 @@ import java.util.List;
 
         try {
             ps = database.getConnection()
-                .prepareStatement("INSERT INTO ENTITY_SUBJECT VALUES (?,?,?,?,?)",
+                .prepareStatement("INSERT INTO ENTITY_SUBJECT VALUES (DEFAULT,?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
             fillPreparedStatement(true, ps, 0, subject.getName(), subject.getEcts(),
                 subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());
