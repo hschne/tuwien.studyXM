@@ -67,16 +67,17 @@ public class QuestionDaoJdbc implements QuestionDao {
     @Override public List<Question> getQuestions() throws DaoException {
         logger.debug("entering method getQuestions()");
         List<Question> questions = new ArrayList<>();
-        Statement stmt = null;
+        PreparedStatement ps = null;
         ResultSet rs = null;
 
         try{
-            stmt = con.getConnection().createStatement();
-            rs = stmt.executeQuery(GET_ALL_QUESTIONS);
+            ps = con.getConnection().prepareStatement(GET_ALL_QUESTIONS);
+            rs = ps.executeQuery();
 
             while (rs.next()){
                 Question q = new Question(rs.getInt("QUESTIONID"),
                     rs.getString("QUESTION"), QuestionType.valueOf(rs.getInt("TYPE")));
+                logger.debug("Found question: " + q.toString());
                 questions.add(q);
             }
         }
@@ -93,9 +94,9 @@ public class QuestionDaoJdbc implements QuestionDao {
                     throw new DaoException("ResultSet couldn't close properly");
                 }
             }
-            if(stmt != null) {
+            if(ps != null) {
                 try {
-                    stmt.close();
+                    ps.close();
                 } catch (SQLException e) {
                     logger.error("Statement couldn't close properly",e);
                     throw new DaoException("Statement couldn't close properly");
@@ -114,7 +115,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
         if(question.getQuestionId() > -1) {
             logger.info("Question already in database, aborting");
-            return question;
+            throw new DaoException("Question already in database");
         }
 
         try {
@@ -133,7 +134,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             }
         } catch(Exception e) {
             logger.error("Could not execute query " + e.getMessage());
-            throw new DaoException("Could not save question in database");
+            throw new DaoException("Could not save question in database " + e.getMessage());
         }
     }
 
@@ -146,7 +147,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
         if(question.getQuestionId() < 0) {
             logger.info("Question not in database, aborting");
-            return question;
+            throw new DaoException("Question not in database");
         }
 
         try {

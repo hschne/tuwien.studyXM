@@ -62,7 +62,7 @@ import static org.mockito.Mockito.*;
     }
 
     @Test
-    public void test_getAnswer_withValidId() throws Exception{
+    public void test_getAnswer_withValidId() throws Exception {
         when(mockResultSet.next()).thenReturn(true);
         when(mockResultSet.getInt(1)).thenReturn(1).thenReturn(2);
         when(mockResultSet.getInt(2)).thenReturn(2);
@@ -72,15 +72,15 @@ import static org.mockito.Mockito.*;
         Answer a = adao.getAnswer(1);
         Answer a2 = adao.getAnswer(2);
         assertTrue("One Answer should be found", a != null);
-        assertEquals("AnswerId should be 1",a.getAnswerId(),1);
-        assertEquals("Answer should by of type 2",a.getType().getValue(),2);
+        assertEquals("AnswerId should be 1", a.getAnswerId(), 1);
+        assertEquals("Answer should by of type 2", a.getType().getValue(), 2);
         assertTrue("Answer should be 'TestAnswer'", a.getAnswer().equals("TestAnswer"));
-        assertTrue("Answer should be correct",a.isCorrect());
+        assertTrue("Answer should be correct", a.isCorrect());
         assertFalse("Answers with different Ids should be different objects", a.equals(a2));
     }
 
     @Test
-    public void test_getAnswers_withEmptyDatabase() throws Exception{
+    public void test_getAnswers_withEmptyDatabase() throws Exception {
         when(mockResultSet.next()).thenReturn(false);
         assertTrue("Database should be empty",adao.getAnswer().isEmpty());
     }
@@ -142,7 +142,7 @@ import static org.mockito.Mockito.*;
     }
 
     @Test(expected =  DaoException.class)
-    public void test_updateAnswer_withNull_Fail() throws Exception{
+    public void test_updateAnswer_withNull_Fail() throws Exception {
         adao.updateAnswer(null);
     }
 
@@ -165,14 +165,14 @@ import static org.mockito.Mockito.*;
 
     @Test
     public void test_deleteAnswer_withValidAnswer() throws Exception {
-        Answer a = new Answer(1,QuestionType.MULTIPLECHOICE,"Testanswer",true);
+        Answer a = new Answer(1,QuestionType.MULTIPLECHOICE,"Testanswer", true);
         adao.deleteAnswer(a);
         verify(mockPreparedStatement).executeUpdate();
     }
 
     @Test
-    public void test_deleteAnswer_withInValidAnswer() throws Exception {
-        Answer a = new Answer(QuestionType.MULTIPLECHOICE,"Testanswer",true);
+    public void test_deleteAnswer_withInvalidAnswer() throws Exception {
+        Answer a = new Answer(QuestionType.MULTIPLECHOICE,"Testanswer", true);
         adao.deleteAnswer(a);
         verify(mockPreparedStatement,never()).executeUpdate();
     }
