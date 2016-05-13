@@ -137,6 +137,7 @@ import java.util.List;
         PreparedStatement ps = null;
 
         try {
+
             ps = database.getConnection().prepareStatement(
                 "DELETE FROM ENTITY_SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
             fillPreparedStatement(false, ps, subject.getSubjectId(), subject.getName(),

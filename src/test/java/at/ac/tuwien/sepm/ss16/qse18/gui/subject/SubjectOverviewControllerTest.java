@@ -2,9 +2,11 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.JavaFxThreadingRule;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
+import javafx.scene.control.ListView;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,13 +38,12 @@ import static org.mockito.Mockito.when;
     @Before public void setUp() {
         controller = new SubjectOverviewController(mockSpringFXMLLoader, mockSubjectService,
             mockAlertBuilder);
+        controller.subjectListView = new ListView<>();
     }
 
     @Test public void testInitialzeOk() throws Exception {
         when(mockSubjectService.getSubjects()).thenReturn(CreateSubjectList());
-
         controller.initialize();
-
         assertTrue(controller.subjectListView.getItems().size() == 1);
     }
 
