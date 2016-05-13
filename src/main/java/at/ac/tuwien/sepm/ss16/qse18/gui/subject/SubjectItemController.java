@@ -47,6 +47,10 @@ public class SubjectItemController {
 
     }
 
+    @FXML public void handleDelete(){
+
+    }
+
     public Node getRoot() {
         return root;
     }

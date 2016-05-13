@@ -94,16 +94,16 @@ import java.util.stream.Collectors;
 
 
     @FXML public void handleEdit() throws IOException {
-        //        logger.debug("Editing selected subject");
-        //        ObservableSubject subject = subjectListView.getSelectionModel().getSelectedItem();
-        //        Stage stage = new Stage();
-        //        SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
-        //            springFXMLLoader
-        //                .loadAndWrap("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
-        //        SubjectEditController childController = editSubjectWrapper.getController();
-        //        childController.setSubject(subject);
-        //        childController.setStage(stage);
-        //        configureStage(stage, "Edit Subject", editSubjectWrapper);
+        logger.debug("Editing selected subject");
+        ObservableSubject subject = subjectListView.getSelectionModel().getSelectedItem();
+        Stage stage = new Stage();
+        SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
+            springFXMLLoader
+                .loadAndWrap("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
+        SubjectEditController childController = editSubjectWrapper.getController();
+        childController.setSubject(subject);
+        childController.setStage(stage);
+        configureStage(stage, "Edit Subject", editSubjectWrapper);
     }
 
     public void addSubject(ObservableSubject subject) {

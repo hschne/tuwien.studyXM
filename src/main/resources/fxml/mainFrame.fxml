@@ -74,7 +74,7 @@
                         </Button>
                      </children>
                   </GridPane>
-                  <Pane fx:id="paneContent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.columnIndex="1" />
+                  <AnchorPane fx:id="paneContent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <GridPane>
