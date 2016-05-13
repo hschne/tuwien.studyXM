@@ -52,29 +52,29 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="buttonHome" mnemonicParsing="false" onAction="#handleHome" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #22374A;" text="home" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.valignment="TOP">
+                        <Button fx:id="buttonHome" mnemonicParsing="false" onAction="#handleHome" prefHeight="33.0" prefWidth="200.0"  text="home" textAlignment="CENTER" textOverrun="CLIP" GridPane.valignment="TOP">
                            <font>
                               <Font name="Arial Bold" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="buttonSubjects" mnemonicParsing="false" onAction="#handleSubjects" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #22374A;" text="subjects" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.rowIndex="1" GridPane.valignment="TOP">
+                        <Button fx:id="buttonSubjects" mnemonicParsing="false" onAction="#handleSubjects" prefHeight="33.0" prefWidth="200.0"  text="subjects" textAlignment="CENTER" textOverrun="CLIP" GridPane.rowIndex="1" GridPane.valignment="TOP">
                            <font>
                               <Font name="Arial Bold" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="buttonResources" disable="true" mnemonicParsing="false" onAction="#handleResources" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #22374A;" text="resources" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                        <Button fx:id="buttonResources" disable="true" mnemonicParsing="false" onAction="#handleResources" prefHeight="33.0" prefWidth="200.0"  text="resources" textAlignment="CENTER" textOverrun="CLIP" GridPane.rowIndex="2" GridPane.valignment="TOP">
                            <font>
                               <Font name="Arial Bold" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="buttonStatistics" disable="true" mnemonicParsing="false" onAction="#handleStatistics" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #22374A;" text="statistics" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                        <Button fx:id="buttonStatistics" disable="true" mnemonicParsing="false" onAction="#handleStatistics" prefHeight="33.0" prefWidth="200.0"  text="statistics" textAlignment="CENTER" textOverrun="CLIP" GridPane.rowIndex="3" GridPane.valignment="TOP">
                            <font>
                               <Font name="Arial Bold" size="18.0" />
                            </font>
                         </Button>
                      </children>
                   </GridPane>
-                  <Pane fx:id="paneContent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.columnIndex="1" />
+                  <AnchorPane fx:id="paneContent" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <GridPane>

@@ -5,6 +5,8 @@ import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -49,7 +51,14 @@ import java.io.IOException;
             SubjectOverviewController controller = mfWrapper.getController();
             controller.setPrimaryStage(primaryStage);
             paneContent.getChildren().clear();
-            paneContent.getChildren().add((Pane) mfWrapper.getLoadedObject());
+            Pane pane = (Pane) mfWrapper.getLoadedObject();
+            pane.setPrefWidth(paneContent.getWidth());
+            pane.setPrefHeight(paneContent.getHeight());
+            AnchorPane.setTopAnchor(pane, 0.0);
+            AnchorPane.setRightAnchor(pane, 0.0);
+            AnchorPane.setLeftAnchor(pane, 0.0);
+            AnchorPane.setBottomAnchor(pane, 0.0);
+            paneContent.getChildren().add(pane);
         } catch (IOException e) {
             logger.error(e);
             Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")

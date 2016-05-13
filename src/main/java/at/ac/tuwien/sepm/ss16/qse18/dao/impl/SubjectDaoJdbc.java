@@ -78,15 +78,15 @@ import java.util.List;
                 res.add(tmp);
             }
         } catch (SQLException e) {
-            logger.error("Could not get all subjects: " + e);
-            throw new DaoException("Could not get all subjects");
+            logger.error("Could not get all subjectListView: " + e);
+            throw new DaoException("Could not get all subjectListView");
         } finally {
             closeStatementsAndResultSets(new Statement[] {s}, new ResultSet[] {rs});
         }
         return res;
     }
 
-    @Override public void createSubject(Subject subject) throws DaoException {
+    @Override public Subject createSubject(Subject subject) throws DaoException {
         logger.debug("Entering createSubject with values " + (subject == null ?
             "null" :
             subjectValues(subject)));
@@ -95,14 +95,26 @@ import java.util.List;
             throw new DaoException("Subject must not be null");
         }
 
+        Subject res = null;
         PreparedStatement ps = null;
 
         try {
             ps = database.getConnection()
-                .prepareStatement("INSERT INTO ENTITY_SUBJECT VALUES (?,?,?,?,?,?)");
-            fillPreparedStatement(ps, subject.getSubjectId(), subject.getName(), subject.getEcts(),
+                .prepareStatement("INSERT INTO ENTITY_SUBJECT VALUES (DEFAULT,?,?,?,?,?)",
+                    Statement.RETURN_GENERATED_KEYS);
+            fillPreparedStatement(true, ps, 0, subject.getName(), subject.getEcts(),
                 subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());
+
             ps.executeUpdate();
+
+            ResultSet generetedKey = ps.getGeneratedKeys();
+            if (generetedKey.next()) {
+                res = new Subject();
+                fillSubject(res, generetedKey.getInt(1), subject.getName(), subject.getEcts(),
+                    subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());
+            }
+
+            return res;
         } catch (SQLException e) {
             logger
                 .error("Could not create subject with values " + subjectValues(subject) + ": " + e);
@@ -113,7 +125,7 @@ import java.util.List;
         }
     }
 
-    @Override public void deleteSubject(Subject subject) throws DaoException {
+    @Override public Subject deleteSubject(Subject subject) throws DaoException {
         logger.debug("Entering deleteSubject with values " + (subject == null ?
             "null" :
             subjectValues(subject)));
@@ -125,15 +137,15 @@ import java.util.List;
         PreparedStatement ps = null;
 
         try {
+
             ps = database.getConnection().prepareStatement(
                 "DELETE FROM ENTITY_SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
-            ps.setInt(1, subject.getSubjectId());
-            ps.setString(2, subject.getName());
-            ps.setFloat(3, subject.getEcts());
-            ps.setString(4, subject.getSemester());
-            ps.setInt(5, subject.getTimeSpent());
-            ps.setString(6, subject.getAuthor());
+            fillPreparedStatement(false, ps, subject.getSubjectId(), subject.getName(),
+                subject.getEcts(), subject.getSemester(), subject.getTimeSpent(),
+                subject.getAuthor());
             ps.executeUpdate();
+
+            return subject;
         } catch (SQLException e) {
             logger
                 .error("Could not delete subject with values " + subjectValues(subject) + ": " + e);
@@ -144,7 +156,7 @@ import java.util.List;
         }
     }
 
-    @Override public void updateSubject(Subject subject) throws DaoException {
+    @Override public Subject updateSubject(Subject subject) throws DaoException {
         logger.debug("Entering updateSubject with values" + (subject == null ?
             "null" :
             subjectValues(subject)));
@@ -167,7 +179,7 @@ import java.util.List;
 
             ps.executeUpdate();
 
-            ps.close();
+            return subject;
         } catch (SQLException e) {
             logger.error(
                 "Could not update subject with id (" + subject.getSubjectId() + ") to values "
@@ -182,7 +194,8 @@ import java.util.List;
 
     private String subjectValues(Subject subject) {
         return "(" + subject.getSubjectId() + ", " + subject.getName() + ", " + subject.getEcts()
-            + ", " + subject.getSemester() + subject.getTimeSpent() + subject.getAuthor() + ")";
+            + ", " + subject.getSemester() + ", " + subject.getTimeSpent() + ", " + subject
+            .getAuthor() + ")";
     }
 
     private void fillSubject(Subject subject, int id, String name, float ects, String semester,
@@ -197,15 +210,25 @@ import java.util.List;
         }
     }
 
-    private void fillPreparedStatement(PreparedStatement ps, int id, String name, float ects,
-        String semester, int timeSpent, String author) throws SQLException {
+    private void fillPreparedStatement(boolean inCreateMethod, PreparedStatement ps, int id,
+        String name, float ects, String semester, int timeSpent, String author)
+        throws SQLException {
         if (ps != null) {
-            ps.setInt(1, id);
-            ps.setString(2, name);
-            ps.setFloat(3, ects);
-            ps.setString(4, semester);
-            ps.setInt(5, timeSpent);
-            ps.setString(6, author);
+            if (inCreateMethod) {
+                ps.setString(1, name);
+                ps.setFloat(2, ects);
+                ps.setString(3, semester);
+                ps.setInt(4, timeSpent);
+                ps.setString(5, author);
+            } else {
+                ps.setInt(1, id);
+                ps.setString(2, name);
+                ps.setFloat(3, ects);
+                ps.setString(4, semester);
+                ps.setInt(5, timeSpent);
+                ps.setString(6, author);
+            }
+
         }
     }
 

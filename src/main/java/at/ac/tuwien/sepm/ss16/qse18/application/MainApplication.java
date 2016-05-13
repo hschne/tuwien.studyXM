@@ -38,7 +38,10 @@ import java.io.IOException;
             springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);
         mfWrapper.getController().setPrimaryStage(primaryStage);
         primaryStage.setTitle("Study XM");
-        primaryStage.setScene(new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720));
+        Scene scene =new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
+        String css = this.getClass().getResource("/style.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
