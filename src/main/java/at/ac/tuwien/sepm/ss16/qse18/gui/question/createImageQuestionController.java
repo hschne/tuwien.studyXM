@@ -1,5 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableAnswer;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
@@ -25,6 +28,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * A controller for the creation of image-questions.
@@ -51,13 +56,11 @@ import java.io.IOException;
     @FXML public CheckBox checkBoxAnswerFour;
 
     private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
-    private SpringFXMLLoader springFXMLLoader;
     private AlertBuilder alertBuilder;
+    private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
 
     private QuestionService questionService;
-    private ObservableQuestion question;
-    private ObservableAnswer answer;
 
     @Autowired
     public CreateImageQuestionController(SpringFXMLLoader springFXMLLoader,
@@ -67,16 +70,57 @@ import java.io.IOException;
         this.alertBuilder = alertBuilder;
     }
 
-    @FXML public void handleCreateQuestion() throws IOException {
+    @FXML
+    public void handleCreateQuestion() throws IOException {
         logger.debug("Creating new Question");
-
+        try {
+            Question q = newQuestionFromFields();
+            questionService.createQuestion(q);
+            questionService.setCorrespondingAnswers(q,newAnswersFromFields());
+        } catch (ServiceException e) {
+           showAlert(e);
+        }
     }
+
+    private Question newQuestionFromFields() {
+        Question newQuestion = new Question();
+        newQuestion.setQuestion(textFieldImagePath.getText());
+        newQuestion.setType(QuestionType.NOTECARD);
+        System.out.println(newQuestion.toString());
+        return newQuestion;
+    }
+
+    private List<Answer> newAnswersFromFields(){
+        List<Answer> answers = new LinkedList<>();
+
+        if(!textFieldAnswerOne.getText().isEmpty())
+        {
+            answers.add(new Answer(
+                    QuestionType.NOTECARD,textFieldAnswerOne.getText(),checkBoxAnswerOne.isSelected()));
+        }
+        if(!textFieldAnswerTwo.getText().isEmpty())
+        {
+            answers.add(new Answer(
+                    QuestionType.NOTECARD,textFieldAnswerTwo.getText(),checkBoxAnswerTwo.isSelected()));
+        }
+        if(!textFieldAnswerThree.getText().isEmpty())
+        {
+            answers.add(new Answer(
+                    QuestionType.NOTECARD,textFieldAnswerThree.getText(),checkBoxAnswerThree.isSelected()));
+        }
+        if(!textFieldAnswerFour.getText().isEmpty())
+        {
+            answers.add(new Answer(
+                    QuestionType.NOTECARD,textFieldAnswerFour.getText(),checkBoxAnswerFour.isSelected()));
+        }
+        return answers;
+    }
+
 
     @FXML public void handleAddImage() throws IOException {
         logger.debug("Adding new image.");
         selectImage();
     }
-
 
     /**
      * loads a new image into the imageViewQuestionImage and displays the path in the textFieldImagePath.
@@ -90,10 +134,9 @@ import java.io.IOException;
             File selectedFile = fileChooser.showOpenDialog(null);
 
             if (selectedFile != null) {
-                File file = selectedFile;
-                Image img = new Image(file.toURI().toString());
+                Image img = new Image(selectedFile.toURI().toString());
                 imageViewQuestionImage.setImage(img);
-                textFieldImagePath.setText(file.toURI().toString());
+                textFieldImagePath.setText(selectedFile.toURI().toString());
             }
     }
 

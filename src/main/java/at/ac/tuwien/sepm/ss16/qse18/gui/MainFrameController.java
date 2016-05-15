@@ -46,10 +46,10 @@ import java.io.IOException;
 
     private void setSubView(String fxmlPath) {
         logger.debug("Loading view from " + fxmlPath);
-        SpringFXMLLoader.FXMLWrapper<Object, WhichQuestionController> mfWrapper;
+        SpringFXMLLoader.FXMLWrapper<Object, CreateImageQuestionController> mfWrapper;
         try {
-            mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, WhichQuestionController.class);
-            WhichQuestionController controller = mfWrapper.getController();
+            mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, CreateImageQuestionController.class);
+            CreateImageQuestionController controller = mfWrapper.getController();
             controller.setPrimaryStage(primaryStage);
             paneContent.getChildren().clear();
             paneContent.getChildren().add((Pane) mfWrapper.getLoadedObject());
@@ -64,7 +64,7 @@ import java.io.IOException;
 
     @FXML public void handleHome() {
         logger.debug("Loading home view");
-        setSubView("/fxml/question/whichQuestion.fxml");
+        setSubView("/fxml/question/createImageQuestion.fxml");
     }
 
     @FXML public void handleSubjects() {
