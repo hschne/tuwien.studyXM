@@ -113,10 +113,10 @@ import static javafx.scene.layout.Region.USE_PREF_SIZE;
     }
 
     /**
-     * Uses a solution from StackOverflow to adjust size of Alert
-     *
-     * @param resizable
-     * @return
+     * Uses a solution from StackOverflow to adjust size of {@link Alert}
+     * http://stackoverflow.com/questions/28937392/javafx-alerts-and-their-size
+     * @param resizable if the dialog should automatically resize, default is false
+     * @return the dialog builder
      */
     public AlertBuilder setResizable(boolean resizable) {
         this.resizable = resizable;
