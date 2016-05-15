@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 
 /**
  * The root controller, which loads subviews into the center pane
@@ -98,10 +97,10 @@ import java.lang.reflect.InvocationTargetException;
         logger.debug("Loading question overview for " + subject.getName());
         try {
             QuestionOverviewController controller =
-                setSubView("/fxml/question/questionOverview.fxml", QuestionOverviewController.class);
-            controller.init();
-        }
-        catch (Exception e) {
+                setSubView("/fxml/question/questionOverview.fxml",
+                    QuestionOverviewController.class);
+            controller.setSubject(subject);
+        } catch (Exception e) {
             handleException(e);
         }
     }
@@ -109,8 +108,8 @@ import java.lang.reflect.InvocationTargetException;
     private void handleException(Exception e) {
         logger.error(e);
         Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("Could not load sub view.").contentText("Unexpected Error. Please view logs for details.")
-            .build();
+            .headerText("Could not load sub view.")
+            .contentText("Unexpected Error. Please view logs for details.").build();
         alert.showAndWait();
     }
 
