@@ -28,7 +28,7 @@ import java.util.List;
 
     private ConnectionH2 database;
 
-    @Autowired SubjectDaoJdbc(ConnectionH2 database) {
+    @Autowired public SubjectDaoJdbc(ConnectionH2 database) {
         this.database = database;
     }
 
