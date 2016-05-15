@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableAnswer;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
@@ -36,7 +37,8 @@ import java.util.List;
  *
  * @author Julian on 14.05.2016.
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateImageQuestionController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateImageQuestionController
+        implements GuiController{
 
     @FXML public Button buttonCreateQuestion;
     @FXML public Button buttonAddImage;

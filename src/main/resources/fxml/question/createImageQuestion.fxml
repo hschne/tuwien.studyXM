@@ -49,7 +49,7 @@
                          </image></ImageView>
                      </children>
                   </GridPane>
-                  <Label text="new question">
+                  <Label text="new notecard question">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
