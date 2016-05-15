@@ -9,10 +9,8 @@ import java.util.List;
  */
 public interface ExamService {
 
-    Exam getExam(int id) throws ServiceException;
+    Exam getExam(int examID) throws ServiceException;
     List<Exam> getExams()throws ServiceException;
     Exam createExam(Exam exam)throws ServiceException;
-    boolean deleteExam(Exam exam)throws ServiceException;
-    Exam updateExam(Exam exam)throws ServiceException;
-
+    Exam deleteExam(Exam exam)throws ServiceException;
 }
