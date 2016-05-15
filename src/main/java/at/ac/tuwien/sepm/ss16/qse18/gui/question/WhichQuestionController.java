@@ -67,7 +67,8 @@ import java.io.IOException;
         radioButtonOpenQuestion.setToggleGroup(tg);
         radioButtonOpenQuestion.setDisable(true); // disabled
         radioButtonNotecard.setToggleGroup(tg);
-        radioButtonMultipleChoice.isSelected();
+        radioButtonMultipleChoice.setSelected(true);
+
     }
 
     @FXML public void handleCreateQuestion() throws IOException {
