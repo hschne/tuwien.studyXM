@@ -1,14 +1,11 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
-import com.sun.xml.internal.bind.util.Which;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -46,12 +43,12 @@ import java.io.IOException;
         this.primaryStage = primaryStage;
     }
 
-    private void setSubView(String fxmlPath) {
+    private <T extends GuiController> void setSubView(String fxmlPath, Class T) {
         logger.debug("Loading view from " + fxmlPath);
-        SpringFXMLLoader.FXMLWrapper<Object, WhichQuestionController> mfWrapper;
+        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper;
         try {
-            mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, WhichQuestionController.class);
-            WhichQuestionController controller = mfWrapper.getController();
+            mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
+            T controller = mfWrapper.getController();
             controller.setPrimaryStage(primaryStage);
             paneContent.getChildren().clear();
             Pane pane = (Pane) mfWrapper.getLoadedObject();
@@ -71,14 +68,17 @@ import java.io.IOException;
         }
     }
 
+
+
+
     @FXML public void handleHome() {
         logger.debug("Loading home view");
-        setSubView("/fxml/question/whichQuestion.fxml");
+        setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class);
     }
 
     @FXML public void handleSubjects() {
         logger.debug("Loading subject view");
-        setSubView("/fxml/subject/subjectOverview.fxml");
+        setSubView("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
     }
 
     @FXML public void handleResources() {

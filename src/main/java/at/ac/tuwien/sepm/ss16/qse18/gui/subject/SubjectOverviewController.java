@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
@@ -31,7 +32,8 @@ import java.util.stream.Collectors;
  *
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectOverviewController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectOverviewController
+    implements GuiController {
 
 
     @FXML public ListView<ObservableSubject> subjectListView;
