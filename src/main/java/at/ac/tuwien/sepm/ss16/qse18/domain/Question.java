@@ -4,22 +4,34 @@ public class Question {
     private int questionId;
     private String question;
     private QuestionType type;
+    private long questionTime;
 
     public Question() {
 
     }
 
-    public Question(int questionId, String question, QuestionType type) {
+    public Question(int questionId, String question, QuestionType type, long questionTime) {
         this.questionId = questionId;
         this.question = question;
         this.type = type;
+        this.questionTime = questionTime;
     }
 
-    public Question(String question, QuestionType type) {
+    public long getQuestionTime() {
+        return questionTime;
+    }
+
+    public void setQuestionTime(long questionTime) {
+        this.questionTime = questionTime;
+    }
+
+    public Question(String question, QuestionType type, long questionTime) {
         // -1 specifies a question which is not yet persistent
         this.questionId = -1;
         this.question = question;
         this.type = type;
+        this.questionTime = questionTime;
+
     }
 
     public int getQuestionId() {
@@ -46,12 +58,12 @@ public class Question {
         this.type = type;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Question{" +
             "questionId=" + questionId +
             ", question='" + question + '\'' +
             ", type=" + type +
+            ", questionTime=" + questionTime +
             '}';
     }
 
