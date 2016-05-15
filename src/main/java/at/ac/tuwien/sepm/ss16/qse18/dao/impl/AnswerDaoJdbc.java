@@ -27,11 +27,10 @@ public class AnswerDaoJdbc implements AnswerDao {
     private Logger logger = LogManager.getLogger(AnswerDaoJdbc.class);
     private final String GET_SINGLE_ANSWER = "SELECT * FROM ENTITY_ANSWER WHERE ANSWERID=?";
     private final String GET_ALL_ANSWERS = "SELECT * FROM ENTITY_ANSWER";
-    private final String UPDATE_ANSWER = "UPDATE ENTITY_ANSWER SET TYPE=?, ANSWER=?, IS_CORRECT=?, "
-                                        + "QUESTION=? WHERE ANSWERID=?";
+    private final String UPDATE_ANSWER = "UPDATE ENTITY_ANSWER SET TYPE=?," +
+            " ANSWER=?, IS_CORRECT=?, " + "QUESTION=? WHERE ANSWERID=?";
     private final String CREATE_ANSWER = "INSERT INTO ENTITY_ANSWER " +
-                                            "(TYPE, ANSWER, IS_CORRECT, QUESTION) " +
-                                            "VALUES (?, ?, ?, ?)";
+            "(TYPE, ANSWER, IS_CORRECT, QUESTION) " + "VALUES (?, ?, ?, ?)";
     private final String DELETE_ANSWER = "DELETE FROM ENTITY_ANSWER WHERE ANSWERID=?";
 
     @Autowired
