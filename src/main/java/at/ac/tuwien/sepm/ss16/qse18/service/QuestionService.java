@@ -22,7 +22,7 @@ public interface QuestionService {
     /**
      * getQuestion
      * Queries the database for a list of all occurrences of question entities.
-     * @return Returns a list of all questions.
+     * @return Returns a list of all question.
      */
     public List<Question> getQuestion() throws ServiceException;
 
