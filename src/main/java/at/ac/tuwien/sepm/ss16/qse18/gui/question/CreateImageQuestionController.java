@@ -84,17 +84,17 @@ import java.io.IOException;
      */
     public void selectImage() throws IOException{
 
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Add image");
-            fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.png", "*.jpg"));
-            File selectedFile = fileChooser.showOpenDialog(null);
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Add image");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.png", "*.jpg"));
+        File selectedFile = fileChooser.showOpenDialog(null);
 
-            if (selectedFile != null) {
-                File file = selectedFile;
-                Image img = new Image(file.toURI().toString());
-                imageViewQuestionImage.setImage(img);
-                textFieldImagePath.setText(file.toURI().toString());
-            }
+        if (selectedFile != null) {
+            File file = selectedFile;
+            Image img = new Image(file.toURI().toString());
+            imageViewQuestionImage.setImage(img);
+            textFieldImagePath.setText(file.toURI().toString());
+        }
     }
 
     public void setPrimaryStage(Stage primaryStage) {
