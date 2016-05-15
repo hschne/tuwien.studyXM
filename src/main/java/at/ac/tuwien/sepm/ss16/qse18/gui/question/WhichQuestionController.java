@@ -63,7 +63,9 @@ import java.io.IOException;
         tg = new ToggleGroup();
         radioButtonMultipleChoice.setToggleGroup(tg);
         radioButtonSingleChoice.setToggleGroup(tg);
+        radioButtonSingleChoice.setDisable(true); // disabled
         radioButtonOpenQuestion.setToggleGroup(tg);
+        radioButtonOpenQuestion.setDisable(true); // disabled
         radioButtonNotecard.setToggleGroup(tg);
         radioButtonMultipleChoice.isSelected();
     }
