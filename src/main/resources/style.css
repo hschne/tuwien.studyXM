@@ -1,0 +1,70 @@
+.button {
+    -fx-background-color: #22374A;
+    -fx-text-fill: white;
+}
+
+.header1 {
+    -fx-font: 18px "Arial";
+    -fx-font-weight: bold;
+}
+
+.header2 {
+    -fx-font: 14px "Arial";
+    -fx-font-weight: bold;
+}
+
+
+
+/** Listview for border pane **/
+.custom-list-view {
+    -fx-background-insets: 0;
+}
+
+/* The main scrollbar CSS class of ListView */
+.custom-list-view .scroll-bar:horizontal,
+.custom-list-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+
+}
+
+/* The increment and decrement button CSS class of scrollbar */
+.custom-list-view .increment-button, .custom-list-view .decrement-button {
+    -fx-background-color: transparent;
+
+}
+
+/* The main scrollbar **track** CSS class  */
+.custom-list-view .scroll-bar:horizontal .track,
+.custom-list-view .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-background-radius: 0;
+}
+
+/* The main scrollbar **thumb** CSS class which we drag every time (movable) */
+.custom-list-view .scroll-bar:horizontal .thumb,
+.custom-list-view .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(black, 90%);
+    -fx-background-insets: 0, 0, 0;
+    -fx-background-radius: 0;
+
+}
+
+/* ------------------------------------------------------------------------------------- */
+/** EVENT CSS **/
+/* ------------------------------------------------------------------------------------- */
+
+/* The main scrollbar **track** CSS class on event of "hover" and "pressed" */
+
+.custom-list-view .scroll-bar:horizontal:hover .track,
+.custom-list-view .scroll-bar:horizontal:pressed .track,
+.custom-list-view .scroll-bar:vertical:hover .track,
+.custom-list-view .scroll-bar:vertical:pressed .track {
+    -fx-opacity: 0.2;
+    -fx-background-radius: 0;
+}
+
+/* The main scrollbar **thumb** CSS class on event of "hover" and "pressed" */
+.custom-list-view .scroll-bar .thumb:hover,
+.custom-list-view .scroll-bar .thumb:pressed {
+    -fx-background-color: #22374A;
+}

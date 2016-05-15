@@ -1,4 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
+import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -25,7 +26,9 @@ import java.io.IOException;
  * @author Julian on 15.05.2016.
  */
 @Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class WhichQuestionController {
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class WhichQuestionController implements
+    GuiController {
+
     @FXML
     public Button buttonCreateQuestion;
     @FXML

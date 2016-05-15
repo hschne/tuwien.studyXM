@@ -5,8 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.JavaFxThreadingRule;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.ListView;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,22 +35,15 @@ import static org.mockito.Mockito.when;
     private SubjectOverviewController controller;
 
     @Before public void setUp() {
-        controller = new SubjectOverviewController(mockSpringFXMLLoader, mockSubjectService, mockAlertBuilder);
-
-        controller.subjects = new TableView<>();
-        controller.nameColumn = new TableColumn<>();
-        controller.semesterColumn = new TableColumn<>();
-        controller.ectsColumn = new TableColumn<>();
-        controller.authorColumn = new TableColumn<>();
-        controller.timeSpentColumn = new TableColumn<>();
+        controller = new SubjectOverviewController(mockSpringFXMLLoader, mockSubjectService,
+            mockAlertBuilder);
+        controller.subjectListView = new ListView<>();
     }
 
     @Test public void testInitialzeOk() throws Exception {
         when(mockSubjectService.getSubjects()).thenReturn(CreateSubjectList());
-
         controller.initialize();
-
-        assertTrue(controller.subjects.getItems().size() == 1);
+        assertTrue(controller.subjectListView.getItems().size() == 1);
     }
 
 

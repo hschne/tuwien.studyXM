@@ -183,6 +183,8 @@ import static org.mockito.Mockito.*;
     @Test(expected = DaoException.class) public void test_createSubject_withAlreadyExistingId_Fail()
         throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
+        when(mockConnection.prepareStatement(anyString(), anyInt()))
+            .thenReturn(mockPreparedStatement);
 
         Subject s = new Subject();
         s.setSubjectId(1);
@@ -204,13 +206,21 @@ import static org.mockito.Mockito.*;
     }
 
     @Test public void test_createSubject_withValidSubject() throws Exception {
+        when(mockConnection.prepareStatement(anyString(), anyInt()))
+            .thenReturn(mockPreparedStatement);
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt(anyInt())).thenReturn(1);
+
         Subject s = new Subject();
-        s.setSubjectId(42);
         s.setName("TESTER");
         s.setEcts(99.9f);
         s.setSemester("WS99");
 
-        sdao.createSubject(s);
+        Subject tester = sdao.createSubject(s);
+
+        assertEquals("Subject should have subjectId 1 as it is the first subject in the database",
+            1, tester.getSubjectId());
 
         verify(mockPreparedStatement).executeUpdate();
     }
@@ -303,7 +313,7 @@ import static org.mockito.Mockito.*;
         s.setEcts(1.0f);
         s.setSemester("WS10");
 
-        sdao.createSubject(s);
+        sdao.deleteSubject(s);
 
         verify(mockPreparedStatement).executeUpdate();
     }
