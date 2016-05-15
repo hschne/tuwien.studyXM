@@ -29,12 +29,11 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     private final String GET_SINGLE_QUESTION = "SELECT * FROM ENTITY_QUESTION WHERE QUESTIONID=?";
     private final String GET_ALL_QUESTIONS = "SELECT * FROM ENTITY_QUESTION";
-    private final String UPDATE_QUESTION = "UPDATE ENTITY_QUESTION SET TYPE=?, QUESTION=?" +
-        " WHERE QUESTIONID=?";
-
-    // TODO: an create_v2.sql anpassen, wurde geaendert um ein testen zu ermoeglichen
-    private final String CREATE_QUESTION = "INSERT INTO ENTITY_QUESTION " + "(TYPE, QUESTION) " + "VALUES (?, ?)";
-
+    private final String UPDATE_QUESTION = "UPDATE ENTITY_QUESTION SET TYPE=?, QUESTION=?, "
+        + "QUESTION_TIME WHERE QUESTIONID=?";
+    private final String CREATE_QUESTION = "INSERT INTO ENTITY_QUESTION " +
+        "(TYPE, ANSWER, IS_CORRECT, QUESTION_TIME) " +
+        "VALUES (?, ?, ?, ?)";
     private final String DELETE_QUESTION = "DELETE FROM ENTITY_QUESTION WHERE QUESTIONID=?";
 
     @Autowired QuestionDaoJdbc(DataBaseConnection database){
@@ -55,7 +54,8 @@ public class QuestionDaoJdbc implements QuestionDao {
             if(result.next()) {
                 Question q = new Question(result.getInt(1),
                     result.getString(2),
-                    QuestionType.valueOf(result.getInt(3)));
+                    QuestionType.valueOf(result.getInt(3)),
+                    result.getLong(4));
                 logger.debug("Found entry of question: " + q.toString());
                 return q;
             } else {
@@ -80,7 +80,8 @@ public class QuestionDaoJdbc implements QuestionDao {
 
             while (rs.next()){
                 Question q = new Question(rs.getInt("QUESTIONID"),
-                    rs.getString("QUESTION"), QuestionType.valueOf(rs.getInt("TYPE")));
+                    rs.getString("QUESTION"), QuestionType.valueOf(rs.getInt("TYPE")),
+                    rs.getLong("QUESTION_TIME"));
                 logger.debug("Found question: " + q.toString());
                 questions.add(q);
             }
@@ -127,6 +128,7 @@ public class QuestionDaoJdbc implements QuestionDao {
                 Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
+            ps.setLong(3, question.getQuestionTime());
             ps.executeUpdate();
             ResultSet generatedKey = ps.getGeneratedKeys();
             if(generatedKey.next()) {
@@ -181,6 +183,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             PreparedStatement ps = con.getConnection().prepareStatement(UPDATE_QUESTION);
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
+            ps.setLong(3, question.getQuestionTime());
             ps.executeUpdate();
             return question;
         } catch(Exception e) {
