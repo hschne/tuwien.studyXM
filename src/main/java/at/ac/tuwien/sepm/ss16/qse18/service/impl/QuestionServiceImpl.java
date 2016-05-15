@@ -12,13 +12,14 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * Created by Felix on 10.05.2016.
  */
-public class QuestionServiceImpl implements QuestionService {
+@Service public class QuestionServiceImpl implements QuestionService {
     private QuestionDao qdao;
     private AnswerDao adao;
     private Logger logger = LogManager.getLogger(QuestionServiceImpl.class);
@@ -41,8 +42,8 @@ public class QuestionServiceImpl implements QuestionService {
         try {
             return this.qdao.getQuestions();
         } catch(DaoException e) {
-            logger.error("Could not fetch a list of all questions: " + e.getMessage());
-            throw new ServiceException("Could not fetch list of all questions");
+            logger.error("Could not fetch a list of all question: " + e.getMessage());
+            throw new ServiceException("Could not fetch list of all question");
         }
     }
 

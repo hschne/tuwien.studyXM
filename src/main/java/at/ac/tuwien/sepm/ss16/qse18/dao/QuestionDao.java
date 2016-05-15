@@ -20,8 +20,8 @@ public interface QuestionDao {
 
     /**
      * getQuestions
-     * Retrieves all questions from the database.
-     * @return Returns a list of all questions present in the database
+     * Retrieves all question from the database.
+     * @return Returns a list of all question present in the database
      * @throws DaoException
      */
     public List<Question> getQuestions() throws DaoException;

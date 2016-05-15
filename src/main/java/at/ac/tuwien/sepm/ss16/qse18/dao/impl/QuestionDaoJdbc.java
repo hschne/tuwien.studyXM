@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * @author Philipp Ganiu, Felix Almer
  */
+@Service
 public class QuestionDaoJdbc implements QuestionDao {
     private DataBaseConnection con;
     private Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
