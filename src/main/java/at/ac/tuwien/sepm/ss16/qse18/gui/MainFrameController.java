@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
@@ -104,6 +106,47 @@ import java.io.IOException;
             handleException(e);
         }
     }
+
+
+    public void handleMultipleChoiceQuestion() {
+        logger.debug("Loading Multiple Choice question screen ");
+        try {
+            setSubView("/fxml/question/createMultipleChoiceQuestion.fxml", CreateMultipleChoiceQuestionController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleSingleChoiceQuestion() {
+        logger.debug("Loading Single Choice question screen ");
+        try {
+            //TODO: create fxml and controller
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleOpenQuestion() {
+        logger.debug("Loading Open question screen ");
+        try {
+            //TODO: create fxml and controller
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateImageQuestion() {
+        logger.debug("Loading Image question screen ");
+        try {
+            setSubView("/fxml/question/createImageQuestion.fxml", CreateImageQuestionController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+
+
+
 
     private void handleException(Exception e) {
         logger.error(e);

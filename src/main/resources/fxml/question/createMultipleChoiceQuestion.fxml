@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 
 <?import javafx.scene.image.Image?>
-<AnchorPane style="-fx-background-color: white;" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController">
+<AnchorPane style="-fx-background-color: white;" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController">
    <children>
       <GridPane layoutX="146.0" layoutY="132.0" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -50,7 +50,7 @@
                          </image></ImageView>
                      </children>
                   </GridPane>
-                  <Label text="new question">
+                  <Label text="new multiple choice question">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>

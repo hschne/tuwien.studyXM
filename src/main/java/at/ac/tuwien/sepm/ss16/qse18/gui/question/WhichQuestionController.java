@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -17,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import sun.applet.Main;
 
 import java.io.IOException;
 
@@ -39,6 +41,8 @@ import java.io.IOException;
     public RadioButton radioButtonOpenQuestion;
     @FXML
     public RadioButton radioButtonNotecard;
+    @Autowired
+    MainFrameController mainFrameController;
 
     private ToggleGroup tg;
 
@@ -47,6 +51,7 @@ import java.io.IOException;
     private AlertBuilder alertBuilder;
     private Stage primaryStage;
 
+
     @Autowired
     public WhichQuestionController(SpringFXMLLoader springFXMLLoader, AlertBuilder alertBuilder) {
         this.alertBuilder = alertBuilder;
@@ -54,12 +59,16 @@ import java.io.IOException;
     }
 
     @FXML public void initialize() {
+        logger.debug("Initializing whichQuestion screen");
         tg = new ToggleGroup();
         radioButtonMultipleChoice.setToggleGroup(tg);
         radioButtonSingleChoice.setToggleGroup(tg);
+        radioButtonSingleChoice.setDisable(true); // disabled
         radioButtonOpenQuestion.setToggleGroup(tg);
+        radioButtonOpenQuestion.setDisable(true); // disabled
         radioButtonNotecard.setToggleGroup(tg);
-        radioButtonMultipleChoice.isSelected();
+        radioButtonMultipleChoice.setSelected(true);
+
     }
 
     @FXML public void handleCreateQuestion() throws IOException {
@@ -67,19 +76,19 @@ import java.io.IOException;
 
         if(radioButtonMultipleChoice.isSelected())
         {
-            //TODO: implement MultipleChoiceQuestion
+            mainFrameController.handleMultipleChoiceQuestion();
         }
         else if (radioButtonSingleChoice.isSelected())
         {
-            //TODO: implement SingleChoiceQuestion
+            //TODO: mainFrameController.handleSingleChoiceQuestion();
         }
         else if(radioButtonOpenQuestion.isSelected())
         {
-            //TODO: implement OpenQuestion
+            //TODO: mainFrameController.handleOpenQuestion();
         }
         else
         {
-            //TODO: implement NotecardQuestion
+            mainFrameController.handleCreateImageQuestion();
         }
 
     }
