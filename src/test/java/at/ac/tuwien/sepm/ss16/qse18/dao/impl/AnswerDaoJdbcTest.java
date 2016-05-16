@@ -119,11 +119,10 @@ import static org.mockito.Mockito.*;
         PowerMockito.verifyStatic();
         mockDatabase.getConnection();
     }
-/*
     @Test(expected = DaoException.class)
     public void test_createAnswer_withAlreadyExistingId_Fail() throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE);
+        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE, 0L);
         Answer a = new Answer(1, QuestionType.MULTIPLECHOICE,"Testanswer", true, q);
         adao.createAnswer(a);
         PowerMockito.verifyStatic();
@@ -137,14 +136,14 @@ import static org.mockito.Mockito.*;
 
     @Test
     public void test_createAnswer_withValidAnswer() throws Exception {
-        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE);
+        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE, 0L);
         Answer a = new Answer(-1, QuestionType.MULTIPLECHOICE,"Testanswer", true, q);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         adao.createAnswer(a);
         verify(mockPreparedStatement).executeUpdate();
     }
-*/
+
     @Test(expected =  DaoException.class)
     public void test_updateAnswer_withNull_Fail() throws Exception {
         adao.updateAnswer(null);
