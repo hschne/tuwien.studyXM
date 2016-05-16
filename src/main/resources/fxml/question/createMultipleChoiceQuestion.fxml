@@ -76,7 +76,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button fx:id="buttonCreateQuestion" mnemonicParsing="false" style="-fx-background-color: #22374A;" text="create question" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+                        <Button fx:id="buttonCreateQuestion" defaultButton="true" mnemonicParsing="false" onAction="#createQuestion" style="-fx-background-color: #22374A;" text="create question" textFill="WHITE" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP">
                            <font>
                               <Font name="Arial Bold" size="18.0" />
                            </font>
@@ -100,19 +100,19 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField fx:id="labelAnswerOne" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="add answer one here...">
+                        <TextField fx:id="textfieldAnswerOne" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="add answer one here...">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="labelAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer two here..." GridPane.rowIndex="1">
+                        <TextField fx:id="textfieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer two here..." GridPane.rowIndex="1">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="labelAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer three here..." GridPane.rowIndex="2">
+                        <TextField fx:id="textfieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer three here..." GridPane.rowIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="labelAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer four here..." GridPane.rowIndex="3">
+                        <TextField fx:id="textfieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer four here..." GridPane.rowIndex="3">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
