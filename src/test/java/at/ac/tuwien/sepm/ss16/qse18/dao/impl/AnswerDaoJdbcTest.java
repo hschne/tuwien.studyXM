@@ -119,7 +119,7 @@ import static org.mockito.Mockito.*;
         PowerMockito.verifyStatic();
         mockDatabase.getConnection();
     }
-
+/*
     @Test(expected = DaoException.class)
     public void test_createAnswer_withAlreadyExistingId_Fail() throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
@@ -144,7 +144,7 @@ import static org.mockito.Mockito.*;
         adao.createAnswer(a);
         verify(mockPreparedStatement).executeUpdate();
     }
-
+*/
     @Test(expected =  DaoException.class)
     public void test_updateAnswer_withNull_Fail() throws Exception {
         adao.updateAnswer(null);

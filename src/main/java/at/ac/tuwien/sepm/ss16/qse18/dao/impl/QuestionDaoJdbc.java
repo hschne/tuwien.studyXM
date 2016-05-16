@@ -32,8 +32,7 @@ public class QuestionDaoJdbc implements QuestionDao {
     private final String UPDATE_QUESTION = "UPDATE ENTITY_QUESTION SET TYPE=?, QUESTION=?, "
         + "QUESTION_TIME WHERE QUESTIONID=?";
     private final String CREATE_QUESTION = "INSERT INTO ENTITY_QUESTION " +
-        "(TYPE, ANSWER, IS_CORRECT, QUESTION_TIME) " +
-        "VALUES (?, ?, ?, ?)";
+            "(TYPE, QUESTION, QUESTION_TIME) " + "VALUES (?, ?, ?)";
     private final String DELETE_QUESTION = "DELETE FROM ENTITY_QUESTION WHERE QUESTIONID=?";
 
     @Autowired QuestionDaoJdbc(DataBaseConnection database){

@@ -33,8 +33,8 @@ import java.util.List;
  *
  * @author Julian on 14.05.2016.
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateImageQuestionController
-        implements GuiController{
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class CreateImageQuestionController implements GuiController{
 
     @FXML public Button buttonCreateQuestion;
     @FXML public Button buttonAddImage;
@@ -117,7 +117,8 @@ import java.util.List;
      */
     private Question newQuestionFromFields()
     {
-        return new Question(textFieldImagePath.getText().toString(),QuestionType.NOTECARD);
+        // Question_Time is set to 1 for now because this parameter was added later and is not in the Mockup
+        return new Question(textFieldImagePath.getText().toString(),QuestionType.NOTECARD,1);
     }
 
     /**
@@ -167,8 +168,11 @@ import java.util.List;
     public void selectImage() throws IOException{
 
         FileChooser fileChooser = new FileChooser();
+        File defaultDirectory = new File("src/main/resources/images"); // Review: could this cause problems?
+        fileChooser.setInitialDirectory(defaultDirectory);
+
         fileChooser.setTitle("Add image");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("*.png", "*.jpg"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
@@ -179,6 +183,7 @@ import java.util.List;
     }
 
     public void setPrimaryStage(Stage primaryStage) {
+
         this.primaryStage = primaryStage;
     }
 

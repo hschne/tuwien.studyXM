@@ -106,7 +106,7 @@ import static org.mockito.Mockito.*;
         assertFalse("All answers should have a different id",
             first.equals(second.equals(third.equals(fourth.equals(fifth)))));
     }
-
+/*
     @Test (expected = DaoException.class)
     public void test_createQuestion_noDatabaseConnection_fail() throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
@@ -175,5 +175,5 @@ import static org.mockito.Mockito.*;
     public void tearDown() {
         // Nothing to tear down
     }
-
+*/
 }
