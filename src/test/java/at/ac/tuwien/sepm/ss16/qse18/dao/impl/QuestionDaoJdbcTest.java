@@ -106,18 +106,18 @@ import static org.mockito.Mockito.*;
         assertFalse("All answers should have a different id",
             first.equals(second.equals(third.equals(fourth.equals(fifth)))));
     }
-/*
+
     @Test (expected = DaoException.class)
     public void test_createQuestion_noDatabaseConnection_fail() throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE));
+        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L));
         PowerMockito.verifyStatic();
         mockPreparedStatement.executeUpdate();
     }
 
     @Test (expected = DaoException.class)
     public void test_createQuestion_withAlreadyExistingId_fail() throws Exception {
-        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE));
+        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
     }
 
     @Test (expected = DaoException.class)
@@ -133,7 +133,7 @@ import static org.mockito.Mockito.*;
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         when(mockResultSet.getInt(1)).thenReturn(1);
-        Question input = new Question("TestQuestion", QuestionType.MULTIPLECHOICE);
+        Question input = new Question("TestQuestion", QuestionType.MULTIPLECHOICE, 0L);
         Question q = qdao.createQuestion(input);
         assertTrue("Question should have received primary key", q.getQuestionId() == 1);
     }
@@ -141,12 +141,12 @@ import static org.mockito.Mockito.*;
     @Test (expected = DaoException.class)
     public void test_updateQuestion_noDatabaseConnection_fail() throws Exception {
         when(mockDatabase.getConnection()).thenThrow(SQLException.class);
-        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE));
+        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
     }
 
     @Test (expected = DaoException.class)
     public void test_updateQuestion_invalidId_fail() throws Exception {
-        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE));
+        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L));
     }
 
     @Test (expected = DaoException.class)
@@ -157,23 +157,22 @@ import static org.mockito.Mockito.*;
     @Test (expected = DaoException.class)
     public void test_deleteQuestion_noDatabaseConnection_fail() throws Exception {
         when(mockDatabase.getConnection()).thenThrow(SQLException.class);
-        qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE));
+        qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
     }
 
     @Test
     public void test_deleteQuestion_valid() throws Exception {
-        qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE));
+        qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
         verify(mockPreparedStatement).executeUpdate();
     }
 
     @Test (expected = DaoException.class)
     public void test_deleteQuestion_invalid() throws Exception {
-        qdao.deleteQuestion(new Question("", QuestionType.MULTIPLECHOICE));
+        qdao.deleteQuestion(new Question("", QuestionType.MULTIPLECHOICE, 0L));
     }
 
     @After
     public void tearDown() {
         // Nothing to tear down
     }
-*/
 }

@@ -7,21 +7,13 @@ public class Question {
     private long questionTime;
 
     public Question() {
-
+        //Only needed for unit testing!
     }
 
     public Question(int questionId, String question, QuestionType type, long questionTime) {
         this.questionId = questionId;
         this.question = question;
         this.type = type;
-        this.questionTime = questionTime;
-    }
-
-    public long getQuestionTime() {
-        return questionTime;
-    }
-
-    public void setQuestionTime(long questionTime) {
         this.questionTime = questionTime;
     }
 
@@ -32,6 +24,14 @@ public class Question {
         this.type = type;
         this.questionTime = questionTime;
 
+    }
+
+    public long getQuestionTime() {
+        return questionTime;
+    }
+
+    public void setQuestionTime(long questionTime) {
+        this.questionTime = questionTime;
     }
 
     public int getQuestionId() {
