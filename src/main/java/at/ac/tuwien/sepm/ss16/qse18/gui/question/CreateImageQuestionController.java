@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -52,6 +53,7 @@ public class CreateImageQuestionController implements GuiController{
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
+    @Autowired MainFrameController mainFrameController;
 
     private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
     private AlertBuilder alertBuilder;
@@ -105,10 +107,12 @@ public class CreateImageQuestionController implements GuiController{
                 answerService.createAnswer(a);
             }
             questionService.setCorrespondingAnswers(newQuestion,answerList);
-
         } catch (ServiceException e) {
             showAlert(e);
+            return;
         }
+        showSuccess("Inserted new question into database.");
+        mainFrameController.handleHome();
     }
 
     /**
@@ -193,6 +197,16 @@ public class CreateImageQuestionController implements GuiController{
                 .title("Error")
                 .headerText("An error occured")
                 .contentText(e.getMessage())
+                .build();
+        alert.showAndWait();
+    }
+
+    private void showSuccess(String msg) {
+        Alert alert = alertBuilder
+                .alertType(Alert.AlertType.INFORMATION)
+                .title("Success")
+                .headerText("The operation was successful!")
+                .contentText(msg)
                 .build();
         alert.showAndWait();
     }

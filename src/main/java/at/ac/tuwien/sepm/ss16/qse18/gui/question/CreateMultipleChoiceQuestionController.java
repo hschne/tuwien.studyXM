@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -45,6 +46,7 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
     @FXML private Button buttonCreateQuestion;
+    @Autowired MainFrameController mainFrameController;
 
     @Override
     public void setPrimaryStage(Stage primaryStage) {
@@ -77,6 +79,7 @@ import java.util.List;
         }
 
         showSuccess("Inserted new question into database.");
+        mainFrameController.handleHome();
     }
 
     private List<Answer> newAnswersFromField() {
