@@ -31,7 +31,7 @@ INSERT INTO entity_topic VALUES(DEFAULT,'topic1'),(DEFAULT,'topic2'),(DEFAULT,'t
 --Insert for subject_topic
 INSERT INTO rel_subject_topic VALUES(1,2),(3,4),(2,6),(2,5),(2,2),(3,5);
 --Insert for question
-INSERT INTO entity_question VALUES(DEFAULT,'Was ist die Antwort auf alle Fragen?',1),(DEFAULT,'Wieviel ergibt 1+1?',1),(DEFAULT,'Wer war der erste US Präsident?',1),(DEFAULT,'Wie heißt die Hauptstadt von Österreich',1),(DEFAULT,'Erklaeren Sie dieses Bild!',3),(DEFAULT,'Definieren Sie den Begriff Schokolade!',2);
+INSERT INTO entity_question VALUES(DEFAULT,'Was ist die Antwort auf alle Fragen?',1,1),(DEFAULT,'Wieviel ergibt 1+1?',1,1),(DEFAULT,'Wer war der erste US Präsident?',1,1),(DEFAULT,'Wie heißt die Hauptstadt von Österreich',1,1),(DEFAULT,'Erklaeren Sie dieses Bild!',1,3),(DEFAULT,'Definieren Sie den Begriff Schokolade!',1,2);
 --Insert for exam_question
 INSERT INTO rel_exam_question VALUES(1,1,TRUE,TRUE),(1,2,FALSE,TRUE),(2,2,FALSE,FALSE),(3,2,TRUE,TRUE),(4,1,FALSE,FALSE),(6,1,TRUE,TRUE);
 --Insert for question_topic
