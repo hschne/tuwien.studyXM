@@ -63,11 +63,9 @@ import java.util.List;
 
     @FXML public void createQuestion() {
         logger.info("Now creating new question");
-        Question newQuestion = new Question(textAreaQuestion.getText(),
-            QuestionType.MULTIPLECHOICE,
-            0L);
+        Question newQuestion = null;
         try {
-            newQuestion = questionService.createQuestion(newQuestion);
+            newQuestion = questionService.createQuestion(newQuestionFromField());
         } catch (ServiceException e) {
             showAlert(e);
             return;
@@ -76,13 +74,23 @@ import java.util.List;
             questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
         } catch(ServiceException e) {
             showAlert(e);
+            return;
         }
 
         showSuccess("Inserted new question into database.");
         mainFrameController.handleHome();
     }
 
-    private List<Answer> newAnswersFromField() {
+    private Question newQuestionFromField() throws ServiceException {
+        logger.info("Collecting question from field.");
+        if(textAreaQuestion.getText().isEmpty()) {
+            throw new ServiceException("The question must not be empty.");
+        }
+
+        return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 0L);
+    }
+
+    private List<Answer> newAnswersFromField() throws ServiceException {
         logger.debug("Collecting all answers");
         List<Answer> newAnswers = new LinkedList<>();
         if(!textfieldAnswerOne.getText().isEmpty()) {
@@ -105,7 +113,18 @@ import java.util.List;
                 textfieldAnswerFour.getText(),
                 checkBoxAnswerFour.isSelected()));
         }
-        return newAnswers;
+
+        if(newAnswers.isEmpty()) {
+            throw new ServiceException("At least one answer must be given.");
+        }
+
+        for(Answer a : newAnswers) {
+            if(a.isCorrect()) {
+                return newAnswers;
+            }
+        }
+
+        throw new ServiceException("At least one question must be true.");
     }
 
     private void showAlert(ServiceException e) {
