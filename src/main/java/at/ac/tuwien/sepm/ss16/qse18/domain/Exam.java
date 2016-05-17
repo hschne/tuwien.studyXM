@@ -62,4 +62,10 @@ public class Exam {
     public void setExamQuestions(List<Question> examQuestions) {
         this.examQuestions = examQuestions;
     }
+
+    @Override public String toString(){
+        return "Exam{" + "examID=" + this.examid + ", created=" + this.getCreated() + ", passed="
+            + this.getPassed() + ", author= \"" + this.getAuthor() + "\", subjectID="+ this.getSubjectID()
+            + "}"; //TODO anpassen nachdem Question dazu gemerged wurde
+    }
 }
