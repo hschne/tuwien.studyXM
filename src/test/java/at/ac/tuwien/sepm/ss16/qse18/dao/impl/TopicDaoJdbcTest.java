@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.junit.After;
 import org.junit.Before;
@@ -111,7 +112,7 @@ import static org.mockito.Mockito.*;
     @Test (expected = DaoException.class)
     public void test_createTopic_withNoDataBaseConnection_Fail() throws Exception{
         when(mockDatabase.getConnection()).thenThrow(SQLException.class);
-        dao.createTopic(new Topic());
+        dao.createTopic(new Topic(),new Subject());
         PowerMockito.verifyStatic();
         mockDatabase.getConnection();
     }
@@ -120,14 +121,14 @@ import static org.mockito.Mockito.*;
     public void test_createTopic_withAlreadyExistingId_Fail() throws Exception{
         when(mockConnection.prepareStatement(anyString(), anyInt())).thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        dao.createTopic(new Topic(1,"TestTopic"));
+        dao.createTopic(new Topic(1,"TestTopic"),new Subject());
         PowerMockito.verifyStatic();
         mockDatabase.getConnection();
     }
 
     @Test (expected = DaoException.class)
     public void test_createTopic_withNull_Fail() throws Exception{
-        dao.createTopic(null);
+        dao.createTopic(null,new Subject());
     }
 
     @Test
@@ -138,9 +139,10 @@ import static org.mockito.Mockito.*;
         when(mockResultSet.getInt(anyInt())).thenReturn(1);
         when(mockResultSet.getString(anyString())).thenReturn("TestTopic");
 
-        Topic t = dao.createTopic(new Topic(1,"TestTopic"));
+        Topic t = dao.createTopic(new Topic(1,"TestTopic"),new Subject());
         assertTrue("Created topic should be returned with name 'TestTopic'",t.getTopic().equals("TestTopic"));
-        verify(mockPreparedStatement).executeUpdate();
+        verify(mockPreparedStatement,times(2)).executeUpdate();
+
 
     }
 
@@ -169,7 +171,7 @@ import static org.mockito.Mockito.*;
     @Test
     public void test_deleteTopic_withValidTopic() throws Exception{
         dao.deleteTopic(new Topic(1,"TestTopic"));
-        verify(mockPreparedStatement).executeUpdate();
+        verify(mockPreparedStatement,times(2)).executeUpdate();
     }
 
     /*tests updateTopic(Topic topic)*/

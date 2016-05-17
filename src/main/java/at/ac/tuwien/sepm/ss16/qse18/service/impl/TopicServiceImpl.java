@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.TopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.TopicDaoJdbc;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
@@ -47,10 +48,10 @@ public class TopicServiceImpl implements TopicService {
     }
 
     @Override
-    public Topic createTopic(Topic topic) throws ServiceException {
+    public Topic createTopic(Topic topic,Subject subject) throws ServiceException {
         //TODO verify topic
         try{
-            return topicDao.createTopic(topic);
+            return topicDao.createTopic(topic,subject);
         }
         catch (DaoException e){
             logger.error(e);

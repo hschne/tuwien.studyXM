@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 
 import java.util.List;
@@ -28,11 +29,12 @@ public interface TopicService {
     /**
      * This method creates a new {@param topic}
      *
-     * @param topic The subject to create
+     * @param topic The topic to create
+     * @param subject the subject to which the topic was created
      * @return The created subject
      * @throws ServiceException if a DaoException is caught
      */
-    Topic createTopic(Topic topic) throws ServiceException;
+    Topic createTopic(Topic topic,Subject subject) throws ServiceException;
 
     /**
      * This method deletes the {@param topic}

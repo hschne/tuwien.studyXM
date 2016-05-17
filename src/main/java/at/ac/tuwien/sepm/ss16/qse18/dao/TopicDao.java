@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 
 import java.util.List;
@@ -28,14 +29,16 @@ public interface TopicDao {
     List<Topic> getTopics() throws DaoException;
 
     /**
-     * Creates a topic with values from parameter {@param topic}.
+     * Creates a topic with values from parameter {@param topic}.This method calls another method
+     * that creates the relation of the topic to a subject it was created for.
      *
      * @param topic DTO that contains information for the topic that is created
+     * @param subject subject to which the topic is created
      * @return the topic that is created with the resource generated topicid
      * @throws DaoException if there is no connection to the resource, or if a topic with the
      * topicid of {@param topic} already exists
      */
-    Topic createTopic(Topic topic) throws DaoException;
+    Topic createTopic(Topic topic, Subject subject) throws DaoException;
 
     /**
      * Deletes an existing topic. The topic to be deleted is specified in {@param topic}.
