@@ -59,7 +59,6 @@ public class Subject {
 
     public void setAuthor(String author) {
         this.author = author;
-
     }
 
     public int getTimeSpent() {

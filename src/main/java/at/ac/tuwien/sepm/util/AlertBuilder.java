@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.util;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import javafx.stage.Window;
@@ -8,14 +9,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+import static javafx.scene.layout.Region.USE_PREF_SIZE;
+
 /**
  * A helper class to create any kind of {@link Alert} dialogs.
  * The helper class follows the builder pattern and allows a fluent creation of {@link Alert} dialogs.
  *
  * @author Dominik Moser
  */
-@Component
-public class AlertBuilder {
+@Component public class AlertBuilder {
 
     private Logger LOG = LoggerFactory.getLogger(AlertBuilder.class);
 
@@ -27,6 +29,7 @@ public class AlertBuilder {
     private Window owner;
     private Modality modality = Modality.NONE;
     private StageStyle stageStyle = StageStyle.DECORATED;
+    private boolean resizable;
 
     /**
      * Set the type of the {@link Alert}.
@@ -110,6 +113,17 @@ public class AlertBuilder {
     }
 
     /**
+     * Uses a solution from StackOverflow to adjust size of {@link Alert}
+     * http://stackoverflow.com/questions/28937392/javafx-alerts-and-their-size
+     * @param resizable if the dialog should automatically resize, default is false
+     * @return the dialog builder
+     */
+    public AlertBuilder setResizable(boolean resizable) {
+        this.resizable = resizable;
+        return this;
+    }
+
+    /**
      * Build the {@link Alert} dialog which can then be shown to the user.
      *
      * @return the built alert dialog
@@ -123,19 +137,22 @@ public class AlertBuilder {
         alert.initOwner(this.owner);
         alert.initModality(this.modality);
         alert.initStyle(this.stageStyle);
+        if (resizable) {
+            alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label)
+                .forEach(node -> ((Label) node).setMinHeight(USE_PREF_SIZE));
+        }
         return alert;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "AlertBuilder{" +
-                "alertType=" + alertType +
-                ", title='" + title + '\'' +
-                ", headerText='" + headerText + '\'' +
-                ", contentText='" + contentText + '\'' +
-                ", owner=" + owner +
-                ", modality=" + modality +
-                ", stageStyle=" + stageStyle +
-                '}';
+            "alertType=" + alertType +
+            ", title='" + title + '\'' +
+            ", headerText='" + headerText + '\'' +
+            ", contentText='" + contentText + '\'' +
+            ", owner=" + owner +
+            ", modality=" + modality +
+            ", stageStyle=" + stageStyle +
+            '}';
     }
 }
