@@ -3,11 +3,13 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -21,11 +23,49 @@ public class QuestionDaoJdbc implements QuestionDao {
     private ConnectionH2 database;
     private Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
 
-    @Autowired QuestionDaoJdbc(ConnectionH2 database){
+    @Autowired public QuestionDaoJdbc(ConnectionH2 database){
         this.database = database;
     }
 
     @Override public Question getQuestion(int id) {
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Question question;
+
+        try{
+            pstmt = this.database.getConnection().prepareStatement("Select * from entity_question where questionid = ?");
+            pstmt.setInt(1, id);
+            rs = pstmt.executeQuery();
+
+            if(rs.next()){
+                question = new Question();
+                question.setQuestionid(rs.getInt("questionid"));
+                question.setQuestion(rs.getString("question"));
+                question.setType(rs.getInt("type"));
+                question.setQuestionTime(rs.getLong("question_time"));
+
+                return question;
+            }
+
+        }catch (SQLException e){
+            e.getMessage();
+        }finally {
+            if(rs != null){
+                try {
+                    rs.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            if(pstmt != null){
+                try{
+                    pstmt.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
         return null;
     }
 

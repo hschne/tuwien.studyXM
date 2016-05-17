@@ -11,9 +11,9 @@ import java.util.Map;
  */
 public interface ExamQuestionDao {
     void create(Exam exam, Question question) throws DaoException;
-    void delete(Exam exam, Question question) throws DaoException;
+    void delete(Exam exam) throws DaoException;
 
-    Map<Boolean, Boolean> getAllQuestionBooleans(int examID) throws DaoException;
+    List<Boolean> getAllQuestionBooleans(List<Integer> questionList) throws DaoException;
     List<Integer> getAllQuestionID(int examID) throws DaoException;
 
 }

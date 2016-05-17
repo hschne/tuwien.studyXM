@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Zhang Haixiang
@@ -12,7 +13,7 @@ public class Exam {
     private boolean passed;
     private String author;
     private int subjectID;
-    private ArrayList<Question> examQuestions = new ArrayList<Question>();
+    private List<Question> examQuestions = new ArrayList<Question>();
 
     public int getExamid(){
         return this.examid;
@@ -54,11 +55,11 @@ public class Exam {
         this.author = author;
     }
 
-    public ArrayList<Question> getExamQuestions() {
+    public List<Question> getExamQuestions() {
         return examQuestions;
     }
 
-    public void setExamQuestions(ArrayList<Question> examQuestions) {
+    public void setExamQuestions(List<Question> examQuestions) {
         this.examQuestions = examQuestions;
     }
 }

@@ -6,7 +6,15 @@ public class Question {
     private int questionid;
     private String question;
     private int type;
+    private long questionTime;
 
+    public long getQuestionTime() {
+        return questionTime;
+    }
+
+    public void setQuestionTime(long questionTime) {
+        this.questionTime = questionTime;
+    }
 
     public int getQuestionid() {
         return questionid;

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface ExamDao {
 
-    Exam create(Exam exam, ArrayList<Question> questions) throws DaoException;
+    Exam create(Exam exam, List<Question> questions) throws DaoException;
     Exam delete(Exam exam) throws DaoException;
     Exam getExam(int examID) throws DaoException;
     List<Exam> getExams() throws DaoException;

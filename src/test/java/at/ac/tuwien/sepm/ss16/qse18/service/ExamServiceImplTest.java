@@ -1,9 +1,14 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
+import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExamDaoJdbc;
+import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExamQuestionDaoJdbc;
+import at.ac.tuwien.sepm.ss16.qse18.dao.impl.QuestionDaoJdbc;
+import at.ac.tuwien.sepm.ss16.qse18.dao.impl.SubjectQuestionDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
 import org.junit.After;
@@ -26,10 +31,13 @@ import static org.mockito.Mockito.verify;
     @Mock private ExamDaoJdbc mockExamDaoJdbc;
     private ExamServiceImpl examService;
     private Exam exam;
+    private Topic topic;
 
 
     @Before public void setUp() throws Exception {
-        this.examService = new ExamServiceImpl(this.mockExamDaoJdbc);
+        this.examService = new ExamServiceImpl(this.mockExamDaoJdbc,
+            new SubjectQuestionDaoJdbc(new ConnectionH2()), new ExamQuestionDaoJdbc(new ConnectionH2()),
+            new QuestionDaoJdbc(new ConnectionH2()));
 
         ArrayList<Question> al = new ArrayList<Question>(){};
         Question question = new Question();
@@ -40,6 +48,10 @@ import static org.mockito.Mockito.verify;
 
         this.exam = createDummyExam(1, "auhtor");
         exam.setExamQuestions(al);
+
+        this.topic = new Topic();
+        topic.setTopic("Topic1");
+        topic.setTopicId(1);
     }
 
     //Testing getSubject(int)
@@ -54,7 +66,7 @@ import static org.mockito.Mockito.verify;
     }
 
     @Test public void testIf_createExam_callsRightMethodInDao() throws Exception {
-        this.examService.createExam(this.exam);
+        this.examService.createExam(this.exam, topic, 1000);
         verify(this.mockExamDaoJdbc).create(this.exam, this.exam.getExamQuestions());
     }
 
@@ -62,13 +74,13 @@ import static org.mockito.Mockito.verify;
     public void test_createExam_invalidAuthorThrowsException() throws Exception {
         Exam fail = createDummyExam(2, "");
 
-        this.examService.createExam(fail);
+        this.examService.createExam(fail, topic, 1000);
     }
 
     @Test(expected = ServiceException.class)
     public void test_createExam_ExamIDThrowsException() throws Exception {
         Exam fail = createDummyExam(-2, "Author2");
-        this.examService.createExam(fail);
+        this.examService.createExam(fail, topic, 1000);
     }
 
 
@@ -91,5 +103,10 @@ import static org.mockito.Mockito.verify;
 
         return exam;
     }
+
+    //Testing getRightQuestions(exam, int, int)
+    //----------------------------------------------------------------------------------------------
+
+    //----------------------------------------------------------------------------------------------
 
 }

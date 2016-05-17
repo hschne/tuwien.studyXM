@@ -29,7 +29,7 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         this.database = database;
     }
 
-    @Override public List<Integer> getAllQuestionsOfSubject(Exam exam) throws DaoException {
+    @Override public List<Integer> getAllQuestionsOfSubject(Exam exam, int topicID) throws DaoException {
         logger.debug("entering method getAllQuestionsOfSubject with parameters {}", exam);
         ArrayList<Integer> questionIDList = new ArrayList<>();
 
@@ -42,9 +42,12 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         ResultSet rs = null;
 
         try{
-            pstmt = this.database.getConnection().prepareStatement("Select * from (rel_subject_topic st "
-                + "join entity_exam e on st.subjectid = e.subject) natural join rel_question_topic");
+            pstmt = this.database.getConnection().prepareStatement("Select * from rel_subject_topic "
+                + "natural join rel_question_topic tc "
+                + "where tc.topicid = ? and subjectid = ? order by questionid asc");
 
+            pstmt.setInt(1, exam.getSubjectID());
+            pstmt.setInt(2, topicID);
             rs = pstmt.executeQuery();
 
             while(rs.next()){

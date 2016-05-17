@@ -32,7 +32,7 @@ public class ExamDaoJdbc implements ExamDao{
         this.examQuestionDao = examQuestionDao;
     }
 
-    @Override public Exam create(Exam exam, ArrayList<Question> questions) throws DaoException {
+    @Override public Exam create(Exam exam, List<Question> questions) throws DaoException {
         logger.debug("entering method create with parameters {}", exam);
 
         if (!DTOValidator.validate(exam)) {
@@ -89,6 +89,9 @@ public class ExamDaoJdbc implements ExamDao{
             pstmt = this.database.getConnection().prepareStatement("Delete from entity_exam where examid = ? and created = ?"
                 + "and passed = ? and author = ? and subject = ?");
 
+            examQuestionDao.delete(exam);
+
+
             pstmt.setInt(1, exam.getExamid());
             pstmt.setTimestamp(2, exam.getCreated());
             pstmt.setBoolean(3, exam.getPassed());
@@ -96,9 +99,7 @@ public class ExamDaoJdbc implements ExamDao{
             pstmt.setInt(5, exam.getSubjectID());
             pstmt.executeUpdate();
 
-            for (Question q : exam.getExamQuestions()) {
-                examQuestionDao.delete(exam, q);
-            }
+
 
         }catch(SQLException e){
             logger.error("SQL Exception in delete with parameters {}", exam, e);

@@ -10,5 +10,5 @@ import java.util.List;
  * @author Zhang Haixiang
  */
 public interface SubjectQuestionDao {
-    List<Integer> getAllQuestionsOfSubject(Exam exam)throws DaoException;
+    List<Integer> getAllQuestionsOfSubject(Exam exam, int topicID)throws DaoException;
 }

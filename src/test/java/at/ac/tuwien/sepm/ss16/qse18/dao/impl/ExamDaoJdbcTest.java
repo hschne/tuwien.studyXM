@@ -112,7 +112,7 @@ import static org.mockito.Mockito.when;
         exam = this.examDaoJdbc.delete(this.testExam);
 
         verify(this.mockPreparedStatement).executeUpdate();
-        verify(this.mockExamQuestionDao).delete(this.testExam, this.testExam.getExamQuestions().get(0));
+        verify(this.mockExamQuestionDao).delete(this.testExam);
         assertSame("Exam Objects should be the same", exam, testExam);
     }
 
