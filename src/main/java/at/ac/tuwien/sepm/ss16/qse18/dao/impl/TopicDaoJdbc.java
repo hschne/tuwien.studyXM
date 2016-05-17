@@ -118,20 +118,18 @@ public class TopicDaoJdbc implements TopicDao {
     }
 
     @Override
-    public Topic deleteTopic(Topic topic) throws DaoException {
+    public boolean deleteTopic(Topic topic) throws DaoException {
         logger.debug("Entering deleteTopic with parameters {}",topic);
         if(topic == null){
             throw new DaoException("Topic must not be null");
         }
 
-        Topic deletedTopic = null;
         PreparedStatement pstmt = null;
 
         try{
             pstmt = database.getConnection().prepareStatement(DELETE_SQL);
             pstmt.setInt(1,topic.getTopicId());
             pstmt.executeUpdate();
-            deletedTopic = topic;
         }
         catch (SQLException e){
             logger.error("Could not delete " + topic,e);
@@ -140,7 +138,7 @@ public class TopicDaoJdbc implements TopicDao {
         finally {
             closeStatementAndResultSet(pstmt,null);
         }
-        return deletedTopic;
+        return true;
     }
 
     @Override

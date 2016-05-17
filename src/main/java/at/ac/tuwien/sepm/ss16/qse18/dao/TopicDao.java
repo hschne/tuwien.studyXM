@@ -41,11 +41,11 @@ public interface TopicDao {
      * Deletes an existing topic. The topic to be deleted is specified in {@param topic}.
      *
      * @param topic DTO that contains information for the topic to be delete
-     * @return the topic that is deleted
+     * @return True if topic is delted, false if operation failed
      * @throws DaoException if there is no connection to the resource, or if a topic with the
      * topicid of {@param topic} does not exist
      */
-    Topic deleteTopic(Topic topic) throws DaoException;
+    boolean deleteTopic(Topic topic) throws DaoException;
 
     /**
      * Updates an existing topic. The topic to be updated is specified in {@param topic}.
