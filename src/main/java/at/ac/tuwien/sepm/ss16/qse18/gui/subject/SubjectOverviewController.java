@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
@@ -20,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -32,8 +34,10 @@ import java.util.stream.Collectors;
  *
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectOverviewController {
+@Component  public class SubjectOverviewController
+    implements GuiController {
 
+    @Autowired ApplicationContext applicationContext;
 
     @FXML public ListView<ObservableSubject> subjectListView;
 
@@ -61,7 +65,7 @@ import java.util.stream.Collectors;
                     .collect(Collectors.toList());
             subjectList = FXCollections.observableArrayList(observableSubjects);
             subjectListView.setItems(subjectList);
-            subjectListView.setCellFactory(listView -> new SubjectCell());
+            subjectListView.setCellFactory(listView -> applicationContext.getBean(SubjectCell.class));
         } catch (ServiceException e) {
             showAlert(e);
         }

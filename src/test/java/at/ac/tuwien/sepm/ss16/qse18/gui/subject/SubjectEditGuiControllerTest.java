@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Hans-Joerg Schroedl
  */
-@RunWith(MockitoJUnitRunner.class) public class SubjectEditControllerTest {
+@RunWith(MockitoJUnitRunner.class) public class SubjectEditGuiControllerTest {
 
     @Rule public JavaFxThreadingRule javafxRule = new JavaFxThreadingRule();
     private SubjectEditController controller;

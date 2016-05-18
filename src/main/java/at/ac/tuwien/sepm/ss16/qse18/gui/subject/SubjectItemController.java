@@ -1,40 +1,27 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
-
-import java.io.IOException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Hans-Joerg Schroedl
  */
-public class SubjectItemController {
+@Component public class SubjectItemController {
 
     @FXML public Node root;
+
     @FXML Label name;
+
+    @Autowired MainFrameController mainFrameController;
+
     private ObservableSubject subject;
 
-    public SubjectItemController(ObservableSubject subject) {
-        this.subject = subject;
-        loadGui();
-        loadFields();
-    }
-
-    private void loadGui() {
-        FXMLLoader fxmlLoader =
-            new FXMLLoader(getClass().getResource("/fxml/subject/subjectItem.fxml"));
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void loadFields() {
+    public void loadFields() {
         name.setText(subject.getName());
     }
 
@@ -47,8 +34,16 @@ public class SubjectItemController {
 
     }
 
-    @FXML public void handleDelete(){
+    @FXML public void handleDelete() {
 
+    }
+
+    @FXML public void handleEditQuestions(){
+        mainFrameController.handleQuestionOverview(subject);
+    }
+
+    public void setSubject(ObservableSubject subject) {
+        this.subject = subject;
     }
 
     public Node getRoot() {
