@@ -1,5 +1,10 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
+import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -42,47 +47,44 @@ import java.io.IOException;
         this.primaryStage = primaryStage;
     }
 
-    private void setSubView(String fxmlPath) {
+    private <T extends GuiController> T setSubView(String fxmlPath, Class T) throws IOException {
         logger.debug("Loading view from " + fxmlPath);
-        SpringFXMLLoader.FXMLWrapper<Object, SubjectOverviewController> mfWrapper;
-        try {
-            mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, SubjectOverviewController.class);
-            SubjectOverviewController controller = mfWrapper.getController();
-            controller.setPrimaryStage(primaryStage);
-            paneContent.getChildren().clear();
-            Pane pane = (Pane) mfWrapper.getLoadedObject();
-            pane.setPrefWidth(paneContent.getWidth());
-            pane.setPrefHeight(paneContent.getHeight());
-            AnchorPane.setTopAnchor(pane, 0.0);
-            AnchorPane.setRightAnchor(pane, 0.0);
-            AnchorPane.setLeftAnchor(pane, 0.0);
-            AnchorPane.setBottomAnchor(pane, 0.0);
-            paneContent.getChildren().add(pane);
-        } catch (IOException e) {
-            logger.error(e);
-            Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-                .headerText("Could not load sub view").contentText("Please view logs for details")
-                .build();
-            alert.showAndWait();
-        }
+        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
+        T controller = mfWrapper.getController();
+        controller.setPrimaryStage(primaryStage);
+        configureSubPane(mfWrapper);
+        return controller;
+    }
+
+    private <T extends GuiController> void configureSubPane(
+        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper) {
+        paneContent.getChildren().clear();
+        Pane pane = (Pane) mfWrapper.getLoadedObject();
+        pane.setPrefWidth(paneContent.getWidth());
+        pane.setPrefHeight(paneContent.getHeight());
+        AnchorPane.setTopAnchor(pane, 0.0);
+        AnchorPane.setRightAnchor(pane, 0.0);
+        AnchorPane.setLeftAnchor(pane, 0.0);
+        AnchorPane.setBottomAnchor(pane, 0.0);
+        paneContent.getChildren().add(pane);
     }
 
     @FXML public void handleHome() {
         logger.debug("Loading home view");
-        //TODO: Properly load using setSubView
-        paneContent.getChildren().clear();
         try {
-            paneContent.getChildren().clear();
-            Pane subRoot = (Pane) fxmlLoader.load("/fxml/createMultipleChoiceQuestion.fxml");
-            paneContent.getChildren()
-                .add(subRoot);
+            setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            handleException(e);
         }
     }
 
     @FXML public void handleSubjects() {
-        setSubView("/fxml/subject/subjectOverview.fxml");
+        logger.debug("Loading subject view");
+        try {
+            setSubView("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
+        } catch (IOException e) {
+            handleException(e);
+        }
     }
 
     @FXML public void handleResources() {
@@ -92,4 +94,66 @@ import java.io.IOException;
     @FXML public void handleStatistics() {
         //TODO: Display view here
     }
+
+    public void handleQuestionOverview(ObservableSubject subject) {
+        logger.debug("Loading question overview for " + subject.getName());
+        try {
+            QuestionOverviewController controller =
+                setSubView("/fxml/question/questionOverview.fxml",
+                    QuestionOverviewController.class);
+            controller.setSubject(subject);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+
+    public void handleMultipleChoiceQuestion() {
+        logger.debug("Loading Multiple Choice question screen ");
+        try {
+            setSubView("/fxml/question/createMultipleChoiceQuestion.fxml", CreateMultipleChoiceQuestionController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleSingleChoiceQuestion() {
+        logger.debug("Loading Single Choice question screen ");
+        try {
+            //TODO: create fxml and controller
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleOpenQuestion() {
+        logger.debug("Loading Open question screen ");
+        try {
+            //TODO: create fxml and controller
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateImageQuestion() {
+        logger.debug("Loading Image question screen ");
+        try {
+            setSubView("/fxml/question/createImageQuestion.fxml", CreateImageQuestionController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+
+
+
+
+    private void handleException(Exception e) {
+        logger.error(e);
+        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
+            .headerText("Could not load sub view.")
+            .contentText("Unexpected Error. Please view logs for details.").build();
+        alert.showAndWait();
+    }
+
 }

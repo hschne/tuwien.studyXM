@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -19,13 +21,16 @@ import javafx.scene.control.ListView;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @author Hans-Joerg Schroedl
  */
-public class SubjectItemController {
+@Component public class SubjectItemController {
 
     @FXML public Node root;
+
     @FXML Label name;
     @FXML public ListView<ObservableTopic> topicListView;
 
@@ -35,11 +40,8 @@ public class SubjectItemController {
     private ObservableList<ObservableTopic> topicList;
 
 
-    public SubjectItemController(ObservableSubject subject) {
-        this.subject = subject;
-        loadGui();
-        loadFields();
-    }
+
+    @Autowired MainFrameController mainFrameController;
 
     @FXML
     public void initialize(){
@@ -71,7 +73,7 @@ public class SubjectItemController {
         }
     }
 
-    private void loadFields() {
+    public void loadFields() {
         name.setText(subject.getName());
     }
 
@@ -84,8 +86,16 @@ public class SubjectItemController {
 
     }
 
-    @FXML public void handleDelete(){
+    @FXML public void handleDelete() {
 
+    }
+
+    @FXML public void handleEditQuestions(){
+        mainFrameController.handleQuestionOverview(subject);
+    }
+
+    public void setSubject(ObservableSubject subject) {
+        this.subject = subject;
     }
 
     public Node getRoot() {

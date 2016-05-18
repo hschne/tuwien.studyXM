@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 /**
- * @author Philipp Ganiu
+ * Created by Felix on 10.05.2016.
  */
 public class Topic {
     private int topicId;
