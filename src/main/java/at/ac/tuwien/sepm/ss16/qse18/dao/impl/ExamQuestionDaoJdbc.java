@@ -44,7 +44,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         try {
             pstmt = this.database.getConnection().prepareStatement("Insert into rel_exam_question values(?, ?, ?, ?)");
             pstmt.setInt(1, exam.getExamid());
-            pstmt.setInt(2, question.getQuestionid());
+            pstmt.setInt(2, question.getQuestionId());
             pstmt.setBoolean(3, false);
             pstmt.setBoolean(4, false);
             pstmt.executeUpdate();
@@ -52,7 +52,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         } catch (SQLException e) {
             logger.error("SQL Exception in create with parameters {}", exam, question, e);
             throw new DaoException(
-                "Could not create ExamQuestion with values(" + exam.getExamid() + ", " + question.getQuestionid() + ")");
+                "Could not create ExamQuestion with values(" + exam.getExamid() + ", " + question.getQuestionId() + ")");
 
         } finally {
             try {

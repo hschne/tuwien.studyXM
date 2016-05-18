@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.impl.QuestionDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.SubjectQuestionDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
 import org.junit.After;
@@ -58,8 +59,8 @@ import static org.mockito.Mockito.*;
         ArrayList<Question> al = new ArrayList<Question>(){};
         Question question = new Question();
         question.setQuestion("TestQuestion");
-        question.setQuestionid(1);
-        question.setType(1);
+        question.setQuestionId(1);
+        question.setType(QuestionType.valueOf(1));
         al.add(question);
 
         this.exam = createDummyExam(1, "auhtor");
@@ -166,9 +167,9 @@ import static org.mockito.Mockito.*;
         Question q2 = createDummyQuestion(2, "Question2");
         Question q3 = createDummyQuestion(3, "Question3");
         List<Integer> questionIDList = new ArrayList<>();
-        questionIDList.add(q1.getQuestionid());
-        questionIDList.add(q2.getQuestionid());
-        questionIDList.add(q3.getQuestionid());
+        questionIDList.add(q1.getQuestionId());
+        questionIDList.add(q2.getQuestionId());
+        questionIDList.add(q3.getQuestionId());
         Map<Integer, Boolean> questionBooleans = new HashMap<>();
         questionBooleans.put(1, false);
         questionBooleans.put(2, false);
@@ -269,9 +270,9 @@ import static org.mockito.Mockito.*;
 
     private Question createDummyQuestion(int questionID, String question){
         Question q = new Question();
-        q.setQuestionid(questionID);
+        q.setQuestionId(questionID);
         q.setQuestion(question);
-        q.setType(1);
+        q.setType(QuestionType.valueOf(1));
         q.setQuestionTime(20);
 
         return q;

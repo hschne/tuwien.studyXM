@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -55,8 +56,8 @@ import static org.mockito.Mockito.when;
         ArrayList<Question> al = new ArrayList<Question>(){};
         Question question = new Question();
         question.setQuestion("TestQuestion");
-        question.setQuestionid(1);
-        question.setType(1);
+        question.setQuestionId(1);
+        question.setType(QuestionType.valueOf(1));
         al.add(question);
 
 

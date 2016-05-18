@@ -131,7 +131,7 @@ public class ExamServiceImpl implements ExamService {
 
             for(Map.Entry<Integer, Boolean> e: questionBooleans.entrySet()) {
                 for(int i = 0; i < notAnsweredQuestions.size(); i++){
-                    if(e.getKey() == notAnsweredQuestions.get(i).getQuestionid()){
+                    if(e.getKey() == notAnsweredQuestions.get(i).getQuestionId()){
                         if (e.getValue() == true) {
                             rightAnsweredQuestions.add(temp.get(counter));
                             notAnsweredQuestions.remove(temp.get(counter));

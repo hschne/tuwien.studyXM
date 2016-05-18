@@ -35,7 +35,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             "(TYPE, QUESTION, QUESTION_TIME) " + "VALUES (?, ?, ?)";
     private final String DELETE_QUESTION = "DELETE FROM ENTITY_QUESTION WHERE QUESTIONID=?";
 
-    @Autowired QuestionDaoJdbc(DataBaseConnection database){
+    @Autowired public QuestionDaoJdbc(DataBaseConnection database){
         this.con = database;
     }
 
