@@ -98,6 +98,12 @@ public class ExamServiceImpl implements ExamService {
     }
 
     public List<Question> getRightQuestions(Exam exam, int topicID, int examTime) throws ServiceException{
+        logger.debug("entering method getRigthQuestions with parameters {}", exam, topicID, examTime);
+        if(exam == null || topicID <= 0 || examTime <= 0){
+            logger.error("Service Exception getRightQuestions {}", exam, topicID, examTime);
+            throw new ServiceException("Invalid values, please check your input");
+        }
+
         int counter = 0;
         long questionTimeCounter = 0;
         int random;
@@ -105,7 +111,7 @@ public class ExamServiceImpl implements ExamService {
         List<Integer> notAnsweredQuestionID = new ArrayList<>();
         List<Question> wrongAnsweredQuestions = new ArrayList<>();
         List<Question> rightAnsweredQuestions = new ArrayList<>();
-        List<Boolean> questionBooleans = new ArrayList<>();
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
         List<Question> notAnsweredQuestions = new ArrayList<>();
 
         try {
@@ -117,24 +123,41 @@ public class ExamServiceImpl implements ExamService {
             }
 
 
-            for(Boolean e: questionBooleans){
-                if(e == true){
-                    rightAnsweredQuestions.add(notAnsweredQuestions.get(counter));
-                    notAnsweredQuestions.remove(counter);
-                }else{
-                    wrongAnsweredQuestions.add(notAnsweredQuestions.get(counter));
-                    notAnsweredQuestions.remove(counter);
+            List<Question> temp = new ArrayList<>();
+            for(Question q: notAnsweredQuestions){
+                temp.add(q);
+            }
+
+
+            for(Map.Entry<Integer, Boolean> e: questionBooleans.entrySet()) {
+                for(int i = 0; i < notAnsweredQuestions.size(); i++){
+                    if(e.getKey() == notAnsweredQuestions.get(i).getQuestionid()){
+                        if (e.getValue() == true) {
+                            rightAnsweredQuestions.add(temp.get(counter));
+                            notAnsweredQuestions.remove(temp.get(counter));
+                        } else {
+                            wrongAnsweredQuestions.add(temp.get(counter));
+                            notAnsweredQuestions.remove(temp.get(counter));
+                        }
+                        counter++;
                     }
                 }
-                counter++;
-            System.out.println(wrongAnsweredQuestions.size());
-            System.out.println(rightAnsweredQuestions.size());
-            System.out.println(questionBooleans.size());
+            }
 
             while((wrongAnsweredQuestions.size() != 0 || notAnsweredQuestions.size() != 0
                 || rightAnsweredQuestions.size()!= 0)){
 
-                if(wrongAnsweredQuestions.size() != 0){
+                if(notAnsweredQuestions.size() != 0){
+                    random = (int)(Math.random() * notAnsweredQuestions.size());
+                    if((questionTimeCounter + notAnsweredQuestions.get(random).getQuestionTime())
+                        <= examTime) {
+                        examQuestions.add(notAnsweredQuestions.get(random));
+                        questionTimeCounter += notAnsweredQuestions.get(random).getQuestionTime();
+                    }
+                    notAnsweredQuestions.remove(random);
+                }
+
+                if(wrongAnsweredQuestions.size() != 0 && notAnsweredQuestions.size() == 0){
                     random = (int)(Math.random() * wrongAnsweredQuestions.size());
                     if((questionTimeCounter + wrongAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {
@@ -145,17 +168,9 @@ public class ExamServiceImpl implements ExamService {
                     wrongAnsweredQuestions.remove(random);
                 }
 
-                if(wrongAnsweredQuestions.size() == 0 && notAnsweredQuestions.size() != 0){
-                    random = (int)(Math.random() * notAnsweredQuestions.size());
-                    if((questionTimeCounter + notAnsweredQuestions.get(random).getQuestionTime())
-                        <= examTime) {
-                        examQuestions.add(notAnsweredQuestions.get(random));
-                        questionTimeCounter += notAnsweredQuestions.get(random).getQuestionTime();
-                    }
-                    notAnsweredQuestions.remove(random);
-                }
 
-                else{
+                if(rightAnsweredQuestions.size() != 0 && notAnsweredQuestions.size() == 0
+                    && wrongAnsweredQuestions.size() == 0){
                     random = (int)(Math.random() * rightAnsweredQuestions.size());
                     if((questionTimeCounter + rightAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {
@@ -168,8 +183,15 @@ public class ExamServiceImpl implements ExamService {
 
 
         }catch (DaoException e){
-            logger.error("Service Exception getRightQuestions with parameters{}", exam);
+            logger.error("Service Exception getRightQuestions with parameters{}", exam, topicID, examTime);
             throw new ServiceException(e.getMessage());
+        }
+
+        if(examQuestions.size() == 0){
+            logger.error("Service Exception getRightQuestions with parameters{}", exam);
+            throw new ServiceException("Could not get Questions with subjectId "
+                + exam.getSubjectID() + " and topicID " + topicID + " or examTime " + examTime
+                + " is too small");
         }
 
         return examQuestions;

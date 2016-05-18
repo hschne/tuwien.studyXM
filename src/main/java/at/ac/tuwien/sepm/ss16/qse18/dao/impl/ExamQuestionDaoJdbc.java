@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.util.DTOValidator;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -99,9 +100,9 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         }
     }
 
-    @Override public List<Boolean> getAllQuestionBooleans(List<Integer> questionList) throws DaoException{
+    @Override public Map<Integer, Boolean> getAllQuestionBooleans(List<Integer> questionList) throws DaoException{
         logger.debug("entering method getALlQuestionBooleans with parameters {}");
-        List<Boolean> questionBoolean = new ArrayList<>();
+        Map<Integer, Boolean> questionBoolean = new HashMap<>();
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -121,7 +122,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
                 rs = pstmt.executeQuery();
 
                 if(rs.next()) {
-                    questionBoolean.add(rs.getBoolean("question_passed"));
+                    questionBoolean.put(rs.getInt("questionid"),rs.getBoolean("question_passed"));
                 }
             }
 

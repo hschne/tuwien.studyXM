@@ -13,7 +13,7 @@ public interface ExamQuestionDao {
     void create(Exam exam, Question question) throws DaoException;
     void delete(Exam exam) throws DaoException;
 
-    List<Boolean> getAllQuestionBooleans(List<Integer> questionList) throws DaoException;
+    Map<Integer, Boolean> getAllQuestionBooleans(List<Integer> questionList) throws DaoException;
     List<Integer> getAllQuestionID(int examID) throws DaoException;
 
 }

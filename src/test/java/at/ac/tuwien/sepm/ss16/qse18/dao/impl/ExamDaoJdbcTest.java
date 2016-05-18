@@ -19,6 +19,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.sql.*;
 import java.util.ArrayList;
+
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -39,6 +40,7 @@ import static org.mockito.Mockito.when;
     @Mock private Statement mockStatement;
     @Mock private PreparedStatement mockPreparedStatement;
     @Mock private ResultSet mockResultSet;
+
     private Exam testExam;
 
     @Before public void setUp() throws Exception {

@@ -122,7 +122,7 @@ public class ExamDaoJdbc implements ExamDao{
 
     @Override public Exam getExam(int examID) throws DaoException {
         logger.debug("entering method getExam with parameters {}", examID);
-        Exam exam = new Exam();
+        Exam exam = null;
 
         if(examID <= 0){
             throw new DaoException("Invalid Exam ID, please check your input");
@@ -137,6 +137,7 @@ public class ExamDaoJdbc implements ExamDao{
             rs = pstmt.executeQuery();
 
             if(rs.next()){
+                exam = new Exam();
                 exam.setExamid(rs.getInt("examid"));
                 exam.setCreated(rs.getTimestamp("created"));
                 exam.setAuthor(rs.getString("author"));

@@ -33,8 +33,8 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         logger.debug("entering method getAllQuestionsOfSubject with parameters {}", exam);
         ArrayList<Integer> questionIDList = new ArrayList<>();
 
-        if(!DTOValidator.validate(exam)){
-            logger.error("Dao Exception create() {}", exam);
+        if(!DTOValidator.validate(exam) || topicID <= 0){
+            logger.error("Dao Exception create() {}", exam, topicID);
             throw new DaoException("Invalid values, please check your input");
         }
 
