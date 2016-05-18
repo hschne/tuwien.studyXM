@@ -51,6 +51,8 @@ import org.springframework.stereotype.Component;
     @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
     @Autowired private TopicService topicService;
     @Autowired private MainFrameController mainFrameController;
+    @Autowired private SubjectOverviewController subjectOverviewController;
+
 
     @FXML
     public void initialize(ObservableSubject subject){
@@ -67,7 +69,6 @@ import org.springframework.stereotype.Component;
             showAlert(e);
         }
     }
-
 
     private void loadGui() {
         FXMLLoader fxmlLoader =
@@ -91,21 +92,25 @@ import org.springframework.stereotype.Component;
 
     @FXML public void handleNew() {
         logger.debug("Create new topic");
-        Stage stage = new Stage();
-        SpringFXMLLoader.FXMLWrapper<Object, TopicEditController> editTopicWrapper = null;
-        try {
-            editTopicWrapper = springFXMLLoader
-                .loadAndWrap("/fxml/topic/topicEditView.fxml", TopicEditController.class);
-        } catch (IOException e) {
-            logger.error("Couldn't load new Topic stage",e);
+        if(subjectOverviewController.SubjectSelected()) {
+            Stage stage = new Stage();
+            SpringFXMLLoader.FXMLWrapper<Object, TopicEditController> editTopicWrapper = null;
+            try {
+                editTopicWrapper = springFXMLLoader
+                    .loadAndWrap("/fxml/topic/topicEditView.fxml", TopicEditController.class);
+            } catch (IOException e) {
+                logger.error("Couldn't load new Topic stage", e);
+            }
+            TopicEditController childController = editTopicWrapper.getController();
+            childController.setStage(stage);
+            stage.setTitle("New Topic");
+            stage.setScene(new Scene((Parent) editTopicWrapper.getLoadedObject(), 400, 300));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();
         }
-        TopicEditController childController = editTopicWrapper.getController();
-        childController.setStage(stage);
-        stage.setTitle("New Topic");
-        stage.setScene(new Scene((Parent) editTopicWrapper.getLoadedObject(), 400, 300));
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.showAndWait();
-        System.out.println(subject.getSubject());
+        else {
+            showAlert("You need to select a subject");
+        }
     }
 
     @FXML public void handleDelete() {
@@ -129,7 +134,7 @@ import org.springframework.stereotype.Component;
 
     public void addTopic(ObservableTopic topic){
         try{
-            topicService.createTopic(topic.getT(),this.subject.getSubject());
+            topicService.createTopic(topic.getT(),subjectOverviewController.getSelectedSubject().getSubject());
             topicList.add(topic);
         }
         catch (ServiceException e){
@@ -140,6 +145,12 @@ import org.springframework.stereotype.Component;
     private void showAlert(ServiceException e) {
         Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
             .headerText("An error occured").contentText(e.getMessage()).build();
+        alert.showAndWait();
+    }
+
+    private void showAlert(String s) {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
+            .headerText("An error occured").contentText(s).build();
         alert.showAndWait();
     }
 
