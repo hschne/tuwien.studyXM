@@ -10,12 +10,14 @@ import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
  * @author Philipp Ganiu
  */
+@Service
 public class TopicServiceImpl implements TopicService {
     private final Logger logger = LogManager.getLogger(this.getClass());
     private TopicDao topicDao;

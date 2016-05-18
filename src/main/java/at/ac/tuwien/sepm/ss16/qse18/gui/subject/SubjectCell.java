@@ -32,7 +32,8 @@ import java.io.IOException;
 
     private void setControllerProperties(ObservableSubject subject,
         SubjectItemController itemController) {
-        itemController.setSubject(subject);
+        //itemController.setSubject(subject);
+        itemController.initialize(subject);
         itemController.loadFields();
         setGraphic(itemController.getRoot());
     }
