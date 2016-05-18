@@ -6,10 +6,19 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
 public class Topic {
     private int topicId;
     private String topic;
+    private String NumberOfQuestions;
 
     public Topic(int topicId, String topic) {
         this.topicId = topicId;
         this.topic = topic;
+    }
+
+    public String getNumberOfQuestions() {
+        return NumberOfQuestions;
+    }
+
+    public void setNumberOfQuestions(String numberOfQuestions) {
+        NumberOfQuestions = numberOfQuestions;
     }
 
     public Topic() {

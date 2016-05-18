@@ -15,11 +15,25 @@ public class ObservableTopic {
     private final IntegerProperty topicid;
     private final StringProperty topic;
     private Topic t;
+    private StringProperty NumberOfQuestions;
+
+    public String getNumberOfQuestions() {
+        return NumberOfQuestions.get();
+    }
+
+    public StringProperty numberOfQuestionsProperty() {
+        return NumberOfQuestions;
+    }
+
+    public void setNumberOfQuestions(String numberOfQuestions) {
+        this.NumberOfQuestions.set(numberOfQuestions);
+    }
 
     public ObservableTopic(Topic t){
         this.t = t;
         topicid = new SimpleIntegerProperty(t.getTopicId());
         topic = new SimpleStringProperty(t.getTopic());
+        NumberOfQuestions = new SimpleStringProperty(t.getNumberOfQuestions());
     }
 
     public int getTopicid() {

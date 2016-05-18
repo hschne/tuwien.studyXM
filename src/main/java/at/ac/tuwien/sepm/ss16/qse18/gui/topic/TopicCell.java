@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
+package at.ac.tuwien.sepm.ss16.qse18.gui.topic;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
 import javafx.event.ActionEvent;
@@ -14,12 +14,13 @@ import javafx.scene.layout.HBox;
  */
 public class TopicCell extends ListCell<ObservableTopic> {
     private HBox box = new HBox(10);
-    private Label label = new Label();
+    private Label topicLable = new Label();
     private Button button = new Button();
+    private Label numberOfQuestions = new Label();
 
     public TopicCell(){
         super();
-        box.getChildren().addAll(label,button);
+        box.getChildren().addAll(topicLable,numberOfQuestions,button);
     }
 
 
@@ -28,7 +29,8 @@ public class TopicCell extends ListCell<ObservableTopic> {
         super.updateItem(topic, empty);
 
         if(topic != null){
-            label.setText(topic.getTopic());
+            topicLable.setText(topic.getTopic());
+            numberOfQuestions.setText(topic.getNumberOfQuestions());
             button.setText("+");
             button.setOnAction(e -> {/*TODO implement what button does*/});
             setGraphic(box);

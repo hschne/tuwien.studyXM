@@ -101,7 +101,7 @@ public class TopicDaoJdbc implements TopicDao {
         if(subject == null){
             throw new DaoException("Subject must not be null");
         }
-        subjectTopicDao.createSubjectTopic(subject,topic);
+
 
         Topic createdTopic = null;
         PreparedStatement pstmt = null;
@@ -116,6 +116,7 @@ public class TopicDaoJdbc implements TopicDao {
             if(generatedKey.next()){
                 createdTopic = new Topic(generatedKey.getInt(1),topic.getTopic());
             }
+            subjectTopicDao.createSubjectTopic(subject,createdTopic);
         }
         catch (SQLException e){
             logger.error("Could not create " + topic,e);

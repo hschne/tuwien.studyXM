@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Philipp Ganiu
  */
-public interface SubjectTopicService {
+public interface SubjectTopicQuestionService {
     //TODO javadoc
-    List<Topic> getTopicToSubject(Subject subject) throws ServiceException;
+    List<Topic> getTopicToSubjectWithNumberOfQuestions(Subject subject) throws ServiceException;
 }
