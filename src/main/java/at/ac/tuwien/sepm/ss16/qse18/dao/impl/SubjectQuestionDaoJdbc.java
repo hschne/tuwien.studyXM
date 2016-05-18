@@ -56,17 +56,17 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
 
 
         }catch (SQLException e){
-            logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}", exam);
+            logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}", exam, topicID);
             throw new DaoException("Could not get List with all Questions for Exam with values("
                 + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
-                + ", " + exam.getAuthor() + ")");
+                + ", " + exam.getAuthor() + " and topicID " + topicID + ")");
         }finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
             } catch (SQLException e) {
-                logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}", exam);
+                logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}", exam, topicID);
                 throw new DaoException("Result Set could not be closed");
             }
 
@@ -75,7 +75,7 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
                     pstmt.close();
                 }
             }catch (SQLException e){
-                logger.error("SQL Excepiton in getAllQuestionsOfSubject with parameters {}", exam, e);
+                logger.error("SQL Excepiton in getAllQuestionsOfSubject with parameters {}", exam, topicID, e);
                 throw new DaoException("Prepared Statement could not be closed");
             }
         }
