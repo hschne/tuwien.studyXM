@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
@@ -18,6 +19,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
@@ -41,6 +43,7 @@ import org.springframework.stereotype.Component;
     @FXML public Node root;
     @FXML Label name;
     @FXML public ListView<ObservableTopic> topicListView;
+    @FXML public Button addTopicButton;
 
     private Logger logger = LoggerFactory.getLogger(SubjectItemController.class);
     private ObservableSubject subject;
@@ -90,6 +93,25 @@ import org.springframework.stereotype.Component;
         System.out.println("Wow, much export!");
     }
 
+    public void setAddTopicButtonAction(ObservableSubject subject,ObservableList<ObservableTopic> topicList){
+        addTopicButton.setOnAction(event -> { Stage stage = new Stage();
+            SpringFXMLLoader.FXMLWrapper<Object, TopicEditController> editTopicWrapper = null;
+            try {
+                editTopicWrapper = springFXMLLoader
+                    .loadAndWrap("/fxml/topic/topicEditView.fxml", TopicEditController.class);
+            } catch (IOException e) {
+                logger.error("Couldn't load new Topic stage", e);
+            }
+            TopicEditController childController = editTopicWrapper.getController();
+            childController.setStage(stage);
+            childController.setSubject(subject.getSubject());
+            childController.setTopicList(topicList);
+            stage.setTitle("New Topic");
+            stage.setScene(new Scene((Parent) editTopicWrapper.getLoadedObject(), 400, 300));
+            stage.initModality(Modality.WINDOW_MODAL);
+            stage.showAndWait();});
+    }
+    /*
     @FXML public void handleNew() {
         logger.debug("Create new topic");
         if(subjectOverviewController.SubjectSelected()) {
@@ -112,6 +134,7 @@ import org.springframework.stereotype.Component;
             showAlert("You need to select a subject");
         }
     }
+    */
 
     @FXML public void handleDelete() {
 
@@ -132,9 +155,9 @@ import org.springframework.stereotype.Component;
 
 
 
-    public void addTopic(ObservableTopic topic){
+    public void addTopic(ObservableTopic topic,Subject subject,ObservableList<ObservableTopic> topicList){
         try{
-            topicService.createTopic(topic.getT(),subjectOverviewController.getSelectedSubject().getSubject());
+            topicService.createTopic(topic.getT(),subject);
             topicList.add(topic);
         }
         catch (ServiceException e){
@@ -152,6 +175,10 @@ import org.springframework.stereotype.Component;
         Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
             .headerText("An error occured").contentText(s).build();
         alert.showAndWait();
+    }
+
+    public ObservableList<ObservableTopic> getTopicList(){
+        return this.topicList;
     }
 
 }

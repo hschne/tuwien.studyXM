@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * @author Hans-Joerg Schroedl
+ * @author Hans-Joerg Schroedl,Philipp Ganiu
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectCell
     extends ListCell<ObservableSubject> {
@@ -34,6 +34,7 @@ import java.io.IOException;
     private void setControllerProperties(ObservableSubject subject,
         SubjectItemController itemController) {
         itemController.initialize(subject);
+        itemController.setAddTopicButtonAction(subject,itemController.getTopicList());
         //itemController.setSubject(subject);
         itemController.loadFields();
         setGraphic(itemController.getRoot());
