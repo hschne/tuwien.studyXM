@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
@@ -145,7 +146,23 @@ import java.io.IOException;
         }
     }
 
+    public void handleCreateExam() {
+        logger.debug("Loading Create exam screen");
+        try {
+            setSubView("/fxml/exam/insertExamValues.fxml", InsertExamValuesController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
 
+    public void handleExams() {
+        logger.debug("Loading home view");
+        try {
+            setSubView("/fxml/exam/createExam.fxml", CreateExamController.class);
+        } catch (IOException e) {
+            handleException(e);
+        }
+    }
 
 
 

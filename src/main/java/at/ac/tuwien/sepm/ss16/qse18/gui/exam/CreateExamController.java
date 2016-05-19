@@ -68,18 +68,14 @@ import org.slf4j.LoggerFactory;
             columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
             tableExam.setItems(examObservableList);
 
-        }catch (ServiceException e){
+        } catch (ServiceException e){
 
         }
     }
 
     @FXML public void insertExamValues()throws Exception {
         logger.debug("Entering insertExamValues()");
-        Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/exam/insertExamValues.fxml"));
-        primaryStage.setTitle("Insert Exam Values");
-        primaryStage.setScene(new Scene(root, 600, 400));
-        primaryStage.show();
+        mainFrameController.handleCreateExam();
     }
 
     @FXML public void showQuestions()throws Exception {

@@ -16,6 +16,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
+
 /**
  * JDBC implementation of the CRUD methods from SubjectDao. This class has access to the h2 database
  * that is defined in the ConnectionH2 class.
@@ -97,6 +99,7 @@ import java.util.List;
 
         Subject res = null;
         PreparedStatement ps = null;
+        ResultSet generetedKey = null;
 
         try {
             ps = database.getConnection()
@@ -107,7 +110,7 @@ import java.util.List;
 
             ps.executeUpdate();
 
-            ResultSet generetedKey = ps.getGeneratedKeys();
+            generetedKey = ps.getGeneratedKeys();
             if (generetedKey.next()) {
                 res = new Subject();
                 fillSubject(res, generetedKey.getInt(1), subject.getName(), subject.getEcts(),
@@ -121,7 +124,7 @@ import java.util.List;
             throw new DaoException(
                 "Could not create subject with values " + subjectValues(subject));
         } finally {
-            closeStatementsAndResultSets(new Statement[] {ps}, null);
+            closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {generetedKey});
         }
     }
 
@@ -229,34 +232,6 @@ import java.util.List;
                 ps.setString(6, author);
             }
 
-        }
-    }
-
-    private void closeStatementsAndResultSets(Statement[] statements, ResultSet[] resultSets)
-        throws DaoException {
-        if (statements != null) {
-            for (Statement s : statements) {
-                if (s != null) {
-                    try {
-                        s.close();
-                    } catch (SQLException e) {
-                        logger.error("Could not close statement " + e.getMessage());
-                        throw new DaoException("Could not close statement " + e.getMessage());
-                    }
-                }
-            }
-        }
-        if (resultSets != null) {
-            for (ResultSet rs : resultSets) {
-                if (rs != null) {
-                    try {
-                        rs.close();
-                    } catch (SQLException e) {
-                        logger.error("Could not close resultset " + e.getMessage());
-                        throw new DaoException("Could not close resultset " + e.getMessage());
-                    }
-                }
-            }
         }
     }
 }
