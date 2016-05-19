@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
@@ -14,7 +15,6 @@ import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -66,13 +66,17 @@ import org.springframework.stereotype.Component;
                         .stream().map(ObservableTopic::new).collect(Collectors.toList());
             topicList = FXCollections.observableList(observableTopics);
             topicListView.setItems(topicList);
-            topicListView.setCellFactory(listView  -> new TopicCell());
+            topicListView.setCellFactory(listView  -> {
+                TopicCell topicCell = new TopicCell();
+                topicCell.setMainFrameController(mainFrameController);
+                return topicCell;
+            });
         }
         catch (ServiceException e){
             showAlert(e);
         }
     }
-
+    /*
     private void loadGui() {
         FXMLLoader fxmlLoader =
             new FXMLLoader(getClass().getResource("/fxml/subject/subjectItem.fxml"));
@@ -83,6 +87,7 @@ import org.springframework.stereotype.Component;
             throw new RuntimeException(e);
         }
     }
+    */
 
     public void loadFields() {
         name.setText(subject.getName());
@@ -157,8 +162,8 @@ import org.springframework.stereotype.Component;
 
     public void addTopic(ObservableTopic topic,Subject subject,ObservableList<ObservableTopic> topicList){
         try{
-            topicService.createTopic(topic.getT(),subject);
-            topicList.add(topic);
+            Topic t = topicService.createTopic(topic.getT(),subject);
+            topicList.add(new ObservableTopic(t));
         }
         catch (ServiceException e){
             showAlert(e);

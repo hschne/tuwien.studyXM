@@ -173,13 +173,14 @@ import java.util.stream.Collectors;
         alert.showAndWait();
     }
 
-
+    /*
     public ObservableSubject getSelectedSubject(){
         return subjectListView.getSelectionModel().getSelectedItem();
     }
     public boolean SubjectSelected(){
         return subjectListView.getSelectionModel().getSelectedItem() != null;
     }
+    */
 
 
 }

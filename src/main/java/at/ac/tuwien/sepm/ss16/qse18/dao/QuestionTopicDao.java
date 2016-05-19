@@ -9,6 +9,12 @@ import java.util.List;
  * @author Philipp Ganiu
  */
 public interface QuestionTopicDao {
-    //TODO javadoc
+    /**
+     * Returns all questions to a specific topic in a List from the Resource
+     *
+     * @param topic the topic for which all quesitons are returned
+     * @return a List of all questions to the {@param topic}
+     * @throws DaoException if there is no connection to the resource
+     * */
     List<Question> getQuestionToTopic(Topic topic) throws DaoException;
 }

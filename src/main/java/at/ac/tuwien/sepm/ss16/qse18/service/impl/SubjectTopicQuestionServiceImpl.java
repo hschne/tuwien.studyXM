@@ -32,6 +32,9 @@ public class SubjectTopicQuestionServiceImpl implements SubjectTopicQuestionServ
     }
     @Override
     public List<Topic> getTopicToSubjectWithNumberOfQuestions(Subject subject) throws ServiceException {
+        if(subject == null){
+            throw new ServiceException("Subject cannot be null");
+        }
         try{
             List<Topic> topics = new ArrayList<>();
             for(Topic t : subjectTopicDao.getTopicToSubject(subject)){

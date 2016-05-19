@@ -51,7 +51,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topic createTopic(Topic topic,Subject subject) throws ServiceException {
-        //TODO verify topic
+        if(!verifyTopic(topic)){
+            throw new ServiceException("Topic is not valid");
+        }
         try{
             return topicDao.createTopic(topic,subject);
         }
@@ -63,7 +65,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public boolean deleteTopic(Topic topic) throws ServiceException {
-        //TODO verify topic
+        if(!verifyTopic(topic)){
+            throw new ServiceException("Topic is not valid");
+        }
         try{
             return topicDao.deleteTopic(topic);
         }
@@ -75,7 +79,9 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public Topic updateTopic(Topic topic) throws ServiceException {
-        //TODO verify topic
+        if(!verifyTopic(topic)){
+            throw new ServiceException("Topic is not valid");
+        }
         try{
             return topicDao.updateTopic(topic);
         }
@@ -83,5 +89,12 @@ public class TopicServiceImpl implements TopicService {
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    public boolean verifyTopic(Topic t){
+        if(t == null){
+            return false;
+        }
+        return !t.getTopic().trim().isEmpty() && t.getTopic().length() <= 200;
     }
 }

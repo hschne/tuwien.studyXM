@@ -38,6 +38,9 @@ public class SubjectTopicDaoJdbc implements SubjectTopicDao {
     public void createSubjectTopic(Subject subject, Topic topic) throws DaoException {
         logger.debug("Entering createSubjectTopic with parameters {}",subject,topic);
         PreparedStatement pstmt = null;
+        if(subject == null || topic == null){
+            throw new DaoException("Subject or topic should not be null");
+        }
         try{
             pstmt = database.getConnection().prepareStatement(CREATE_SQL);
             pstmt.setInt(1,subject.getSubjectId());
@@ -58,6 +61,10 @@ public class SubjectTopicDaoJdbc implements SubjectTopicDao {
     public void deleteSubjectTopic(Topic topic) throws DaoException {
         logger.debug("Entering deleteSubjectTopic with parameters {}",topic);
         PreparedStatement pstmt = null;
+
+        if(topic == null){
+            throw new DaoException("Topic cannot be null");
+        }
 
         try{
             pstmt = database.getConnection().prepareStatement(DELETE_SQL);
