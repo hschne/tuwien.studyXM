@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
@@ -56,7 +58,6 @@ public class CreateImageQuestionController implements GuiController{
     @Autowired MainFrameController mainFrameController;
 
     private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
-    private AlertBuilder alertBuilder;
     private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
 
@@ -70,7 +71,6 @@ public class CreateImageQuestionController implements GuiController{
         this.springFXMLLoader = springFXMLLoader;
         this.questionService = questionService;
         this.answerService = answerService;
-        this.alertBuilder = alertBuilder;
     }
 
     /**
@@ -80,11 +80,12 @@ public class CreateImageQuestionController implements GuiController{
     @FXML
     public void handleCreateQuestion() throws IOException {
         logger.debug("Creating new Question");
+        Alert alert;
 
         if(textFieldImagePath.getText().isEmpty()){
             logger.debug("No image was selected");
-            new Alert(Alert.AlertType.WARNING,
-                    "Please select an image located in resources/images/. ", ButtonType.OK).showAndWait();
+            alert =  new Alert(Alert.AlertType.WARNING, "Please select an image for this question. ", ButtonType.OK);
+            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
             return;
         }
         if(textFieldAnswerOne.getText().isEmpty() &&
@@ -92,8 +93,20 @@ public class CreateImageQuestionController implements GuiController{
                 textFieldAnswerThree.getText().isEmpty() &&
                 textFieldAnswerFour.getText().isEmpty()){
             logger.debug("No answer was given to this question");
-            new Alert(Alert.AlertType.WARNING,
-                    "You should at least give one answer to this question.", ButtonType.OK).showAndWait();
+            alert = new Alert(Alert.AlertType.WARNING,
+                    "You should at least give one answer to this question.", ButtonType.OK);
+            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
+            return;
+        }
+
+        if(!checkBoxAnswerOne.isSelected() &&
+                !checkBoxAnswerTwo.isSelected() &&
+                !checkBoxAnswerThree.isSelected() &&
+                !checkBoxAnswerFour.isSelected()){
+            logger.debug("No correct answer was given to this question");
+            alert = new Alert(Alert.AlertType.WARNING,
+                    "You should at least give one correct answer to this question.", ButtonType.OK);
+            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
             return;
         }
 
@@ -108,10 +121,13 @@ public class CreateImageQuestionController implements GuiController{
             }
             questionService.setCorrespondingAnswers(newQuestion,answerList);
         } catch (ServiceException e) {
-            showAlert(e);
+            alert = new Alert(Alert.AlertType.ERROR, "An error occured "+  e.getMessage(), ButtonType.OK);
+            alert.setTitle("Error");alert.setHeaderText("Error");alert.showAndWait();
             return;
         }
-        showSuccess("Inserted new question into database.");
+
+        alert = new Alert(Alert.AlertType.INFORMATION, "Inserted new question into database.", ButtonType.OK);
+        alert.setTitle("Information");alert.setHeaderText("Information");alert.showAndWait();
         mainFrameController.handleHome();
     }
 
@@ -160,7 +176,7 @@ public class CreateImageQuestionController implements GuiController{
      * Handles the event of the "add image" button
      * @throws IOException
      */
-    @FXML public void handleAddImage() throws IOException {
+    @FXML public void handleAddImage(){
         logger.debug("Adding new image.");
         selectImage();
     }
@@ -169,10 +185,11 @@ public class CreateImageQuestionController implements GuiController{
      * Loads a new image into the imageViewQuestionImage and displays the path in the textFieldImagePath.
      * @throws IOException
      */
-    public void selectImage() throws IOException{
+    public void selectImage(){
 
         FileChooser fileChooser = new FileChooser();
-        File defaultDirectory = new File("src/main/resources/images"); // Review: could this cause problems?
+        String defaultPath = "src/main/resources/images/";
+        File defaultDirectory = new File(defaultPath);
         fileChooser.setInitialDirectory(defaultDirectory);
 
         fileChooser.setTitle("Add image");
@@ -180,36 +197,29 @@ public class CreateImageQuestionController implements GuiController{
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
+            logger.debug("A File was selected");
             Image img = new Image(selectedFile.toURI().toString());
             imageViewQuestionImage.setImage(img);
-            textFieldImagePath.setText(selectedFile.toURI().toString());
+
+            File out = new File(defaultPath+selectedFile.getName());
+
+            try {
+                ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", out);
+            } catch (IOException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load image "+e.getMessage(), ButtonType.OK);
+                alert.setTitle("Error");alert.setHeaderText("Error");alert.showAndWait();
+                return;
+            }
+
+            logger.debug("File copied to: "+defaultPath);
+            textFieldImagePath.setText(defaultPath + selectedFile.getName());
         }
     }
 
     public void setPrimaryStage(Stage primaryStage) {
-
         this.primaryStage = primaryStage;
     }
 
-    private void showAlert(ServiceException e) {
-        Alert alert = alertBuilder
-                .alertType(Alert.AlertType.ERROR)
-                .title("Error")
-                .headerText("An error occured")
-                .contentText(e.getMessage())
-                .build();
-        alert.showAndWait();
-    }
-
-    private void showSuccess(String msg) {
-        Alert alert = alertBuilder
-                .alertType(Alert.AlertType.INFORMATION)
-                .title("Success")
-                .headerText("The operation was successful!")
-                .contentText(msg)
-                .build();
-        alert.showAndWait();
-    }
 }
 
 
