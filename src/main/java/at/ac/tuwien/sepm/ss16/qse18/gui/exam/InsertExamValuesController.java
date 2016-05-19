@@ -141,6 +141,16 @@ import java.util.stream.Collectors;
                 return;
             }
 
+
+            // TODO: Set questions for exam like
+            /* "exam.setExamQuestions(TopicQuestionService
+                                              .getQuestionsFromTopic(topicListView
+                                                                              .getSelectionModel()
+                                                                              .getSelectedItem()
+                                                                              .getTopic()
+                                                                              .getTopicId()))"
+            */
+
             try {
                 examService.createExam(exam,
                     topicListView.getSelectionModel().getSelectedItem().getTopic(), 1);
