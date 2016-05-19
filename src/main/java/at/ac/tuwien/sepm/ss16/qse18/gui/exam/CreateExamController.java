@@ -76,7 +76,7 @@ import org.slf4j.LoggerFactory;
     @FXML public void insertExamValues()throws Exception {
         logger.debug("Entering insertExamValues()");
         Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("insertExamValues.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/exam/insertExamValues.fxml"));
         primaryStage.setTitle("Insert Exam Values");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
@@ -85,7 +85,7 @@ import org.slf4j.LoggerFactory;
     @FXML public void showQuestions()throws Exception {
         logger.debug("Entering showQuestions()");
         Stage primaryStage = new Stage();
-        Parent root = FXMLLoader.load(getClass().getResource("showQuestions.fxml"));
+        Parent root = FXMLLoader.load(getClass().getResource("/fxml/exam/showQuestions.fxml"));
         primaryStage.setTitle("Show Questions");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.show();
