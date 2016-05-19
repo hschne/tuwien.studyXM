@@ -35,7 +35,7 @@ import java.util.List;
  * @author Julian on 14.05.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class CreateImageQuestionController implements GuiController{
+public class CreateImageQuestionController implements GuiController  {
 
     @FXML public Button buttonCreateQuestion;
     @FXML public Button buttonAddImage;

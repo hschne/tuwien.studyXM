@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
@@ -120,6 +121,7 @@ import java.io.IOException;
     public void handleSingleChoiceQuestion() {
         logger.debug("Loading Single Choice question screen ");
         try {
+            setSubView("/fxml/question/createSingleChoiceQuestion.fxml", CreateSingleChoiceQuestionController.class);
             //TODO: create fxml and controller
         } catch (Exception e) {
             handleException(e);
