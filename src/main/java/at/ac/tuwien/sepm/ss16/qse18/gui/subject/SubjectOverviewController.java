@@ -129,8 +129,8 @@ import java.util.stream.Collectors;
 
     public void addSubject(ObservableSubject subject) {
         try {
-            subjectService.createSubject(subject.getSubject());
-            subjectList.add(subject);
+            Subject s = subjectService.createSubject(subject.getSubject());
+            subjectList.add(new ObservableSubject(s));
         } catch (ServiceException e) {
             showAlert(e);
         }
