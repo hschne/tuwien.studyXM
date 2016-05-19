@@ -76,18 +76,6 @@ import org.springframework.stereotype.Component;
             showAlert(e);
         }
     }
-    /*
-    private void loadGui() {
-        FXMLLoader fxmlLoader =
-            new FXMLLoader(getClass().getResource("/fxml/subject/subjectItem.fxml"));
-        fxmlLoader.setController(this);
-        try {
-            fxmlLoader.load();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    */
 
     public void loadFields() {
         name.setText(subject.getName());
@@ -116,33 +104,9 @@ import org.springframework.stereotype.Component;
             stage.initModality(Modality.WINDOW_MODAL);
             stage.showAndWait();});
     }
-    /*
-    @FXML public void handleNew() {
-        logger.debug("Create new topic");
-        if(subjectOverviewController.SubjectSelected()) {
-            Stage stage = new Stage();
-            SpringFXMLLoader.FXMLWrapper<Object, TopicEditController> editTopicWrapper = null;
-            try {
-                editTopicWrapper = springFXMLLoader
-                    .loadAndWrap("/fxml/topic/topicEditView.fxml", TopicEditController.class);
-            } catch (IOException e) {
-                logger.error("Couldn't load new Topic stage", e);
-            }
-            TopicEditController childController = editTopicWrapper.getController();
-            childController.setStage(stage);
-            stage.setTitle("New Topic");
-            stage.setScene(new Scene((Parent) editTopicWrapper.getLoadedObject(), 400, 300));
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.showAndWait();
-        }
-        else {
-            showAlert("You need to select a subject");
-        }
-    }
-    */
 
     @FXML public void handleDelete() {
-
+        //TODO implement this method
     }
 
     @FXML public void handleEditQuestions(){
@@ -173,12 +137,6 @@ import org.springframework.stereotype.Component;
     private void showAlert(ServiceException e) {
         Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
             .headerText("An error occured").contentText(e.getMessage()).build();
-        alert.showAndWait();
-    }
-
-    private void showAlert(String s) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("An error occured").contentText(s).build();
         alert.showAndWait();
     }
 

@@ -35,7 +35,6 @@ import java.io.IOException;
         SubjectItemController itemController) {
         itemController.initialize(subject);
         itemController.setAddTopicButtonAction(subject,itemController.getTopicList());
-        //itemController.setSubject(subject);
         itemController.loadFields();
         setGraphic(itemController.getRoot());
     }
