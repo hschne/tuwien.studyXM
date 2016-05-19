@@ -9,11 +9,14 @@ import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -85,6 +88,9 @@ import java.util.stream.Collectors;
     @FXML public void handleDelete() {
         try {
             logger.debug("Delete subject from table");
+            if (!actionConfirmed()) {
+                return;
+            }
             ObservableSubject subjectToDelete =
                 subjectListView.getSelectionModel().getSelectedItem();
             if (subjectToDelete != null) {
@@ -94,6 +100,17 @@ import java.util.stream.Collectors;
         } catch (ServiceException e) {
             showAlert(e);
         }
+    }
+
+    private boolean actionConfirmed() {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
+            .setResizable(true)
+            .headerText("Are you sure?")
+            .contentText("This will remove the subject and all associated queestions, materials and exams.")
+            .build();
+        alert.showAndWait();
+        ButtonType result = alert.getResult();
+        return result == ButtonType.OK;
     }
 
 
@@ -112,8 +129,8 @@ import java.util.stream.Collectors;
 
     public void addSubject(ObservableSubject subject) {
         try {
-            subjectService.createSubject(subject.getSubject());
-            subjectList.add(subject);
+            Subject s = subjectService.createSubject(subject.getSubject());
+            subjectList.add(new ObservableSubject(s));
         } catch (ServiceException e) {
             showAlert(e);
         }
@@ -155,4 +172,5 @@ import java.util.stream.Collectors;
             .headerText("An error occured").contentText(e.getMessage()).build();
         alert.showAndWait();
     }
+
 }
