@@ -12,12 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.*;
 
 /**
  * JDBC Implementation of the CRUD-Method of the
@@ -45,8 +41,12 @@ public class ExamDaoJdbc implements ExamDao{
 
         PreparedStatement pstmt = null;
         ResultSet generatedKey = null;
+        java.util.Date date = new java.util.Date();
 
         try {
+            exam.setCreated(new Timestamp(date.getTime()));
+            exam.setPassed(false);
+
             pstmt = database.getConnection().prepareStatement("Insert into entity_exam "
                 + "(created, passed, author, subject)Values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
             pstmt.setTimestamp(1, exam.getCreated());
