@@ -11,6 +11,7 @@ import org.apache.commons.validator.Validator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,6 +22,7 @@ import java.util.List;
 /**
  * @author Zhang Haixiang
  */
+@Service
 public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
     private ConnectionH2 database;
     private static final Logger logger = LogManager.getLogger();

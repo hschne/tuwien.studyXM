@@ -14,6 +14,6 @@ public interface ExamQuestionDao {
     void delete(Exam exam) throws DaoException;
 
     Map<Integer, Boolean> getAllQuestionBooleans(List<Integer> questionList) throws DaoException;
-    List<Integer> getAllQuestionID(int examID) throws DaoException;
+    List<Question> getAllQuestionsOfExam(int examID) throws DaoException;
 
 }

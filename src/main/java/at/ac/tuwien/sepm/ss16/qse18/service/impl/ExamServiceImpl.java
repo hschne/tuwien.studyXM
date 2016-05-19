@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.util.DTOValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.Map;
 /**
  * @author Zhang Haixiang
  */
+@Service
 public class ExamServiceImpl implements ExamService {
     private ExamDao examDao;
     private SubjectQuestionDao subjectQuestionDao;
@@ -195,6 +197,23 @@ public class ExamServiceImpl implements ExamService {
         }
 
         return examQuestions;
+    }
+
+    @Override public List<Question> getAllQuestionsOfExam(int examID) throws ServiceException{
+        logger.debug("entering getAllQuestionsOfExam with parameters {}", examID);
+
+        if(examID <= 1){
+            logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID);
+            throw new ServiceException("Invalid examID, please check your input");
+        }
+
+        try{
+            return this.examQuestionDao.getAllQuestionsOfExam(examID);
+
+        }catch (DaoException e){
+            logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID, e);
+            throw new ServiceException(e.getMessage());
+        }
     }
 
 }

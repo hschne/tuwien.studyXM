@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
@@ -72,7 +73,7 @@ import java.io.IOException;
     @FXML public void handleHome() {
         logger.debug("Loading home view");
         try {
-            setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class);
+            setSubView("/fxml/exam/createExam.fxml", CreateExamController.class);
         } catch (IOException e) {
             handleException(e);
         }

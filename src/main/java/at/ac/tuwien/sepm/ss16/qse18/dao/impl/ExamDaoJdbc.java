@@ -10,10 +10,12 @@ import at.ac.tuwien.sepm.util.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,6 +24,7 @@ import java.util.List;
  *
  * @author Zhang Haixiang
  */
+@Service
 public class ExamDaoJdbc implements ExamDao{
     private ConnectionH2 database;
     private final ExamQuestionDao examQuestionDao;
@@ -41,15 +44,25 @@ public class ExamDaoJdbc implements ExamDao{
         }
 
         PreparedStatement pstmt = null;
+        ResultSet generatedKey = null;
 
         try {
-            pstmt = database.getConnection().prepareStatement("Insert into entity_exam Values(?, ?, ?, ?, ?)");
-            pstmt.setInt(1, exam.getExamid());
-            pstmt.setTimestamp(2, exam.getCreated());
-            pstmt.setBoolean(3, exam.getPassed());
-            pstmt.setString(4, exam.getAuthor());
-            pstmt.setInt(5, exam.getSubjectID());
+            pstmt = database.getConnection().prepareStatement("Insert into entity_exam "
+                + "(created, passed, author, subject)Values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            pstmt.setTimestamp(1, exam.getCreated());
+            pstmt.setBoolean(2, exam.getPassed());
+            pstmt.setString(3, exam.getAuthor());
+            pstmt.setInt(4, exam.getSubjectID());
             pstmt.executeUpdate();
+
+            generatedKey = pstmt.getGeneratedKeys();
+
+            if(generatedKey.next()) {
+               exam.setExamid(generatedKey.getInt(1));
+            } else {
+                logger.error("Primary Key for exam could not be created");
+                throw new DaoException("Exam could not be inserted into database");
+            }
 
             for (Question q : exam.getExamQuestions()) {
                 examQuestionDao.create(exam, q);
@@ -62,6 +75,15 @@ public class ExamDaoJdbc implements ExamDao{
                     + ", " + exam.getAuthor() + ")");
 
         } finally {
+            if (generatedKey!= null) {
+                try {
+                    generatedKey.close();
+                } catch (SQLException e) {
+                    logger.error("SQL Exception in create with parameters {}", exam, e);
+                    throw new DaoException("Result Set could not be closed");
+                }
+            }
+
             if (pstmt != null) {
                 try {
                     pstmt.close();
