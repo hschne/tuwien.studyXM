@@ -9,22 +9,19 @@ import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -36,14 +33,14 @@ import java.util.stream.Collectors;
  *
  * @author Hans-Joerg Schroedl
  */
-@Component  public class SubjectOverviewController
-    implements GuiController {
-
-    @Autowired ApplicationContext applicationContext;
+@Component public class SubjectOverviewController implements GuiController {
 
     @FXML public ListView<ObservableSubject> subjectListView;
+    @FXML public Button editButton;
+    @FXML public Button deleteButton;
+    @Autowired ApplicationContext applicationContext;
 
-    private Logger logger = LoggerFactory.getLogger(SubjectOverviewController.class);
+    private Logger logger = LogManager.getLogger();
     private ObservableList<ObservableSubject> subjectList;
     private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
@@ -62,17 +59,18 @@ import java.util.stream.Collectors;
         try {
             logger.debug("Initializing subject table");
             //Lambdas to create a new observable subject for each subject
-            List<ObservableSubject> observableSubjects =
-                subjectService.getSubjects().stream().map(ObservableSubject::new)
-                    .collect(Collectors.toList());
-            subjectList = FXCollections.observableArrayList(observableSubjects);
-            subjectListView.setItems(subjectList);
-            subjectListView.setCellFactory(listView -> applicationContext.getBean(SubjectCell.class));
+            initializeButtons();
+            initializeListView();
         } catch (ServiceException e) {
             showAlert(e);
         }
     }
 
+    /**
+     * ActionHandler for creating a new subject
+     *
+     * @throws IOException
+     */
     @FXML public void handleNew() throws IOException {
         logger.debug("Create new subject");
         Stage stage = new Stage();
@@ -85,6 +83,9 @@ import java.util.stream.Collectors;
         configureStage(stage, "New Subject", editSubjectWrapper);
     }
 
+    /**
+     * Action handler for deleting a subject
+     */
     @FXML public void handleDelete() {
         try {
             logger.debug("Delete subject from table");
@@ -102,18 +103,11 @@ import java.util.stream.Collectors;
         }
     }
 
-    private boolean actionConfirmed() {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
-            .setResizable(true)
-            .headerText("Are you sure?")
-            .contentText("This will remove the subject and all associated queestions, materials and exams.")
-            .build();
-        alert.showAndWait();
-        ButtonType result = alert.getResult();
-        return result == ButtonType.OK;
-    }
-
-
+    /**
+     * Action handler for editing the selected subject
+     *
+     * @throws IOException
+     */
     @FXML public void handleEdit() throws IOException {
         logger.debug("Editing selected subject");
         ObservableSubject subject = subjectListView.getSelectionModel().getSelectedItem();
@@ -127,19 +121,71 @@ import java.util.stream.Collectors;
         configureStage(stage, "Edit Subject", editSubjectWrapper);
     }
 
+    /**
+     * Creates a new subject and adds it to the subject list
+     *
+     * @param subject The subject to be added
+     */
     public void addSubject(ObservableSubject subject) {
         try {
             Subject s = subjectService.createSubject(subject.getSubject());
             subjectList.add(new ObservableSubject(s));
         } catch (ServiceException e) {
+            logger.error(e);
             showAlert(e);
         }
     }
 
+    /**
+     * Sets the primary stage of this view
+     *
+     * @param primaryStage The primary stage
+     */
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
+    /**
+     * Updates a subject in the list and in the database
+     *
+     * @param observableSubject The current subject in the list
+     * @param subject           The new subject, containing new values
+     */
+    public void updateSubject(ObservableSubject observableSubject, Subject subject) {
+        try {
+            subjectService.updateSubject(subject);
+            updateEntry(observableSubject, subject);
+        } catch (ServiceException e) {
+            showAlert(e);
+        }
+    }
+
+    private void initializeListView() throws ServiceException {
+        List<ObservableSubject> observableSubjects =
+            subjectService.getSubjects().stream().map(ObservableSubject::new)
+                .collect(Collectors.toList());
+        subjectList = FXCollections.observableArrayList(observableSubjects);
+        subjectListView.setItems(subjectList);
+        subjectListView.setCellFactory(listView -> applicationContext.getBean(SubjectCell.class));
+    }
+
+    private void initializeButtons() {
+        editButton.disableProperty()
+            .bind(subjectListView.getSelectionModel().selectedItemProperty().isNull());
+        deleteButton.disableProperty()
+            .bind(subjectListView.getSelectionModel().selectedItemProperty().isNull());
+
+    }
+
+    private boolean actionConfirmed() {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
+            .setResizable(true).headerText("Are you sure?").contentText(
+                "This will remove the subject and all associated queestions, materials and exams.")
+            .build();
+        alert.showAndWait();
+        ButtonType result = alert.getResult();
+        return result == ButtonType.OK;
+    }
 
     private void configureStage(Stage stage, String title,
         SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper)
@@ -149,15 +195,6 @@ import java.util.stream.Collectors;
         stage.initModality(Modality.WINDOW_MODAL);
         stage.initOwner(this.primaryStage);
         stage.showAndWait();
-    }
-
-    public void updateSubject(ObservableSubject observableSubject, Subject subject) {
-        try {
-            subjectService.updateSubject(subject);
-            updateEntry(observableSubject, subject);
-        } catch (ServiceException e) {
-            showAlert(e);
-        }
     }
 
     private void updateEntry(ObservableSubject observableSubject, Subject subject) {
