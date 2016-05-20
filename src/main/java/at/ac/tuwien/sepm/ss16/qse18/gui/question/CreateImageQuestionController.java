@@ -28,16 +28,16 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * A controller for the creation of image-questions.
- *
  * @author Julian on 14.05.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CreateImageQuestionController implements GuiController{
+
+    private static final String W = "Warning";
 
     @FXML public Button buttonCreateQuestion;
     @FXML public Button buttonAddImage;
@@ -58,11 +58,13 @@ public class CreateImageQuestionController implements GuiController{
     @Autowired MainFrameController mainFrameController;
 
     private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
+    private AlertBuilder alertBuilder;
     private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
 
     private QuestionService questionService;
     private AnswerService answerService;
+    private File out;
 
     @Autowired
     public CreateImageQuestionController(SpringFXMLLoader springFXMLLoader,
@@ -71,75 +73,80 @@ public class CreateImageQuestionController implements GuiController{
         this.springFXMLLoader = springFXMLLoader;
         this.questionService = questionService;
         this.answerService = answerService;
+        this.alertBuilder = alertBuilder;
     }
 
     /**
-     * Creates a new question from the users input and stores it in the database, if it doesn't already exist.
-     * @throws IOException
+     * Creates a new image question from the users input and stores it in the database.
      */
     @FXML
-    public void handleCreateQuestion() throws IOException {
-        logger.debug("Creating new Question");
-        Alert alert;
+    public void handleCreateQuestion() {
 
-        if(textFieldImagePath.getText().isEmpty()){
-            logger.debug("No image was selected");
-            alert =  new Alert(Alert.AlertType.WARNING, "Please select an image for this question.", ButtonType.OK);
-            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
-            return;
+        if(!validateInput())
+        {
+            logger.debug("User input is not valid, can't create question.");
         }
-        if(textFieldAnswerOne.getText().isEmpty() &&
-                textFieldAnswerTwo.getText().isEmpty() &&
-                textFieldAnswerThree.getText().isEmpty() &&
-                textFieldAnswerFour.getText().isEmpty()){
-            logger.debug("No answer was given to this question");
-            alert = new Alert(Alert.AlertType.WARNING,
-                    "You should at least give one answer to this question.", ButtonType.OK);
-            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
-            return;
-        }
+        else
+        {
+            logger.debug("Creating new question from valid user input.");
+            try {
+                copySelectedImage();
 
-        if(!checkBoxAnswerOne.isSelected() &&
-                !checkBoxAnswerTwo.isSelected() &&
-                !checkBoxAnswerThree.isSelected() &&
-                !checkBoxAnswerFour.isSelected()){
-            logger.debug("No correct answer was given to this question");
-            alert = new Alert(Alert.AlertType.WARNING,
-                    "You should at least give one correct answer to this question.", ButtonType.OK);
-            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
-            return;
-        }
+                Question newQuestion = newQuestionFromFields();
+                questionService.createQuestion(newQuestion);
 
-        if((checkBoxAnswerOne.isSelected()&&textFieldAnswerOne.getText().isEmpty()) |
-                (checkBoxAnswerTwo.isSelected()&&textFieldAnswerTwo.getText().isEmpty()) |
-                (checkBoxAnswerThree.isSelected()&&textFieldAnswerThree.getText().isEmpty()) |
-                (checkBoxAnswerFour.isSelected()&&textFieldAnswerFour.getText().isEmpty())){
-            logger.debug("An empty text field was marked as correct answer");
-            alert = new Alert(Alert.AlertType.WARNING,
-                    "A correct answer can't be empty. Please add text to this answer.", ButtonType.OK);
-            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
-            return;
-        }
+                List<Answer> answerList = newAnswersFromFields();
+                for(Answer a: answerList) {
+                    a.setQuestion(newQuestion);
+                    answerService.createAnswer(a);
+                }
+                questionService.setCorrespondingAnswers(newQuestion,answerList);
 
-        try {
-            Question newQuestion = newQuestionFromFields();
-            questionService.createQuestion(newQuestion);
-
-            List<Answer> answerList = newAnswersFromFields();
-            for(Answer a: answerList) {
-                a.setQuestion(newQuestion);
-                answerService.createAnswer(a);
             }
-            questionService.setCorrespondingAnswers(newQuestion,answerList);
-        } catch (ServiceException e) {
-            alert = new Alert(Alert.AlertType.ERROR, "An error occured "+  e.getMessage(), ButtonType.OK);
-            alert.setTitle("Error");alert.setHeaderText("Error");alert.showAndWait();
-            return;
-        }
+            catch (IOException e) {
+                logger.debug("Unable to copy image "+e.getMessage());
+                showExceptionAlert(e, Alert.AlertType.ERROR,"Error","Unable to copy image");
+                return;
+            }
+            catch (ServiceException e) {
+                logger.debug("Unable to create question. "+e.getMessage());
+                showExceptionAlert(e, Alert.AlertType.ERROR,"Error","Unable to create question");
+                return;
+            }
 
-        alert = new Alert(Alert.AlertType.INFORMATION, "Inserted new question into database.", ButtonType.OK);
-        alert.setTitle("Information");alert.setHeaderText("Information");alert.showAndWait();
-        mainFrameController.handleHome();
+            logger.debug("Question successfully created");
+            showAlert(Alert.AlertType.INFORMATION,"Success", "Question successfully created",
+                    "Your question is now in the database.");
+
+            mainFrameController.handleSubjects();
+        }
+    }
+
+    /**
+     * Handles the event of the "add image" button.
+     * Opens a dialogue to give the user the opportunity to choose an image file.
+     * When an image ist selected the image is loaded into the imageViewQuestionImage
+     * The path is also displayed in the textFieldImagePath
+     */
+    @FXML public void handleAddImage(){
+        logger.debug("Opening file chooser dialogue");
+
+        FileChooser fileChooser = new FileChooser();
+        String defaultPath = "src/main/resources/images/";
+        File defaultDirectory = new File(defaultPath);
+        fileChooser.setInitialDirectory(defaultDirectory);
+
+        fileChooser.setTitle("Add image");
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg"));
+        File selectedFile = fileChooser.showOpenDialog(null);
+
+        if (selectedFile != null) {
+            logger.debug("A File was selected");
+            Image img = new Image(selectedFile.toURI().toString());
+            imageViewQuestionImage.setImage(img);
+            out = new File(defaultPath + generateFileName(selectedFile.getName()));
+            textFieldImagePath.setText(defaultPath + selectedFile.getName());
+        }
     }
 
     /**
@@ -148,8 +155,7 @@ public class CreateImageQuestionController implements GuiController{
      */
     private Question newQuestionFromFields()
     {
-        // Question_Time is set to 1 for now because this parameter was added later and is not in the Mockup
-        return new Question(textFieldImagePath.getText().toString(),QuestionType.NOTECARD,1);
+        return new Question(textFieldImagePath.getText(),QuestionType.NOTECARD,1);
     }
 
     /**
@@ -184,53 +190,170 @@ public class CreateImageQuestionController implements GuiController{
     }
 
     /**
-     * Handles the event of the "add image" button
-     * @throws IOException
+     * Checks if the user has selected an image.
+     * @return true if an image was selected, false else.
      */
-    @FXML public void handleAddImage(){
-        logger.debug("Adding new image.");
-        selectImage();
+    private boolean checkIfImageWasSelected()
+    {
+        logger.debug("Checking if image was selected.");
+        return !textFieldImagePath.getText().isEmpty();
     }
 
     /**
-     * Loads a new image into the imageViewQuestionImage and displays the path in the textFieldImagePath.
-     * @throws IOException
+     * Checks if the user has provided an answer to this question.
+     * @return true if answer was given, false else.
      */
-    public void selectImage(){
+    private boolean checkIfAnswerWasGiven()
+    {
+        logger.debug("Checking if answer was given.");
+        return !(textFieldAnswerOne.getText().isEmpty() && textFieldAnswerTwo.getText().isEmpty() &&
+                textFieldAnswerThree.getText().isEmpty() && textFieldAnswerFour.getText().isEmpty());
+    }
 
-        FileChooser fileChooser = new FileChooser();
-        String defaultPath = "src/main/resources/images/";
-        File defaultDirectory = new File(defaultPath);
-        fileChooser.setInitialDirectory(defaultDirectory);
+    /**
+     * Checks if one of thee given answers is selected as correct.
+     * @return true if at least one answer is selected as correct, false else.
+     */
+    private boolean checkIfCorrectAnswerWasGiven()
+    {
+        logger.debug("Checking if correct answer was given.");
+        return checkBoxAnswerOne.isSelected() || checkBoxAnswerTwo.isSelected() ||
+                checkBoxAnswerThree.isSelected() || checkBoxAnswerFour.isSelected();
+    }
 
-        fileChooser.setTitle("Add image");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg"));
-        File selectedFile = fileChooser.showOpenDialog(null);
+    /**
+     * Checks if the user has provided text to a checkbox selected as correct.
+     * @return true if all checkboxes which are selected as correct have text in their text fields. False else.
+     */
+    private boolean checkIfCorrectAnswerHasText()
+    {
+        logger.debug("Checking if correct answers have text.");
+        boolean answerOk=true;
+        if(checkBoxAnswerOne.isSelected()){
+            answerOk &= (!textFieldAnswerOne.getText().isEmpty());}
+        if(checkBoxAnswerTwo.isSelected()){
+            answerOk &= (!textFieldAnswerTwo.getText().isEmpty());}
+        if(checkBoxAnswerThree.isSelected()){
+            answerOk &= (!textFieldAnswerThree.getText().isEmpty());}
+        if(checkBoxAnswerFour.isSelected()){
+            answerOk &= (!textFieldAnswerFour.getText().isEmpty());}
+        return answerOk;
+    }
 
-        if (selectedFile != null) {
-            logger.debug("A File was selected");
-            Image img = new Image(selectedFile.toURI().toString());
-            imageViewQuestionImage.setImage(img);
+    /**
+     * Checks if the user has provided enough information to create a valid question.
+     * @return true if the user input is valid, false else.
+     */
+    private boolean validateInput()
+    {
+        logger.debug("Validating user input.");
+        boolean inputOk=true;
 
-            File out = new File(defaultPath+selectedFile.getName());
-
-            try {
-                ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", out);
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load image "+e.getMessage(), ButtonType.OK);
-                alert.setTitle("Error");alert.setHeaderText("Error");alert.showAndWait();
-                return;
-            }
-
-            logger.debug("File copied to: "+defaultPath);
-            textFieldImagePath.setText(defaultPath + selectedFile.getName());
+        inputOk &= checkIfImageWasSelected();
+        if(!inputOk){
+            logger.debug("No image was selected.");
+            showAlert(Alert.AlertType.WARNING,W, "No image selected",
+                    "Please select an image for this question");
+            return false;
         }
+
+        inputOk &= checkIfAnswerWasGiven();
+        if(!inputOk){
+            logger.debug("No answer was given.");
+            showAlert(Alert.AlertType.WARNING,W, "No answer was given",
+                    "Please give at least one answer to this question.");
+            return false;
+        }
+
+        inputOk &= checkIfCorrectAnswerWasGiven();
+        if(!inputOk){
+            logger.debug("No correct answer was given.");
+            showAlert(Alert.AlertType.WARNING,W, "No correct answer was given",
+                    "Please give at least one correct answer to this question.");
+
+            return false;
+        }
+
+        inputOk &= checkIfCorrectAnswerHasText();
+        if(!inputOk){
+            logger.debug("The answer selected as correct has no text.");
+            showAlert(Alert.AlertType.WARNING,W, "Correct answer has no text",
+                    "Please add text to the question selected as correct.");
+            return false;
+        }
+
+        return inputOk;
+    }
+
+    /**
+     * Stores a copy of the selected image in src/main/resources/images/ when a new question is created.
+     */
+    private void copySelectedImage() throws IOException
+    {
+        logger.debug("tying to copy image to src/main/resources/images/");
+        ImageIO.write(SwingFXUtils.fromFXImage(imageViewQuestionImage.getImage(), null), "png", out);
+    }
+
+    /**
+     * Generates a new image file name if the passed name is already present in the image directory.
+     * @param fileName name which should be checked for duplicates
+     * @return new file name when a duplicate was found, fileName else.
+     */
+    private String generateFileName(String fileName)
+    {
+        logger.debug("Checking for duplicate image files");
+        File dir = new File("src/main/resources/images/");
+        String[] files = dir.list();
+        Set<String> fileSet = new HashSet<>();
+        fileSet.addAll(Arrays.asList(files));
+        String newFileName;
+
+            if (fileSet.contains(fileName))
+            {
+                logger.debug("Duplicate found, generating new file name");
+                newFileName = new Date().getTime()+fileName;
+                return newFileName;
+            }
+            else
+            {
+                logger.debug("No duplicate found");
+                return fileName;
+            }
+    }
+
+    /**
+     *  Creates and shows a new Alert.
+     * @param type alert type
+     * @param title alert title
+     * @param headerText alert header text
+     * @param contentText alert content text
+     */
+    private void showAlert(Alert.AlertType type, String title, String headerText, String contentText) {
+        Alert alert = alertBuilder.alertType(type)
+                .title(title)
+                .headerText(headerText)
+                .contentText(contentText).build();
+        alert.showAndWait();
+    }
+
+    /**
+     * Creates and shows a new Alert for a given Exception.
+     * @param e Exception
+     * @param type alert type
+     * @param title alert title
+     * @param headerText alert header text
+     */
+    private void showExceptionAlert(Exception e, Alert.AlertType type, String title, String headerText) {
+        Alert alert = alertBuilder.alertType(type)
+                .title(title)
+                .headerText(headerText)
+                .contentText(e.getMessage()).build();
+        alert.showAndWait();
     }
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
-
 }
 
 
