@@ -47,12 +47,13 @@ import java.util.stream.Collectors;
     @FXML public Button buttonCreate;
     @FXML public Button buttonCancel;
 
-    @FXML public Text topicText;
+    @FXML public Label topicText;
 
     @FXML public ListView<ObservableSubject> subjectListView;
     @FXML public ListView<ObservableTopic> topicListView;
 
     @FXML public TextField fieldAuthor;
+    @FXML public TextField fieldTime;
 
     @Autowired
     public InsertExamValuesController(ExamService examService, SubjectService subjectService,
@@ -127,48 +128,47 @@ import java.util.stream.Collectors;
 
         if (fieldAuthor.getText().isEmpty()) {
             logger.error("TextField \'author\' is empty");
-            showalert(Alert.AlertType.WARNING, "Textfield author must not be empty");
+            showAlert(Alert.AlertType.WARNING, "Textfield author must not be empty");
+        } else if (fieldTime.getText().isEmpty() || !fieldTime.getText().matches("\\d*")) {
+            logger.error("No valid time has been given");
+            showAlert(Alert.AlertType.ERROR,
+                "No valid time has been given. Make sure to fill the Time textfield with only whole numbers.");
+        } else if (topicListView.getSelectionModel().getSelectedItem() == null) {
+            logger.warn("No topic selected");
+            showAlert(Alert.AlertType.WARNING, "No topic selected.");
         } else {
             Exam exam = new Exam();
             exam.setAuthor(fieldAuthor.getText());
             exam.setCreated(new Timestamp(new Date().getTime()));
             exam.setPassed(false);
+
+            int examTime = 0;
+
             exam.setSubjectID(
                 subjectListView.getSelectionModel().getSelectedItem().getSubject().getSubjectId());
 
-            if (topicListView.getSelectionModel().getSelectedItem() == null) {
-                logger.warn("No topic selected");
-                showalert(Alert.AlertType.WARNING, "No topic selected.");
-                return;
-            }
-
-
-            // TODO: Set questions for exam like
-            /* "exam.setExamQuestions(TopicQuestionService
-                                              .getQuestionsFromTopic(topicListView
-                                                                              .getSelectionModel()
-                                                                              .getSelectedItem()
-                                                                              .getTopic()
-                                                                              .getTopicId()))"
-            */
             try {
+                examTime = Integer.parseInt(fieldTime.getText());
+
                 exam.setExamQuestions(questionService.getQuestionsFromTopic(
                     topicListView.getSelectionModel().getSelectedItem().getTopic().getTopicId()));
 
-                for (Question q : exam.getExamQuestions()) {
-                    System.out.println("Question " + q.getQuestionId() + ": " + q.getQuestion());
-                }
-
                 examService.createExam(exam,
-                    topicListView.getSelectionModel().getSelectedItem().getTopic(),
-                    1000); // examTime has to be read from textfield
-                showalert(Alert.AlertType.CONFIRMATION, "Exam created");
+                    topicListView.getSelectionModel().getSelectedItem().getTopic(), examTime);
+                showAlert(Alert.AlertType.CONFIRMATION, "Exam created");
+                mainFrameController.handleExams();
             } catch (ServiceException e) {
                 logger.error("Could not create exam: " + e.getMessage());
-                showalert(Alert.AlertType.ERROR,
-                    "Could not create exam. Reason: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR,
+                    "Could not create exam. Check logs for more information." + "\n\nHints: "
+                        + "\nCheck if the choosen topic has already questions to answer."
+                        + "\nCheck if the length of the author do not exceed 80 characters.");
+            } catch (NumberFormatException e) {
+                logger.error("Could not create exam: " + e.getMessage());
+                showAlert(Alert.AlertType.ERROR,
+                    "Could not parse exam time. Make sure it only contains numbers and is lower than "
+                        + Integer.MAX_VALUE + ".");
             }
-            mainFrameController.handleExams();
         }
     }
 
@@ -176,7 +176,7 @@ import java.util.stream.Collectors;
         mainFrameController.handleExams();
     }
 
-    private void showalert(Alert.AlertType type, String contentMsg) {
+    private void showAlert(Alert.AlertType type, String contentMsg) {
         String header = "";
 
         if (type == Alert.AlertType.ERROR) {
