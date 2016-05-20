@@ -28,6 +28,7 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.*;
 
 /**
@@ -306,13 +307,11 @@ public class CreateImageQuestionController implements GuiController{
         String[] files = dir.list();
         Set<String> fileSet = new HashSet<>();
         fileSet.addAll(Arrays.asList(files));
-        String newFileName;
 
             if (fileSet.contains(fileName))
             {
                 logger.debug("Duplicate found, generating new file name");
-                newFileName = new Date().getTime()+fileName;
-                return newFileName;
+                return UUID.randomUUID().toString()+".png";
             }
             else
             {
