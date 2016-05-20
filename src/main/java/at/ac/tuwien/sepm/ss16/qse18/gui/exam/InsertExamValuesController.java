@@ -172,6 +172,7 @@ import java.util.stream.Collectors;
         }
     }
 
+
     @FXML public void cancel() {
         mainFrameController.handleExams();
     }
