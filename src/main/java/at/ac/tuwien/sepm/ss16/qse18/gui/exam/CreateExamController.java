@@ -14,6 +14,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -25,6 +26,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,9 +34,8 @@ import org.slf4j.LoggerFactory;
  * @author Zhang Haixiang
  */
 
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateExamController implements
-    GuiController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateExamController
+    implements GuiController {
     private Stage primaryStage;
     private Logger logger = LoggerFactory.getLogger(CreateExamController.class);
     private SpringFXMLLoader springFXMLLoader;
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
     private ConnectionH2 database = new ConnectionH2();
     @Autowired ExamServiceImpl examService;
 
-    ObservableList<Exam> examObservableList;
+    private ObservableList<Exam> examObservableList;
 
     @FXML public Button buttonShowQuestions;
     @FXML public Button buttonNewExam;
@@ -54,31 +55,33 @@ import org.slf4j.LoggerFactory;
     @FXML public TableColumn<Exam, String> columnAuthor;
     @Autowired MainFrameController mainFrameController;
 
-    @Autowired public CreateExamController(SpringFXMLLoader springFXMLLoader, AlertBuilder alertBuilder){
+    @Autowired
+    public CreateExamController(SpringFXMLLoader springFXMLLoader, AlertBuilder alertBuilder) {
         this.springFXMLLoader = springFXMLLoader;
         this.alertBuilder = alertBuilder;
     }
 
-    @FXML public void initialize(){
-        try{
+    @FXML public void initialize() {
+        try {
             examObservableList = FXCollections.observableArrayList(this.examService.getExams());
             columnExamID.setCellValueFactory(new PropertyValueFactory<>("examid"));
             columnCreated.setCellValueFactory(new PropertyValueFactory<>("created"));
             columnPassed.setCellValueFactory(new PropertyValueFactory<>("passed"));
             columnAuthor.setCellValueFactory(new PropertyValueFactory<>("author"));
             tableExam.setItems(examObservableList);
-
-        } catch (ServiceException e){
-
+        } catch (ServiceException e) {
+            logger.error("Could not fill exam-table: " + e.getMessage());
+            Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).headerText("Error")
+                .contentText("Could not fill exam-table.").build();
         }
     }
 
-    @FXML public void insertExamValues()throws Exception {
+    @FXML public void insertExamValues() throws Exception {
         logger.debug("Entering insertExamValues()");
         mainFrameController.handleCreateExam();
     }
 
-    @FXML public void showQuestions()throws Exception {
+    @FXML public void showQuestions() throws Exception {
         logger.debug("Entering showQuestions()");
         Stage primaryStage = new Stage();
         Parent root = FXMLLoader.load(getClass().getResource("/fxml/exam/showQuestions.fxml"));
