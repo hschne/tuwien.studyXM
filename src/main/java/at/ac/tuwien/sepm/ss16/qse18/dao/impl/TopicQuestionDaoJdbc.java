@@ -2,15 +2,21 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser;
 import at.ac.tuwien.sepm.ss16.qse18.dao.TopicQuestionDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.LinkedList;
 import java.util.List;
+
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 @Service public class TopicQuestionDaoJdbc implements TopicQuestionDao {
 
@@ -21,17 +27,52 @@ import java.util.List;
         this.database = database;
     }
 
-    @Override public List<Question> getQuestionsFromTopic(int topicId) throws DaoException {
+    @Override public List<Integer> getQuestionIdsFromTopicId(int topicId) throws DaoException {
+        logger.debug("Entering getQuestionIdsFromTopicId(int)");
 
-        // TODO: Return all questions that belong to the topic with the given topicId
-
-        return null;
+        return getItems('t', "SELECT questionId FROM rel_question_topic WHERE topicId = ?",
+            topicId);
     }
 
-    @Override public List<Topic> getTopicsFromQuestion(int questionId) throws DaoException {
+    @Override public List<Integer> getTopicIdsFromQuestionId(int questionId) throws DaoException {
+        logger.debug("Entering getTopicIdsFromQuestionId(int)");
 
-        // TODO: Return all topics that belong to the question with the given questionId
+        return getItems('q', "SELECT topicId FROM rel_question_topic WHERE questionId = ?",
+            questionId);
+    }
 
-        return null;
+    private List<Integer> getItems(char typeOfId, String sqlStatement, int id) throws DaoException {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Integer> res = null;
+
+        try {
+            ps = database.getConnection().prepareStatement(sqlStatement);
+            ps.setInt(1, id);
+
+            rs = ps.executeQuery();
+            res = new LinkedList<>();
+
+            while (rs.next()) {
+                res.add(rs.getInt(1));
+            }
+        } catch (SQLException e) {
+            if (typeOfId == 'q') {
+                logger.error("Could not get all topicIds from question with id (" + id + ")" + e
+                    .getMessage());
+                throw new DaoException(
+                    "Could not get all topicIds from question with id (" + id + ")" + e
+                        .getMessage());
+            } else if (typeOfId == 't') {
+                logger.error(
+                    "Could not get all questions from topic with id (" + id + ")" + e.getMessage());
+                throw new DaoException(
+                    "Could not get all questions from topic with id (" + id + ")" + e.getMessage());
+            }
+        } finally {
+            closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
+        }
+
+        return res;
     }
 }

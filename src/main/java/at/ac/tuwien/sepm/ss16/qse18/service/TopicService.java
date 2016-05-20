@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TopicService {
     List<Topic> getTopicsFromSubject(int subjectid) throws ServiceException;
+    List<Topic> getTopicsFromQuestion(int questionid) throws ServiceException;
 }

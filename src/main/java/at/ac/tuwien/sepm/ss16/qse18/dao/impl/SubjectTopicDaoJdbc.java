@@ -32,7 +32,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     @Override public List<Integer> getTopicIdsFromSubjectId(int subjectId) throws DaoException {
         logger.debug("Entering getTopicIdsFromSubjectId(" + subjectId + ")");
 
-        return getItems(
+        return getItems('s',
             "SELECT topicid FROM rel_subject_topic WHERE subjectid = ? ORDER BY topicid ASC",
             subjectId);
     }
@@ -40,12 +40,12 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     @Override public List<Integer> getSubjectIdsFromTopicId(int topicId) throws DaoException {
         logger.debug("Entering getSubjectIdsFromTopicId(" + topicId + ")");
 
-        return getItems(
+        return getItems('t',
             "SELECT subjectid FROM rel_subject_topic WHERE topicid = ? ORDER BY subjectid ASC",
             topicId);
     }
 
-    private List<Integer> getItems(String sqlStatement, int id) throws DaoException {
+    private List<Integer> getItems(char typeOfId, String sqlStatement, int id) throws DaoException {
         List<Integer> res = null;
         PreparedStatement ps = null;
         ResultSet resultIds = null;
@@ -62,12 +62,17 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 res.add(resultIds.getInt(1));
             }
 
-            return res;
         } catch (SQLException e) {
-            logger.error("Could not get topicIds from subjectId (" + id + "): " + e);
-            throw new DaoException("Could not get topicIds from subjectId(" + id + ")");
+            if (typeOfId == 's') {
+                logger.error("Could not get topicIds from subjectId (" + id + "): " + e);
+                throw new DaoException("Could not get topicIds from subjectId(" + id + ")");
+            } else if (typeOfId == 't') {
+                logger.error("Could not get subjectId from topicId (" + id + "): " + e);
+                throw new DaoException("Could not get subjectId from topicId(" + id + ")");
+            }
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {resultIds});
         }
+        return res;
     }
 }

@@ -1,16 +1,14 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
-import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
-import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
+import at.ac.tuwien.sepm.ss16.qse18.service.*;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -42,6 +40,7 @@ import java.util.stream.Collectors;
     private ExamService examService;
     private SubjectService subjectService;
     private TopicService topicService;
+    private QuestionService questionService;
 
     @Autowired MainFrameController mainFrameController;
 
@@ -57,10 +56,11 @@ import java.util.stream.Collectors;
 
     @Autowired
     public InsertExamValuesController(ExamService examService, SubjectService subjectService,
-        TopicService topicService, AlertBuilder alertBuilder) {
+        TopicService topicService, QuestionService questionService, AlertBuilder alertBuilder) {
         this.examService = examService;
         this.subjectService = subjectService;
         this.topicService = topicService;
+        this.questionService = questionService;
         this.alertBuilder = alertBuilder;
     }
 
@@ -133,7 +133,8 @@ import java.util.stream.Collectors;
             exam.setAuthor(fieldAuthor.getText());
             exam.setCreated(new Timestamp(new Date().getTime()));
             exam.setPassed(false);
-            exam.setSubjectID(1);
+            exam.setSubjectID(
+                subjectListView.getSelectionModel().getSelectedItem().getSubject().getSubjectId());
 
             if (topicListView.getSelectionModel().getSelectedItem() == null) {
                 logger.warn("No topic selected");
@@ -150,16 +151,24 @@ import java.util.stream.Collectors;
                                                                               .getTopic()
                                                                               .getTopicId()))"
             */
-
             try {
+                exam.setExamQuestions(questionService.getQuestionsFromTopic(
+                    topicListView.getSelectionModel().getSelectedItem().getTopic().getTopicId()));
+
+                for (Question q : exam.getExamQuestions()) {
+                    System.out.println("Question " + q.getQuestionId() + ": " + q.getQuestion());
+                }
+
                 examService.createExam(exam,
-                    topicListView.getSelectionModel().getSelectedItem().getTopic(), 1);
+                    topicListView.getSelectionModel().getSelectedItem().getTopic(),
+                    1000); // examTime has to be read from textfield
+                showalert(Alert.AlertType.CONFIRMATION, "Exam created");
             } catch (ServiceException e) {
-                e.printStackTrace();
                 logger.error("Could not create exam: " + e.getMessage());
                 showalert(Alert.AlertType.ERROR,
-                    "Unexpected error. Could not create exam. For more information view logs.");
+                    "Could not create exam. Reason: " + e.getMessage());
             }
+            mainFrameController.handleExams();
         }
     }
 
@@ -174,6 +183,8 @@ import java.util.stream.Collectors;
             header = "Error";
         } else if (type == Alert.AlertType.WARNING) {
             header = "Warning";
+        } else if (type == Alert.AlertType.CONFIRMATION) {
+            header = "Success";
         }
 
         Alert alert =
