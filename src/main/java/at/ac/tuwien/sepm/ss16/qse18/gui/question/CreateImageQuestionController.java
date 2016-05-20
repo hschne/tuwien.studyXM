@@ -84,7 +84,7 @@ public class CreateImageQuestionController implements GuiController{
 
         if(textFieldImagePath.getText().isEmpty()){
             logger.debug("No image was selected");
-            alert =  new Alert(Alert.AlertType.WARNING, "Please select an image for this question. ", ButtonType.OK);
+            alert =  new Alert(Alert.AlertType.WARNING, "Please select an image for this question.", ButtonType.OK);
             alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
             return;
         }
@@ -106,6 +106,17 @@ public class CreateImageQuestionController implements GuiController{
             logger.debug("No correct answer was given to this question");
             alert = new Alert(Alert.AlertType.WARNING,
                     "You should at least give one correct answer to this question.", ButtonType.OK);
+            alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
+            return;
+        }
+
+        if((checkBoxAnswerOne.isSelected()&&textFieldAnswerOne.getText().isEmpty()) |
+                (checkBoxAnswerTwo.isSelected()&&textFieldAnswerTwo.getText().isEmpty()) |
+                (checkBoxAnswerThree.isSelected()&&textFieldAnswerThree.getText().isEmpty()) |
+                (checkBoxAnswerFour.isSelected()&&textFieldAnswerFour.getText().isEmpty())){
+            logger.debug("An empty text field was marked as correct answer");
+            alert = new Alert(Alert.AlertType.WARNING,
+                    "A correct answer can't be empty. Please add text to this answer.", ButtonType.OK);
             alert.setTitle("Warning");alert.setHeaderText("Warning");alert.showAndWait();
             return;
         }
