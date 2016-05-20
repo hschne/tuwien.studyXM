@@ -17,4 +17,6 @@ public interface QuestionTopicDao {
      * @throws DaoException if there is no connection to the resource
      * */
     List<Question> getQuestionToTopic(Topic topic) throws DaoException;
+
+    void removeQuestionFromTopic(Topic topic) throws DaoException;
 }

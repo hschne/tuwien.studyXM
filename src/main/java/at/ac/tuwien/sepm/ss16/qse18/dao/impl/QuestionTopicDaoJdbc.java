@@ -81,4 +81,18 @@ public class QuestionTopicDaoJdbc implements QuestionTopicDao {
         }
         return questions;
     }
+
+    @Override
+    public void removeQuestionFromTopic(Topic topic) throws DaoException {
+        PreparedStatement pstmt;
+        try {
+            pstmt = database.getConnection().prepareStatement("DELETE FROM REL_QUESTION_TOPIC WHERE TOPICID =?;");
+            pstmt.setInt(1,topic.getTopicId());
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
 }

@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +29,20 @@ import java.util.List;
 
     private ConnectionH2 database;
 
+    private TopicDaoJdbc topicDaoJdbc;
+
+    private SubjectTopicDaoJdbc subjectTopicDaoJdbc;
+
     @Autowired public SubjectDaoJdbc(ConnectionH2 database) {
         this.database = database;
+    }
+
+    @Autowired public void setTopicDaoJdbc(TopicDaoJdbc topicDaoJdbc) {
+        this.topicDaoJdbc = topicDaoJdbc;
+    }
+
+    @Autowired public void setSubjectTopicDaoJdbc(SubjectTopicDaoJdbc subjectTopicDaoJdbc) {
+        this.subjectTopicDaoJdbc = subjectTopicDaoJdbc;
     }
 
     @Override public Subject getSubject(int id) throws DaoException {
@@ -87,21 +100,16 @@ import java.util.List;
     }
 
     @Override public Subject createSubject(Subject subject) throws DaoException {
-        logger.debug("Entering createSubject with values " + (subject == null ?
-            "null" :
-            subjectValues(subject)));
+        assertNotNull(subject);
 
-        if (subject == null) {
-            throw new DaoException("Subject must not be null");
-        }
-
+        logger.debug("Entering createSubject with values " + subjectValues(subject));
         Subject res = null;
         PreparedStatement ps = null;
 
         try {
-            ps = database.getConnection()
-                .prepareStatement("INSERT INTO ENTITY_SUBJECT (NAME,ECTS,SEMESTER,TIME_SPENT,AUTHOR) VALUES (?,?,?,?,?)",
-                    Statement.RETURN_GENERATED_KEYS);
+            ps = database.getConnection().prepareStatement(
+                "INSERT INTO ENTITY_SUBJECT (NAME,ECTS,SEMESTER,TIME_SPENT,AUTHOR) VALUES (?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS);
             fillPreparedStatement(true, ps, 0, subject.getName(), subject.getEcts(),
                 subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());
 
@@ -126,18 +134,14 @@ import java.util.List;
     }
 
     @Override public Subject deleteSubject(Subject subject) throws DaoException {
-        logger.debug("Entering deleteSubject with values " + (subject == null ?
-            "null" :
-            subjectValues(subject)));
 
-        if (subject == null) {
-            throw new DaoException("Subject must not be null");
-        }
+        assertNotNull(subject);
 
+        logger.debug("Entering deleteSubject with values " + subjectValues(subject));
+        deleteTopics(subject);
+        deleteExams(subject);
         PreparedStatement ps = null;
-
         try {
-
             ps = database.getConnection().prepareStatement(
                 "DELETE FROM ENTITY_SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
             fillPreparedStatement(false, ps, subject.getSubjectId(), subject.getName(),
@@ -157,16 +161,10 @@ import java.util.List;
     }
 
     @Override public Subject updateSubject(Subject subject) throws DaoException {
-        logger.debug("Entering updateSubject with values" + (subject == null ?
-            "null" :
-            subjectValues(subject)));
-
-        if (subject == null) {
-            throw new DaoException("Subject must not be null");
-        }
+        assertNotNull(subject);
+        logger.debug("Entering updateSubject with values" + subjectValues(subject));
 
         PreparedStatement ps = null;
-
         try {
             ps = database.getConnection().prepareStatement(
                 "UPDATE ENTITY_SUBJECT SET name = ?, ects = ?, semester = ?, time_spent = ?, author = ? WHERE SUBJECTID = ?");
@@ -189,6 +187,31 @@ import java.util.List;
                     + subjectValues(subject));
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, null);
+        }
+    }
+
+    private void assertNotNull(Subject subject) throws DaoException {
+        if (subject == null) {
+            throw new DaoException("Subject must not be null");
+        }
+    }
+
+    //TODO: This is TEMPRORARY. Replace with method from examDao as soon as possible.
+    private void deleteExams(Subject subject) throws DaoException {
+        try {
+            PreparedStatement statement = database.getConnection()
+                .prepareStatement("DELETE FROM ENTITY_EXAM WHERE SUBJECT = ?");
+            statement.setInt(1, subject.getSubjectId());
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void deleteTopics(Subject subject) throws DaoException {
+        List<Topic> topics = subjectTopicDaoJdbc.getTopicToSubject(subject);
+        for (Topic topic : topics) {
+            topicDaoJdbc.deleteTopic(topic);
         }
     }
 
