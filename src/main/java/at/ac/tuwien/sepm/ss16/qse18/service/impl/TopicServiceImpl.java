@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
-import at.ac.tuwien.sepm.ss16.qse18.dao.TopicQuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.TopicDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -24,10 +24,10 @@ import java.util.List;
 
     private SubjectTopicDao stDao;
     private TopicDaoJdbc tDao;
-    private TopicQuestionDao tqDao;
+    private QuestionTopicDao tqDao;
 
     @Autowired
-    public TopicServiceImpl(SubjectTopicDao stDao, TopicDaoJdbc tDao, TopicQuestionDao tqDao) {
+    public TopicServiceImpl(SubjectTopicDao stDao, TopicDaoJdbc tDao, QuestionTopicDao tqDao) {
         this.stDao = stDao;
         this.tDao = tDao;
         this.tqDao = tqDao;

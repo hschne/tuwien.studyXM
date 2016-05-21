@@ -3,7 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.AnswerDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
-import at.ac.tuwien.sepm.ss16.qse18.dao.TopicQuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
@@ -24,10 +24,10 @@ import java.util.List;
 @Service public class QuestionServiceImpl implements QuestionService {
     private QuestionDao qdao;
     private AnswerDao adao;
-    private TopicQuestionDao tqDao;
+    private QuestionTopicDao tqDao;
     private Logger logger = LogManager.getLogger(QuestionServiceImpl.class);
 
-    @Autowired public QuestionServiceImpl(QuestionDao qd, AnswerDao ad, TopicQuestionDao tqDao) {
+    @Autowired public QuestionServiceImpl(QuestionDao qd, AnswerDao ad, QuestionTopicDao tqDao) {
         this.qdao = qd;
         this.adao = ad;
         this.tqDao = tqDao;

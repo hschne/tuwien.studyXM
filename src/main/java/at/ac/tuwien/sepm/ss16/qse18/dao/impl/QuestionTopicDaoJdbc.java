@@ -2,8 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser;
-import at.ac.tuwien.sepm.ss16.qse18.dao.TopicQuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +17,12 @@ import java.util.List;
 
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
-@Service public class TopicQuestionDaoJdbc implements TopicQuestionDao {
+@Service public class QuestionTopicDaoJdbc implements QuestionTopicDao {
 
     private static final Logger logger = LogManager.getLogger();
     private ConnectionH2 database;
 
-    @Autowired public TopicQuestionDaoJdbc(ConnectionH2 database) {
+    @Autowired public QuestionTopicDaoJdbc(ConnectionH2 database) {
         this.database = database;
     }
 
