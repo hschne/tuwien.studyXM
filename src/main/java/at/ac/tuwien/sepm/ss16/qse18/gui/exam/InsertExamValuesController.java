@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Controller of the create exam window in which in which new exams can be saved into the database
  * @author Zhang Haixiang, Bicer Cem
  */
 @Component public class InsertExamValuesController implements GuiController {
