@@ -156,7 +156,7 @@ import static org.mockito.Mockito.*;
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
 
 
-        this.examService.getRightQuestions(this.exam, 1, 2000);
+        this.examService.getRightQuestions(this.exam, 1, 1000);
         verify(this.mockSubjectQuestionDaoJdbc).getAllQuestionsOfSubject(this.exam, 1);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
         verify(this.mockExamQuestionDaoJdbc).getAllQuestionBooleans(questionIDList);
@@ -192,7 +192,7 @@ import static org.mockito.Mockito.*;
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3);
 
-        test = this.examService.getRightQuestions(this.exam, 1, 1000);
+        test = this.examService.getRightQuestions(this.exam, 1, 1500);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
         this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
@@ -309,7 +309,7 @@ import static org.mockito.Mockito.*;
         q.setQuestionId(questionID);
         q.setQuestion(question);
         q.setType(QuestionType.valueOf(1));
-        q.setQuestionTime(20);
+        q.setQuestionTime(500);
 
         return q;
     }
