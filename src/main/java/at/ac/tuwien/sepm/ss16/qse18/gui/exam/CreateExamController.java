@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Controller of the exam window, in which all exams of the database are displayed
  * @author Zhang Haixiang
  *
  */

@@ -16,7 +16,7 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * JDBC Implementation of the CRUD-Method of the
+ * JDBC Implementation of the CRUD-Method of Exam
  *
  * @author Zhang Haixiang
  */

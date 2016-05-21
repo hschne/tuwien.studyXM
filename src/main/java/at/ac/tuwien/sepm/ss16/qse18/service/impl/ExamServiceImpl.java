@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * This class represents the service layer of exams
  * @author Zhang Haixiang
  */
 @Service

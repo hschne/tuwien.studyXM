@@ -17,6 +17,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Controller of the showQuestion window in which the questions of the chosen exam are displayed
  * @author Zhang Haixiang
  */
 @Component
