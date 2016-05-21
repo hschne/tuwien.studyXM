@@ -17,6 +17,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -25,6 +26,7 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -51,7 +53,7 @@ import static org.mockito.Mockito.when;
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
         when(mockConnection.createStatement()).thenReturn(mockStatement);
 
-        this.examDaoJdbc = new ExamDaoJdbc(mockConnectionH2, mockExamQuestionDao);
+        this.examDaoJdbc = new ExamDaoJdbc(this.mockConnectionH2, this.mockExamQuestionDao);
 
         ArrayList<Question> al = new ArrayList<Question>(){};
         Question question = new Question();
@@ -73,7 +75,8 @@ import static org.mockito.Mockito.when;
     // Testing create(Exam)
     //----------------------------------------------------------------------------------------------
     @Test public void test_createWith_validParameters_should_persist() throws Exception{
-
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
         Exam exam;
 
         exam = this.examDaoJdbc.create(this.testExam, this.testExam.getExamQuestions());
@@ -96,6 +99,8 @@ import static org.mockito.Mockito.when;
 
     @Test(expected = DaoException.class) public void test_createExamWithAlreadyExistingID_should_fail()
         throws Exception{
+        when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
+        when(mockResultSet.next()).thenReturn(true);
         Exam temp;
 
         temp = this.examDaoJdbc.create(this.testExam, this.testExam.getExamQuestions());
@@ -115,7 +120,7 @@ import static org.mockito.Mockito.when;
         exam = this.examDaoJdbc.delete(this.testExam);
 
         verify(this.mockPreparedStatement).executeUpdate();
-        verify(this.mockExamQuestionDao).delete(this.testExam);
+        verify(this.mockExamQuestionDao).delete(this.testExam.getExamid());
         assertSame("Exam Objects should be the same", exam, testExam);
     }
 

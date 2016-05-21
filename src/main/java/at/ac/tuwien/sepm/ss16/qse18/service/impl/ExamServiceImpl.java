@@ -199,10 +199,10 @@ public class ExamServiceImpl implements ExamService {
         return examQuestions;
     }
 
-    @Override public List<Question> getAllQuestionsOfExam(int examID) throws ServiceException{
+    @Override public List<Integer> getAllQuestionsOfExam(int examID) throws ServiceException{
         logger.debug("entering getAllQuestionsOfExam with parameters {}", examID);
 
-        if(examID <= 1){
+        if(examID <= 0){
             logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID);
             throw new ServiceException("Invalid examID, please check your input");
         }

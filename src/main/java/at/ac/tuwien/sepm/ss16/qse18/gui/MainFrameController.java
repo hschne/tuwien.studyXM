@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
@@ -164,6 +165,14 @@ import java.io.IOException;
         }
     }
 
+    public void handleShowQuestions(){
+        logger.debug("Loading ShowQuestions screen");
+        try{
+            setSubView("/fxml/exam/showQuestions.fxml", ShowQuestionsController.class);
+        }catch (IOException e){
+            handleException(e);
+        }
+    }
 
 
     private void handleException(Exception e) {

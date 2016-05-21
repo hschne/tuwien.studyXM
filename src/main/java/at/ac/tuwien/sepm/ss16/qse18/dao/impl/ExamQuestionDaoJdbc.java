@@ -68,12 +68,12 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         }
     }
 
-    @Override public void delete(Exam exam) throws DaoException {
-        logger.debug("entering method delete with parameters {}", exam);
+    @Override public void delete(int examID) throws DaoException {
+        logger.debug("entering method delete with parameters {}", examID);
 
-        if (!DTOValidator.validate(exam)) {
-            logger.error("Dao Exception delete() {}", exam);
-            throw new DaoException("Invalid values, please check your input");
+        if (examID <= 0) {
+            logger.error("Dao Exception delete() {}", examID);
+            throw new DaoException("Invalid examID, please check your input");
         }
 
         PreparedStatement pstmt = null;
@@ -82,13 +82,13 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             pstmt = this.database.getConnection().prepareStatement("Delete from rel_exam_question "
                 + "where examid = ?");
 
-            pstmt.setInt(1, exam.getExamid());
+            pstmt.setInt(1, examID);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
-            logger.error("SQL Exception in delete with parameters {}", exam, e);
+            logger.error("SQL Exception in delete with parameters {}", examID, e);
             throw new DaoException(
-                "Could not delete ExamQuestion with values(" + exam.getExamid() + ")");
+                "Could not delete ExamQuestion with values(" + examID + ")");
 
         } finally {
             try {
@@ -96,7 +96,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
                     pstmt.close();
                 }
             } catch (SQLException e) {
-                logger.error("SQL Exception in delete with parameters {}", exam, e);
+                logger.error("SQL Exception in delete with parameters {}", examID, e);
                 throw new DaoException("Prepared Statement could not be closed");
             }
         }
@@ -154,12 +154,12 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         return questionBoolean;
     }
 
-    @Override public List<Question> getAllQuestionsOfExam(int examID) throws DaoException {
+    @Override public List<Integer> getAllQuestionsOfExam(int examID) throws DaoException {
         logger.debug("entering method getALlQuestionsOfExam with parameters {}", examID);
-        ArrayList<Question> questionList = new ArrayList<>();
-        Question q = null;
+        ArrayList<Integer> questionIDList = new ArrayList<>();
 
         if(examID <= 0){
+            logger.error("Dao Exception in getAllQuestionsofExam with parameters", examID);
             throw new DaoException("Invalid Exam ID, please check your input");
         }
 
@@ -173,18 +173,13 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             rs = pstmt.executeQuery();
 
             while(rs.next()) {
-                q = new Question();
-                q.setQuestionId(rs.getInt("questionid"));
-                q.setQuestion(rs.getString("question"));
-                q.setType(QuestionType.valueOf(rs.getInt("type")));
-                q.setQuestionTime(rs.getLong("question_time"));
-                questionList.add(q);
+                questionIDList.add(rs.getInt("questionid"));
             }
 
 
         }catch (SQLException e){
             logger.error("SQL Exception in delete with parameters {}", examID);
-            throw new DaoException("Could not get List with all Questions for Exam ID" + examID);
+            throw new DaoException("Could not get List with all Questions for Exam ID " + examID);
         }finally {
             try {
                 if (rs != null) {
@@ -204,7 +199,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
                 throw new DaoException("Prepared Statement could not be closed");
             }
         }
-        return questionList;
+        return questionIDList;
     }
 
 

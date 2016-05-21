@@ -57,7 +57,7 @@ public class ExamDaoJdbc implements ExamDao{
 
             generatedKey = pstmt.getGeneratedKeys();
 
-            if(generatedKey.next()) {
+            if(generatedKey != null && generatedKey.next()) {
                exam.setExamid(generatedKey.getInt(1));
             } else {
                 logger.error("Primary Key for exam could not be created");
@@ -111,7 +111,7 @@ public class ExamDaoJdbc implements ExamDao{
             pstmt = this.database.getConnection().prepareStatement("Delete from entity_exam where examid = ? and created = ?"
                 + "and passed = ? and author = ? and subject = ?");
 
-            examQuestionDao.delete(exam);
+            examQuestionDao.delete(exam.getExamid());
 
 
             pstmt.setInt(1, exam.getExamid());
@@ -147,6 +147,7 @@ public class ExamDaoJdbc implements ExamDao{
         Exam exam = null;
 
         if(examID <= 0){
+            logger.error("DaoException getExam with parameters {}", examID);
             throw new DaoException("Invalid Exam ID, please check your input");
         }
 

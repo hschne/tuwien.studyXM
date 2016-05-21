@@ -252,6 +252,24 @@ import static org.mockito.Mockito.*;
     }
     //----------------------------------------------------------------------------------------------
 
+    //Testing getAllQuestionsOfExam(int)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_getAllQuestionsCallsRightMethodInDao() throws Exception{
+        this.examService.getAllQuestionsOfExam(1);
+        verify(this.mockExamQuestionDaoJdbc).getAllQuestionsOfExam(1);
+    }
+
+    @Test(expected = ServiceException.class) public void test_getAllQuestionsWithInvalidExamID_should_fail()
+        throws Exception{
+        this.examService.getAllQuestionsOfExam(-1);
+
+    }
+
+    @Test public void test_getAllQuestionsWithoutDatabaseConnection_should_fail()
+        throws Exception{
+        //TODO add test
+    }
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() throws Exception {
         //nothing to tear down

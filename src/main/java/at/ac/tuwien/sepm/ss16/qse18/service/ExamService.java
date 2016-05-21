@@ -15,5 +15,5 @@ public interface ExamService {
     List<Exam> getExams()throws ServiceException;
     Exam createExam(Exam exam, Topic topic, int examTime)throws ServiceException;
     Exam deleteExam(Exam exam)throws ServiceException;
-    List<Question> getAllQuestionsOfExam(int examID)throws ServiceException;
+    List<Integer> getAllQuestionsOfExam(int examID)throws ServiceException;
 }
