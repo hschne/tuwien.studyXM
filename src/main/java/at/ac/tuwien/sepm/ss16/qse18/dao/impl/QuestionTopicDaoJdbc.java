@@ -39,6 +39,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     @Override public List<Topic> getTopicsFromQuestion(Question question) throws DaoException {
         logger.debug("Entering getTopicsFromQuestion with parameter [{}]", question);
 
+        if (question == null) {
+            logger.error("Question must not be null");
+            throw new DaoException("Question is null in getTopicsFromQuestion()");
+        }
+
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Topic> res = null;
@@ -47,8 +52,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             ps = database.getConnection().prepareStatement(
                 "SELECT t.* FROM rel_question_topic NATURAL JOIN entity_topic t WHERE questionId = ?");
             ps.setInt(1, question.getQuestionId());
-
             rs = ps.executeQuery();
+
             res = new LinkedList<>();
 
             while (rs.next()) {
@@ -96,22 +101,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             logger.error("Couldn't get all Quesitons to this Topic " + topic, e);
             throw new DaoException("Couldn't get all Questions to this Topic" + topic);
         } finally {
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    logger.error("Couldn't close Statement");
-                    throw new DaoException("Couldn't close Statement");
-                }
-            }
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    logger.error("Couldn't close ResultSet");
-                    throw new DaoException("Couldn't close ResultSet");
-                }
-            }
+            closeStatementsAndResultSets(new Statement[] {pstmt}, new ResultSet[] {rs});
         }
         return questions;
     }

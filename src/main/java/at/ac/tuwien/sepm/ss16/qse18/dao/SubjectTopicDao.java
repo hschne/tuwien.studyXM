@@ -33,5 +33,12 @@ public interface SubjectTopicDao {
      * */
     List<Topic> getTopicToSubject(Subject subject) throws DaoException;
 
+    /**
+     * Returns all subjects for a specific {@param topic}
+     *
+     * @param topic the topic for which all subjects are returned
+     * @return a list of all subjects
+     * @throws DaoException if there is no connection to the source
+     */
     List<Subject> getSubjectsFromTopic(Topic topic) throws DaoException;
 }

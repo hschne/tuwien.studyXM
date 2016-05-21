@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.*;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.TopicDaoJdbc;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.TopicDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
@@ -25,15 +24,15 @@ import java.util.List;
     private QuestionDao qDao;
     private SubjectDao sdao;
     private SubjectTopicDao stDao;
-    private TopicDaoJdbc tDao;
-    private QuestionTopicDao tqDao;
+    private QuestionTopicDao qtDao;
 
-    @Autowired public TopicServiceImpl(SubjectTopicDao stDao, SubjectDao sdao, TopicDaoJdbc tDao,
-        QuestionTopicDao tqDao) {
+    @Autowired public TopicServiceImpl(SubjectTopicDao stDao, SubjectDao sdao, TopicDao tDao,
+        QuestionDao qDao, QuestionTopicDao qtDao) {
         this.stDao = stDao;
         this.sdao = sdao;
-        this.tDao = tDao;
-        this.tqDao = tqDao;
+        this.topicDao = tDao;
+        this.qtDao = qtDao;
+        this.qDao = qDao;
     }
 
     public TopicServiceImpl(TopicDaoJdbc topicDao) {
@@ -104,11 +103,21 @@ import java.util.List;
     @Override public List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException {
         logger.debug("Entering getTopicsFromSubject()");
 
+        if (subject == null) {
+            logger.error("Subject must not be null in getTopicsFromSubject()");
+            throw new ServiceException("Subject is null in getTopicsFromSubject()");
+        }
+
         return getTopicsFromId('s', subject.getSubjectId());
     }
 
     @Override public List<Topic> getTopicsFromQuestion(Question question) throws ServiceException {
         logger.debug("Entering getTopicsFromSubject()");
+
+        if (question == null) {
+            logger.error("Question must not be null in getTopicsFromQuestion()");
+            throw new ServiceException("Question is null in getTopicsFromQuestion()");
+        }
 
         return getTopicsFromId('q', question.getQuestionId());
     }
@@ -118,7 +127,7 @@ import java.util.List;
 
         try {
             if (typeOfId == 'q') {
-                res = tqDao.getTopicsFromQuestion(qDao.getQuestion(id));
+                res = qtDao.getTopicsFromQuestion(qDao.getQuestion(id));
             } else if (typeOfId == 's') {
                 res = stDao.getTopicToSubject(sdao.getSubject(id));
             } else {

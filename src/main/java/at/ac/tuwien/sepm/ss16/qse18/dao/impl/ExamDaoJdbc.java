@@ -69,7 +69,7 @@ public class ExamDaoJdbc implements ExamDao{
             }
 
         } catch (SQLException e) {
-            logger.error("SQL Exception in create with parameters {}", exam, e);
+            logger.error("SQL Exception in create with parameters {}: " + e, exam);
             throw new DaoException(
                 "Could not create Exam with values(" + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
                     + ", " + exam.getAuthor() + ")");

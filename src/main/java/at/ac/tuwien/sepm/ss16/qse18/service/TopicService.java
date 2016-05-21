@@ -55,7 +55,21 @@ public interface TopicService {
      */
     Topic updateTopic(Topic topic) throws ServiceException;
 
+    /**
+     * Returns a list of all topics that belong to {@param subject}
+     *
+     * @param subject the subject we want the topics to
+     * @return a list containing every topic of the given {@param subject}
+     * @throws ServiceException if an error occurs in the DAO layer
+     */
     List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException;
 
+    /**
+     * Returns a list of all topics that belong to {@param question}
+     *
+     * @param question the question we want the topics to
+     * @return a list containing every topic of the given {@param question}
+     * @throws ServiceException if an error occurs in the DAO layer
+     */
     List<Topic> getTopicsFromQuestion(Question question) throws ServiceException;
 }

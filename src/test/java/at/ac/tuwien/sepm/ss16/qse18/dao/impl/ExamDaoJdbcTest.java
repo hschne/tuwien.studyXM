@@ -199,8 +199,7 @@ import static org.mockito.Mockito.when;
             exam.getPassed() == exam2.getPassed());
         assertNotEquals("These two exams should not have the same Author", exam.getAuthor(),
             exam2.getAuthor());
-        System.out.println(exam.getSubjectID());
-        System.out.println(exam2.getSubjectID());
+
         assertFalse("These two exams should not have the same subject ID",
             exam.getSubjectID() == exam2.getSubjectID());
     }

@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qse18.service;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
 import org.junit.After;
 import org.junit.Before;
