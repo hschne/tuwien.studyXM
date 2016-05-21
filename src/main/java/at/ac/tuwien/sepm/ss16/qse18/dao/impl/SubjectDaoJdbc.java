@@ -30,7 +30,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     private ConnectionH2 database;
 
-    @Autowired SubjectDaoJdbc(ConnectionH2 database) {
+    @Autowired public SubjectDaoJdbc(ConnectionH2 database) {
         this.database = database;
     }
 
@@ -103,7 +103,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
         try {
             ps = database.getConnection()
-                .prepareStatement("INSERT INTO ENTITY_SUBJECT VALUES (DEFAULT,?,?,?,?,?)",
+                .prepareStatement("INSERT INTO ENTITY_SUBJECT (NAME,ECTS,SEMESTER,TIME_SPENT,AUTHOR) VALUES (?,?,?,?,?)",
                     Statement.RETURN_GENERATED_KEYS);
             fillPreparedStatement(true, ps, 0, subject.getName(), subject.getEcts(),
                 subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());

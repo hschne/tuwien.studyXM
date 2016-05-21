@@ -50,8 +50,8 @@ import java.util.Objects;
         verifyCreate(subject);
         verifyUpdate(subject);
         try {
-            sd.createSubject(subject);
-            return subject;
+
+            return  sd.createSubject(subject);
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());
@@ -72,8 +72,7 @@ import java.util.Objects;
     @Override public Subject updateSubject(Subject subject) throws ServiceException {
         verifyUpdate(subject);
         try {
-            sd.updateSubject(subject);
-            return subject;
+            return  sd.updateSubject(subject);
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());

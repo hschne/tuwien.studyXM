@@ -2,7 +2,9 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.TopicDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +25,7 @@ import java.util.List;
 public class TopicDaoJdbc implements TopicDao {
     private static final Logger logger = LogManager.getLogger(TopicDaoJdbc.class);
     private ConnectionH2 database;
+    private SubjectTopicDao subjectTopicDao;
     private static final String GETTOPIC_SQL = "SELECT * FROM ENTITY_TOPIC WHERE TOPICID = ?;";
     private static final String GETOPICS_SQL = "SELECT * FROM ENTITY_TOPIC;";
     private static final String CREATE_SQL = "INSERT INTO ENTITY_TOPIC (TOPIC) VALUES(?);";
@@ -32,6 +35,7 @@ public class TopicDaoJdbc implements TopicDao {
     @Autowired
     public TopicDaoJdbc(ConnectionH2 database) {
         this.database = database;
+        subjectTopicDao = new SubjectTopicDaoJdbc(database);
     }
 
     @Override
@@ -89,11 +93,15 @@ public class TopicDaoJdbc implements TopicDao {
     }
 
     @Override
-    public Topic createTopic(Topic topic) throws DaoException {
+    public Topic createTopic(Topic topic,Subject subject) throws DaoException {
         logger.debug("Entering createTopic with parameters {}",topic);
         if(topic == null){
             throw new DaoException("Topic must not be null");
         }
+        if(subject == null){
+            throw new DaoException("Subject must not be null");
+        }
+
 
         Topic createdTopic = null;
         PreparedStatement pstmt = null;
@@ -108,6 +116,7 @@ public class TopicDaoJdbc implements TopicDao {
             if(generatedKey.next()){
                 createdTopic = new Topic(generatedKey.getInt(1),topic.getTopic());
             }
+            subjectTopicDao.createSubjectTopic(subject,createdTopic);
         }
         catch (SQLException e){
             logger.error("Could not create " + topic,e);
@@ -120,20 +129,24 @@ public class TopicDaoJdbc implements TopicDao {
     }
 
     @Override
-    public Topic deleteTopic(Topic topic) throws DaoException {
+    public boolean deleteTopic(Topic topic) throws DaoException {
         logger.debug("Entering deleteTopic with parameters {}",topic);
         if(topic == null){
             throw new DaoException("Topic must not be null");
         }
-
-        Topic deletedTopic = null;
+        try {
+            subjectTopicDao.deleteSubjectTopic(topic);
+        }
+        catch (DaoException e){
+            logger.error(e);
+            throw new DaoException(e.getMessage());
+        }
         PreparedStatement pstmt = null;
 
         try{
             pstmt = database.getConnection().prepareStatement(DELETE_SQL);
             pstmt.setInt(1,topic.getTopicId());
             pstmt.executeUpdate();
-            deletedTopic = topic;
         }
         catch (SQLException e){
             logger.error("Could not delete " + topic,e);
@@ -142,7 +155,7 @@ public class TopicDaoJdbc implements TopicDao {
         finally {
             closeStatementAndResultSet(pstmt,null);
         }
-        return deletedTopic;
+        return true;
     }
 
     @Override
@@ -169,7 +182,7 @@ public class TopicDaoJdbc implements TopicDao {
         return updatedTopic;
     }
 
-    private void closeStatementAndResultSet(Statement statement, ResultSet resultSet) throws DaoException {
+    public static void closeStatementAndResultSet(Statement statement, ResultSet resultSet) throws DaoException {
         if (statement != null) {
             try {
                 statement.close();

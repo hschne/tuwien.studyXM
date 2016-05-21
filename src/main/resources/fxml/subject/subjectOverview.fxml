@@ -24,12 +24,12 @@
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleDelete" text="Delete" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+            <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" text="Delete" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
             </Button>
-            <Button mnemonicParsing="false" onAction="#handleEdit" text="Edit" GridPane.columnIndex="1" />
+            <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEdit" text="Edit" GridPane.columnIndex="1" />
          </children>
       </GridPane>
     </children>

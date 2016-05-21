@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.JavaFxThreadingRule;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import org.junit.Before;
 import org.junit.Rule;
@@ -38,6 +39,8 @@ import static org.mockito.Mockito.when;
         controller = new SubjectOverviewController(mockSpringFXMLLoader, mockSubjectService,
             mockAlertBuilder);
         controller.subjectListView = new ListView<>();
+        controller.editButton = new Button();
+        controller.deleteButton = new Button();
     }
 
     @Test public void testInitialzeOk() throws Exception {
