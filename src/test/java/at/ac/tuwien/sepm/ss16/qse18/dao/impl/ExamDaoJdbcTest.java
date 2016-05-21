@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -33,8 +34,8 @@ import static org.mockito.Mockito.when;
 /**
  * @author Zhang Haixiang
  */
-    @RunWith(PowerMockRunner.class) @PrepareForTest(ConnectionH2.class) @PowerMockIgnore("javax.management.*")
-    public class ExamDaoJdbcTest {
+@RunWith(PowerMockRunner.class) @PrepareForTest(ConnectionH2.class)
+@PowerMockIgnore("javax.management.*") public class ExamDaoJdbcTest {
 
     private ExamDaoJdbc examDaoJdbc;
     @Mock private ExamQuestionDao mockExamQuestionDao;
@@ -55,7 +56,8 @@ import static org.mockito.Mockito.when;
 
         this.examDaoJdbc = new ExamDaoJdbc(this.mockConnectionH2, this.mockExamQuestionDao);
 
-        ArrayList<Question> al = new ArrayList<Question>(){};
+        ArrayList<Question> al = new ArrayList<Question>() {
+        };
         Question question = new Question();
         question.setQuestion("TestQuestion");
         question.setQuestionId(1);
@@ -74,7 +76,9 @@ import static org.mockito.Mockito.when;
 
     // Testing create(Exam)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_createWith_validParameters_should_persist() throws Exception{
+    @Test public void test_createWith_validParameters_should_persist() throws Exception {
+        when(mockConnectionH2.getConnection().prepareStatement(anyString(), anyInt()))
+            .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         Exam exam;
@@ -85,7 +89,8 @@ import static org.mockito.Mockito.when;
         assertSame("Exam Objects should be the same", exam, this.testExam);
     }
 
-    @Test(expected = DaoException.class) public void test_createWithoutDatabaseConnection_should_fail() throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_createWithoutDatabaseConnection_should_fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
         this.examDaoJdbc.create(this.testExam, this.testExam.getExamQuestions());
 
@@ -93,12 +98,15 @@ import static org.mockito.Mockito.when;
         mockConnectionH2.getConnection();
     }
 
-    @Test(expected = DaoException.class) public void test_createWith_Null_shoud_fail() throws Exception{
+    @Test(expected = DaoException.class) public void test_createWith_Null_shoud_fail()
+        throws Exception {
         this.examDaoJdbc.create(null, null);
     }
 
-    @Test(expected = DaoException.class) public void test_createExamWithAlreadyExistingID_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_createExamWithAlreadyExistingID_should_fail() throws Exception {
+        when(mockConnectionH2.getConnection().prepareStatement(anyString(), anyInt()))
+            .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         Exam temp;
@@ -114,7 +122,7 @@ import static org.mockito.Mockito.when;
 
     // Testing delete(Exam)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_deleteWithValidExam_should_persist() throws Exception{
+    @Test public void test_deleteWithValidExam_should_persist() throws Exception {
         Exam exam;
 
         exam = this.examDaoJdbc.delete(this.testExam);
@@ -124,19 +132,20 @@ import static org.mockito.Mockito.when;
         assertSame("Exam Objects should be the same", exam, testExam);
     }
 
-    @Test(expected = DaoException.class) public void test_deleteWithNull_should_fail() throws Exception{
+    @Test(expected = DaoException.class) public void test_deleteWithNull_should_fail()
+        throws Exception {
         this.examDaoJdbc.delete(null);
     }
 
     @Test(expected = DaoException.class) public void test_deleteWithNoExistingExam_should_fail()
-        throws Exception{
+        throws Exception {
 
         when(this.mockPreparedStatement.executeUpdate()).thenThrow(DaoException.class);
         this.examDaoJdbc.delete(this.testExam);
     }
 
-    @Test(expected = DaoException.class) public void test_delteWithoutDatabaseConnection_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_delteWithoutDatabaseConnection_should_fail() throws Exception {
 
         when(this.mockConnectionH2.getConnection()).thenThrow(DaoException.class);
 
@@ -149,7 +158,7 @@ import static org.mockito.Mockito.when;
 
     // Testing getExam(int)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_getExamWithValidExamID_should_persist()throws Exception{
+    @Test public void test_getExamWithValidExamID_should_persist() throws Exception {
         when(this.mockResultSet.next()).thenReturn(true);
         when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(1);
         when(this.mockResultSet.getTimestamp(anyString())).thenReturn(new Timestamp(798));
@@ -161,17 +170,20 @@ import static org.mockito.Mockito.when;
 
         assertTrue("There should be exactly one element found", exam != null);
         assertEquals("Found exam should have the ID 1", exam.getExamid(), 1);
-        assertTrue("Found exam should have Timestamp 798", exam.getCreated().equals(new Timestamp(798)));
+        assertTrue("Found exam should have Timestamp 798",
+            exam.getCreated().equals(new Timestamp(798)));
         assertTrue("Found exam shouldn't been passsd yet", exam.getPassed() == false);
         assertEquals("Found exam should have author test1", exam.getAuthor(), "Test1");
         assertEquals("Found exam should have subject ID 1", exam.getSubjectID(), 1);
 
     }
 
-    @Test public void test_getExamWithValidExamID2_should_persist() throws Exception{
+    @Test public void test_getExamWithValidExamID2_should_persist() throws Exception {
         when(this.mockResultSet.next()).thenReturn(true);
-        when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(2).thenReturn(2).thenReturn(3);
-        when(this.mockResultSet.getTimestamp(anyString())).thenReturn(new Timestamp(123)).thenReturn(new Timestamp(80));
+        when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(2).thenReturn(2)
+            .thenReturn(3);
+        when(this.mockResultSet.getTimestamp(anyString())).thenReturn(new Timestamp(123))
+            .thenReturn(new Timestamp(80));
         when(this.mockResultSet.getBoolean(anyString())).thenReturn(false).thenReturn(true);
         when(this.mockResultSet.getString(anyString())).thenReturn("Test2").thenReturn("Test3");
 
@@ -179,17 +191,22 @@ import static org.mockito.Mockito.when;
         Exam exam2 = this.examDaoJdbc.getExam(2);
 
         assertFalse("These two exams should not be the same", exam == exam2);
-        assertFalse("These two exams should not have the same ID's", exam.getExamid() == exam2.getExamid());
-        assertFalse("These two exams should not have the same Timestamps", exam.getCreated().equals(exam2.getCreated()));
-        assertFalse("These two exams should not have the same passed status", exam.getPassed() == exam2.getPassed());
-        assertNotEquals("These two exams should not have the same Author", exam.getAuthor(), exam2.getAuthor());
+        assertFalse("These two exams should not have the same ID's",
+            exam.getExamid() == exam2.getExamid());
+        assertFalse("These two exams should not have the same Timestamps",
+            exam.getCreated().equals(exam2.getCreated()));
+        assertFalse("These two exams should not have the same passed status",
+            exam.getPassed() == exam2.getPassed());
+        assertNotEquals("These two exams should not have the same Author", exam.getAuthor(),
+            exam2.getAuthor());
         System.out.println(exam.getSubjectID());
         System.out.println(exam2.getSubjectID());
-        assertFalse("These two exams should not have the same subject ID", exam.getSubjectID() == exam2.getSubjectID());
+        assertFalse("These two exams should not have the same subject ID",
+            exam.getSubjectID() == exam2.getSubjectID());
     }
 
-    @Test(expected = DaoException.class) public void test_getExamWithoutDatabaseConnection_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_getExamWithoutDatabaseConnection_should_fail() throws Exception {
         when(this.mockConnectionH2.getConnection()).thenThrow(DaoException.class);
         this.examDaoJdbc.getExam(1);
         PowerMockito.verifyStatic();
@@ -197,7 +214,7 @@ import static org.mockito.Mockito.when;
 
     }
 
-    @Test public void test_getExamWithTooBigInt_should_fail()throws Exception{
+    @Test public void test_getExamWithTooBigInt_should_fail() throws Exception {
         Exam e = this.examDaoJdbc.getExam(Integer.MAX_VALUE);
         assertTrue("There should be no Subject with ID 2147483647 (= max int value)", e == null);
     }
@@ -206,7 +223,7 @@ import static org.mockito.Mockito.when;
 
     //Testing getExams()
     //----------------------------------------------------------------------------------------------
-    @Test public void test_getExamsWith10ElementsInTheDatabase_should_persist()throws Exception{
+    @Test public void test_getExamsWith10ElementsInTheDatabase_should_persist() throws Exception {
         when(mockResultSet.next()).thenAnswer(new Answer<Boolean>() {
             private int count = 0;
 
@@ -223,10 +240,12 @@ import static org.mockito.Mockito.when;
         assertSame("The List should contain 10 Exams", examList.size(), 10);
     }
 
-    @Test public void test_getExamWith2ElementsInTheDatabase_should_persist() throws Exception{
+    @Test public void test_getExamWith2ElementsInTheDatabase_should_persist() throws Exception {
         when(this.mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
-        when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(1).thenReturn(2).thenReturn(2);
-        when(this.mockResultSet.getTimestamp(anyString())).thenReturn(new Timestamp(10)).thenReturn(new Timestamp(20));
+        when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(1).thenReturn(2)
+            .thenReturn(2);
+        when(this.mockResultSet.getTimestamp(anyString())).thenReturn(new Timestamp(10))
+            .thenReturn(new Timestamp(20));
         when(this.mockResultSet.getBoolean(anyString())).thenReturn(true).thenReturn(false);
         when(this.mockResultSet.getString(anyString())).thenReturn("Author1").thenReturn("Author2");
 
@@ -253,16 +272,15 @@ import static org.mockito.Mockito.when;
         assertEquals("Exam2 should have subject ID 2", exam2.getSubjectID(), 2);
     }
 
-    @Test(expected = DaoException.class) public void test_getExamsWithoutDatabaseConnection_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_getExamsWithoutDatabaseConnection_should_fail() throws Exception {
         when(this.mockConnectionH2.getConnection()).thenThrow(DaoException.class);
         this.examDaoJdbc.getExams();
         PowerMockito.verifyStatic();
         this.mockConnectionH2.getConnection();
     }
 
-    @Test public void test_getExamWithoutAnyElementsInTheDatabase_should_fail()
-        throws Exception{
+    @Test public void test_getExamWithoutAnyElementsInTheDatabase_should_fail() throws Exception {
         when(this.mockResultSet.next()).thenReturn(false);
 
         List<Exam> examList = this.examDaoJdbc.getExams();
