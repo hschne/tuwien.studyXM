@@ -234,6 +234,12 @@ public class ExamServiceImpl implements ExamService {
                 + " is too small");
         }
 
+        if(questionTimeCounter < examTime*0.8){
+            logger.error("Service Exception getRightQuestions with parameters{}", exam);
+            throw new ServiceException("There aren't enough questions to cover the exam time " + examTime
+                + " ,please reduce the exam time");
+        }
+
         return examQuestions;
     }
 
