@@ -148,9 +148,18 @@ import java.io.IOException;
     }
 
     public void handleCreateExam() {
-        logger.debug("Loading Create exam screen");
+        logger.debug("Loading create exam screen");
         try {
             setSubView("/fxml/exam/insertExamValues.fxml", InsertExamValuesController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateQuestion() {
+        logger.debug("Loading create question screen");
+        try {
+            setSubView("/fxml/question/whichQuestion.fxml", InsertExamValuesController.class);
         } catch (Exception e) {
             handleException(e);
         }

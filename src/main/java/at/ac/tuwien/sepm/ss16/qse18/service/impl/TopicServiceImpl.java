@@ -15,10 +15,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author Philipp Ganiu
+ * @author Philipp Ganiu, Bicer Cem
  */
 @Service
 public class TopicServiceImpl implements TopicService {
@@ -35,7 +36,6 @@ public class TopicServiceImpl implements TopicService {
         this.tqDao = tqDao;
     }
 
-    @Autowired
     public TopicServiceImpl(TopicDaoJdbc topicDao) {
         this.topicDao = topicDao;
     }

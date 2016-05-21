@@ -109,7 +109,7 @@ import java.util.stream.Collectors;
                     if (empty) {
                         setText(null);
                     } else {
-                        String text = item.getTopic().getTopicId() + ": " + item.getName();
+                        String text = item.getT().getTopicId() + ": " + item.getTopic();
                         setText(text);
                     }
                 }
@@ -151,10 +151,10 @@ import java.util.stream.Collectors;
                 examTime = Integer.parseInt(fieldTime.getText());
 
                 exam.setExamQuestions(questionService.getQuestionsFromTopic(
-                    topicListView.getSelectionModel().getSelectedItem().getTopic().getTopicId()));
+                    topicListView.getSelectionModel().getSelectedItem().getT().getTopicId()));
 
                 examService.createExam(exam,
-                    topicListView.getSelectionModel().getSelectedItem().getTopic(), examTime);
+                    topicListView.getSelectionModel().getSelectedItem().getT(), examTime);
                 showAlert(Alert.AlertType.CONFIRMATION, "Exam created");
                 mainFrameController.handleExams();
             } catch (ServiceException e) {
@@ -162,7 +162,8 @@ import java.util.stream.Collectors;
                 showAlert(Alert.AlertType.ERROR,
                     "Could not create exam. Check logs for more information." + "\n\nHints: "
                         + "\nCheck if the choosen topic has already questions to answer."
-                        + "\nCheck if the length of the author do not exceed 80 characters.");
+                        + "\nCheck if the length of the author do not exceed 80 characters."
+                        + "\nCheck if there are enough questions in this topic to cover the exam time.");
             } catch (NumberFormatException e) {
                 logger.error("Could not create exam: " + e.getMessage());
                 showAlert(Alert.AlertType.ERROR,
