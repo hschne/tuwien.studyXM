@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
+import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.DTOValidator;
 import org.apache.logging.log4j.LogManager;
@@ -94,9 +95,46 @@ public class ExamServiceImpl implements ExamService {
             return this.examDao.delete(exam);
 
         }catch (DaoException e){
-            logger.error("Service Exception deleteExam {}", exam);
+            logger.error("Service Exception deleteExam {}", exam, e);
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    public Boolean deletedSubject(int subjectID) throws ServiceException{
+        /*
+        logger.debug("entering method deletedSubject with parameters {}", subjectID);
+        List<Exam> examList = new ArrayList<>();
+        List<Integer> questionIDList = new ArrayList<>();
+        List<Integer> temp = new ArrayList<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        if(subjectID <= 0){
+            logger.error("Service Exception getExam {}", subjectID);
+            throw new ServiceException("Invalid subject ID, please check your input");
+        }
+
+        try{
+            examList = this.examDao.getAllExamsOfSubject(subjectID);
+            for(Exam e: examList){
+                questionIDList = this.examQuestionDao.getAllQuestionsOfExam(e.getExamid());
+                map.put(e.getExamid(), questionIDList);
+                this.examDao.delete(e);
+            }
+
+            for(Map.Entry e: map.entrySet()){
+                for(int i: (List<Integer>)e.getValue()){
+                    this.questionDao.deleteQuestion(this.questionDao.getQuestion(i));
+                }
+            }
+
+        }catch (DaoException e){
+            logger.error("Service Exception getAllExamsOfSubject {}", subjectID, e);
+            throw new ServiceException(e.getMessage());
+        }
+        */
+
+        return true;
+
     }
 
     public List<Question> getRightQuestions(Exam exam, int topicID, int examTime) throws ServiceException{

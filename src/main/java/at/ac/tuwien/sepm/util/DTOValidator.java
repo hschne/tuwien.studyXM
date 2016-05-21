@@ -25,7 +25,6 @@ public class DTOValidator {
      * @return true if exam is valid
      * */
     public static boolean validate(Exam e){
-        return e != null && e.getAuthor().length() <= 80 && !e.getAuthor().trim().isEmpty()
-            && e.getExamQuestions().size() > 0;
+        return e != null && e.getAuthor().length() <= 80 && !e.getAuthor().trim().isEmpty();
     }
 }

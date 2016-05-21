@@ -142,6 +142,52 @@ public class ExamDaoJdbc implements ExamDao{
         return exam;
     }
 
+    @Override public List<Exam> getAllExamsOfSubject(int subjectID) throws DaoException{
+        logger.debug("entering method getAllExamsOfSubject with parameters {}", subjectID);
+        List<Exam> examList = new ArrayList<>();
+        Exam exam = null;
+
+        if(subjectID <= 0){
+            logger.error("DaoException getAllExamsOfSubject with parameters {}", subjectID);
+            throw new DaoException("Invalid subject ID, please check your input");
+        }
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try{
+            pstmt = this.database.getConnection().prepareStatement("Select * from entity_exam where subject = ?");
+            pstmt.setInt(1, subjectID);
+            rs = pstmt.executeQuery();
+
+            examList = fillList(rs);
+
+        }catch (SQLException e){
+            logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectID);
+            throw new DaoException("Could not get List with of Exams with subject ID " + subjectID);
+        }finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+            } catch (SQLException e) {
+                logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectID);
+                throw new DaoException("Result Set could not be closed");
+            }
+
+            try{
+                if(pstmt != null){
+                    pstmt.close();
+                }
+            }catch (SQLException e){
+                logger.error("SQL Excepiton in getAllExamsOfSubject with parameters {}", subjectID, e);
+                throw new DaoException("Prepared Statement could not be closed");
+            }
+        }
+
+        return examList;
+    }
+
     @Override public Exam getExam(int examID) throws DaoException {
         logger.debug("entering method getExam with parameters {}", examID);
         Exam exam = null;
@@ -196,8 +242,7 @@ public class ExamDaoJdbc implements ExamDao{
 
     @Override public List<Exam> getExams() throws DaoException {
         logger.debug("entering method getExams()");
-        ArrayList<Exam> examList = new ArrayList<>();
-        Exam exam;
+        List<Exam> examList = new ArrayList<>();
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -206,17 +251,8 @@ public class ExamDaoJdbc implements ExamDao{
             pstmt = this.database.getConnection().prepareStatement("Select * from entity_exam");
             rs = pstmt.executeQuery();
 
-            while(rs.next()){
-                exam = new Exam();
+            examList = fillList(rs);
 
-                exam.setExamid(rs.getInt("examid"));
-                exam.setCreated(rs.getTimestamp("created"));
-                exam.setAuthor(rs.getString("author"));
-                exam.setPassed(rs.getBoolean("passed"));
-                exam.setSubjectID(rs.getInt("subject"));
-
-                examList.add(exam);
-            }
 
         }catch (SQLException e){
             logger.error("SQL Exception in getExam with parameters {}");
@@ -244,5 +280,23 @@ public class ExamDaoJdbc implements ExamDao{
         return examList;
     }
 
+    public List<Exam> fillList(ResultSet rs) throws SQLException{
+        Exam exam;
+        List<Exam> examList = new ArrayList<>();
+
+        while(rs.next()){
+            exam = new Exam();
+
+            exam.setExamid(rs.getInt("examid"));
+            exam.setCreated(rs.getTimestamp("created"));
+            exam.setAuthor(rs.getString("author"));
+            exam.setPassed(rs.getBoolean("passed"));
+            exam.setSubjectID(rs.getInt("subject"));
+
+            examList.add(exam);
+        }
+
+        return examList;
+    }
 
 }

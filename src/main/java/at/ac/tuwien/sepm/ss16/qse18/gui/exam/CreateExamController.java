@@ -105,6 +105,7 @@ import org.slf4j.LoggerFactory;
     }
 
     @FXML public void showQuestions() throws Exception {
+        this.questionList = new ArrayList<>();
         logger.debug("Entering showQuestions()");
         List<Integer> questionIDList = new ArrayList<>();
         logger.debug("Entering showQuestions");
