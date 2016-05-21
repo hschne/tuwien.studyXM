@@ -138,7 +138,8 @@ public class CreateImageQuestionController implements GuiController{
         fileChooser.setInitialDirectory(defaultDirectory);
 
         fileChooser.setTitle("Add image");
-        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Image Files","*.png", "*.jpg"));
+        fileChooser.getExtensionFilters().addAll(new FileChooser
+                .ExtensionFilter("Image Files","*.png", "*.jpg"));
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
@@ -169,23 +170,23 @@ public class CreateImageQuestionController implements GuiController{
 
         if(!textFieldAnswerOne.getText().isEmpty())
         {
-            answers.add(new Answer(
-                    QuestionType.NOTECARD,textFieldAnswerOne.getText(),checkBoxAnswerOne.isSelected()));
+            answers.add(new Answer(QuestionType.NOTECARD,textFieldAnswerOne
+                    .getText(),checkBoxAnswerOne.isSelected()));
         }
         if(!textFieldAnswerTwo.getText().isEmpty())
         {
-            answers.add(new Answer(
-                    QuestionType.NOTECARD,textFieldAnswerTwo.getText(),checkBoxAnswerTwo.isSelected()));
+            answers.add(new Answer(QuestionType.NOTECARD,textFieldAnswerTwo
+                    .getText(),checkBoxAnswerTwo.isSelected()));
         }
         if(!textFieldAnswerThree.getText().isEmpty())
         {
-            answers.add(new Answer(
-                    QuestionType.NOTECARD,textFieldAnswerThree.getText(),checkBoxAnswerThree.isSelected()));
+            answers.add(new Answer(QuestionType.NOTECARD,textFieldAnswerThree
+                    .getText(),checkBoxAnswerThree.isSelected()));
         }
         if(!textFieldAnswerFour.getText().isEmpty())
         {
-            answers.add(new Answer(
-                    QuestionType.NOTECARD,textFieldAnswerFour.getText(),checkBoxAnswerFour.isSelected()));
+            answers.add(new Answer(QuestionType.NOTECARD,textFieldAnswerFour
+                    .getText(),checkBoxAnswerFour.isSelected()));
         }
         return answers;
     }
@@ -207,8 +208,10 @@ public class CreateImageQuestionController implements GuiController{
     private boolean checkIfAnswerWasGiven()
     {
         logger.debug("Checking if answer was given.");
-        return !(textFieldAnswerOne.getText().isEmpty() && textFieldAnswerTwo.getText().isEmpty() &&
-                textFieldAnswerThree.getText().isEmpty() && textFieldAnswerFour.getText().isEmpty());
+        return !(textFieldAnswerOne.getText().isEmpty() &&
+                textFieldAnswerTwo.getText().isEmpty() &&
+                textFieldAnswerThree.getText().isEmpty() &&
+                textFieldAnswerFour.getText().isEmpty());
     }
 
     /**
@@ -224,21 +227,21 @@ public class CreateImageQuestionController implements GuiController{
 
     /**
      * Checks if the user has provided text to a checkbox selected as correct.
-     * @return true if all checkboxes which are selected as correct have text in their text fields. False else.
+     * @return true if all checkboxes which are selected as correct have text
+     * in their text fields. False else.
      */
     private boolean checkIfCorrectAnswerHasText()
     {
         logger.debug("Checking if correct answers have text.");
-        boolean answerOk=true;
-        if(checkBoxAnswerOne.isSelected()){
-            answerOk &= (!textFieldAnswerOne.getText().isEmpty());}
-        if(checkBoxAnswerTwo.isSelected()){
-            answerOk &= (!textFieldAnswerTwo.getText().isEmpty());}
-        if(checkBoxAnswerThree.isSelected()){
-            answerOk &= (!textFieldAnswerThree.getText().isEmpty());}
-        if(checkBoxAnswerFour.isSelected()){
-            answerOk &= (!textFieldAnswerFour.getText().isEmpty());}
-        return answerOk;
+        if(checkBoxAnswerOne.isSelected() && textFieldAnswerOne.getText().isEmpty()){
+            return false;}
+        if(checkBoxAnswerTwo.isSelected() && textFieldAnswerTwo.getText().isEmpty()){
+            return false;}
+        if(checkBoxAnswerThree.isSelected() && textFieldAnswerThree.getText().isEmpty()){
+            return false;}
+        if(checkBoxAnswerFour.isSelected() && textFieldAnswerFour.getText().isEmpty()){
+            return false;}
+        return true;
     }
 
     /**
@@ -248,51 +251,46 @@ public class CreateImageQuestionController implements GuiController{
     private boolean validateInput()
     {
         logger.debug("Validating user input.");
-        boolean inputOk=true;
 
-        inputOk &= checkIfImageWasSelected();
-        if(!inputOk){
+        if(!checkIfImageWasSelected()){
             logger.debug("No image was selected.");
             showAlert(Alert.AlertType.WARNING,W, "No image selected",
                     "Please select an image for this question");
             return false;
         }
 
-        inputOk &= checkIfAnswerWasGiven();
-        if(!inputOk){
+        if(!checkIfAnswerWasGiven()){
             logger.debug("No answer was given.");
             showAlert(Alert.AlertType.WARNING,W, "No answer was given",
                     "Please give at least one answer to this question.");
             return false;
         }
 
-        inputOk &= checkIfCorrectAnswerWasGiven();
-        if(!inputOk){
+        if(!checkIfCorrectAnswerWasGiven()){
             logger.debug("No correct answer was given.");
             showAlert(Alert.AlertType.WARNING,W, "No correct answer was given",
                     "Please give at least one correct answer to this question.");
-
             return false;
         }
 
-        inputOk &= checkIfCorrectAnswerHasText();
-        if(!inputOk){
+        if(!checkIfCorrectAnswerHasText()){
             logger.debug("The answer selected as correct has no text.");
             showAlert(Alert.AlertType.WARNING,W, "Correct answer has no text",
                     "Please add text to the question selected as correct.");
             return false;
         }
-
-        return inputOk;
+        return true;
     }
 
     /**
-     * Stores a copy of the selected image in src/main/resources/images/ when a new question is created.
+     * Stores a copy of the selected image in src/main/resources/images/ when
+     * a new question is created.
      */
     private void copySelectedImage() throws IOException
     {
         logger.debug("tying to copy image to src/main/resources/images/");
-        ImageIO.write(SwingFXUtils.fromFXImage(imageViewQuestionImage.getImage(), null), "png", out);
+        ImageIO.write(SwingFXUtils.fromFXImage(imageViewQuestionImage.getImage(),
+                null), "png", out);
     }
 
     /**
@@ -327,7 +325,8 @@ public class CreateImageQuestionController implements GuiController{
      * @param headerText alert header text
      * @param contentText alert content text
      */
-    private void showAlert(Alert.AlertType type, String title, String headerText, String contentText) {
+    private void showAlert(Alert.AlertType type, String title,
+                           String headerText, String contentText) {
         Alert alert = alertBuilder.alertType(type)
                 .title(title)
                 .headerText(headerText)
@@ -342,7 +341,8 @@ public class CreateImageQuestionController implements GuiController{
      * @param title alert title
      * @param headerText alert header text
      */
-    private void showExceptionAlert(Exception e, Alert.AlertType type, String title, String headerText) {
+    private void showExceptionAlert(Exception e, Alert.AlertType type,
+                                    String title, String headerText) {
         Alert alert = alertBuilder.alertType(type)
                 .title(title)
                 .headerText(headerText)

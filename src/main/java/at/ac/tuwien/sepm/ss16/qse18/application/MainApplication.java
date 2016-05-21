@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.application;
 
+import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.application.Application;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * The starting point of Study XM
@@ -22,11 +24,17 @@ import java.io.IOException;
 @Configuration @ComponentScan("at.ac.tuwien.sepm") public class MainApplication
     extends Application {
 
-    private Logger logger = LoggerFactory.getLogger(MainApplication.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(MainApplication.class);
     private AnnotationConfigApplicationContext applicationContext = null;
 
     public static void main(String[] args) {
+
+        try {
+           new ConnectionH2().getConnection();
+        } catch (SQLException e) {
+            logger.error("Unable to connect to database. " +e.getMessage());
+            return;
+        }
         Application.launch(args);
     }
 
@@ -49,6 +57,7 @@ import java.io.IOException;
         logger.info("Stopping Application");
         if (this.applicationContext != null && applicationContext.isRunning()) {
             this.applicationContext.close();
+            new ConnectionH2().closeConnection();
         }
         super.stop();
     }
