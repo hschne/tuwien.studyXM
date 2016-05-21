@@ -115,10 +115,6 @@ import org.slf4j.LoggerFactory;
                 questionList.add(questionService.getQuestion(e));
             }
 
-            for(Question q: this.questionList){
-                System.out.println(q.getQuestionId());
-            }
-
             mainFrameController.handleShowQuestions();
 
         }else{
