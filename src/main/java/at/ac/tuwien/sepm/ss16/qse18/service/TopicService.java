@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 
@@ -54,7 +55,7 @@ public interface TopicService {
      */
     Topic updateTopic(Topic topic) throws ServiceException;
 
-    List<Topic> getTopicsFromSubject(int subjectid) throws ServiceException;
+    List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException;
 
-    List<Topic> getTopicsFromQuestion(int questionid) throws ServiceException;
+    List<Topic> getTopicsFromQuestion(Question question) throws ServiceException;
 }

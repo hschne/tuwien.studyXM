@@ -108,6 +108,6 @@ public interface QuestionService {
      * Returns a list of all questions that belong to a topic
      * @return topicId The given id of the topic that we want the questions to
      */
-    public List<Question> getQuestionsFromTopic(int topicId) throws ServiceException;
+    public List<Question> getQuestionsFromTopic(Topic topic) throws ServiceException;
 
 }

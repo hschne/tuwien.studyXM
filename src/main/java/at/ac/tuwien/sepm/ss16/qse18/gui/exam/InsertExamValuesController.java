@@ -93,8 +93,8 @@ import java.util.stream.Collectors;
                     topicListView.setDisable(false);
                     try {
                         List<ObservableTopic> observableTopics =
-                            topicService.getTopicsFromSubject(newValue.getSubject().getSubjectId())
-                                .stream().map(ObservableTopic::new).collect(Collectors.toList());
+                            topicService.getTopicsFromSubject(newValue.getSubject()).stream()
+                                .map(ObservableTopic::new).collect(Collectors.toList());
 
                         topicList = FXCollections.observableList(observableTopics);
                         topicListView.setItems(topicList);
@@ -151,10 +151,11 @@ import java.util.stream.Collectors;
                 examTime = Integer.parseInt(fieldTime.getText());
 
                 exam.setExamQuestions(questionService.getQuestionsFromTopic(
-                    topicListView.getSelectionModel().getSelectedItem().getT().getTopicId()));
+                    topicListView.getSelectionModel().getSelectedItem().getT()));
 
-                examService.createExam(exam,
-                    topicListView.getSelectionModel().getSelectedItem().getT(), examTime);
+                examService
+                    .createExam(exam, topicListView.getSelectionModel().getSelectedItem().getT(),
+                        examTime);
                 showAlert(Alert.AlertType.CONFIRMATION, "Exam created");
                 mainFrameController.handleExams();
             } catch (ServiceException e) {

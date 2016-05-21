@@ -18,7 +18,5 @@ public interface QuestionTopicDao {
      * */
     List<Question> getQuestionToTopic(Topic topic) throws DaoException;
 
-    List<Integer> getQuestionIdsFromTopicId(int topicId) throws DaoException;
-
-    List<Integer> getTopicIdsFromQuestionId(int questionId) throws DaoException;
+    List<Topic> getTopicsFromQuestion(Question question) throws DaoException;
 }

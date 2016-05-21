@@ -128,21 +128,16 @@ import java.util.List;
         return null;
     }
 
-    @Override public List<Question> getQuestionsFromTopic(int topicId) throws ServiceException {
+    @Override public List<Question> getQuestionsFromTopic(Topic topic) throws ServiceException {
         logger.debug("Entering getQuestionsFromTopic");
 
         List<Question> res = null;
 
         try {
-            List<Integer> idList = tqDao.getQuestionIdsFromTopicId(topicId);
-            res = new LinkedList<>();
-
-            for (Integer i: idList) {
-                res.add(qdao.getQuestion(i));
-            }
+            res = tqDao.getQuestionToTopic(topic);
         } catch (DaoException e) {
-            logger.error("Could not get questions from topicId (" + topicId + ")" + e.getMessage());
-            throw new ServiceException("Could not get questions from topicId (" + topicId + ")");
+            logger.error("Could not get questions from topic [" + topic + "]" + e.getMessage());
+            throw new ServiceException("Could not get questions from topic [" + topic + "]");
         }
 
         return res;

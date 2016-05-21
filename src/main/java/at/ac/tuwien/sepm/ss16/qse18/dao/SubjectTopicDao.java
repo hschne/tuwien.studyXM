@@ -33,7 +33,5 @@ public interface SubjectTopicDao {
      * */
     List<Topic> getTopicToSubject(Subject subject) throws DaoException;
 
-    List<Integer> getTopicIdsFromSubjectId(int subjectId) throws DaoException;
-
-    List<Integer> getSubjectIdsFromTopicId(int topicId) throws DaoException;
+    List<Subject> getSubjectsFromTopic(Topic topic) throws DaoException;
 }

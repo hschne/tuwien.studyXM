@@ -45,8 +45,8 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
                 + "natural join rel_question_topic tc "
                 + "where tc.topicid = ? and subjectid = ? order by questionid asc");
 
-            pstmt.setInt(1, exam.getSubjectID());
-            pstmt.setInt(2, topicID);
+            pstmt.setInt(1, topicID);
+            pstmt.setInt(2, exam.getSubjectID());
             rs = pstmt.executeQuery();
 
             while(rs.next()){
