@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import javafx.fxml.FXML;
@@ -16,7 +17,8 @@ import org.springframework.stereotype.Component;
  *
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController
+    implements GuiController {
 
     @FXML public TextField name;
     @FXML public TextField semester;
@@ -61,6 +63,7 @@ import org.springframework.stereotype.Component;
     @FXML public void handleCancel() {
         mainFrameController.handleSubjects();
     }
+
 
     private Subject newSubjectFromFields() {
         Subject newSubject = new Subject();

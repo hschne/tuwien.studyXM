@@ -13,7 +13,6 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,10 +57,10 @@ import java.util.List;
             initializeTable();
         } catch (ServiceException e) {
             logger.error("Could not fill exam-table: ", e);
-            Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-                .setResizable(true)
-                .headerText("Could not fill exam-table.")
-                .contentText("Please make sure you are connected to the database").build();
+            Alert alert =
+                alertBuilder.alertType(Alert.AlertType.ERROR).title("Error").setResizable(true)
+                    .headerText("Could not fill exam-table.")
+                    .contentText("Please make sure you are connected to the database").build();
             alert.showAndWait();
         }
     }
@@ -81,10 +80,6 @@ import java.util.List;
             logger.error("No Exam was selected");
             showAlert("Please select an Exam first");
         }
-    }
-
-    @Override public void setPrimaryStage(Stage primaryStage) {
-        //Not needed at the moment
     }
 
     public List<Question> getQuestionList() {

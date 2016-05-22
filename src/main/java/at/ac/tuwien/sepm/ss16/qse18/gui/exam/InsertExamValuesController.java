@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
  */
 @Component public class InsertExamValuesController implements GuiController {
     private Logger logger = LoggerFactory.getLogger(InsertExamValuesController.class);
-    private Stage primaryStage;
     private AlertBuilder alertBuilder;
     private ObservableList<ObservableSubject> subjectList;
     private ObservableList<ObservableTopic> topicList;
@@ -119,10 +118,6 @@ import java.util.stream.Collectors;
         } catch (Exception e) {
             logger.error("Initialize in InsertExamValuesController not successful", e);
         }
-    }
-
-    @Override public void setPrimaryStage(Stage stage) {
-        this.primaryStage = stage;
     }
 
     @FXML public void create() {

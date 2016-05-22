@@ -31,10 +31,8 @@ import java.util.List;
     implements GuiController {
 
     private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
-    private Stage primaryStage;
     private AlertBuilder alertBuilder;
     private QuestionService questionService;
-    private SpringFXMLLoader springFXMLLoader;
 
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;
@@ -48,15 +46,9 @@ import java.util.List;
     @FXML private Button buttonCreateQuestion;
     @Autowired MainFrameController mainFrameController;
 
-    @Override
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
 
     @Autowired
-    public CreateMultipleChoiceQuestionController(SpringFXMLLoader springFXMLLoader,
-        QuestionService questionService, AlertBuilder alertBuilder) {
-        this.springFXMLLoader = springFXMLLoader;
+    public CreateMultipleChoiceQuestionController(QuestionService questionService, AlertBuilder alertBuilder) {
         this.questionService = questionService;
         this.alertBuilder = alertBuilder;
     }

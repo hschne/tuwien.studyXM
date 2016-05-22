@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
@@ -8,12 +7,10 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
@@ -57,7 +54,6 @@ import java.io.IOException;
         logger.debug("Loading view from " + fxmlPath);
         SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
         T controller = mfWrapper.getController();
-        controller.setPrimaryStage(primaryStage);
         configureSubPane(mfWrapper);
         return controller;
     }
@@ -115,10 +111,7 @@ import java.io.IOException;
     public void handleQuestionOverview(ObservableSubject subject) {
         logger.debug("Loading question overview for " + subject.getName());
         try {
-            QuestionOverviewController controller =
-                setSubView("/fxml/question/questionOverview.fxml",
-                    QuestionOverviewController.class);
-            controller.setSubject(subject);
+            setSubView("/fxml/question/questionOverview.fxml", QuestionOverviewController.class);
         } catch (Exception e) {
             handleException(e);
         }

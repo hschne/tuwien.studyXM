@@ -10,43 +10,38 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Controller of the showQuestion window in which the questions of the chosen exam are displayed
+ *
  * @author Zhang Haixiang
  */
-@Component
-public class ShowQuestionsController implements GuiController {
-    private Logger logger = LoggerFactory.getLogger(ShowQuestionsController.class);
-    private Stage primaryStage;
-    private SpringFXMLLoader springFXMLLoader;
-    private AlertBuilder alertBuilder;
+@Component public class ShowQuestionsController implements GuiController {
     ObservableList<Question> questionObservableList;
     @Autowired CreateExamController createExamController;
-
     @FXML TableView<Question> tableQuestion;
     @FXML TableColumn<Question, Integer> columnQuestionID;
     @FXML TableColumn<Question, String> columnQuestion;
     @FXML TableColumn<Question, Integer> columnType;
     @FXML TableColumn<Question, Long> columnQuestionTime;
+    private Logger logger = LoggerFactory.getLogger(ShowQuestionsController.class);
+    private SpringFXMLLoader springFXMLLoader;
+    private AlertBuilder alertBuilder;
 
 
-    @Override public void setPrimaryStage(Stage stage) {
-        this.primaryStage = stage;
-    }
-
-    @Autowired public ShowQuestionsController(SpringFXMLLoader springFXMLLoader, AlertBuilder alertBuilder){
+    @Autowired
+    public ShowQuestionsController(SpringFXMLLoader springFXMLLoader, AlertBuilder alertBuilder) {
         this.springFXMLLoader = springFXMLLoader;
         this.alertBuilder = alertBuilder;
     }
 
-    @FXML public void initialize(){
-        questionObservableList = FXCollections.observableArrayList(this.createExamController.getQuestionList());
+    @FXML public void initialize() {
+        questionObservableList =
+            FXCollections.observableArrayList(this.createExamController.getQuestionList());
         columnQuestionID.setCellValueFactory(new PropertyValueFactory<>("questionId"));
         columnQuestion.setCellValueFactory(new PropertyValueFactory<>("question"));
         columnType.setCellValueFactory(new PropertyValueFactory<>("type"));

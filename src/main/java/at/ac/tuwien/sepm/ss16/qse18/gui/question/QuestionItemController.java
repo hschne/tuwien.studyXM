@@ -19,12 +19,6 @@ public class QuestionItemController implements GuiController {
 
     private ObservableQuestion question;
 
-    private Stage primaryStage;
-
-    @Override public void setPrimaryStage(Stage stage) {
-        this.primaryStage = stage;
-    }
-
     public void setQuestion(ObservableQuestion question) {
         this.question = question;
     }

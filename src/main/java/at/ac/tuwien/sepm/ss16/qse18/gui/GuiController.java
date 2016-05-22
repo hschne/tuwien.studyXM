@@ -6,8 +6,4 @@ import javafx.stage.Stage;
  * @author Hans-Joerg Schroedl
  */
 public interface GuiController {
-
-    void setPrimaryStage(Stage stage);
-
-
 }
