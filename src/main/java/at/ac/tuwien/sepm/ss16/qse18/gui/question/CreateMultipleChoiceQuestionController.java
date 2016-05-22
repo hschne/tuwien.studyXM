@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -48,11 +47,13 @@ import java.util.List;
     @FXML private Button buttonCreateQuestion;
     @Autowired MainFrameController mainFrameController;
 
-    @Override
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
+    /**
+     * Creates a controller for multiple choice creation.
+     * @param springFXMLLoader The autowired spring framework FXML loader.
+     * @param questionService The question service which saves a given question and answers
+     *                        persistently.
+     * @param alertBuilder An alert builder which wraps pop ups for user interaction.
+     */
     @Autowired
     public CreateMultipleChoiceQuestionController(SpringFXMLLoader springFXMLLoader,
         QuestionService questionService, AlertBuilder alertBuilder) {
@@ -61,18 +62,18 @@ import java.util.List;
         this.alertBuilder = alertBuilder;
     }
 
+    @Override
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
     @FXML public void createQuestion() {
         logger.info("Now creating new question");
-        Question newQuestion = null;
+        Question newQuestion;
         try {
             newQuestion = questionService.createQuestion(newQuestionFromField());
-        } catch (ServiceException e) {
-            showAlert(e);
-            return;
-        }
-        try {
             questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
-        } catch(ServiceException e) {
+        } catch (ServiceException e) {
             showAlert(e);
             return;
         }

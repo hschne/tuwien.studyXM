@@ -47,11 +47,14 @@ import java.util.List;
     @FXML private Button buttonCreateQuestion;
     @Autowired MainFrameController mainFrameController;
 
-    @Override
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
+    /**
+     * Creates a controller for the single choice question creation.
+     *
+     * @param springFXMLLoader The autowired spring framework FXML loader.
+     * @param questionService The question service which saves a given question and answers
+     *                        persistently.
+     * @param alertBuilder An alert builder which wraps pop ups for user interaction.
+     */
     @Autowired
     public CreateSingleChoiceQuestionController(SpringFXMLLoader springFXMLLoader,
         QuestionService questionService, AlertBuilder alertBuilder) {
@@ -60,18 +63,19 @@ import java.util.List;
         this.alertBuilder = alertBuilder;
     }
 
+
+    @Override
+    public void setPrimaryStage(Stage primaryStage) {
+        this.primaryStage = primaryStage;
+    }
+
     @FXML public void createQuestion() {
         logger.info("Now creating new question");
-        Question newQuestion = null;
+        Question newQuestion;
         try {
             newQuestion = questionService.createQuestion(newQuestionFromField());
-        } catch (ServiceException e) {
-            showAlert(e);
-            return;
-        }
-        try {
             questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
-        } catch(ServiceException e) {
+        } catch (ServiceException e) {
             showAlert(e);
             return;
         }
@@ -124,7 +128,7 @@ import java.util.List;
             }
         }
 
-        throw new ServiceException("At least one question must be true.");
+        throw new ServiceException("At least one given answer must be true.");
     }
 
     private void showAlert(ServiceException e) {
