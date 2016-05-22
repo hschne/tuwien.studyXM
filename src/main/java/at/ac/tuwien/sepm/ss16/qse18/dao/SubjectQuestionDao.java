@@ -9,6 +9,7 @@ import java.util.List;
  * Inteface that represents the relationship between Subject and Question.
  * @author Zhang Haixiang
  */
+@FunctionalInterface
 public interface SubjectQuestionDao {
     /**
      * getAllQuestionsOfSubject

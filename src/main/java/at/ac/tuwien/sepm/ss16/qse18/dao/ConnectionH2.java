@@ -53,7 +53,6 @@ import java.sql.SQLException;
     @Override
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            //TODO: use config file instead of hardcoded credentials?
             openConnection("jdbc:h2:tcp://localhost/~/studyXmDatabase", "studyXm", "xm");
         }
         return connection;

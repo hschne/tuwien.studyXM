@@ -21,13 +21,11 @@ public class StatementResultsetCloser {
             return;
         }
         for (Statement s : statements) {
-            if (s != null) {
-                try {
-                    s.close();
-                } catch (SQLException e) {
-                    logger.error("Could not close statement.", e);
-                    throw new DaoException("Could not close statement: " + e.getMessage());
-                }
+            try {
+                s.close();
+            } catch (Exception e) {
+                logger.error("Could not close statement.", e);
+                throw new DaoException("Could not close statement: " + e.getMessage());
             }
         }
 
@@ -36,13 +34,11 @@ public class StatementResultsetCloser {
         }
 
         for (ResultSet rs : resultSets) {
-            if (rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    logger.error("Could not close resultset.", e);
-                    throw new DaoException("Could not close resultset: " + e.getMessage());
-                }
+            try {
+                rs.close();
+            } catch (Exception e) {
+                logger.error("Could not close resultset.", e);
+                throw new DaoException("Could not close resultset: " + e.getMessage());
             }
         }
     }

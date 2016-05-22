@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 
 import java.util.List;
 

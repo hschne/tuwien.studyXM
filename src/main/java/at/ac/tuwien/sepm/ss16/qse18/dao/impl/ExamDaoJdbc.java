@@ -122,13 +122,12 @@ public class ExamDaoJdbc implements ExamDao{
     }
 
     @Override public List<Exam> getAllExamsOfSubject(Subject subject) throws DaoException{
-        int subjectID = subject.getSubjectId();
-        logger.debug("entering method getAllExamsOfSubject with parameters {}", subjectID);
+        int subjectId = subject.getSubjectId();
+        logger.debug("entering method getAllExamsOfSubject with parameters {}", subjectId);
         List<Exam> examList = new ArrayList<>();
-        Exam exam = null;
 
-        if(subjectID <= 0){
-            logger.error("DaoException getAllExamsOfSubject with parameters {}", subjectID);
+        if(subjectId <= 0){
+            logger.error("DaoException getAllExamsOfSubject with parameters {}", subjectId);
             throw new DaoException("Invalid subject ID, please check your input");
         }
 
@@ -138,14 +137,14 @@ public class ExamDaoJdbc implements ExamDao{
         try{
             pstmt = this.database.getConnection()
                 .prepareStatement("SELECT * FROM ENTITY_EXAM WHERE SUBJECT = ?");
-            pstmt.setInt(1, subjectID);
+            pstmt.setInt(1, subjectId);
             rs = pstmt.executeQuery();
 
             examList = fillList(rs);
 
         } catch (SQLException e){
-            logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectID, e);
-            throw new DaoException("Could not get List with of Exams with subject ID " + subjectID);
+            logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectId, e);
+            throw new DaoException("Could not get List with of Exams with subject ID " + subjectId);
         } finally {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }

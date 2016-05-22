@@ -9,10 +9,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +56,6 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
                 questionIDList.add(rs.getInt("questionid"));
             }
 
-
         } catch(SQLException e){
             logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}",
                 exam, topicID, e);
@@ -62,25 +63,7 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
                 + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
                 + ", " + exam.getAuthor() + " and topicID " + topicID + ")");
         } finally {
-            try {
-                if(rs != null) {
-                    rs.close();
-                }
-            } catch(SQLException e) {
-                logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}",
-                    exam, topicID, e);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try {
-                if(pstmt != null) {
-                    pstmt.close();
-                }
-            } catch(SQLException e){
-                logger.error("SQL Excepiton in getAllQuestionsOfSubject with parameters {}",
-                    exam, topicID, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[] {pstmt}, new ResultSet[] {rs});
         }
 
         return questionIDList;
