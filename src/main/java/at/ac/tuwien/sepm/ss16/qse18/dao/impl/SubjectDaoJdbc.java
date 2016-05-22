@@ -101,8 +101,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                     rs.getString("semester"), rs.getInt("time_spent"), rs.getString("author"));
                 res.add(tmp);
             }
-            s.close();
             rs.close();
+            s.close();
         } catch (SQLException e) {
             logger.error("Could not get all subjectListView ", e);
             throw new DaoException("Could not get all subjectListView");

@@ -11,6 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -90,22 +91,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             throw new DaoException("SQL Exception while getting all Questions");
         }
         finally {
-            if(rs != null) {
-                try {
-                    rs.close();
-                } catch (SQLException e) {
-                    logger.error("ResultSet couldn't close properly",e);
-                    throw new DaoException("ResultSet couldn't close properly");
-                }
-            }
-            if(ps != null) {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    logger.error("Statement couldn't close properly",e);
-                    throw new DaoException("Statement couldn't close properly");
-                }
-            }
+            closeStatementsAndResultSets(new Statement[]{ps}, new ResultSet[]{rs});
         }
         return questions;
     }
@@ -122,14 +108,17 @@ public class QuestionDaoJdbc implements QuestionDao {
             throw new DaoException("Question already in database");
         }
 
+        PreparedStatement ps = null;
+        ResultSet generatedKey = null;
+
         try {
-            PreparedStatement ps = con.getConnection().prepareStatement(CREATE_QUESTION,
+            ps = con.getConnection().prepareStatement(CREATE_QUESTION,
                 Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
             ps.setLong(3, question.getQuestionTime());
             ps.executeUpdate();
-            ResultSet generatedKey = ps.getGeneratedKeys();
+            generatedKey = ps.getGeneratedKeys();
             if(generatedKey.next()) {
                 question.setQuestionId(generatedKey.getInt(1));
                 return question;
@@ -140,6 +129,8 @@ public class QuestionDaoJdbc implements QuestionDao {
         } catch(Exception e) {
             logger.error("Could not execute query", e);
             throw new DaoException("Could not save question in database " + e.getMessage());
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{ps}, new ResultSet[]{generatedKey});
         }
     }
 
@@ -155,14 +146,18 @@ public class QuestionDaoJdbc implements QuestionDao {
             throw new DaoException("Question not in database");
         }
 
+        PreparedStatement ps = null;
+
         try {
-            PreparedStatement ps = con.getConnection().prepareStatement(DELETE_QUESTION);
+            ps = con.getConnection().prepareStatement(DELETE_QUESTION);
             ps.setInt(1, question.getQuestionId());
             ps.executeUpdate();
             return question;
         } catch(Exception e) {
             logger.error("Could not delete question from database", e);
             throw new DaoException("Could not delete question");
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{ps}, new ResultSet[]{});
         }
     }
 
@@ -178,8 +173,10 @@ public class QuestionDaoJdbc implements QuestionDao {
             return this.createQuestion(question);
         }
 
+        PreparedStatement ps = null;
+
         try {
-            PreparedStatement ps = con.getConnection().prepareStatement(UPDATE_QUESTION);
+            ps = con.getConnection().prepareStatement(UPDATE_QUESTION);
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
             ps.setLong(3, question.getQuestionTime());
@@ -188,6 +185,8 @@ public class QuestionDaoJdbc implements QuestionDao {
         } catch(Exception e) {
             logger.error("Could not update question", e);
             throw new DaoException("Could not update question");
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{ps}, new ResultSet[]{});
         }
     }
 
