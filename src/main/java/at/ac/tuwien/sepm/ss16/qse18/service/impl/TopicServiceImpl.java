@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.TopicDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.*;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.TopicDaoJdbc;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -12,89 +12,141 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 /**
- * @author Philipp Ganiu
+ * @author Philipp Ganiu, Bicer Cem
  */
-@Service
-public class TopicServiceImpl implements TopicService {
+@Service public class TopicServiceImpl implements TopicService {
     private final Logger logger = LogManager.getLogger(this.getClass());
     private TopicDao topicDao;
+    private QuestionDao qDao;
+    private SubjectDao sdao;
+    private SubjectTopicDao stDao;
+    private QuestionTopicDao qtDao;
 
-    @Autowired
+    @Autowired public TopicServiceImpl(SubjectTopicDao stDao, SubjectDao sdao, TopicDao tDao,
+        QuestionDao qDao, QuestionTopicDao qtDao) {
+        this.stDao = stDao;
+        this.sdao = sdao;
+        this.topicDao = tDao;
+        this.qtDao = qtDao;
+        this.qDao = qDao;
+    }
+
     public TopicServiceImpl(TopicDaoJdbc topicDao) {
         this.topicDao = topicDao;
     }
 
-    @Override
-    public Topic getTopic(int topicid) throws ServiceException {
-        try{
+    @Override public Topic getTopic(int topicid) throws ServiceException {
+        try {
             return topicDao.getTopic(topicid);
-        }
-        catch (DaoException e){
+        } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
 
-    @Override
-    public List<Topic> getTopics() throws ServiceException {
-        try{
+    @Override public List<Topic> getTopics() throws ServiceException {
+        try {
             return topicDao.getTopics();
-        }
-        catch (DaoException e){
+        } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
 
-    @Override
-    public Topic createTopic(Topic topic,Subject subject) throws ServiceException {
-        if(!verifyTopic(topic)){
+    @Override public Topic createTopic(Topic topic, Subject subject) throws ServiceException {
+        if (!verifyTopic(topic)) {
             throw new ServiceException("Topic is not valid");
         }
-        try{
-            return topicDao.createTopic(topic,subject);
-        }
-        catch (DaoException e){
+        try {
+            return topicDao.createTopic(topic, subject);
+        } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
 
-    @Override
-    public boolean deleteTopic(Topic topic) throws ServiceException {
-        if(!verifyTopic(topic)){
+    @Override public boolean deleteTopic(Topic topic) throws ServiceException {
+        if (!verifyTopic(topic)) {
             throw new ServiceException("Topic is not valid");
         }
-        try{
+        try {
             return topicDao.deleteTopic(topic);
-        }
-        catch (DaoException e){
+        } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
 
-    @Override
-    public Topic updateTopic(Topic topic) throws ServiceException {
-        if(!verifyTopic(topic)){
+    @Override public Topic updateTopic(Topic topic) throws ServiceException {
+        if (!verifyTopic(topic)) {
             throw new ServiceException("Topic is not valid");
         }
-        try{
+        try {
             return topicDao.updateTopic(topic);
-        }
-        catch (DaoException e){
+        } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
 
-    public boolean verifyTopic(Topic t){
-        if(t == null){
+    public boolean verifyTopic(Topic t) {
+        if (t == null) {
             return false;
         }
         return !t.getTopic().trim().isEmpty() && t.getTopic().length() <= 200;
+    }
+
+    @Override public List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException {
+        logger.debug("Entering getTopicsFromSubject()");
+
+        if (subject == null) {
+            logger.error("Subject must not be null in getTopicsFromSubject()");
+            throw new ServiceException("Subject is null in getTopicsFromSubject()");
+        }
+
+        return getTopicsFromId('s', subject.getSubjectId());
+    }
+
+    @Override public List<Topic> getTopicsFromQuestion(Question question) throws ServiceException {
+        logger.debug("Entering getTopicsFromSubject()");
+
+        if (question == null) {
+            logger.error("Question must not be null in getTopicsFromQuestion()");
+            throw new ServiceException("Question is null in getTopicsFromQuestion()");
+        }
+
+        return getTopicsFromId('q', question.getQuestionId());
+    }
+
+    private List<Topic> getTopicsFromId(char typeOfId, int id) throws ServiceException {
+        List<Topic> res = null;
+
+        try {
+            if (typeOfId == 'q') {
+                res = qtDao.getTopicsFromQuestion(qDao.getQuestion(id));
+            } else if (typeOfId == 's') {
+                res = stDao.getTopicToSubject(sdao.getSubject(id));
+            } else {
+                // add some types if you need
+                res = new LinkedList<>();
+            }
+        } catch (DaoException e) {
+            if (typeOfId == 'q') {
+                logger.error(
+                    "Could not get topics from given questionId (" + id + "): " + e.getMessage());
+                throw new ServiceException(
+                    "Could not get topics from given questionId (" + id + ")");
+            } else if (typeOfId == 's') {
+                logger.error(
+                    "Could not get topics from given subjectId (" + id + "): " + e.getMessage());
+                throw new ServiceException(
+                    "Could not get topics from given subjectId (" + id + ")");
+            }
+        }
+        return res;
     }
 }

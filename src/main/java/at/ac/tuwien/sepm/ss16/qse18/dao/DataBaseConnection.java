@@ -26,6 +26,7 @@ public interface DataBaseConnection {
      * closeConnection
      * Closes the current java.sql.Connection which refers to the database. Connection.close() is
      * called
+     * @throws SQLException
      */
-    public void closeConnection();
+    public void closeConnection() throws SQLException;
 }

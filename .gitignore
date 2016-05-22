@@ -3,6 +3,13 @@
 *.iml
 *.iws
 *.class
+
+*.png
+*.jpg
+!graph.jpg
+!graph.png
+!imagePlaceholder.png
+
 log/
 target/
 out/

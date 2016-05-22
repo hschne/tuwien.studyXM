@@ -1,12 +1,13 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 
 import java.util.List;
 
 /**
- * @author Philipp Ganiu
+ * @author Philipp Ganiu, Bicer Cem
  */
 public interface TopicService {
     /**
@@ -53,4 +54,22 @@ public interface TopicService {
      * @throws ServiceException if a DaoException is caught
      */
     Topic updateTopic(Topic topic) throws ServiceException;
+
+    /**
+     * Returns a list of all topics that belong to {@param subject}
+     *
+     * @param subject the subject we want the topics to
+     * @return a list containing every topic of the given {@param subject}
+     * @throws ServiceException if an error occurs in the DAO layer
+     */
+    List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException;
+
+    /**
+     * Returns a list of all topics that belong to {@param question}
+     *
+     * @param question the question we want the topics to
+     * @return a list containing every topic of the given {@param question}
+     * @throws ServiceException if an error occurs in the DAO layer
+     */
+    List<Topic> getTopicsFromQuestion(Question question) throws ServiceException;
 }

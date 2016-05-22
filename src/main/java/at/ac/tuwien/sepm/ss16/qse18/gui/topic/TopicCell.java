@@ -41,7 +41,7 @@ public class TopicCell extends ListCell<ObservableTopic> {
             topicLable.setText(topic.getTopic());
             numberOfQuestions.setText(topic.getNumberOfQuestions());
             button.setText("+");
-            button.setOnAction(e -> {mainFrameController.handleHome();});
+            button.setOnAction(e -> {mainFrameController.handleCreateQuestion();});
             setGraphic(box);
         }
         else{
