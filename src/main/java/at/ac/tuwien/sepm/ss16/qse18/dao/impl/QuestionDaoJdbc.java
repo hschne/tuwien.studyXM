@@ -62,7 +62,7 @@ public class QuestionDaoJdbc implements QuestionDao {
                 return null;
             }
         } catch(Exception e) {
-            logger.error("Could not fetch question: " + e.getMessage());
+            logger.error("Could not fetch question", e);
             throw new DaoException("Could not fetch question");
         }
     }
@@ -138,7 +138,7 @@ public class QuestionDaoJdbc implements QuestionDao {
                 throw new DaoException("Question could not be inserted into database");
             }
         } catch(Exception e) {
-            logger.error("Could not execute query " + e.getMessage());
+            logger.error("Could not execute query", e);
             throw new DaoException("Could not save question in database " + e.getMessage());
         }
     }
@@ -161,7 +161,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             ps.executeUpdate();
             return question;
         } catch(Exception e) {
-            logger.error("Could not delete question from database " + e.getMessage());
+            logger.error("Could not delete question from database", e);
             throw new DaoException("Could not delete question");
         }
     }
@@ -186,7 +186,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             ps.executeUpdate();
             return question;
         } catch(Exception e) {
-            logger.error("Could not update question " + e.getMessage());
+            logger.error("Could not update question", e);
             throw new DaoException("Could not update question");
         }
     }

@@ -203,7 +203,7 @@ public class ExamDaoJdbc implements ExamDao{
 
 
         } catch (SQLException e){
-            logger.error("SQL Exception in getExam with parameters {}");
+            logger.error("SQL Exception in getExam", e);
             throw new DaoException("Could not get List with of Exams");
         } finally {
             try {

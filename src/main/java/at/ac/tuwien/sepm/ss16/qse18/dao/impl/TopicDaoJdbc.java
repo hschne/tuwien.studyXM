@@ -39,27 +39,25 @@ public class TopicDaoJdbc implements TopicDao {
     }
 
     @Override
-    public Topic getTopic(int topicid) throws DaoException {
-        logger.debug("Entering getTopic with parameters {}",topicid);
+    public Topic getTopic(int topicId) throws DaoException {
+        logger.debug("Entering getTopic with parameters {}", topicId);
 
         Topic topic = null;
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        try{
+        try {
             pstmt = database.getConnection().prepareStatement(GETTOPIC_SQL);
-            pstmt.setInt(1,topicid);
+            pstmt.setInt(1,topicId);
             rs = pstmt.executeQuery();
 
-            if(rs.next()){
-                topic = new Topic(topicid,rs.getString("TOPIC"));
+            if(rs.next()) {
+                topic = new Topic(topicId,rs.getString("TOPIC"));
             }
-        }
-        catch (SQLException e){
-            logger.error("Could not get topic with id (" + topicid + ")",e);
-            throw new DaoException("Could not get topic with id (" + topicid + ")");
-        }
-        finally {
+        } catch(SQLException e){
+            logger.error("Could not get topic with id (" + topicId + ")", e);
+            throw new DaoException("Could not get topic with id (" + topicId + ")");
+        } finally {
             closeStatementAndResultSet(pstmt,rs);
         }
         return topic;
@@ -78,16 +76,14 @@ public class TopicDaoJdbc implements TopicDao {
             rs = stmt.executeQuery(GETOPICS_SQL);
 
             while(rs.next()){
-                Topic topic = new Topic(rs.getInt("TOPICID"),rs.getString("TOPIC"));
+                Topic topic = new Topic(rs.getInt("TOPICID"), rs.getString("TOPIC"));
                 topics.add(topic);
             }
-        }
-        catch (SQLException e){
+        } catch(SQLException e){
             logger.error("Could not get all Topics: " + e);
             throw new DaoException("Could not get all Topics");
-        }
-        finally {
-            closeStatementAndResultSet(stmt,rs);
+        } finally {
+            closeStatementAndResultSet(stmt, rs);
         }
         return topics;
     }
@@ -95,10 +91,10 @@ public class TopicDaoJdbc implements TopicDao {
     @Override
     public Topic createTopic(Topic topic,Subject subject) throws DaoException {
         logger.debug("Entering createTopic with parameters {}",topic);
-        if(topic == null){
+        if(topic == null) {
             throw new DaoException("Topic must not be null");
         }
-        if(subject == null){
+        if(subject == null) {
             throw new DaoException("Subject must not be null");
         }
 
@@ -107,23 +103,21 @@ public class TopicDaoJdbc implements TopicDao {
         PreparedStatement pstmt = null;
         ResultSet generatedKey = null;
 
-        try{
+        try {
             pstmt = database.getConnection().prepareStatement(CREATE_SQL,Statement.RETURN_GENERATED_KEYS);
-            pstmt.setString(1,topic.getTopic());
+            pstmt.setString(1, topic.getTopic());
             pstmt.executeUpdate();
 
             generatedKey = pstmt.getGeneratedKeys();
-            if(generatedKey.next()){
-                createdTopic = new Topic(generatedKey.getInt(1),topic.getTopic());
+            if(generatedKey.next()) {
+                createdTopic = new Topic(generatedKey.getInt(1), topic.getTopic());
             }
-            subjectTopicDao.createSubjectTopic(subject,createdTopic);
-        }
-        catch (SQLException e){
-            logger.error("Could not create " + topic,e);
+            subjectTopicDao.createSubjectTopic(subject, createdTopic);
+        } catch(SQLException e){
+            logger.error("Could not create " + topic, e);
             throw new DaoException("Could not create " + topic);
-        }
-        finally {
-            closeStatementAndResultSet(pstmt,generatedKey);
+        } finally {
+            closeStatementAndResultSet(pstmt, generatedKey);
         }
         return createdTopic;
     }
@@ -136,24 +130,22 @@ public class TopicDaoJdbc implements TopicDao {
         }
         try {
             subjectTopicDao.deleteSubjectTopic(topic);
-        }
-        catch (DaoException e){
+        } catch (DaoException e){
             logger.error(e);
             throw new DaoException(e.getMessage());
         }
+
         PreparedStatement pstmt = null;
 
-        try{
+        try {
             pstmt = database.getConnection().prepareStatement(DELETE_SQL);
-            pstmt.setInt(1,topic.getTopicId());
+            pstmt.setInt(1, topic.getTopicId());
             pstmt.executeUpdate();
-        }
-        catch (SQLException e){
-            logger.error("Could not delete " + topic,e);
+        } catch (SQLException e){
+            logger.error("Could not delete " + topic, e);
             throw new DaoException("Could not delete" + topic);
-        }
-        finally {
-            closeStatementAndResultSet(pstmt,null);
+        } finally {
+            closeStatementAndResultSet(pstmt, null);
         }
         return true;
     }
@@ -168,34 +160,34 @@ public class TopicDaoJdbc implements TopicDao {
         Topic updatedTopic = null;
         PreparedStatement pstmt = null;
 
-        try{
+        try {
             pstmt = database.getConnection().prepareStatement(UPDATE_SQL);
             pstmt.setString(1,topic.getTopic());
             pstmt.setInt(2,topic.getTopicId());
             pstmt.executeUpdate();
             updatedTopic = topic;
-        }
-        catch (SQLException e){
-            logger.error("Could not update " + topic);
+        } catch (SQLException e){
+            logger.error("Could not update " + topic, e);
             throw new DaoException("Could not update " + topic);
         }
         return updatedTopic;
     }
 
-    public static void closeStatementAndResultSet(Statement statement, ResultSet resultSet) throws DaoException {
+    public static void closeStatementAndResultSet(Statement statement, ResultSet resultSet)
+        throws DaoException {
         if (statement != null) {
             try {
                 statement.close();
             } catch (SQLException e) {
-                logger.error("Could not close Statement " + e.getMessage());
+                logger.error("Could not close Statement ", e);
                 throw new DaoException("Could not close Statement " + e.getMessage());
             }
         }
-        if (resultSet != null) {
+        if(resultSet != null) {
             try {
                 resultSet.close();
-            } catch (SQLException e) {
-                logger.error("Could not close ResultSet " + e.getMessage());
+            } catch(SQLException e) {
+                logger.error("Could not close ResultSet ", e);
                 throw new DaoException("Could not close Resultset " + e.getMessage());
             }
         }
