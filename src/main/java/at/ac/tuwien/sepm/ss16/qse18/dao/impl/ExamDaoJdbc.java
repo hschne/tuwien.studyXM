@@ -12,6 +12,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
+
 import java.sql.*;
 import java.util.*;
 
@@ -76,23 +78,7 @@ public class ExamDaoJdbc implements ExamDao{
                     + ", " + exam.getPassed() + ", " + exam.getAuthor() + ")");
 
         } finally {
-            if (generatedKey != null) {
-                try {
-                    generatedKey.close();
-                } catch (SQLException e) {
-                    logger.error("SQL Exception in create with parameters {}", exam, e);
-                    throw new DaoException("Result Set could not be closed");
-                }
-            }
-
-            if (pstmt != null) {
-                try {
-                    pstmt.close();
-                } catch (SQLException e) {
-                    logger.error("SQL Exception in create with parameters {}", exam, e);
-                    throw new DaoException("Prepared Statement could not be closed");
-                }
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{generatedKey});
         }
 
         return exam;
@@ -128,14 +114,7 @@ public class ExamDaoJdbc implements ExamDao{
                 "Could not delete Exam with values(" + exam.getExamid() + ", " + exam.getCreated()
                     + ", " + exam.getPassed() + ", " + exam.getAuthor() + ")");
         } finally {
-            if(pstmt != null){
-                try{
-                    pstmt.close();
-                }catch (SQLException e){
-                    logger.error("SQL Exception in delete with parameters {}", exam, e);
-                    throw new DaoException("Prepared Statement could not be closed");
-                }
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{});
         }
 
         return exam;
@@ -166,25 +145,7 @@ public class ExamDaoJdbc implements ExamDao{
             logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectID, e);
             throw new DaoException("Could not get List with of Exams with subject ID " + subjectID);
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in getAllExamsOfSubject with parameters {}",
-                    subjectID, e);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try {
-                if(pstmt != null){
-                    pstmt.close();
-                }
-            } catch (SQLException e){
-                logger.error("SQL Excepiton in getAllExamsOfSubject with parameters {}",
-                    subjectID, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
 
         return examList;
@@ -221,23 +182,7 @@ public class ExamDaoJdbc implements ExamDao{
             logger.error("SQL Exception in getExam with parameters {}", examID, e);
             throw new DaoException("Could not get List with of Exams with Exam ID" + examID);
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in getExam with parameters {}", examID, e);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try {
-                if(pstmt != null) {
-                    pstmt.close();
-                }
-            } catch (SQLException e){
-                logger.error("SQL Excepiton in getExam with parameters {}", examID, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
 
         return exam;

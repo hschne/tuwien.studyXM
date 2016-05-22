@@ -5,16 +5,17 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.util.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,14 +58,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
                 "Could not create ExamQuestion with values(" + exam.getExamid() + ", "
                     + question.getQuestionId() + ")");
         } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-            } catch(SQLException e) {
-                logger.error("SQL Exception in create with parameters {}", exam, question, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{});
         }
     }
 
@@ -91,14 +85,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
                 "Could not delete ExamQuestion with values(" + examID + ")");
 
         } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-            } catch(SQLException e) {
-                logger.error("SQL Exception in delete with parameters {}", examID, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{});
         }
     }
 
@@ -133,23 +120,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             logger.error("SQL Exception in delete with parameters {}");
             throw new DaoException("Could not get List with all Question Booleans for Questions");
         } finally {
-            try {
-                if (rs!= null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in getAllQuestionBooleans with parameters {}", e);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try {
-                if(pstmt != null) {
-                    pstmt.close();
-                }
-            } catch(SQLException e){
-                logger.error("SQL Excepiton in getAllQuestionBooleans with parameters {}", e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
         return questionBoolean;
     }
@@ -182,25 +153,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             logger.error("SQL Exception in delete with parameters {}", examID, e);
             throw new DaoException("Could not get List with all Questions for Exam ID " + examID);
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch(SQLException e) {
-                logger.error("SQL Exception in getAllQuestionsOfExam with parameters {}",
-                    examID, e);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try {
-                if(pstmt != null) {
-                    pstmt.close();
-                }
-            } catch(SQLException e) {
-                logger.error("SQL Excepiton in getAllQuestionsOfExam with parameters {}",
-                    examID, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
         return questionIDList;
     }
