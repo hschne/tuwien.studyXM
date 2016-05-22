@@ -224,7 +224,8 @@ public class ExamServiceImpl implements ExamService {
 
 
         }catch (DaoException e){
-            logger.error("Service Exception getRightQuestions with parameters{}", exam, topicID, examTime);
+            logger.error("Service Exception getRightQuestions with parameters{}",
+                exam, topicID, examTime, e);
             throw new ServiceException(e.getMessage());
         }
 

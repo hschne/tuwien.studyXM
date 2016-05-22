@@ -11,31 +11,40 @@ public class StatementResultsetCloser {
 
     private static final Logger logger = LogManager.getLogger();
 
+    private StatementResultsetCloser() {
+
+    }
+
     public static void closeStatementsAndResultSets(Statement[] statements, ResultSet[] resultSets)
         throws DaoException {
-        if (statements != null) {
-            for (Statement s : statements) {
-                if (s != null) {
-                    try {
-                        s.close();
-                    } catch (SQLException e) {
-                        logger.error("Could not close statement.", e);
-                        throw new DaoException("Could not close statement: " + e.getMessage());
-                    }
+        if (statements == null) {
+            return;
+        }
+        for (Statement s : statements) {
+            if (s != null) {
+                try {
+                    s.close();
+                } catch (SQLException e) {
+                    logger.error("Could not close statement.", e);
+                    throw new DaoException("Could not close statement: " + e.getMessage());
                 }
             }
         }
-        if (resultSets != null) {
-            for (ResultSet rs : resultSets) {
-                if (rs != null) {
-                    try {
-                        rs.close();
-                    } catch (SQLException e) {
-                        logger.error("Could not close resultset.", e);
-                        throw new DaoException("Could not close resultset: " + e.getMessage());
-                    }
+
+        if (resultSets == null) {
+            return;
+        }
+
+        for (ResultSet rs : resultSets) {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) {
+                    logger.error("Could not close resultset.", e);
+                    throw new DaoException("Could not close resultset: " + e.getMessage());
                 }
             }
+        }
         }
     }
 }

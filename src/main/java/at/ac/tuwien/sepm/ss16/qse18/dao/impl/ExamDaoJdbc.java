@@ -208,23 +208,7 @@ public class ExamDaoJdbc implements ExamDao{
             logger.error("SQL Exception in getExam", e);
             throw new DaoException("Could not get List with of Exams");
         } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in getExams()", e);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try{
-                if(pstmt != null){
-                    pstmt.close();
-                }
-            }catch (SQLException e){
-                logger.error("SQL Excepiton in getExams()", e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
 
         return examList;
