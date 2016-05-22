@@ -1,57 +1,44 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import javassist.scopedpool.SoftValueHashMap;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.sql.*;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
  * @author Zhang Haixiang
- *
  */
-@RunWith(PowerMockRunner.class)@PrepareForTest(ConnectionH2.class) @PowerMockIgnore("javax.management.*")
-public class ExamQuestionDaoJdbcTest {
+public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
     private ExamQuestionDaoJdbc examQuestionDaoJdbc;
     @Mock private ExamQuestionDao mockExamQuestionDao;
-    @Mock private ConnectionH2 mockConnectionH2;
-    @Mock private Connection mockConnection;
-    @Mock private Statement mockStatement;
-    @Mock private PreparedStatement mockPreparedStatement;
-    @Mock private ResultSet mockResultSet;
+
     private Exam testExam;
 
     @Before public void setUp() throws Exception {
-        when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
-        when(mockConnection.createStatement()).thenReturn(mockStatement);
+        super.setUp();
         this.examQuestionDaoJdbc = new ExamQuestionDaoJdbc(mockConnectionH2);
 
-        ArrayList<Question> al = new ArrayList<Question>(){};
+        ArrayList<Question> al = new ArrayList<Question>() {
+        };
         Question question = new Question();
         question.setQuestion("TestQuestion");
         question.setQuestionId(1);
@@ -70,7 +57,7 @@ public class ExamQuestionDaoJdbcTest {
 
     //Testing create(Exam, Question)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_createWith_validParameters_should_persist() throws Exception{
+    @Test public void test_createWith_validParameters_should_persist() throws Exception {
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
 
@@ -78,7 +65,8 @@ public class ExamQuestionDaoJdbcTest {
         verify(mockPreparedStatement).executeUpdate();
     }
 
-    @Test(expected = DaoException.class) public void test_createWithoutDatabaseConnection_should_fail() throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_createWithoutDatabaseConnection_should_fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
         this.examQuestionDaoJdbc.create(this.testExam, this.testExam.getExamQuestions().get(0));
 
@@ -86,12 +74,13 @@ public class ExamQuestionDaoJdbcTest {
         mockConnectionH2.getConnection();
     }
 
-    @Test(expected = DaoException.class) public void test_createWith_Null_shoud_fail() throws Exception{
+    @Test(expected = DaoException.class) public void test_createWith_Null_shoud_fail()
+        throws Exception {
         this.examQuestionDaoJdbc.create(null, null);
     }
 
-    @Test(expected = DaoException.class) public void test_createExamWithAlreadyExistingID_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_createExamWithAlreadyExistingID_should_fail() throws Exception {
 
         this.examQuestionDaoJdbc.create(this.testExam, this.testExam.getExamQuestions().get(0));
         verify(mockPreparedStatement).executeUpdate();
@@ -103,24 +92,25 @@ public class ExamQuestionDaoJdbcTest {
 
     //Testing delete(int)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_deleteWithValidExam_should_persist() throws Exception{
+    @Test public void test_deleteWithValidExam_should_persist() throws Exception {
         this.examQuestionDaoJdbc.delete(this.testExam.getExamid());
         verify(this.mockPreparedStatement).executeUpdate();
     }
 
-    @Test(expected = DaoException.class) public void test_deleteWithInvalidExamID_should_fail() throws Exception{
+    @Test(expected = DaoException.class) public void test_deleteWithInvalidExamID_should_fail()
+        throws Exception {
         this.examQuestionDaoJdbc.delete(-1);
     }
 
     @Test(expected = DaoException.class) public void test_deleteWithNoExistingExam_should_fail()
-        throws Exception{
+        throws Exception {
 
         when(this.mockPreparedStatement.executeUpdate()).thenThrow(DaoException.class);
         this.examQuestionDaoJdbc.delete(this.testExam.getExamid());
     }
 
-    @Test(expected = DaoException.class) public void test_delteWithoutDatabaseConnection_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_delteWithoutDatabaseConnection_should_fail() throws Exception {
 
         when(this.mockConnectionH2.getConnection()).thenThrow(DaoException.class);
 
@@ -132,7 +122,8 @@ public class ExamQuestionDaoJdbcTest {
 
     //Testing getAllQuestionBooleans(List<Integer>)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_getAllQuestionBooleansWith3ElementsInDatabase_should_persist() throws Exception{
+    @Test public void test_getAllQuestionBooleansWith3ElementsInDatabase_should_persist()
+        throws Exception {
         List<Integer> questionIDList = new ArrayList<>();
         Map<Integer, Boolean> questionBooleans = new HashMap<>();
         questionIDList.add(1);
@@ -141,7 +132,8 @@ public class ExamQuestionDaoJdbcTest {
 
         when(this.mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true);
         when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(2).thenReturn(3);
-        when(this.mockResultSet.getBoolean(anyString())).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(this.mockResultSet.getBoolean(anyString())).thenReturn(true).thenReturn(true)
+            .thenReturn(false);
 
         questionBooleans = this.examQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
 
@@ -154,16 +146,17 @@ public class ExamQuestionDaoJdbcTest {
 
     }
 
-    @Test(expected = DaoException.class) public void
-    test_getAllQuestionBooleansWithNegativeQuestionID_should_fail() throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_getAllQuestionBooleansWithNegativeQuestionID_should_fail() throws Exception {
         List<Integer> questionIDList = new ArrayList<>();
         questionIDList.add(-1);
 
         this.examQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
     }
 
-    @Test(expected = DaoException.class) public void
-    test_getAllQuestionBooleansWithoutDatabaseConnection_should_fail()throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_getAllQuestionBooleansWithoutDatabaseConnection_should_fail()
+        throws Exception {
         List<Integer> questionIDList = new ArrayList<>();
         questionIDList.add(1);
         when(this.mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -175,8 +168,10 @@ public class ExamQuestionDaoJdbcTest {
 
     //Testing getAllQuestionsOfExam(int)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_getAllQuestionsOfExamWith3QuestionsInExam_should_persist() throws Exception{
-        when(mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+    @Test public void test_getAllQuestionsOfExamWith3QuestionsInExam_should_persist()
+        throws Exception {
+        when(mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true)
+            .thenReturn(false);
         when(mockResultSet.getInt(anyString())).thenReturn(10).thenReturn(20).thenReturn(30);
 
         List<Integer> questionIDList = new ArrayList<>();
@@ -191,13 +186,13 @@ public class ExamQuestionDaoJdbcTest {
         assertTrue("Third Element should be 30", questionIDList.get(2) == 30);
     }
 
-    @Test(expected = DaoException.class) public void test_getAllQuestionsOfExamWithInvalidExamID_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_getAllQuestionsOfExamWithInvalidExamID_should_fail() throws Exception {
         this.examQuestionDaoJdbc.getAllQuestionsOfExam(-10);
     }
 
-    @Test(expected = DaoException.class) public void test_getAllQuestionsOfExamWithoutDatabaseConnection_should_fail()
-        throws Exception{
+    @Test(expected = DaoException.class)
+    public void test_getAllQuestionsOfExamWithoutDatabaseConnection_should_fail() throws Exception {
         when(this.mockConnectionH2.getConnection()).thenThrow(SQLException.class);
         this.examQuestionDaoJdbc.getAllQuestionsOfExam(1);
         PowerMockito.verifyStatic();

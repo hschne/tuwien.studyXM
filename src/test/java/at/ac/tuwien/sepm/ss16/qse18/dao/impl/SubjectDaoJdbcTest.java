@@ -36,6 +36,10 @@ import static org.mockito.Mockito.*;
     @Mock private Statement mockStatement;
     @Mock private PreparedStatement mockPreparedStatement;
     @Mock private ResultSet mockResultSet;
+    @Mock private SubjectTopicDaoJdbc mockSubjectTopicDaoJdbc;
+    @Mock private TopicDaoJdbc mockTopicDaoJdbc;
+    @Mock private ExamDaoJdbc examDaoJdbc;
+
 
     @Before public void setUp() throws Exception {
 
@@ -46,6 +50,9 @@ import static org.mockito.Mockito.*;
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
         when(mockConnection.createStatement()).thenReturn(mockStatement);
         sdao = new SubjectDaoJdbc(mockConnectionH2);
+        sdao.setSubjectTopicDaoJdbc(mockSubjectTopicDaoJdbc);
+        sdao.setTopicDaoJdbc(mockTopicDaoJdbc);
+        sdao.setExamDaoJdbc(examDaoJdbc);
     }
 
     // Testing getSubject(int) method
