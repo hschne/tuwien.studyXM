@@ -180,7 +180,7 @@ import java.util.stream.Collectors;
     private boolean actionConfirmed() {
         Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
             .setResizable(true).headerText("Are you sure?").contentText(
-                "This will remove the subject and all associated queestions, materials and exams.")
+                "This will remove the subject and all associated questions, materials and exams.")
             .build();
         alert.showAndWait();
         ButtonType result = alert.getResult();

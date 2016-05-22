@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
@@ -35,6 +36,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     private SubjectTopicDaoJdbc subjectTopicDaoJdbc;
 
+    private ExamDaoJdbc examDaoJdbc;
+
     @Autowired public SubjectDaoJdbc(ConnectionH2 database) {
         this.database = database;
     }
@@ -45,6 +48,10 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     @Autowired public void setSubjectTopicDaoJdbc(SubjectTopicDaoJdbc subjectTopicDaoJdbc) {
         this.subjectTopicDaoJdbc = subjectTopicDaoJdbc;
+    }
+
+    @Autowired public void setExamDaoJdbc(ExamDaoJdbc examDaoJdbc) {
+        this.examDaoJdbc = examDaoJdbc;
     }
 
     @Override public Subject getSubject(int id) throws DaoException {
@@ -137,9 +144,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     @Override public Subject deleteSubject(Subject subject) throws DaoException {
-
         assertNotNull(subject);
-
         logger.debug("Entering deleteSubject with values " + subjectValues(subject));
         deleteTopics(subject);
         deleteExams(subject);
@@ -199,15 +204,10 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         }
     }
 
-    //TODO: This is TEMPRORARY. Replace with method from examDao as soon as possible.
     private void deleteExams(Subject subject) throws DaoException {
-        try {
-            PreparedStatement statement = database.getConnection()
-                .prepareStatement("DELETE FROM ENTITY_EXAM WHERE SUBJECT = ?");
-            statement.setInt(1, subject.getSubjectId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        List<Exam> exams = examDaoJdbc.getAllExamsOfSubject(subject);
+        for (Exam exam : exams) {
+            examDaoJdbc.delete(exam);
         }
     }
 
