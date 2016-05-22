@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.application.Application;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -50,6 +51,7 @@ import java.util.Optional;
         String css = this.getClass().getResource("/style.css").toExternalForm();
         scene.getStylesheets().add(css);
         primaryStage.setScene(scene);
+        primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(this::closeWithConfirmation);
         primaryStage.show();
 
@@ -96,6 +98,14 @@ import java.util.Optional;
         String contentText) {
         Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
             .contentText(contentText).build();
+        ObservableList<ButtonType> buttons =  alert.getButtonTypes();
+
+        for (ButtonType b : buttons) {
+            if (b == ButtonType.CANCEL) {
+                buttons.remove(b);
+                buttons.add(new ButtonType("Cancel"));
+            }
+        }
         return alert.showAndWait();
     }
 }
