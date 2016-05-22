@@ -176,7 +176,7 @@ import java.util.List;
             pstmt.executeUpdate();
             updatedTopic = topic;
         } catch (SQLException e) {
-            logger.error("Could not update " + topic);
+            logger.error("Could not update " + topic, e);
             throw new DaoException("Could not update " + topic);
         }
         return updatedTopic;

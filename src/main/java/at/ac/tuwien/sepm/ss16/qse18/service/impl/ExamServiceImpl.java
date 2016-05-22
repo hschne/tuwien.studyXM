@@ -44,14 +44,14 @@ public class ExamServiceImpl implements ExamService {
 
     @Override public Exam getExam(int examID) throws ServiceException {
         logger.debug("entering method getExam with parameters {}", examID);
-        if(examID <= 0){
+        if(examID <= 0) {
             logger.error("Service Exception getExam {}", examID);
             throw new ServiceException("Invalid Exam ID, please check your input");
         }
 
         try {
            return this.examDao.getExam(examID);
-        }catch (DaoException e){
+        } catch(DaoException e){
             logger.error("Service Exception getExam {}", examID, e);
             throw new ServiceException(e.getMessage());
         }
@@ -59,10 +59,9 @@ public class ExamServiceImpl implements ExamService {
 
     @Override public List<Exam> getExams() throws ServiceException {
         logger.debug("entering method getExams()");
-        try{
+        try {
             return this.examDao.getExams();
-
-        }catch (DaoException e){
+        } catch(DaoException e){
             logger.error("Service Exception getExams", e);
             throw new ServiceException(e.getMessage());
         }
@@ -78,7 +77,6 @@ public class ExamServiceImpl implements ExamService {
         try {
             exam.setExamQuestions(getRightQuestions(exam, topic.getTopicId(), examTime));
             return this.examDao.create(exam, exam.getExamQuestions());
-
         } catch(DaoException e){
             logger.error("Service Exception createExam {}", exam, e);
             throw new ServiceException(e.getMessage());
@@ -92,9 +90,8 @@ public class ExamServiceImpl implements ExamService {
             throw new ServiceException("Invalid values, please check your input");
         }
 
-        try{
+        try {
             return this.examDao.delete(exam);
-
         } catch(DaoException e){
             logger.error("Service Exception deleteExam {}", exam, e);
             throw new ServiceException(e.getMessage());
@@ -135,12 +132,11 @@ public class ExamServiceImpl implements ExamService {
         */
 
         return true;
-
     }
 
     public List<Question> getRightQuestions(Exam exam, int topicID, int examTime) throws ServiceException{
         logger.debug("entering method getRigthQuestions with parameters {}", exam, topicID, examTime);
-        if(exam == null || topicID <= 0 || examTime <= 0){
+        if(exam == null || topicID <= 0 || examTime <= 0) {
             logger.error("Service Exception getRightQuestions {}", exam, topicID, examTime);
             throw new ServiceException("Invalid values, please check your input");
         }
@@ -163,17 +159,15 @@ public class ExamServiceImpl implements ExamService {
                 notAnsweredQuestions.add(this.questionDao.getQuestion(e));
             }
 
-
             List<Question> temp = new ArrayList<>();
-            for(Question q: notAnsweredQuestions){
+            for(Question q: notAnsweredQuestions) {
                 temp.add(q);
             }
 
-
             for(Map.Entry<Integer, Boolean> e: questionBooleans.entrySet()) {
                 for(int i = 0; i < notAnsweredQuestions.size(); i++){
-                    if(e.getKey() == notAnsweredQuestions.get(i).getQuestionId()){
-                        if (e.getValue() == true) {
+                    if(e.getKey() == notAnsweredQuestions.get(i).getQuestionId()) {
+                        if(e.getValue() == true) {
                             rightAnsweredQuestions.add(temp.get(counter));
                             notAnsweredQuestions.remove(temp.get(counter));
                         } else {
@@ -186,9 +180,9 @@ public class ExamServiceImpl implements ExamService {
             }
 
             while((wrongAnsweredQuestions.size() != 0 || notAnsweredQuestions.size() != 0
-                || rightAnsweredQuestions.size()!= 0)){
+                || rightAnsweredQuestions.size()!= 0)) {
 
-                if(notAnsweredQuestions.size() != 0){
+                if(notAnsweredQuestions.size() != 0) {
                     random = (int)(Math.random() * notAnsweredQuestions.size());
                     if((questionTimeCounter + notAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {
@@ -198,7 +192,7 @@ public class ExamServiceImpl implements ExamService {
                     notAnsweredQuestions.remove(random);
                 }
 
-                if(wrongAnsweredQuestions.size() != 0 && notAnsweredQuestions.size() == 0){
+                if(wrongAnsweredQuestions.size() != 0 && notAnsweredQuestions.size() == 0) {
                     random = (int)(Math.random() * wrongAnsweredQuestions.size());
                     if((questionTimeCounter + wrongAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {
@@ -211,7 +205,7 @@ public class ExamServiceImpl implements ExamService {
 
 
                 if(rightAnsweredQuestions.size() != 0 && notAnsweredQuestions.size() == 0
-                    && wrongAnsweredQuestions.size() == 0){
+                    && wrongAnsweredQuestions.size() == 0) {
                     random = (int)(Math.random() * rightAnsweredQuestions.size());
                     if((questionTimeCounter + rightAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {
@@ -222,21 +216,20 @@ public class ExamServiceImpl implements ExamService {
                 }
             }
 
-
-        }catch (DaoException e){
+        } catch(DaoException e){
             logger.error("Service Exception getRightQuestions with parameters{}",
                 exam, topicID, examTime, e);
             throw new ServiceException(e.getMessage());
         }
 
-        if(examQuestions.size() == 0){
+        if(examQuestions.size() == 0) {
             logger.error("Service Exception getRightQuestions with parameters{}", exam);
             throw new ServiceException("Could not get Questions with subjectId "
                 + exam.getSubjectID() + " and topicID " + topicID + " or examTime " + examTime
                 + " is too small");
         }
 
-        if(questionTimeCounter < examTime*0.8){
+        if(questionTimeCounter < examTime*0.8) {
             logger.error("Service Exception getRightQuestions with parameters{}", exam);
             throw new ServiceException("There aren't enough questions to cover the exam time " + examTime
                 + " ,please reduce the exam time");
@@ -248,15 +241,14 @@ public class ExamServiceImpl implements ExamService {
     @Override public List<Integer> getAllQuestionsOfExam(int examID) throws ServiceException{
         logger.debug("entering getAllQuestionsOfExam with parameters {}", examID);
 
-        if(examID <= 0){
+        if(examID <= 0) {
             logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID);
             throw new ServiceException("Invalid examID, please check your input");
         }
 
-        try{
+        try {
             return this.examQuestionDao.getAllQuestionsOfExam(examID);
-
-        }catch (DaoException e){
+        } catch(DaoException e){
             logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID, e);
             throw new ServiceException(e.getMessage());
         }
