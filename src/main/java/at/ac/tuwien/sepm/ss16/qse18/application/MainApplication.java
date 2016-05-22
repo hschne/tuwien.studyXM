@@ -5,9 +5,11 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.application.Application;
+import javafx.event.Event;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.Optional;
 
 /**
  * The starting point of Study XM
@@ -43,27 +46,38 @@ import java.sql.SQLException;
             springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);
         mfWrapper.getController().setPrimaryStage(primaryStage);
         primaryStage.setTitle("Study XM");
-        Scene scene =new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
+        Scene scene = new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
         String css = this.getClass().getResource("/style.css").toExternalForm();
         scene.getStylesheets().add(css);
         primaryStage.setScene(scene);
+        primaryStage.setOnCloseRequest(this::closeWithConfirmation);
         primaryStage.show();
 
         try {
             new ConnectionH2().getConnection();
         } catch (SQLException e) {
-            logger.error("Unable to connect to database. "+e.getMessage());
+            logger.error("Unable to connect to database. " + e.getMessage());
             primaryStage.close();
-            showAlert(Alert.AlertType.ERROR, "Error"
-                    ,"Unable to connect to database."
-                    ,"The application wasn't able to get a connection to the database. "
-                            + "Please make sure h2.bat is running and try again.");
+            showAlert(Alert.AlertType.ERROR, "Error", "Unable to connect to database.",
+                "The application wasn't able to get a connection to the database. "
+                    + "Please make sure h2.bat is running and try again.");
 
+        }
+    }
+
+    private void closeWithConfirmation(Event e) {
+        Optional<ButtonType> closing =
+            showAlert(Alert.AlertType.CONFIRMATION, "Closing application", "Closing application",
+                "Are you sure you want to close the application?");
+
+        if (closing.get() != ButtonType.OK) {
+            e.consume();
         }
     }
 
     @Override public void stop() throws Exception {
         logger.info("Stopping Application");
+
         if (this.applicationContext != null && applicationContext.isRunning()) {
             this.applicationContext.close();
             new ConnectionH2().closeConnection();
@@ -73,17 +87,15 @@ import java.sql.SQLException;
 
     /**
      * Creates and shows a new Alert.
-     * @param type alert type
-     * @param title alert title
+     *
+     * @param type       alert type
+     * @param title      alert title
      * @param headerText alert header text
      */
-    private void showAlert(Alert.AlertType type, String title,
-                           String headerText,String contentText) {
-        Alert alert = alertBuilder.alertType(type)
-                .title(title)
-                .headerText(headerText)
-                .contentText(contentText).build();
-        alert.showAndWait();
+    private Optional<ButtonType> showAlert(Alert.AlertType type, String title, String headerText,
+        String contentText) {
+        Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
+            .contentText(contentText).build();
+        return alert.showAndWait();
     }
-
 }
