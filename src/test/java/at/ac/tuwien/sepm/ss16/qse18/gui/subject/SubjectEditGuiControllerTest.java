@@ -2,9 +2,9 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.JavaFxThreadingRule;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -24,16 +24,17 @@ import static org.mockito.Mockito.verify;
     @Rule public JavaFxThreadingRule javafxRule = new JavaFxThreadingRule();
     private SubjectEditController controller;
     @Mock private SubjectOverviewController mockSubjectOverviewController;
+    @Mock private MainFrameController mockMainFrameController;
 
-    @Mock private Stage mockDialogStage;
 
     @Before public void setUp() {
-        controller = new SubjectEditController(mockSubjectOverviewController);
-        controller.setStage(mockDialogStage);
+        controller = new SubjectEditController();
         controller.name = new TextField();
         controller.author = new TextField();
         controller.ects = new TextField();
         controller.semester = new TextField();
+        controller.setMainFrameController(mockMainFrameController);
+        controller.setSubjectOverviewController(mockSubjectOverviewController);
     }
 
     @Test public void testHandleOkWithNewSubjectAddsNewSubject() throws Exception {
@@ -54,6 +55,6 @@ import static org.mockito.Mockito.verify;
     @Test public void testHandleCancelClosesDialogStage() throws Exception {
         controller.handleCancel();
 
-        verify(mockDialogStage).close();
+        verify(mockMainFrameController).handleSubjects();
     }
 }

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
@@ -8,9 +9,11 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
@@ -86,6 +89,17 @@ import java.io.IOException;
         try {
             setSubView("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
         } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateSubject(ObservableSubject subject){
+        logger.debug("Loading create subject view");
+        try{
+            SubjectEditController controller = setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
+            controller.setSubject(subject);
+        }
+        catch (IOException e){
             handleException(e);
         }
     }

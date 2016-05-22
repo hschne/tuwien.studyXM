@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
@@ -39,18 +40,14 @@ import java.util.stream.Collectors;
     @FXML public Button editButton;
     @FXML public Button deleteButton;
     @Autowired ApplicationContext applicationContext;
-
+    @Autowired MainFrameController mainFrameController;
     private Logger logger = LogManager.getLogger();
     private ObservableList<ObservableSubject> subjectList;
-    private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
     private SubjectService subjectService;
     private AlertBuilder alertBuilder;
 
-
-    @Autowired public SubjectOverviewController(SpringFXMLLoader springFXMLLoader,
-        SubjectService subjectService, AlertBuilder alertBuilder) {
-        this.springFXMLLoader = springFXMLLoader;
+    @Autowired public SubjectOverviewController(SubjectService subjectService, AlertBuilder alertBuilder) {
         this.subjectService = subjectService;
         this.alertBuilder = alertBuilder;
     }
@@ -62,6 +59,7 @@ import java.util.stream.Collectors;
             initializeButtons();
             initializeListView();
         } catch (ServiceException e) {
+            logger.error(e);
             showAlert();
         }
     }
@@ -73,14 +71,7 @@ import java.util.stream.Collectors;
      */
     @FXML public void handleNew() throws IOException {
         logger.debug("Create new subject");
-        Stage stage = new Stage();
-        SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
-            springFXMLLoader
-                .loadAndWrap("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
-        SubjectEditController childController = editSubjectWrapper.getController();
-        childController.setSubject(null);
-        childController.setStage(stage);
-        configureStage(stage, "New Subject", editSubjectWrapper);
+        mainFrameController.handleCreateSubject(null);
     }
 
     /**
@@ -99,6 +90,7 @@ import java.util.stream.Collectors;
                 subjectList.remove(subjectToDelete);
             }
         } catch (ServiceException e) {
+            logger.error(e);
             showAlert();
         }
     }
@@ -111,14 +103,7 @@ import java.util.stream.Collectors;
     @FXML public void handleEdit() throws IOException {
         logger.debug("Editing selected subject");
         ObservableSubject subject = subjectListView.getSelectionModel().getSelectedItem();
-        Stage stage = new Stage();
-        SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper =
-            springFXMLLoader
-                .loadAndWrap("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
-        SubjectEditController childController = editSubjectWrapper.getController();
-        childController.setSubject(subject);
-        childController.setStage(stage);
-        configureStage(stage, "Edit Subject", editSubjectWrapper);
+        mainFrameController.handleCreateSubject(subject);
     }
 
     /**
@@ -156,6 +141,7 @@ import java.util.stream.Collectors;
             subjectService.updateSubject(subject);
             updateEntry(observableSubject, subject);
         } catch (ServiceException e) {
+            logger.error(e);
             showAlert();
         }
     }

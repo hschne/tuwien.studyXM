@@ -36,7 +36,7 @@ import static org.mockito.Mockito.when;
     private SubjectOverviewController controller;
 
     @Before public void setUp() {
-        controller = new SubjectOverviewController(mockSpringFXMLLoader, mockSubjectService,
+        controller = new SubjectOverviewController(mockSubjectService,
             mockAlertBuilder);
         controller.subjectListView = new ListView<>();
         controller.editButton = new Button();
