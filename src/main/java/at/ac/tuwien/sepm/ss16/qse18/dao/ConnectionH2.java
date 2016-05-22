@@ -36,7 +36,7 @@ import java.sql.SQLException;
             try {
                 Class.forName("org.h2.Driver");
             } catch (ClassNotFoundException e) {
-                logger.error("Unable to load org.h2.Driver. " + e.getMessage());
+                logger.error("Unable to load org.h2.Driver.", e);
                 return;
             }
             connection = DriverManager.getConnection(path, user, password);

@@ -26,7 +26,7 @@ public class ExamDaoJdbc implements ExamDao{
     private final ExamQuestionDao examQuestionDao;
     private static final Logger logger = LogManager.getLogger();
 
-    @Autowired public ExamDaoJdbc(ConnectionH2 database, ExamQuestionDao examQuestionDao){
+    @Autowired public ExamDaoJdbc(ConnectionH2 database, ExamQuestionDao examQuestionDao) {
         this.database = database;
         this.examQuestionDao = examQuestionDao;
     }
@@ -47,8 +47,9 @@ public class ExamDaoJdbc implements ExamDao{
             exam.setCreated(new Timestamp(date.getTime()));
             exam.setPassed(false);
 
-            pstmt = database.getConnection().prepareStatement("Insert into entity_exam "
-                + "(created, passed, author, subject)Values(?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            pstmt = database.getConnection().prepareStatement("INSERT INTO ENTITY_EXAM "
+                + "(CREATED, PASSED, AUTHOR, SUBJECT) VALUES (?, ?, ?, ?)",
+                Statement.RETURN_GENERATED_KEYS);
             pstmt.setTimestamp(1, exam.getCreated());
             pstmt.setBoolean(2, exam.getPassed());
             pstmt.setString(3, exam.getAuthor());
@@ -69,13 +70,13 @@ public class ExamDaoJdbc implements ExamDao{
             }
 
         } catch (SQLException e) {
-            logger.error("SQL Exception in create with parameters {}: " + e, exam);
+            logger.error("SQL Exception in create with parameters {}: ", exam, e);
             throw new DaoException(
-                "Could not create Exam with values(" + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
-                    + ", " + exam.getAuthor() + ")");
+                "Could not create Exam with values(" + exam.getExamid() + ", " + exam.getCreated()
+                    + ", " + exam.getPassed() + ", " + exam.getAuthor() + ")");
 
         } finally {
-            if (generatedKey!= null) {
+            if (generatedKey != null) {
                 try {
                     generatedKey.close();
                 } catch (SQLException e) {
@@ -107,12 +108,12 @@ public class ExamDaoJdbc implements ExamDao{
 
         PreparedStatement pstmt = null;
 
-        try{
-            pstmt = this.database.getConnection().prepareStatement("Delete from entity_exam where examid = ? and created = ?"
-                + "and passed = ? and author = ? and subject = ?");
+        try {
+            pstmt = this.database.getConnection()
+                .prepareStatement("DELETE FROM ENTITY_EXAM WHERE EXAMID = ? AND CREATED = ?"
+                + "AND PASSED = ? AND AUTHOR = ? AND SUBJECT = ?");
 
             examQuestionDao.delete(exam.getExamid());
-
 
             pstmt.setInt(1, exam.getExamid());
             pstmt.setTimestamp(2, exam.getCreated());
@@ -121,14 +122,12 @@ public class ExamDaoJdbc implements ExamDao{
             pstmt.setInt(5, exam.getSubjectID());
             pstmt.executeUpdate();
 
-
-
-        }catch(SQLException e){
+        } catch(SQLException e){
             logger.error("SQL Exception in delete with parameters {}", exam, e);
             throw new DaoException(
-                "Could not delete Exam with values(" + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
-                    + ", " + exam.getAuthor() + ")");
-        }finally {
+                "Could not delete Exam with values(" + exam.getExamid() + ", " + exam.getCreated()
+                    + ", " + exam.getPassed() + ", " + exam.getAuthor() + ")");
+        } finally {
             if(pstmt != null){
                 try{
                     pstmt.close();
@@ -156,31 +155,34 @@ public class ExamDaoJdbc implements ExamDao{
         ResultSet rs = null;
 
         try{
-            pstmt = this.database.getConnection().prepareStatement("Select * from entity_exam where subject = ?");
+            pstmt = this.database.getConnection()
+                .prepareStatement("SELECT * FROM ENTITY_EXAM WHERE SUBJECT = ?");
             pstmt.setInt(1, subjectID);
             rs = pstmt.executeQuery();
 
             examList = fillList(rs);
 
-        }catch (SQLException e){
-            logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectID);
+        } catch (SQLException e){
+            logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectID, e);
             throw new DaoException("Could not get List with of Exams with subject ID " + subjectID);
-        }finally {
+        } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
             } catch (SQLException e) {
-                logger.error("SQL Exception in getAllExamsOfSubject with parameters {}", subjectID);
+                logger.error("SQL Exception in getAllExamsOfSubject with parameters {}",
+                    subjectID, e);
                 throw new DaoException("Result Set could not be closed");
             }
 
-            try{
+            try {
                 if(pstmt != null){
                     pstmt.close();
                 }
-            }catch (SQLException e){
-                logger.error("SQL Excepiton in getAllExamsOfSubject with parameters {}", subjectID, e);
+            } catch (SQLException e){
+                logger.error("SQL Excepiton in getAllExamsOfSubject with parameters {}",
+                    subjectID, e);
                 throw new DaoException("Prepared Statement could not be closed");
             }
         }
@@ -192,7 +194,7 @@ public class ExamDaoJdbc implements ExamDao{
         logger.debug("entering method getExam with parameters {}", examID);
         Exam exam = null;
 
-        if(examID <= 0){
+        if(examID <= 0) {
             logger.error("DaoException getExam with parameters {}", examID);
             throw new DaoException("Invalid Exam ID, please check your input");
         }
@@ -200,12 +202,13 @@ public class ExamDaoJdbc implements ExamDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        try{
-            pstmt = this.database.getConnection().prepareStatement("Select * from entity_exam where examid = ?");
+        try {
+            pstmt = this.database.getConnection()
+                .prepareStatement("SELECT * FROM ENTITY_EXAM WHERE EXAMID = ?");
             pstmt.setInt(1, examID);
             rs = pstmt.executeQuery();
 
-            if(rs.next()){
+            if(rs.next()) {
                 exam = new Exam();
                 exam.setExamid(rs.getInt("examid"));
                 exam.setCreated(rs.getTimestamp("created"));
@@ -214,24 +217,24 @@ public class ExamDaoJdbc implements ExamDao{
                 exam.setSubjectID(rs.getInt("subject"));
             }
 
-        }catch (SQLException e){
-            logger.error("SQL Exception in getExam with parameters {}", examID);
+        } catch (SQLException e) {
+            logger.error("SQL Exception in getExam with parameters {}", examID, e);
             throw new DaoException("Could not get List with of Exams with Exam ID" + examID);
-        }finally {
+        } finally {
             try {
                 if (rs != null) {
                     rs.close();
                 }
             } catch (SQLException e) {
-                logger.error("SQL Exception in getExam with parameters {}", examID);
+                logger.error("SQL Exception in getExam with parameters {}", examID, e);
                 throw new DaoException("Result Set could not be closed");
             }
 
-            try{
-                if(pstmt != null){
+            try {
+                if(pstmt != null) {
                     pstmt.close();
                 }
-            }catch (SQLException e){
+            } catch (SQLException e){
                 logger.error("SQL Excepiton in getExam with parameters {}", examID, e);
                 throw new DaoException("Prepared Statement could not be closed");
             }
@@ -247,17 +250,17 @@ public class ExamDaoJdbc implements ExamDao{
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        try{
-            pstmt = this.database.getConnection().prepareStatement("Select * from entity_exam");
+        try {
+            pstmt = this.database.getConnection().prepareStatement("SELECT * FROM ENTITY_EXAM");
             rs = pstmt.executeQuery();
 
             examList = fillList(rs);
 
 
-        }catch (SQLException e){
+        } catch (SQLException e){
             logger.error("SQL Exception in getExam with parameters {}");
             throw new DaoException("Could not get List with of Exams");
-        }finally {
+        } finally {
             try {
                 if (rs != null) {
                     rs.close();
@@ -284,7 +287,7 @@ public class ExamDaoJdbc implements ExamDao{
         Exam exam;
         List<Exam> examList = new ArrayList<>();
 
-        while(rs.next()){
+        while(rs.next()) {
             exam = new Exam();
 
             exam.setExamid(rs.getInt("examid"));

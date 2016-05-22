@@ -52,6 +52,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 fillSubject(res, rs.getInt("subjectId"), rs.getString("name"), rs.getFloat("ects"),
                     rs.getString("semester"), rs.getInt("time_spent"), rs.getString("author"));
             }
+            ps.close();
+            rs.close();
         } catch (SQLException e) {
             logger.error("Could not get subject with id (" + id + "): " + e);
             throw new DaoException("Could not get subject with id (" + id + ")");
@@ -79,6 +81,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                     rs.getString("semester"), rs.getInt("time_spent"), rs.getString("author"));
                 res.add(tmp);
             }
+            s.close();
+            rs.close();
         } catch (SQLException e) {
             logger.error("Could not get all subjectListView: " + e);
             throw new DaoException("Could not get all subjectListView");
@@ -147,7 +151,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 subject.getEcts(), subject.getSemester(), subject.getTimeSpent(),
                 subject.getAuthor());
             ps.executeUpdate();
-
+            ps.close();
             return subject;
         } catch (SQLException e) {
             logger
@@ -181,7 +185,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             ps.setInt(6, subject.getSubjectId());
 
             ps.executeUpdate();
-
+            ps.close();
             return subject;
         } catch (SQLException e) {
             logger.error(

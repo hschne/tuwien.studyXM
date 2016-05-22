@@ -58,7 +58,7 @@ import java.util.Optional;
         try {
             new ConnectionH2().getConnection();
         } catch (SQLException e) {
-            logger.error("Unable to connect to database. " + e.getMessage());
+            logger.error("Unable to connect to database. ", e);
             primaryStage.close();
             showAlert(Alert.AlertType.ERROR, "Error", "Unable to connect to database.",
                 "The application wasn't able to get a connection to the database. "

@@ -67,6 +67,14 @@ public class Question {
             '}';
     }
 
+    @Override public int hashCode() {
+        int result = questionId;
+        result = 31 * result + (question != null ? question.hashCode() : 0);
+        result = 31 * result + type.hashCode();
+        result = 31 * result + (int) (questionTime ^ (questionTime >>> 32));
+        return result;
+    }
+
     @Override public boolean equals(Object o) {
         if (this == o)
             return true;
