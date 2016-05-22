@@ -13,7 +13,7 @@ public class Exam {
     private boolean passed;
     private String author;
     private int subjectID;
-    private List<Question> examQuestions = new ArrayList<Question>();
+    private List<Question> examQuestions = new ArrayList<>();
 
     public int getExamid(){
         return this.examid;

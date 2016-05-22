@@ -100,7 +100,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         try{
             for(int e: questionList) {
                 if(e <= 0){
-                    logger.error("SQL Exception in delete with parameters {}");
+                    logger.error("Invalid question ID");
                     throw new DaoException("Invalid question ID");
                 }
                 pstmt = this.database.getConnection()

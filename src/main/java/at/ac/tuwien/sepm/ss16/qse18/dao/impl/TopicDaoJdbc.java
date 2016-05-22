@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.*;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
@@ -101,9 +100,8 @@ import java.util.List;
 
     @Override public Topic createTopic(Topic topic, Subject subject) throws DaoException {
         logger.debug("Entering createTopic with parameters {}", topic);
-        if (topic == null) {
-            throw new DaoException("Topic must not be null");
-        }
+        isTopicNull(topic);
+
         if (subject == null) {
             throw new DaoException("Subject must not be null");
         }
@@ -134,9 +132,8 @@ import java.util.List;
 
     @Override public boolean deleteTopic(Topic topic) throws DaoException {
         logger.debug("Entering deleteTopic with parameters {}", topic);
-        if (topic == null) {
-            throw new DaoException("Topic must not be null");
-        }
+        isTopicNull(topic);
+
         try {
             subjectTopicDaoJdbc.deleteSubjectTopic(topic);
         } catch (DaoException e) {
@@ -162,12 +159,10 @@ import java.util.List;
 
     @Override public Topic updateTopic(Topic topic) throws DaoException {
         logger.debug("Entering updateTopic with parameters {}", topic);
-        if (topic == null) {
-            throw new DaoException("Topic must not be null");
-        }
+        isTopicNull(topic);
 
-        Topic updatedTopic = null;
-        PreparedStatement pstmt = null;
+        Topic updatedTopic;
+        PreparedStatement pstmt;
 
         try {
             pstmt = database.getConnection().prepareStatement(UPDATE_SQL);
@@ -199,6 +194,12 @@ import java.util.List;
                 logger.error("Could not close ResultSet ", e);
                 throw new DaoException("Could not close Resultset " + e.getMessage());
             }
+        }
+    }
+
+    private void isTopicNull(Topic t) throws DaoException {
+        if (t == null) {
+            throw new DaoException("Topic must not be null");
         }
     }
 }

@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -25,8 +24,8 @@ import java.sql.SQLException;
         this.database = database;
     }
 
-    @Override public void addResourceTopic(Topic topic, Resource resource) {
-        throw new NotImplementedException();
+    @Override public void addResourceTopic(Topic topic, Resource resource) throws Exception {
+        throw new Exception("Not implemented yet");
     }
 
     @Override public void removeResourceTopic(Topic topic) throws DaoException {

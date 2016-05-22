@@ -93,9 +93,7 @@ public class AnswerDaoJdbc implements AnswerDao {
 
     @Override public Answer createAnswer(Answer a) throws DaoException {
         logger.info("Trying to save answer persistently");
-        if(a == null) {
-            throw new DaoException("Answer must not be null");
-        }
+        isAnswerNull(a);
 
         if(a.getAnswerId() > 0) {
             throw new DaoException("Answer ID already in use");
@@ -126,9 +124,7 @@ public class AnswerDaoJdbc implements AnswerDao {
 
     @Override public Answer updateAnswer(Answer a) throws DaoException {
         logger.info("Trying to modify answer");
-        if(a == null) {
-            throw new DaoException("Answer must not be null");
-        }
+        isAnswerNull(a);
 
         if(a.getAnswerId() < 0) {
             logger.info("Answer not yet in Database, now creating entry");
@@ -153,9 +149,7 @@ public class AnswerDaoJdbc implements AnswerDao {
 
     @Override public Answer deleteAnswer(Answer a) throws DaoException {
         logger.info("Removing answer from database");
-        if(a == null) {
-            throw new DaoException("Answer must not be null");
-        }
+        isAnswerNull(a);
 
         if(a.getAnswerId() < 0) {
             logger.info("Answer not in database, nothing to do");
@@ -176,5 +170,11 @@ public class AnswerDaoJdbc implements AnswerDao {
 
     private Question getCorrespondingQuestion(int questionId) throws DaoException {
         return new QuestionDaoJdbc(this.con).getQuestion(questionId);
+    }
+
+    private void isAnswerNull(Answer a) throws DaoException {
+        if(a == null) {
+            throw new DaoException("Answer must not be null");
+        }
     }
 }

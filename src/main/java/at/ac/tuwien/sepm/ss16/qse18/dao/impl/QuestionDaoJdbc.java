@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
@@ -28,13 +27,13 @@ public class QuestionDaoJdbc implements QuestionDao {
     private DataBaseConnection con;
     private Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
 
-    private final String GET_SINGLE_QUESTION = "SELECT * FROM ENTITY_QUESTION WHERE QUESTIONID=?";
-    private final String GET_ALL_QUESTIONS = "SELECT * FROM ENTITY_QUESTION";
-    private final String UPDATE_QUESTION = "UPDATE ENTITY_QUESTION SET TYPE=?, QUESTION=?, "
+    private static final String GET_SINGLE_QUESTION = "SELECT * FROM ENTITY_QUESTION WHERE QUESTIONID=?";
+    private static final String GET_ALL_QUESTIONS = "SELECT * FROM ENTITY_QUESTION";
+    private static final String UPDATE_QUESTION = "UPDATE ENTITY_QUESTION SET TYPE=?, QUESTION=?, "
         + "QUESTION_TIME WHERE QUESTIONID=?";
-    private final String CREATE_QUESTION = "INSERT INTO ENTITY_QUESTION " +
+    private static final String CREATE_QUESTION = "INSERT INTO ENTITY_QUESTION " +
             "(TYPE, QUESTION, QUESTION_TIME) " + "VALUES (?, ?, ?)";
-    private final String DELETE_QUESTION = "DELETE FROM ENTITY_QUESTION WHERE QUESTIONID=?";
+    private static final String DELETE_QUESTION = "DELETE FROM ENTITY_QUESTION WHERE QUESTIONID=?";
 
     @Autowired public QuestionDaoJdbc(DataBaseConnection database){
         this.con = database;
@@ -98,10 +97,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override public Question createQuestion(Question question) throws DaoException {
         logger.info("Now saving question in database");
-        if(question == null) {
-            logger.error("Given question must not be null");
-            throw new DaoException("Question must not be null");
-        }
+        isQuestionNull(question);
 
         if(question.getQuestionId() > -1) {
             logger.info("Question already in database, aborting");
@@ -136,10 +132,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override public Question deleteQuestion(Question question) throws DaoException {
         logger.info("Now deleting quetion entry from database");
-        if(question == null) {
-            logger.error("Given question must not be null");
-            throw new DaoException("Question must not be null");
-        }
+        isQuestionNull(question);
 
         if(question.getQuestionId() < 0) {
             logger.info("Question not in database, aborting");
@@ -163,10 +156,7 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Override public Question updateQuestion(Question question) throws DaoException {
         logger.info("Now updating question in database");
-        if(question == null) {
-            logger.error("Given question must not be null");
-            throw new DaoException("Question must not be null");
-        }
+        isQuestionNull(question);
 
         if(question.getQuestionId() < 0) {
             logger.info("Question not in database, creating new entry for the given instance");
@@ -196,6 +186,13 @@ public class QuestionDaoJdbc implements QuestionDao {
     }
 
     @Override public List<Answer> getRelatedAnswers(Question q) throws DaoException {
-        return null;
+        return new ArrayList<>();
+    }
+
+    private void isQuestionNull(Question q) throws DaoException {
+        if(q == null) {
+            logger.error("Given question must not be null");
+            throw new DaoException("Question must not be null");
+        }
     }
 }

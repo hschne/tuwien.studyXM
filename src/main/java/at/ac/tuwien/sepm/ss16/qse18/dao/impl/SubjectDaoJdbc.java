@@ -109,6 +109,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         } finally {
             closeStatementsAndResultSets(new Statement[] {s}, new ResultSet[] {rs});
         }
+
         return res;
     }
 
@@ -124,8 +125,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             ps = database.getConnection().prepareStatement(
                 "INSERT INTO ENTITY_SUBJECT (NAME,ECTS,SEMESTER,TIME_SPENT,AUTHOR) VALUES (?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
-            fillPreparedStatement(true, ps, 0, subject.getName(), subject.getEcts(),
-                subject.getSemester(), subject.getTimeSpent(), subject.getAuthor());
+            fillPreparedStatementWithSubject(true, ps, subject);
 
             ps.executeUpdate();
 
@@ -156,9 +156,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         try {
             ps = database.getConnection().prepareStatement(
                 "DELETE FROM ENTITY_SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
-            fillPreparedStatement(false, ps, subject.getSubjectId(), subject.getName(),
-                subject.getEcts(), subject.getSemester(), subject.getTimeSpent(),
-                subject.getAuthor());
+            fillPreparedStatementWithSubject(false, ps, subject);
             ps.executeUpdate();
             ps.close();
             return subject;
@@ -240,25 +238,23 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         }
     }
 
-    private void fillPreparedStatement(boolean inCreateMethod, PreparedStatement ps, int id,
-        String name, float ects, String semester, int timeSpent, String author)
-        throws SQLException {
+    private void fillPreparedStatementWithSubject(boolean inCreateMethod,
+        PreparedStatement ps, Subject s) throws SQLException {
         if (ps != null) {
             if (inCreateMethod) {
-                ps.setString(1, name);
-                ps.setFloat(2, ects);
-                ps.setString(3, semester);
-                ps.setInt(4, timeSpent);
-                ps.setString(5, author);
+                ps.setString(1, s.getName());
+                ps.setFloat(2, s.getEcts());
+                ps.setString(3, s.getSemester());
+                ps.setInt(4, s.getTimeSpent());
+                ps.setString(5, s.getAuthor());
             } else {
-                ps.setInt(1, id);
-                ps.setString(2, name);
-                ps.setFloat(3, ects);
-                ps.setString(4, semester);
-                ps.setInt(5, timeSpent);
-                ps.setString(6, author);
+                ps.setInt(1, s.getSubjectId());
+                ps.setString(2, s.getName());
+                ps.setFloat(3, s.getEcts());
+                ps.setString(4, s.getSemester());
+                ps.setInt(5, s.getTimeSpent());
+                ps.setString(6, s.getAuthor());
             }
-
         }
     }
 }

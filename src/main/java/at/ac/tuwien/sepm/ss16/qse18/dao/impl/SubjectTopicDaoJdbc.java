@@ -17,7 +17,6 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.List;
 
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
@@ -120,7 +119,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
             rs = ps.executeQuery();
 
-            res = new LinkedList<Subject>();
+            res = new LinkedList<>();
 
             while (rs.next()) {
                 Subject tmp = new Subject();

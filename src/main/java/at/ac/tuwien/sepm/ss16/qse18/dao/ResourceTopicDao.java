@@ -10,7 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
  */
 public interface ResourceTopicDao {
     
-    void addResourceTopic(Topic topic, Resource resource);
+    void addResourceTopic(Topic topic, Resource resource) throws Exception;
 
     void removeResourceTopic(Topic topic) throws DaoException;
 }

@@ -1,14 +1,12 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableAnswer;
-
 /**
  * Created by Felix on 06.05.2016.
  */
 public class Answer {
     private int answerId;
     private QuestionType type;
-    private String answer;
+    private String answerString;
     private boolean isCorrect;
     private Question q;
 
@@ -17,7 +15,7 @@ public class Answer {
     public Answer(int answerId, QuestionType type, String answer, boolean isCorrect, Question q) {
         this.answerId = answerId;
         this.type = type;
-        this.answer = answer;
+        this.answerString = answer;
         this.isCorrect = isCorrect;
         this.q = q;
     }
@@ -26,7 +24,7 @@ public class Answer {
         // -1 specifies an instance which is not yet persistent
         this.answerId = -1;
         this.type = type;
-        this.answer = answer;
+        this.answerString = answer;
         this.isCorrect = isCorrect;
         this.q = null;
 
@@ -57,11 +55,11 @@ public class Answer {
     }
 
     public String getAnswer() {
-        return answer;
+        return answerString;
     }
 
     public void setAnswer(String answer) {
-        this.answer = answer;
+        this.answerString = answer;
     }
 
     public boolean isCorrect() {
@@ -75,7 +73,7 @@ public class Answer {
     @Override public int hashCode() {
         int result = answerId;
         result = 31 * result + type.hashCode();
-        result = 31 * result + answer.hashCode();
+        result = 31 * result + answerString.hashCode();
         result = 31 * result + (isCorrect ? 1 : 0);
         result = 31 * result + (q != null ? q.hashCode() : 0);
         return result;
@@ -85,7 +83,7 @@ public class Answer {
         return "Answer{" +
             "answerId=" + answerId +
             ", type=" + type +
-            ", answer='" + answer + '\'' +
+            ", answer='" + answerString + '\'' +
             ", isCorrect=" + isCorrect +
             ", q=" + q +
             '}';
@@ -94,8 +92,10 @@ public class Answer {
 
     @Override
     public boolean equals(Object that){
-        if (this == that) return true;
-        if (!(that instanceof Answer)) return false;
+        if (this == that)
+            return true;
+        if (!(that instanceof Answer))
+            return false;
         return ((Answer) that).getAnswerId() == this.getAnswerId();
     }
 }
