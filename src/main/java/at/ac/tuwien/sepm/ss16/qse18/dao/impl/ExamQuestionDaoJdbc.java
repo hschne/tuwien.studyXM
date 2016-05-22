@@ -130,7 +130,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             }
 
         } catch(SQLException e) {
-            logger.error("SQL Exception in delete with parameters {}");
+            logger.error("SQL Exception in getAllQuestionBooleans", e);
             throw new DaoException("Could not get List with all Question Booleans for Questions");
         } finally {
             try {

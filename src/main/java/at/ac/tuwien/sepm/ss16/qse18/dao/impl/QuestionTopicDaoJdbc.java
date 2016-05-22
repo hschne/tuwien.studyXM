@@ -65,9 +65,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             }
         } catch (SQLException e) {
             logger.error(
-                "Could not get all topics from question [" + question + "]" + e.getMessage());
+                "Could not get all topics from question {}", question, e);
             throw new DaoException(
-                "Could not get all topics from question [" + question + "]" + e.getMessage());
+                "Could not get all topics from question " + question);
 
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});

@@ -28,11 +28,12 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         this.database = database;
     }
 
-    @Override public List<Integer> getAllQuestionsOfSubject(Exam exam, int topicID) throws DaoException {
+    @Override public List<Integer> getAllQuestionsOfSubject(Exam exam, int topicID)
+        throws DaoException {
         logger.debug("entering method getAllQuestionsOfSubject with parameters {}", exam);
         ArrayList<Integer> questionIDList = new ArrayList<>();
 
-        if(!DTOValidator.validate(exam) || topicID <= 0){
+        if(!DTOValidator.validate(exam) || topicID <= 0) {
             logger.error("Dao Exception create() {}", exam, topicID);
             throw new DaoException("Invalid values, please check your input");
         }
@@ -40,41 +41,44 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        try{
-            pstmt = this.database.getConnection().prepareStatement("Select * from rel_subject_topic "
-                + "natural join rel_question_topic tc "
-                + "where tc.topicid = ? and subjectid = ? order by questionid asc");
+        try {
+            pstmt = this.database.getConnection().prepareStatement("SELECT * FROM REL_SUBJECT_TOPIC "
+                + "NATURAL JOIN REL_QUESTION_TOPIC TC "
+                + "WHERE tc.topicid = ? AND SUBJECTID = ? ORDER BY questionid ASC");
 
             pstmt.setInt(1, topicID);
             pstmt.setInt(2, exam.getSubjectID());
             rs = pstmt.executeQuery();
 
-            while(rs.next()){
+            while(rs.next()) {
                 questionIDList.add(rs.getInt("questionid"));
             }
 
 
-        }catch (SQLException e){
-            logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}", exam, topicID);
+        } catch(SQLException e){
+            logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}",
+                exam, topicID, e);
             throw new DaoException("Could not get List with all Questions for Exam with values("
                 + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
                 + ", " + exam.getAuthor() + " and topicID " + topicID + ")");
-        }finally {
+        } finally {
             try {
-                if (rs != null) {
+                if(rs != null) {
                     rs.close();
                 }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}", exam, topicID);
+            } catch(SQLException e) {
+                logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}",
+                    exam, topicID, e);
                 throw new DaoException("Result Set could not be closed");
             }
 
-            try{
-                if(pstmt != null){
+            try {
+                if(pstmt != null) {
                     pstmt.close();
                 }
-            }catch (SQLException e){
-                logger.error("SQL Excepiton in getAllQuestionsOfSubject with parameters {}", exam, topicID, e);
+            } catch(SQLException e){
+                logger.error("SQL Excepiton in getAllQuestionsOfSubject with parameters {}",
+                    exam, topicID, e);
                 throw new DaoException("Prepared Statement could not be closed");
             }
         }
