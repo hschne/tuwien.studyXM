@@ -26,16 +26,19 @@ public class SubjectTopicQuestionServiceImpl implements SubjectTopicQuestionServ
     private QuestionTopicDao questionTopicDao;
 
     @Autowired
-    public SubjectTopicQuestionServiceImpl(SubjectTopicDao subjectTopicDao,QuestionTopicDao questionTopicDao) {
+    public SubjectTopicQuestionServiceImpl(SubjectTopicDao subjectTopicDao,
+        QuestionTopicDao questionTopicDao) {
         this.subjectTopicDao = subjectTopicDao;
         this.questionTopicDao = questionTopicDao;
     }
+
     @Override
-    public List<Topic> getTopicToSubjectWithNumberOfQuestions(Subject subject) throws ServiceException {
-        if(subject == null){
+    public List<Topic> getTopicToSubjectWithNumberOfQuestions(Subject subject)
+        throws ServiceException {
+        if(subject == null) {
             throw new ServiceException("Subject cannot be null");
         }
-        try{
+        try {
             List<Topic> topics = new ArrayList<>();
             for(Topic t : subjectTopicDao.getTopicToSubject(subject)){
                 List<Question> questions = questionTopicDao.getQuestionToTopic(t);
@@ -43,9 +46,8 @@ public class SubjectTopicQuestionServiceImpl implements SubjectTopicQuestionServ
                 topics.add(t);
             }
             return topics;
-        }
-        catch (DaoException e){
-            logger.error(e);
+        } catch (DaoException e){
+            logger.error("Could not execute getTopicToSubjectWithNumberOfQuestions", e);
             throw new ServiceException(e.getMessage());
         }
     }

@@ -72,8 +72,10 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 fillSubject(res, rs.getInt("subjectId"), rs.getString("name"), rs.getFloat("ects"),
                     rs.getString("semester"), rs.getInt("time_spent"), rs.getString("author"));
             }
+            ps.close();
+            rs.close();
         } catch (SQLException e) {
-            logger.error("Could not get subject with id (" + id + "): " + e);
+            logger.error("Could not get subject with id (" + id + ") ", e);
             throw new DaoException("Could not get subject with id (" + id + ")");
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
@@ -99,8 +101,10 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                     rs.getString("semester"), rs.getInt("time_spent"), rs.getString("author"));
                 res.add(tmp);
             }
+            s.close();
+            rs.close();
         } catch (SQLException e) {
-            logger.error("Could not get all subjectListView: " + e);
+            logger.error("Could not get all subjectListView ", e);
             throw new DaoException("Could not get all subjectListView");
         } finally {
             closeStatementsAndResultSets(new Statement[] {s}, new ResultSet[] {rs});
@@ -135,7 +139,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             return res;
         } catch (SQLException e) {
             logger
-                .error("Could not create subject with values " + subjectValues(subject) + ": " + e);
+                .error("Could not create subject with values " + subjectValues(subject), e);
             throw new DaoException(
                 "Could not create subject with values " + subjectValues(subject));
         } finally {
@@ -156,11 +160,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 subject.getEcts(), subject.getSemester(), subject.getTimeSpent(),
                 subject.getAuthor());
             ps.executeUpdate();
-
+            ps.close();
             return subject;
         } catch (SQLException e) {
             logger
-                .error("Could not delete subject with values " + subjectValues(subject) + ": " + e);
+                .error("Could not delete subject with values " + subjectValues(subject), e);
             throw new DaoException(
                 "Could not delete subject with values " + subjectValues(subject));
         } finally {
@@ -184,12 +188,12 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             ps.setInt(6, subject.getSubjectId());
 
             ps.executeUpdate();
-
+            ps.close();
             return subject;
         } catch (SQLException e) {
             logger.error(
                 "Could not update subject with id (" + subject.getSubjectId() + ") to values "
-                    + subjectValues(subject) + ": " + e);
+                    + subjectValues(subject), e);
             throw new DaoException(
                 "Could not update subject with id (" + subject.getSubjectId() + ") to values "
                     + subjectValues(subject));

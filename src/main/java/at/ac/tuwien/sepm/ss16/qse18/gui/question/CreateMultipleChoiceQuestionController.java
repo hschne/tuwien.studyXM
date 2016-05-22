@@ -124,7 +124,7 @@ import java.util.List;
             }
         }
 
-        throw new ServiceException("At least one question must be true.");
+        throw new ServiceException("At least one answer must be true.");
     }
 
     private void showAlert(ServiceException e) {

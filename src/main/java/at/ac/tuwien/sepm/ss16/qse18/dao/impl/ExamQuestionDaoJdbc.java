@@ -5,16 +5,17 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.util.DTOValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +44,8 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         PreparedStatement pstmt = null;
 
         try {
-            pstmt = this.database.getConnection().prepareStatement("Insert into rel_exam_question values(?, ?, ?, ?)");
+            pstmt = this.database.getConnection()
+                .prepareStatement("INSERT INTO REL_EXAM_QUESTION VALUES(?, ?, ?, ?)");
             pstmt.setInt(1, exam.getExamid());
             pstmt.setInt(2, question.getQuestionId());
             pstmt.setBoolean(3, false);
@@ -53,17 +55,10 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         } catch (SQLException e) {
             logger.error("SQL Exception in create with parameters {}", exam, question, e);
             throw new DaoException(
-                "Could not create ExamQuestion with values(" + exam.getExamid() + ", " + question.getQuestionId() + ")");
-
+                "Could not create ExamQuestion with values(" + exam.getExamid() + ", "
+                    + question.getQuestionId() + ")");
         } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in create with parameters {}", exam, question, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{});
         }
     }
 
@@ -78,30 +73,24 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         PreparedStatement pstmt = null;
 
         try {
-            pstmt = this.database.getConnection().prepareStatement("Delete from rel_exam_question "
-                + "where examid = ?");
+            pstmt = this.database.getConnection().prepareStatement("DELETE FROM REL_EXAM_QUESTION "
+                + "WHERE EXAMID = ?");
 
             pstmt.setInt(1, examID);
             pstmt.executeUpdate();
 
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             logger.error("SQL Exception in delete with parameters {}", examID, e);
             throw new DaoException(
                 "Could not delete ExamQuestion with values(" + examID + ")");
 
         } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in delete with parameters {}", examID, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{});
         }
     }
 
-    @Override public Map<Integer, Boolean> getAllQuestionBooleans(List<Integer> questionList) throws DaoException{
+    @Override public Map<Integer, Boolean> getAllQuestionBooleans(List<Integer> questionList)
+        throws DaoException{
         logger.debug("entering method getALlQuestionBooleans with parameters {}");
         Map<Integer, Boolean> questionBoolean = new HashMap<>();
 
@@ -109,46 +98,29 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         ResultSet rs = null;
 
         try{
-
             for(int e: questionList) {
                 if(e <= 0){
                     logger.error("SQL Exception in delete with parameters {}");
                     throw new DaoException("Invalid question ID");
                 }
-                pstmt = this.database.getConnection().prepareStatement("Select * from rel_exam_question where "
-                    + "questionid = ? and already_answered = ? order by questionid, examid desc");
+                pstmt = this.database.getConnection()
+                    .prepareStatement("SELECT * FROM REL_EXAM_QUESTION WHERE "
+                    + "QUESTIONID = ? AND ALREADY_ANSWERED = ? ORDER BY QUESTIONID, EXAMID DESC");
 
                 pstmt.setInt(1, e);
-                pstmt.setBoolean(2,true);
+                pstmt.setBoolean(2, true);
                 rs = pstmt.executeQuery();
 
                 if(rs.next()) {
-                    questionBoolean.put(rs.getInt("questionid"),rs.getBoolean("question_passed"));
+                    questionBoolean.put(rs.getInt("questionid"), rs.getBoolean("question_passed"));
                 }
             }
 
-
-        }catch (SQLException e){
-            logger.error("SQL Exception in delete with parameters {}");
+        } catch(SQLException e) {
+            logger.error("SQL Exception in getAllQuestionBooleans", e);
             throw new DaoException("Could not get List with all Question Booleans for Questions");
-        }finally {
-            try {
-                if (rs!= null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in getAllQuestionBooleans with parameters {}", e);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try{
-                if(pstmt != null){
-                    pstmt.close();
-                }
-            }catch (SQLException e){
-                logger.error("SQL Excepiton in getAllQuestionBooleans with parameters {}", e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
         return questionBoolean;
     }
@@ -157,7 +129,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         logger.debug("entering method getALlQuestionsOfExam with parameters {}", examID);
         ArrayList<Integer> questionIDList = new ArrayList<>();
 
-        if(examID <= 0){
+        if(examID <= 0) {
             logger.error("Dao Exception in getAllQuestionsofExam with parameters", examID);
             throw new DaoException("Invalid Exam ID, please check your input");
         }
@@ -165,8 +137,9 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         PreparedStatement pstmt = null;
         ResultSet rs = null;
 
-        try{
-            pstmt = this.database.getConnection().prepareStatement("Select * from rel_exam_question where examid = ?");
+        try {
+            pstmt = this.database.getConnection()
+                .prepareStatement("SELECT * FROM REL_EXAM_QUESTION WHERE EXAMID = ?");
 
             pstmt.setInt(1, examID);
             rs = pstmt.executeQuery();
@@ -175,28 +148,11 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
                 questionIDList.add(rs.getInt("questionid"));
             }
 
-
-        }catch (SQLException e){
-            logger.error("SQL Exception in delete with parameters {}", examID);
+        } catch(SQLException e) {
+            logger.error("SQL Exception in delete with parameters {}", examID, e);
             throw new DaoException("Could not get List with all Questions for Exam ID " + examID);
-        }finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                logger.error("SQL Exception in getAllQuestionsOfExam with parameters {}", examID);
-                throw new DaoException("Result Set could not be closed");
-            }
-
-            try{
-                if(pstmt != null){
-                    pstmt.close();
-                }
-            }catch (SQLException e){
-                logger.error("SQL Excepiton in getAllQuestionsOfExam with parameters {}", examID, e);
-                throw new DaoException("Prepared Statement could not be closed");
-            }
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
         return questionIDList;
     }

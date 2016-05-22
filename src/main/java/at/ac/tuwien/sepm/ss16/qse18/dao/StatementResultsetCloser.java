@@ -19,8 +19,8 @@ public class StatementResultsetCloser {
                     try {
                         s.close();
                     } catch (SQLException e) {
-                        logger.error("Could not close statement " + e.getMessage());
-                        throw new DaoException("Could not close statement " + e.getMessage());
+                        logger.error("Could not close statement.", e);
+                        throw new DaoException("Could not close statement: " + e.getMessage());
                     }
                 }
             }
@@ -31,8 +31,8 @@ public class StatementResultsetCloser {
                     try {
                         rs.close();
                     } catch (SQLException e) {
-                        logger.error("Could not close resultset " + e.getMessage());
-                        throw new DaoException("Could not close resultset " + e.getMessage());
+                        logger.error("Could not close resultset.", e);
+                        throw new DaoException("Could not close resultset: " + e.getMessage());
                     }
                 }
             }

@@ -36,8 +36,8 @@ import java.util.List;
     @Override public Question getQuestion(int questionId) throws ServiceException {
         try {
             return this.qdao.getQuestion(questionId);
-        } catch (DaoException e) {
-            logger.error("Could not fetch question: " + e.getMessage());
+        } catch(DaoException e) {
+            logger.error("Could not fetch question: ", e);
             throw new ServiceException("Could not fetch question");
         }
     }
@@ -45,8 +45,8 @@ import java.util.List;
     @Override public List<Question> getQuestion() throws ServiceException {
         try {
             return this.qdao.getQuestions();
-        } catch (DaoException e) {
-            logger.error("Could not fetch a list of all question: " + e.getMessage());
+        } catch(DaoException e) {
+            logger.error("Could not fetch a list of all question: ", e);
             throw new ServiceException("Could not fetch list of all question");
         }
     }
@@ -55,7 +55,7 @@ import java.util.List;
         try {
             return this.qdao.createQuestion(q);
         } catch (DaoException e) {
-            logger.error("Could not save question persistently: " + e.getMessage());
+            logger.error("Could not save question persistently: ", e);
             throw new ServiceException("Could not save question persistently");
         }
     }
@@ -63,8 +63,8 @@ import java.util.List;
     @Override public Question updateQuestion(Question q) throws ServiceException {
         try {
             return this.qdao.updateQuestion(q);
-        } catch (DaoException e) {
-            logger.error("Could not update question: " + e.getMessage());
+        } catch(DaoException e) {
+            logger.error("Could not update question: ", e);
             throw new ServiceException("Could not update question");
         }
     }
@@ -72,8 +72,8 @@ import java.util.List;
     @Override public Question deleteQuestion(Question q) throws ServiceException {
         try {
             return this.qdao.deleteQuestion(q);
-        } catch (DaoException e) {
-            logger.error("Could not delete question: " + e.getMessage());
+        } catch(DaoException e) {
+            logger.error("Could not delete question: ", e);
             throw new ServiceException("Could not delete question");
         }
     }
@@ -86,8 +86,8 @@ import java.util.List;
                 adao.updateAnswer(a);
             }
             return true;
-        } catch (DaoException e) {
-            logger.error("Could not set corresponding answers: " + e.getMessage());
+        } catch(DaoException e) {
+            logger.error("Could not set corresponding answers: ", e);
         }
         return false;
     }
@@ -101,8 +101,8 @@ import java.util.List;
                 }
             }
             return al;
-        } catch (DaoException e) {
-            logger.error("Could not get corresponding answers: " + e.getMessage());
+        } catch(DaoException e) {
+            logger.error("Could not get corresponding answers: ", e);
             throw new ServiceException("Could not get corresponding answers");
         }
     }
@@ -131,12 +131,12 @@ import java.util.List;
     @Override public List<Question> getQuestionsFromTopic(Topic topic) throws ServiceException {
         logger.debug("Entering getQuestionsFromTopic");
 
-        List<Question> res = null;
+        List<Question> res;
 
         try {
             res = tqDao.getQuestionToTopic(topic);
         } catch (DaoException e) {
-            logger.error("Could not get questions from topic [" + topic + "]" + e.getMessage());
+            logger.error("Could not get questions from topic [" + topic + "]", e);
             throw new ServiceException("Could not get questions from topic [" + topic + "]");
         }
 

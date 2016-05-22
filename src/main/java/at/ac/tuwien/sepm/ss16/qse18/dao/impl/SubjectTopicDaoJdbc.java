@@ -40,7 +40,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     @Override public void createSubjectTopic(Subject subject, Topic topic) throws DaoException {
         logger.debug("Entering createSubjectTopic with parameters {}", subject, topic);
         PreparedStatement pstmt = null;
-        if (subject == null || topic == null) {
+        if(subject == null || topic == null) {
+            logger.warn("Subject or topic should not be null");
             throw new DaoException("Subject or topic should not be null");
         }
         try {
@@ -60,7 +61,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         logger.debug("Entering deleteSubjectTopic with parameters {}", topic);
         PreparedStatement pstmt = null;
 
-        if (topic == null) {
+        if(topic == null) {
             throw new DaoException("Topic cannot be null");
         }
 
@@ -68,8 +69,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             pstmt = database.getConnection().prepareStatement(DELETE_SQL);
             pstmt.setInt(1, topic.getTopicId());
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            logger.error("Could not delete in rel_subject_topic topic " + topic);
+        } catch(SQLException e) {
+            logger.error("Could not delete in rel_subject_topic topic " + topic, e);
             throw new DaoException("Could not delete in rel_subject_topic topic " + topic);
         } finally {
             TopicDaoJdbc.closeStatementAndResultSet(pstmt, null);
@@ -79,7 +80,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     @Override public List<Topic> getTopicToSubject(Subject subject) throws DaoException {
         logger.debug("Entering getTopicToSubject with parameters {}", subject);
-        if (subject == null) {
+        if(subject == null) {
             logger.error("Subject cannot be null");
             throw new DaoException("Subject cannot be null");
         }
@@ -96,7 +97,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 Topic t = new Topic(rs.getInt(1), rs.getString(2));
                 topics.add(t);
             }
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             logger.error("Couldn't get all Topics to this Subject " + subject, e);
             throw new DaoException("Couldn't get all Topics to this Subject" + subject);
         } finally {
@@ -133,7 +134,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 res.add(tmp);
             }
 
-        } catch (SQLException e) {
+        } catch(SQLException e) {
             logger.error("Could not get subjects from topic [" + topic + "]: " + e);
             throw new DaoException("Could not get subjects from topic [" + topic + "]");
         } finally {

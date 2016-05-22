@@ -42,8 +42,8 @@ import java.util.List;
     @Override public Topic getTopic(int topicid) throws ServiceException {
         try {
             return topicDao.getTopic(topicid);
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not get topic", e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -51,44 +51,47 @@ import java.util.List;
     @Override public List<Topic> getTopics() throws ServiceException {
         try {
             return topicDao.getTopics();
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not get a list of all topics", e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override public Topic createTopic(Topic topic, Subject subject) throws ServiceException {
-        if (!verifyTopic(topic)) {
+        if(!verifyTopic(topic)) {
             throw new ServiceException("Topic is not valid");
         }
+
         try {
             return topicDao.createTopic(topic, subject);
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not create topic", e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override public boolean deleteTopic(Topic topic) throws ServiceException {
-        if (!verifyTopic(topic)) {
+        if(!verifyTopic(topic)) {
             throw new ServiceException("Topic is not valid");
         }
+
         try {
             return topicDao.deleteTopic(topic);
         } catch (DaoException e) {
-            logger.error(e);
+            logger.error("Could not delete topic", e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override public Topic updateTopic(Topic topic) throws ServiceException {
-        if (!verifyTopic(topic)) {
+        if(!verifyTopic(topic)) {
             throw new ServiceException("Topic is not valid");
         }
+
         try {
             return topicDao.updateTopic(topic);
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not update topic", e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -97,13 +100,13 @@ import java.util.List;
         if (t == null) {
             return false;
         }
-        return !t.getTopic().trim().isEmpty() && t.getTopic().length() <= 200;
+        return !t.getTopic().trim().isEmpty() && (t.getTopic().length() <= 200);
     }
 
     @Override public List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException {
         logger.debug("Entering getTopicsFromSubject()");
 
-        if (subject == null) {
+        if(subject == null) {
             logger.error("Subject must not be null in getTopicsFromSubject()");
             throw new ServiceException("Subject is null in getTopicsFromSubject()");
         }
@@ -137,12 +140,12 @@ import java.util.List;
         } catch (DaoException e) {
             if (typeOfId == 'q') {
                 logger.error(
-                    "Could not get topics from given questionId (" + id + "): " + e.getMessage());
+                    "Could not get topics from given questionId (" + id + "): ", e);
                 throw new ServiceException(
                     "Could not get topics from given questionId (" + id + ")");
             } else if (typeOfId == 's') {
                 logger.error(
-                    "Could not get topics from given subjectId (" + id + "): " + e.getMessage());
+                    "Could not get topics from given subjectId (" + id + "): ", e);
                 throw new ServiceException(
                     "Could not get topics from given subjectId (" + id + ")");
             }

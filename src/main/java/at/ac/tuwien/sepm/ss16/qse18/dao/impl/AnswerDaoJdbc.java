@@ -66,7 +66,7 @@ public class AnswerDaoJdbc implements AnswerDao {
                 return null;
             }
         } catch(Exception e) {
-            logger.debug(e.getMessage());
+            logger.error("Could not fetch answer.", e);
             throw new DaoException("Could not fetch answer with id " + answerId);
         }
     }
@@ -87,7 +87,7 @@ public class AnswerDaoJdbc implements AnswerDao {
                 answerList.add(a);
             }
         } catch(Exception e) {
-            logger.debug(e.getMessage());
+            logger.error("Could not fetch answers.", e);
             throw new DaoException("Could not fetch answers");
         }
         return answerList;
@@ -119,7 +119,7 @@ public class AnswerDaoJdbc implements AnswerDao {
                 a.setAnswerId(key.getInt(1));
             logger.debug("Inserted Answer " + a.toString());
         } catch(Exception e) {
-            logger.debug(e.getMessage());
+            logger.error("Could not save answer", e);
             throw new DaoException("Could not save answer");
         }
 
@@ -148,7 +148,7 @@ public class AnswerDaoJdbc implements AnswerDao {
 
             return this.getAnswer(a.getAnswerId());
         } catch(Exception e) {
-            logger.debug(e.getMessage());
+            logger.error("Could not modify answer", e);
             throw new DaoException("Could not modify answer");
         }
     }
@@ -171,7 +171,7 @@ public class AnswerDaoJdbc implements AnswerDao {
             a.setAnswerId(-1);
             return a;
         } catch(Exception e) {
-            logger.debug(e.getMessage());
+            logger.debug("Could not delete answer", e);
             throw new DaoException("Could not delete answer");
         }
     }

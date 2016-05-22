@@ -72,6 +72,15 @@ public class Answer {
         isCorrect = correct;
     }
 
+    @Override public int hashCode() {
+        int result = answerId;
+        result = 31 * result + type.hashCode();
+        result = 31 * result + answer.hashCode();
+        result = 31 * result + (isCorrect ? 1 : 0);
+        result = 31 * result + (q != null ? q.hashCode() : 0);
+        return result;
+    }
+
     @Override public String toString() {
         return "Answer{" +
             "answerId=" + answerId +
@@ -80,6 +89,7 @@ public class Answer {
             ", isCorrect=" + isCorrect +
             ", q=" + q +
             '}';
+
     }
 
     @Override
