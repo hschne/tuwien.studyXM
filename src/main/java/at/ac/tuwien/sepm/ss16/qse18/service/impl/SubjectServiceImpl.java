@@ -31,8 +31,8 @@ import java.util.Objects;
     @Override public Subject getSubject(int id) throws ServiceException {
         try {
             return sd.getSubject(id);
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not get Subject", e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -40,8 +40,8 @@ import java.util.Objects;
     @Override public List<Subject> getSubjects() throws ServiceException {
         try {
             return sd.getSubjects();
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not get a list of all subjects", e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -50,10 +50,9 @@ import java.util.Objects;
         verifyCreate(subject);
         verifyUpdate(subject);
         try {
-
             return  sd.createSubject(subject);
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not create Subject", e);
             throw new ServiceException(e.getMessage());
         }
 
@@ -63,8 +62,8 @@ import java.util.Objects;
         try {
             sd.deleteSubject(subject);
             return true;
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not delete Subject", e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -73,8 +72,8 @@ import java.util.Objects;
         verifyUpdate(subject);
         try {
             return  sd.updateSubject(subject);
-        } catch (DaoException e) {
-            logger.error(e);
+        } catch(DaoException e) {
+            logger.error("Could not update Subject", e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -86,10 +85,10 @@ import java.util.Objects;
     }
 
     private void verifyUpdate(Subject subject) throws ServiceException {
-        if (subject.getName().isEmpty()) {
+        if(subject.getName().isEmpty()) {
             throw new ServiceException("Subject name must not be empty");
         }
-        if (subject.getEcts() < 0) {
+        if(subject.getEcts() < 0) {
             throw new ServiceException("ECTS cannot be negative");
         }
     }

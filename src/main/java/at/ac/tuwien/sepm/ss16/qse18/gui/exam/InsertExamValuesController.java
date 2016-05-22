@@ -101,6 +101,7 @@ import java.util.stream.Collectors;
                         topicListView.setItems(topicList);
 
                     } catch (ServiceException e) {
+                        logger.error("Could not get observable topics", e);
                         topicListView.setItems(null);
                     }
                 });
@@ -116,7 +117,7 @@ import java.util.stream.Collectors;
                 }
             });
         } catch (Exception e) {
-            logger.error(e.toString());
+            logger.error("Initialize in InsertExamValuesController not successful", e);
         }
     }
 
@@ -160,14 +161,14 @@ import java.util.stream.Collectors;
                 showAlert(Alert.AlertType.CONFIRMATION, "Exam created");
                 mainFrameController.handleExams();
             } catch (ServiceException e) {
-                logger.error("Could not create exam: " + e.getMessage());
+                logger.error("Could not create exam: ", e);
                 showAlert(Alert.AlertType.ERROR,
                     "Could not create exam. Check logs for more information." + "\n\nHints: "
                         + "\nCheck if the choosen topic has already questions to answer."
                         + "\nCheck if the length of the author do not exceed 80 characters."
                         + "\nCheck if there are enough questions in this topic to cover the exam time.");
             } catch (NumberFormatException e) {
-                logger.error("Could not create exam: " + e.getMessage());
+                logger.error("Could not create exam: ", e);
                 showAlert(Alert.AlertType.ERROR,
                     "Could not parse exam time. Make sure it only contains numbers and is lower than "
                         + Integer.MAX_VALUE + ".");

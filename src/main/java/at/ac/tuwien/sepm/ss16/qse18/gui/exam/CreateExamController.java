@@ -94,7 +94,7 @@ import org.slf4j.LoggerFactory;
             });
 
         } catch (ServiceException e) {
-            logger.error("Could not fill exam-table: " + e.getMessage());
+            logger.error("Could not fill exam-table: ", e);
             alertBuilder.alertType(Alert.AlertType.ERROR).headerText("Error")
                 .contentText("Could not fill exam-table.").build();
         }

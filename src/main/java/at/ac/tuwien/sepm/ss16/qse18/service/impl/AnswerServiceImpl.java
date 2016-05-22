@@ -30,7 +30,7 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             return this.adao.getAnswer(answerId);
         } catch(DaoException e) {
-            logger.error("Could not fetch answer from database: " + e.getMessage());
+            logger.error("Could not fetch answer from database: ", e);
             throw new ServiceException("Could not fetch answer from database");
         }
     }
@@ -39,8 +39,8 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             return this.adao.getAnswer();
         } catch(DaoException e) {
-            logger.error("Could not fetch list of all answers from the database: "
-                + e.getMessage());
+            logger.error("Could not fetch list of all answers from the database: ",
+                e);
             throw new ServiceException("Could not fetch list of all answers from database");
         }
     }
@@ -49,7 +49,7 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             return this.adao.createAnswer(a);
         } catch(DaoException e) {
-            logger.error("Could not save answer persistently: " + e.getMessage());
+            logger.error("Could not save answer persistently: ", e);
             throw new ServiceException("Could not save answer persistently");
         }
     }
@@ -58,7 +58,7 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             return this.adao.updateAnswer(a);
         } catch(DaoException e) {
-            logger.error("Could not update answer: " + e.getMessage());
+            logger.error("Could not update answer: ", e);
             throw new ServiceException("Could not update answer");
         }
     }
@@ -67,7 +67,7 @@ public class AnswerServiceImpl implements AnswerService {
         try {
             return this.adao.deleteAnswer(a);
         } catch(DaoException e) {
-            logger.error("Could not delete answer: " + e.getMessage());
+            logger.error("Could not delete answer: ", e);
             throw new ServiceException("Could not delete answer");
         }
     }

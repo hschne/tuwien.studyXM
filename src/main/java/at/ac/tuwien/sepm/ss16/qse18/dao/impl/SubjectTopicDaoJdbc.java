@@ -70,7 +70,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
             pstmt.setInt(1, topic.getTopicId());
             pstmt.executeUpdate();
         } catch(SQLException e) {
-            logger.error("Could not delete in rel_subject_topic topic " + topic);
+            logger.error("Could not delete in rel_subject_topic topic " + topic, e);
             throw new DaoException("Could not delete in rel_subject_topic topic " + topic);
         } finally {
             TopicDaoJdbc.closeStatementAndResultSet(pstmt, null);

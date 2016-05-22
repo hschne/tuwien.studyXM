@@ -52,7 +52,7 @@ public class ExamServiceImpl implements ExamService {
         try {
            return this.examDao.getExam(examID);
         }catch (DaoException e){
-            logger.error("Service Exception getExam {}", examID);
+            logger.error("Service Exception getExam {}", examID, e);
             throw new ServiceException(e.getMessage());
         }
     }
@@ -63,31 +63,31 @@ public class ExamServiceImpl implements ExamService {
             return this.examDao.getExams();
 
         }catch (DaoException e){
-            logger.error("Service Exception getExams");
+            logger.error("Service Exception getExams", e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override public Exam createExam(Exam exam, Topic topic, int examTime) throws ServiceException {
         logger.debug("entering method createExam with parameters {}", exam);
-        if(!DTOValidator.validate(exam)){
+        if(!DTOValidator.validate(exam)) {
             logger.error("Service Exception createExam {}", exam);
             throw new ServiceException("Invalid values, please check your input");
         }
 
-        try{
+        try {
             exam.setExamQuestions(getRightQuestions(exam, topic.getTopicId(), examTime));
             return this.examDao.create(exam, exam.getExamQuestions());
 
-        }catch (DaoException e){
-            logger.error("Service Exception createExam {}", exam);
+        } catch(DaoException e){
+            logger.error("Service Exception createExam {}", exam, e);
             throw new ServiceException(e.getMessage());
         }
     }
 
     @Override public Exam deleteExam(Exam exam) throws ServiceException {
         logger.debug("entering method deleteExam with parameters {}", exam);
-        if(!DTOValidator.validate(exam)){
+        if(!DTOValidator.validate(exam)) {
             logger.error("Service Exception deleteExam {}", exam);
             throw new ServiceException("Invalid values, please check your input");
         }
@@ -95,13 +95,13 @@ public class ExamServiceImpl implements ExamService {
         try{
             return this.examDao.delete(exam);
 
-        }catch (DaoException e){
+        } catch(DaoException e){
             logger.error("Service Exception deleteExam {}", exam, e);
             throw new ServiceException(e.getMessage());
         }
     }
 
-    public Boolean deletedSubject(int subjectID) throws ServiceException{
+    public Boolean deletedSubject(int subjectID) throws ServiceException {
         /*
         logger.debug("entering method deletedSubject with parameters {}", subjectID);
         List<Exam> examList = new ArrayList<>();
