@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
             initializeButtons();
             initializeListView();
         } catch (ServiceException e) {
-            showAlert(e);
+            showAlert();
         }
     }
 
@@ -99,7 +99,7 @@ import java.util.stream.Collectors;
                 subjectList.remove(subjectToDelete);
             }
         } catch (ServiceException e) {
-            showAlert(e);
+            showAlert();
         }
     }
 
@@ -132,7 +132,7 @@ import java.util.stream.Collectors;
             subjectList.add(new ObservableSubject(s));
         } catch (ServiceException e) {
             logger.error(e);
-            showAlert(e);
+            showAlert();
         }
     }
 
@@ -156,7 +156,7 @@ import java.util.stream.Collectors;
             subjectService.updateSubject(subject);
             updateEntry(observableSubject, subject);
         } catch (ServiceException e) {
-            showAlert(e);
+            showAlert();
         }
     }
 
@@ -204,9 +204,11 @@ import java.util.stream.Collectors;
         observableSubject.setAuthor(subject.getAuthor());
     }
 
-    private void showAlert(ServiceException e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("An error occured").contentText(e.getMessage()).build();
+    private void showAlert() {
+        Alert alert =
+            alertBuilder.alertType(Alert.AlertType.ERROR).title("Error").setResizable(true)
+                .headerText("Could not load Subjects")
+                .contentText("Please make sure you are connected to the database").build();
         alert.showAndWait();
     }
 

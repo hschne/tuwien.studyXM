@@ -97,7 +97,7 @@ import java.util.Optional;
     private Optional<ButtonType> showAlert(Alert.AlertType type, String title, String headerText,
         String contentText) {
         Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
-            .contentText(contentText).build();
+            .contentText(contentText).setResizable(true).build();
         ObservableList<ButtonType> buttons =  alert.getButtonTypes();
 
         for (ButtonType b : buttons) {
