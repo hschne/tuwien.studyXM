@@ -148,7 +148,6 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
                 questionIDList.add(rs.getInt("questionid"));
             }
 
-
         } catch(SQLException e) {
             logger.error("SQL Exception in delete with parameters {}", examID, e);
             throw new DaoException("Could not get List with all Questions for Exam ID " + examID);
