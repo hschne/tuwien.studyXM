@@ -44,7 +44,6 @@ public class CreateMultipleChoiceQuestionController implements GuiController {
     @FXML private Button buttonCreateQuestion;
     @Autowired MainFrameController mainFrameController;
 
-     *                        persistently.
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         AlertBuilder alertBuilder) {
         this.questionService = questionService;

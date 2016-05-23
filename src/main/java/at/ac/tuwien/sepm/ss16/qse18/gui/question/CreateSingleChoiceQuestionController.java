@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
@@ -44,8 +45,8 @@ import java.util.List;
     @FXML private RadioButton radioButtonAnswerTwo;
     @FXML private RadioButton radioButtonAnswerThree;
     @FXML private RadioButton radioButtonAnswerFour;
-    @FXML private Button buttonCreateQuestion;
     @Autowired MainFrameController mainFrameController;
+    private ObservableTopic topic;
 
     /**
      * Creates a controller for the single choice question creation.
@@ -63,17 +64,15 @@ import java.util.List;
         this.alertBuilder = alertBuilder;
     }
 
-
-    @Override
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
+    public void setTopic(ObservableTopic topic) {
+        this.topic = topic;
     }
 
     @FXML public void createQuestion() {
         logger.info("Now creating new question");
         Question newQuestion;
         try {
-            newQuestion = questionService.createQuestion(newQuestionFromField());
+            newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
         } catch (ServiceException e) {
             showAlert(e);

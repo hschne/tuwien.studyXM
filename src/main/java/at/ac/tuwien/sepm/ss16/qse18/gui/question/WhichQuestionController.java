@@ -58,7 +58,6 @@ import java.io.IOException;
         tg = new ToggleGroup();
         radioButtonMultipleChoice.setToggleGroup(tg);
         radioButtonSingleChoice.setToggleGroup(tg);
-        //radioButtonSingleChoice.setDisable(true); // disabled
         radioButtonOpenQuestion.setToggleGroup(tg);
         radioButtonOpenQuestion.setDisable(true); // disabled
         radioButtonNotecard.setToggleGroup(tg);
@@ -69,23 +68,16 @@ import java.io.IOException;
     @FXML public void handleCreateQuestion() throws IOException {
         logger.debug("Opening creation screen");
 
-        if(radioButtonMultipleChoice.isSelected())
-        {
-            mainFrameController.handleMultipleChoiceQuestion();
-        }
-        else if (radioButtonSingleChoice.isSelected())
-        {
-            mainFrameController.handleSingleChoiceQuestion();
-        } else if (radioButtonOpenQuestion.isSelected()) {
+        if(radioButtonMultipleChoice.isSelected()) {
+            mainFrameController.handleMultipleChoiceQuestion(this.topic);
+        } else if(radioButtonSingleChoice.isSelected()) {
+            mainFrameController.handleSingleChoiceQuestion(this.topic);
+        } else if(radioButtonOpenQuestion.isSelected()) {
             //TODO: mainFrameController.handleOpenQuestion();
         } else {
             mainFrameController.handleCreateImageQuestion(topic);
         }
 
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
     }
 
     public void setTopic(ObservableTopic topic) {

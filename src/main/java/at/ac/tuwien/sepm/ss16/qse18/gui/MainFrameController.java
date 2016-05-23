@@ -133,10 +133,13 @@ import java.io.IOException;
         }
     }
 
-    public void handleSingleChoiceQuestion() {
+    public void handleSingleChoiceQuestion(ObservableTopic topic) {
         logger.debug("Loading Single Choice question screen ");
         try {
-            setSubView("/fxml/question/createSingleChoiceQuestion.fxml", CreateSingleChoiceQuestionController.class);
+            CreateSingleChoiceQuestionController singleChoiceQuestionController =
+                setSubView("/fxml/question/createSingleChoiceQuestion.fxml",
+                    CreateSingleChoiceQuestionController.class);
+            singleChoiceQuestionController.setTopic(topic);
             //TODO: create fxml and controller
         } catch (Exception e) {
             handleException(e);
