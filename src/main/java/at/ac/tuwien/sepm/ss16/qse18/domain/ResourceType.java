@@ -18,7 +18,7 @@ public enum ResourceType {
     private int value;
     private static Map<Integer, ResourceType> rm = new HashMap<>();
 
-    private ResourceType(int type) {
+    private ResourceType(int value) {
         this.value = value;
     }
 

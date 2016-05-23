@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity;
+package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
@@ -63,6 +63,7 @@ public class ObservableAnswer {
         this.correct.set(correct);
     }
 
+    @Override
     public String toString() {
         return a.toString();
     }

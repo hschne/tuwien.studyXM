@@ -1,71 +1,54 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import org.junit.runner.RunWith;
-import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
-import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
  * @author Felix Almer
  */
-@RunWith(PowerMockRunner.class) @PrepareForTest(ConnectionH2.class)
-@PowerMockIgnore("javax.management.*") public class QuestionDaoJdbcTest {
+public class QuestionDaoJdbcTest extends DaoBaseTest {
 
     private QuestionDaoJdbc qdao;
-    @Mock
-    private DataBaseConnection mockDatabase;
-    @Mock
-    private Connection mockConnection;
-    @Mock
-    private PreparedStatement mockPreparedStatement;
-    @Mock
-    private Statement mockStatement;
-    @Mock
-    private ResultSet mockResultSet;
+    @Mock private QuestionTopicDao questionTopicDao;
 
-    @Before
-    public void setUp() throws Exception {
-        when(mockDatabase.getConnection()).thenReturn(mockConnection);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        qdao = new QuestionDaoJdbc(mockDatabase);
+    @Before public void setUp() throws Exception {
+        super.setUp();
+        qdao = new QuestionDaoJdbc(mockConnectionH2);
+        qdao.setQuestionTopicDao(questionTopicDao);
     }
 
-    @Test (expected = DaoException.class)
-    public void test_getQuestion_noDatabaseConnection() throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+    @Test(expected = DaoException.class) public void test_getQuestion_noDatabaseConnection()
+        throws Exception {
+        when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
         qdao.getQuestion(1);
         PowerMockito.verifyStatic();
-        mockDatabase.getConnection();
+        mockConnectionH2.getConnection();
     }
 
-    @Test
-    public void test_getAnswer_notInDatabase() throws Exception {
+    @Test public void test_getAnswer_notInDatabase() throws Exception {
         assertTrue("Object with id smaller than 0 should return null",
             qdao.getQuestion(-1) == null);
         when(mockResultSet.next()).thenReturn(false);
         assertTrue("Object with this id is not in database", qdao.getQuestion(1) == null);
     }
 
-    @Test
-    public void test_getQuestion_withValidId() throws Exception {
+    @Test public void test_getQuestion_withValidId() throws Exception {
         when(mockResultSet.next()).thenReturn(true);
         when(mockResultSet.getInt(1)).thenReturn(1).thenReturn(2);
         when(mockResultSet.getString(2)).thenReturn("TestQuestion");
@@ -81,18 +64,16 @@ import static org.mockito.Mockito.*;
         assertFalse("Question with different ids should not be equal", a.equals(b));
     }
 
-    @Test
-    public void test_getAllQuestions_emptyDatabase() throws Exception {
+    @Test public void test_getAllQuestions_emptyDatabase() throws Exception {
         when(mockResultSet.next()).thenReturn(false);
         assertTrue("Database should return empty list", qdao.getQuestions().isEmpty());
     }
 
-    @Test
-    public void test_getAllQuestions_fiveElementsInDatabase() throws Exception {
+    @Test public void test_getAllQuestions_fiveElementsInDatabase() throws Exception {
         when(mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true)
             .thenReturn(true).thenReturn(true).thenReturn(false);
-        when(mockResultSet.getInt(1)).thenReturn(1).thenReturn(2).thenReturn(3)
-            .thenReturn(4).thenReturn(5);
+        when(mockResultSet.getInt(1)).thenReturn(1).thenReturn(2).thenReturn(3).thenReturn(4)
+            .thenReturn(5);
         when(mockResultSet.getString(2)).thenReturn("TestQuestion");
         when(mockResultSet.getInt(3)).thenReturn(2);
 
@@ -107,72 +88,70 @@ import static org.mockito.Mockito.*;
             first.equals(second.equals(third.equals(fourth.equals(fifth)))));
     }
 
-    @Test (expected = DaoException.class)
-    public void test_createQuestion_noDatabaseConnection_fail() throws Exception {
+    @Test(expected = DaoException.class) public void test_createQuestion_noDatabaseConnection_fail()
+        throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
         PowerMockito.verifyStatic();
         mockPreparedStatement.executeUpdate();
     }
 
-    @Test (expected = DaoException.class)
+    @Test(expected = DaoException.class)
     public void test_createQuestion_withAlreadyExistingId_fail() throws Exception {
-        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
     }
 
-    @Test (expected = DaoException.class)
-    public void test_createAnswer_null_fail() throws Exception {
-        qdao.createQuestion(null);
+    @Test(expected = DaoException.class) public void test_createAnswer_null_fail()
+        throws Exception {
+        qdao.createQuestion(null,null);
     }
 
-    @Test
-    public void test_createQuestion_validQuestion() throws Exception {
-        when(mockDatabase.getConnection()).thenReturn(mockConnection);
+    @Test public void test_createQuestion_validQuestion() throws Exception {
+
+        when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString(), anyInt()))
             .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         when(mockResultSet.getInt(1)).thenReturn(1);
         Question input = new Question("TestQuestion", QuestionType.MULTIPLECHOICE, 0L);
-        Question q = qdao.createQuestion(input);
+        Question q = qdao.createQuestion(input,new Topic(2,"abc"));
         assertTrue("Question should have received primary key", q.getQuestionId() == 1);
     }
 
-    @Test (expected = DaoException.class)
-    public void test_updateQuestion_noDatabaseConnection_fail() throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
-        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
+    @Test(expected = DaoException.class) public void test_updateQuestion_noDatabaseConnection_fail()
+        throws Exception {
+        when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
+        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
     }
 
-    @Test (expected = DaoException.class)
-    public void test_updateQuestion_invalidId_fail() throws Exception {
-        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L));
+    @Test(expected = DaoException.class) public void test_updateQuestion_invalidId_fail()
+        throws Exception {
+        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
     }
 
-    @Test (expected = DaoException.class)
-    public void test_updateQuestion_null_fail() throws Exception {
-        qdao.updateQuestion(null);
+    @Test(expected = DaoException.class) public void test_updateQuestion_null_fail()
+        throws Exception {
+        qdao.updateQuestion(null,null);
     }
 
-    @Test (expected = DaoException.class)
-    public void test_deleteQuestion_noDatabaseConnection_fail() throws Exception {
-        when(mockDatabase.getConnection()).thenThrow(SQLException.class);
+    @Test(expected = DaoException.class) public void test_deleteQuestion_noDatabaseConnection_fail()
+        throws Exception {
+        when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
         qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
     }
 
-    @Test
-    public void test_deleteQuestion_valid() throws Exception {
+    @Test public void test_deleteQuestion_valid() throws Exception {
         qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
         verify(mockPreparedStatement).executeUpdate();
     }
 
-    @Test (expected = DaoException.class)
-    public void test_deleteQuestion_invalid() throws Exception {
+    @Test(expected = DaoException.class) public void test_deleteQuestion_invalid()
+        throws Exception {
         qdao.deleteQuestion(new Question("", QuestionType.MULTIPLECHOICE, 0L));
     }
 
-    @After
-    public void tearDown() {
+    @After public void tearDown() {
         // Nothing to tear down
     }
 }

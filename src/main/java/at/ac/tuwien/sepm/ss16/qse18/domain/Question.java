@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 public class Question {
     private int questionId;
-    private String question;
+    private String questionString;
     private QuestionType type;
     private long questionTime;
 
@@ -12,7 +12,7 @@ public class Question {
 
     public Question(int questionId, String question, QuestionType type, long questionTime) {
         this.questionId = questionId;
-        this.question = question;
+        this.questionString = question;
         this.type = type;
         this.questionTime = questionTime;
     }
@@ -20,7 +20,7 @@ public class Question {
     public Question(String question, QuestionType type, long questionTime) {
         // -1 specifies a question which is not yet persistent
         this.questionId = -1;
-        this.question = question;
+        this.questionString = question;
         this.type = type;
         this.questionTime = questionTime;
 
@@ -43,11 +43,11 @@ public class Question {
     }
 
     public String getQuestion() {
-        return question;
+        return questionString;
     }
 
     public void setQuestion(String question) {
-        this.question = question;
+        this.questionString = question;
     }
 
     public QuestionType getType() {
@@ -61,10 +61,18 @@ public class Question {
     @Override public String toString() {
         return "Question{" +
             "questionId=" + questionId +
-            ", question='" + question + '\'' +
+            ", question='" + questionString + '\'' +
             ", type=" + type +
             ", questionTime=" + questionTime +
             '}';
+    }
+
+    @Override public int hashCode() {
+        int result = questionId;
+        result = 31 * result + (questionString != null ? questionString.hashCode() : 0);
+        result = 31 * result + type.hashCode();
+        result = 31 * result + (int) (questionTime ^ (questionTime >>> 32));
+        return result;
     }
 
     @Override public boolean equals(Object o) {
@@ -77,7 +85,8 @@ public class Question {
 
         if (questionId != question1.questionId)
             return false;
-        if (question != null ? !question.equals(question1.question) : question1.question != null)
+        if (questionString != null ?
+            !questionString.equals(question1.questionString) : question1.questionString != null)
             return false;
         return type == question1.type;
 

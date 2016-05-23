@@ -5,12 +5,11 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,15 +24,13 @@ import java.util.List;
 /**
  * Created by Julian on 15.05.2016.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateMultipleChoiceQuestionController
-    implements GuiController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class CreateMultipleChoiceQuestionController implements GuiController {
 
     private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
-    private Stage primaryStage;
     private AlertBuilder alertBuilder;
     private QuestionService questionService;
-    private SpringFXMLLoader springFXMLLoader;
+    private ObservableTopic topic;
 
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;
@@ -47,31 +44,18 @@ import java.util.List;
     @FXML private Button buttonCreateQuestion;
     @Autowired MainFrameController mainFrameController;
 
-    /**
-     * Creates a controller for multiple choice creation.
-     * @param springFXMLLoader The autowired spring framework FXML loader.
-     * @param questionService The question service which saves a given question and answers
      *                        persistently.
-     * @param alertBuilder An alert builder which wraps pop ups for user interaction.
-     */
-    @Autowired
-    public CreateMultipleChoiceQuestionController(SpringFXMLLoader springFXMLLoader,
-        QuestionService questionService, AlertBuilder alertBuilder) {
-        this.springFXMLLoader = springFXMLLoader;
+    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
+        AlertBuilder alertBuilder) {
         this.questionService = questionService;
         this.alertBuilder = alertBuilder;
-    }
-
-    @Override
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
     }
 
     @FXML public void createQuestion() {
         logger.info("Now creating new question");
         Question newQuestion;
         try {
-            newQuestion = questionService.createQuestion(newQuestionFromField());
+            newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
         } catch (ServiceException e) {
             showAlert(e);
@@ -79,7 +63,7 @@ import java.util.List;
         }
 
         showSuccess("Inserted new question into database.");
-        mainFrameController.handleHome();
+        mainFrameController.handleSubjects();
     }
 
     private Question newQuestionFromField() throws ServiceException {
@@ -125,7 +109,11 @@ import java.util.List;
             }
         }
 
-        throw new ServiceException("At least one question must be true.");
+        throw new ServiceException("At least one answer must be true.");
+    }
+
+    public void setTopic(ObservableTopic topic) {
+        this.topic = topic;
     }
 
     private void showAlert(ServiceException e) {

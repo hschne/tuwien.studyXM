@@ -17,4 +17,25 @@ public interface QuestionTopicDao {
      * @throws DaoException if there is no connection to the resource
      * */
     List<Question> getQuestionToTopic(Topic topic) throws DaoException;
+
+    /**
+     * Returns all topics to a specific question in a List from the resource
+     *
+     * @param question the question for which all topics are returned
+     * @return a list of all topics to the {@param question}
+     * @throws DaoException if there is no connection to the resource
+     * */
+    List<Topic> getTopicsFromQuestion(Question question) throws DaoException;
+
+    void removeQuestionFromTopic(Topic topic) throws DaoException;
+
+
+     /***
+     * Inserts a relation between a {@param question} and a {@param topic} in the resource.
+     *
+     * @param question the question for which the relation is inserted
+     * @param topic the topic for which the relation is inserted
+     * @throws DaoException if there is no connection to the resource
+     * */
+    void createQuestionTopic(Question question, Topic topic) throws DaoException;
 }

@@ -26,16 +26,17 @@ import java.sql.SQLException;
      * @param path     the filepath to the H2-database
      * @param user     the username of the H2-database
      * @param password the password of the H2-database
+     * @throws SQLException
      */
     private static void openConnection(String path, String user, String password)
         throws SQLException {
-        logger.info("Entering openConnection() with " + path + " " + user + " " + password);
+        logger.debug("Entering openConnection() with " + path + " " + user + " " + password);
 
         if (connection == null || connection.isClosed()) {
             try {
                 Class.forName("org.h2.Driver");
             } catch (ClassNotFoundException e) {
-                logger.error("Unable to load org.h2.Driver. " + e.getMessage());
+                logger.error("Unable to load org.h2.Driver.", e);
                 return;
             }
             connection = DriverManager.getConnection(path, user, password);
@@ -47,10 +48,11 @@ import java.sql.SQLException;
      * If the connection is null or has been closed a new connection is opened up.
      *
      * @return connection to the H2-database
+     * @throws SQLException
      */
+    @Override
     public Connection getConnection() throws SQLException {
         if (connection == null || connection.isClosed()) {
-            //TODO: use config file instead of hardcoded credentials?
             openConnection("jdbc:h2:tcp://localhost/~/studyXmDatabase", "studyXm", "xm");
         }
         return connection;
@@ -58,16 +60,14 @@ import java.sql.SQLException;
 
     /**
      * closes the existing connection to the h2 database.
+     * @throws SQLException
      */
-    public void closeConnection() {
-        logger.info("Closing H2 Database Connection");
+    @Override
+    public void closeConnection() throws SQLException {
+        logger.debug("Closing H2 Database Connection");
 
-        try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
-            }
-        } catch (SQLException e) {
-            logger.error("Unable to close database connection. " + e.getMessage());
+        if (connection != null && !connection.isClosed()) {
+            connection.close();
         }
     }
 }

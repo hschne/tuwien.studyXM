@@ -1,16 +1,11 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.topic;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Philipp Ganiu
@@ -23,28 +18,28 @@ public class TopicCell extends ListCell<ObservableTopic> {
 
     private MainFrameController mainFrameController;
 
-    public TopicCell(){
+    public TopicCell() {
         super();
-        box.getChildren().addAll(topicLable,numberOfQuestions,button);
+        box.getChildren().addAll(topicLable, numberOfQuestions, button);
     }
 
-    public void setMainFrameController(MainFrameController mainFrameController){
+    public void setMainFrameController(MainFrameController mainFrameController) {
         this.mainFrameController = mainFrameController;
     }
 
 
-    @Override
-    public void updateItem(ObservableTopic topic, boolean empty){
+    @Override public void updateItem(ObservableTopic topic, boolean empty) {
         super.updateItem(topic, empty);
 
-        if(topic != null){
+        if (topic != null) {
             topicLable.setText(topic.getTopic());
             numberOfQuestions.setText(topic.getNumberOfQuestions());
-            button.setText("+");
-            button.setOnAction(e -> {mainFrameController.handleHome();});
+            button.setText("add question");
+            button.setOnAction(e -> {
+                mainFrameController.handleCreateQuestion(topic);
+            });
             setGraphic(box);
-        }
-        else{
+        } else {
             setGraphic(null);
         }
     }

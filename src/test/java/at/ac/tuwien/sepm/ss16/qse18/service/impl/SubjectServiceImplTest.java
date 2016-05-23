@@ -1,7 +1,8 @@
-package at.ac.tuwien.sepm.ss16.qse18.service;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.SubjectDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static org.mockito.Mockito.verify;
  *
  * @author Zhang Haixiang
  */
-@RunWith(MockitoJUnitRunner.class) public class SubjectServiceTest {
+@RunWith(MockitoJUnitRunner.class) public class SubjectServiceImplTest {
 
     @Mock private SubjectDaoJdbc mockDaoJdbc;
 

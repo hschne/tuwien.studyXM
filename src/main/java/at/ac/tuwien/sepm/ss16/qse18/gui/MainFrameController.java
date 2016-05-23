@@ -1,11 +1,16 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -52,7 +57,6 @@ import java.io.IOException;
         logger.debug("Loading view from " + fxmlPath);
         SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
         T controller = mfWrapper.getController();
-        controller.setPrimaryStage(primaryStage);
         configureSubPane(mfWrapper);
         return controller;
     }
@@ -73,7 +77,7 @@ import java.io.IOException;
     @FXML public void handleHome() {
         logger.debug("Loading home view");
         try {
-            setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class);
+            setSubView("/fxml/exam/createExam.fxml", CreateExamController.class);
         } catch (IOException e) {
             handleException(e);
         }
@@ -84,6 +88,17 @@ import java.io.IOException;
         try {
             setSubView("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
         } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateSubject(ObservableSubject subject){
+        logger.debug("Loading create subject view");
+        try{
+            SubjectEditController controller = setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
+            controller.setSubject(subject);
+        }
+        catch (IOException e){
             handleException(e);
         }
     }
@@ -99,20 +114,20 @@ import java.io.IOException;
     public void handleQuestionOverview(ObservableSubject subject) {
         logger.debug("Loading question overview for " + subject.getName());
         try {
-            QuestionOverviewController controller =
-                setSubView("/fxml/question/questionOverview.fxml",
-                    QuestionOverviewController.class);
-            controller.setSubject(subject);
+            setSubView("/fxml/question/questionOverview.fxml", QuestionOverviewController.class);
         } catch (Exception e) {
             handleException(e);
         }
     }
 
 
-    public void handleMultipleChoiceQuestion() {
+    public void handleMultipleChoiceQuestion(ObservableTopic topic) {
         logger.debug("Loading Multiple Choice question screen ");
         try {
-            setSubView("/fxml/question/createMultipleChoiceQuestion.fxml", CreateMultipleChoiceQuestionController.class);
+            CreateMultipleChoiceQuestionController multipleChoiceQuestionController =
+                setSubView("/fxml/question/createMultipleChoiceQuestion.fxml",
+                    CreateMultipleChoiceQuestionController.class);
+            multipleChoiceQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }
@@ -137,17 +152,55 @@ import java.io.IOException;
         }
     }
 
-    public void handleCreateImageQuestion() {
+    public void handleCreateImageQuestion(ObservableTopic topic) {
         logger.debug("Loading Image question screen ");
         try {
-            setSubView("/fxml/question/createImageQuestion.fxml", CreateImageQuestionController.class);
+            CreateImageQuestionController imageQuestionController =
+                setSubView("/fxml/question/createImageQuestion.fxml",
+                    CreateImageQuestionController.class);
+            imageQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }
     }
 
+    public void handleCreateExam() {
+        logger.debug("Loading create exam screen");
+        try {
+            setSubView("/fxml/exam/insertExamValues.fxml", InsertExamValuesController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
 
+    public void handleCreateQuestion(ObservableTopic topic) {
+        logger.debug("Loading create question screen");
+        try {
+            WhichQuestionController whichQuestionController =
+                setSubView("/fxml/question/whichQuestion.fxml", InsertExamValuesController.class);
+            whichQuestionController.setTopic(topic);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
 
+    public void handleExams() {
+        logger.debug("Loading home view");
+        try {
+            setSubView("/fxml/exam/createExam.fxml", CreateExamController.class);
+        } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleShowQuestions(){
+        logger.debug("Loading ShowQuestions screen");
+        try{
+            setSubView("/fxml/exam/showQuestions.fxml", ShowQuestionsController.class);
+        }catch (IOException e){
+            handleException(e);
+        }
+    }
 
 
     private void handleException(Exception e) {
@@ -157,5 +210,7 @@ import java.io.IOException;
             .contentText("Unexpected Error. Please view logs for details.").build();
         alert.showAndWait();
     }
+
+
 
 }

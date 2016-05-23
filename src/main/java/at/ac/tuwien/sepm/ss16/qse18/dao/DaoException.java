@@ -7,7 +7,11 @@ package at.ac.tuwien.sepm.ss16.qse18.dao;
  * @author Cem Bicer
  */
 public class DaoException extends Exception {
-    public DaoException (String msg) {
+    public DaoException(String msg) {
         super(msg);
+    }
+
+    public DaoException(Exception e) {
+        super(e);
     }
 }

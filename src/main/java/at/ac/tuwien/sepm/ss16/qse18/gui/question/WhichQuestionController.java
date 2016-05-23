@@ -1,6 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
+
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -26,22 +28,15 @@ import java.io.IOException;
  *
  * @author Julian on 15.05.2016.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class WhichQuestionController implements
-    GuiController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class WhichQuestionController
+    implements GuiController {
 
-    @FXML
-    public Button buttonCreateQuestion;
-    @FXML
-    public RadioButton radioButtonMultipleChoice;
-    @FXML
-    public RadioButton radioButtonSingleChoice;
-    @FXML
-    public RadioButton radioButtonOpenQuestion;
-    @FXML
-    public RadioButton radioButtonNotecard;
-    @Autowired
-    MainFrameController mainFrameController;
+    @FXML public Button buttonCreateQuestion;
+    @FXML public RadioButton radioButtonMultipleChoice;
+    @FXML public RadioButton radioButtonSingleChoice;
+    @FXML public RadioButton radioButtonOpenQuestion;
+    @FXML public RadioButton radioButtonNotecard;
+    @Autowired MainFrameController mainFrameController;
 
     private ToggleGroup tg;
 
@@ -49,6 +44,7 @@ import java.io.IOException;
     private SpringFXMLLoader springFXMLLoader;
     private AlertBuilder alertBuilder;
     private Stage primaryStage;
+    private ObservableTopic topic;
 
 
     @Autowired
@@ -80,20 +76,20 @@ import java.io.IOException;
         else if (radioButtonSingleChoice.isSelected())
         {
             mainFrameController.handleSingleChoiceQuestion();
-        }
-        else if(radioButtonOpenQuestion.isSelected())
-        {
+        } else if (radioButtonOpenQuestion.isSelected()) {
             //TODO: mainFrameController.handleOpenQuestion();
-        }
-        else
-        {
-            mainFrameController.handleCreateImageQuestion();
+        } else {
+            mainFrameController.handleCreateImageQuestion(topic);
         }
 
     }
 
     public void setPrimaryStage(Stage primaryStage) {
         this.primaryStage = primaryStage;
+    }
+
+    public void setTopic(ObservableTopic topic) {
+        this.topic = topic;
     }
 
     private void showAlert(ServiceException e) {
