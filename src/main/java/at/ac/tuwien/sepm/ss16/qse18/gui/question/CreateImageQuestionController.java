@@ -116,10 +116,10 @@ public class CreateImageQuestionController implements GuiController {
             }
 
             logger.debug("Question successfully created");
+            mainFrameController.handleSubjects();
             showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
                 "Your question is now in the database.");
 
-            mainFrameController.handleSubjects();
         }
     }
 

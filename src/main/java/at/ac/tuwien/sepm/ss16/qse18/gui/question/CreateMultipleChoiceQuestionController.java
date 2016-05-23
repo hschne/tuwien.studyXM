@@ -61,8 +61,8 @@ public class CreateMultipleChoiceQuestionController implements GuiController {
             return;
         }
 
-        showSuccess("Inserted new question into database.");
         mainFrameController.handleSubjects();
+        showSuccess("Inserted new question into database.");
     }
 
     private Question newQuestionFromField() throws ServiceException {

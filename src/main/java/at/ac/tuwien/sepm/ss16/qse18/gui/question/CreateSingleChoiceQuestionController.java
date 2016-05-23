@@ -80,8 +80,8 @@ import java.util.List;
             return;
         }
 
+        mainFrameController.handleSubjects();
         showSuccess("Inserted new question into database.");
-        mainFrameController.handleHome();
     }
 
     private Question newQuestionFromField() throws ServiceException {
