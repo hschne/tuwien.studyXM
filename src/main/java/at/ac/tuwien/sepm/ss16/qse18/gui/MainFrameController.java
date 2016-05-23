@@ -5,9 +5,11 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
@@ -38,7 +40,6 @@ import java.io.IOException;
     private SpringFXMLLoader fxmlLoader;
     private AlertBuilder alertBuilder;
     private Stage primaryStage;
-    private Topic topicToQuestion;
 
     @Autowired void setSpringFXMLLoader(SpringFXMLLoader loader) {
         this.fxmlLoader = loader;
@@ -120,10 +121,13 @@ import java.io.IOException;
     }
 
 
-    public void handleMultipleChoiceQuestion() {
+    public void handleMultipleChoiceQuestion(ObservableTopic topic) {
         logger.debug("Loading Multiple Choice question screen ");
         try {
-            setSubView("/fxml/question/createMultipleChoiceQuestion.fxml", CreateMultipleChoiceQuestionController.class);
+            CreateMultipleChoiceQuestionController multipleChoiceQuestionController =
+                setSubView("/fxml/question/createMultipleChoiceQuestion.fxml",
+                    CreateMultipleChoiceQuestionController.class);
+            multipleChoiceQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }
@@ -147,10 +151,13 @@ import java.io.IOException;
         }
     }
 
-    public void handleCreateImageQuestion() {
+    public void handleCreateImageQuestion(ObservableTopic topic) {
         logger.debug("Loading Image question screen ");
         try {
-            setSubView("/fxml/question/createImageQuestion.fxml", CreateImageQuestionController.class);
+            CreateImageQuestionController imageQuestionController =
+                setSubView("/fxml/question/createImageQuestion.fxml",
+                    CreateImageQuestionController.class);
+            imageQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }
@@ -165,11 +172,12 @@ import java.io.IOException;
         }
     }
 
-    public void handleCreateQuestion(Topic topic) {
+    public void handleCreateQuestion(ObservableTopic topic) {
         logger.debug("Loading create question screen");
-        this.topicToQuestion = topic;
         try {
-            setSubView("/fxml/question/whichQuestion.fxml", InsertExamValuesController.class);
+            WhichQuestionController whichQuestionController =
+                setSubView("/fxml/question/whichQuestion.fxml", InsertExamValuesController.class);
+            whichQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }
@@ -202,8 +210,6 @@ import java.io.IOException;
         alert.showAndWait();
     }
 
-    public Topic getTopicToQuestion(){
-        return topicToQuestion;
-    }
+
 
 }

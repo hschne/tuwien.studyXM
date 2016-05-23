@@ -23,28 +23,28 @@ public class TopicCell extends ListCell<ObservableTopic> {
 
     private MainFrameController mainFrameController;
 
-    public TopicCell(){
+    public TopicCell() {
         super();
-        box.getChildren().addAll(topicLable,numberOfQuestions,button);
+        box.getChildren().addAll(topicLable, numberOfQuestions, button);
     }
 
-    public void setMainFrameController(MainFrameController mainFrameController){
+    public void setMainFrameController(MainFrameController mainFrameController) {
         this.mainFrameController = mainFrameController;
     }
 
 
-    @Override
-    public void updateItem(ObservableTopic topic, boolean empty){
+    @Override public void updateItem(ObservableTopic topic, boolean empty) {
         super.updateItem(topic, empty);
 
-        if(topic != null){
+        if (topic != null) {
             topicLable.setText(topic.getTopic());
             numberOfQuestions.setText(topic.getNumberOfQuestions());
-            button.setText("+");
-            button.setOnAction(e -> {mainFrameController.handleCreateQuestion(topic.getT());});
+            button.setText("add question");
+            button.setOnAction(e -> {
+                mainFrameController.handleCreateQuestion(topic);
+            });
             setGraphic(box);
-        }
-        else{
+        } else {
             setGraphic(null);
         }
     }

@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -26,13 +27,13 @@ import java.util.List;
 /**
  * Created by Julian on 15.05.2016.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateMultipleChoiceQuestionController
-    implements GuiController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class CreateMultipleChoiceQuestionController implements GuiController {
 
     private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
     private AlertBuilder alertBuilder;
     private QuestionService questionService;
+    private ObservableTopic topic;
 
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;
@@ -47,8 +48,8 @@ import java.util.List;
     @Autowired MainFrameController mainFrameController;
 
 
-    @Autowired
-    public CreateMultipleChoiceQuestionController(QuestionService questionService, AlertBuilder alertBuilder) {
+    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
+        AlertBuilder alertBuilder) {
         this.questionService = questionService;
         this.alertBuilder = alertBuilder;
     }
@@ -57,14 +58,14 @@ import java.util.List;
         logger.info("Now creating new question");
         Question newQuestion = null;
         try {
-            newQuestion = questionService.createQuestion(newQuestionFromField(),mainFrameController.getTopicToQuestion());
+            newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
         } catch (ServiceException e) {
             showAlert(e);
             return;
         }
         try {
             questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
-        } catch(ServiceException e) {
+        } catch (ServiceException e) {
             showAlert(e);
             return;
         }
@@ -75,7 +76,7 @@ import java.util.List;
 
     private Question newQuestionFromField() throws ServiceException {
         logger.info("Collecting question from field.");
-        if(textAreaQuestion.getText().isEmpty()) {
+        if (textAreaQuestion.getText().isEmpty()) {
             throw new ServiceException("The question must not be empty.");
         }
 
@@ -85,33 +86,29 @@ import java.util.List;
     private List<Answer> newAnswersFromField() throws ServiceException {
         logger.debug("Collecting all answers");
         List<Answer> newAnswers = new LinkedList<>();
-        if(!textfieldAnswerOne.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE,
-                textfieldAnswerOne.getText(),
+        if (!textfieldAnswerOne.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerOne.getText(),
                 checkBoxAnswerOne.isSelected()));
         }
-        if(!textfieldAnswerTwo.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE,
-                textfieldAnswerTwo.getText(),
+        if (!textfieldAnswerTwo.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerTwo.getText(),
                 checkBoxAnswerTwo.isSelected()));
         }
-        if(!textfieldAnswerThree.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE,
-                textfieldAnswerThree.getText(),
+        if (!textfieldAnswerThree.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerThree.getText(),
                 checkBoxAnswerThree.isSelected()));
         }
-        if(!textfieldAnswerFour.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE,
-                textfieldAnswerFour.getText(),
+        if (!textfieldAnswerFour.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerFour.getText(),
                 checkBoxAnswerFour.isSelected()));
         }
 
-        if(newAnswers.isEmpty()) {
+        if (newAnswers.isEmpty()) {
             throw new ServiceException("At least one answer must be given.");
         }
 
-        for(Answer a : newAnswers) {
-            if(a.isCorrect()) {
+        for (Answer a : newAnswers) {
+            if (a.isCorrect()) {
                 return newAnswers;
             }
         }
@@ -119,23 +116,19 @@ import java.util.List;
         throw new ServiceException("At least one answer must be true.");
     }
 
+    public void setTopic(ObservableTopic topic) {
+        this.topic = topic;
+    }
+
     private void showAlert(ServiceException e) {
-        Alert alert = alertBuilder
-            .alertType(Alert.AlertType.ERROR)
-            .title("Error")
-            .headerText("An error occurred")
-            .contentText(e.getMessage())
-            .build();
+        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
+            .headerText("An error occurred").contentText(e.getMessage()).build();
         alert.showAndWait();
     }
 
     private void showSuccess(String msg) {
-        Alert alert = alertBuilder
-            .alertType(Alert.AlertType.INFORMATION)
-            .title("Success")
-            .headerText("The operation was successful!")
-            .contentText(msg)
-            .build();
+        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Success")
+            .headerText("The operation was successful!").contentText(msg).build();
         alert.showAndWait();
     }
 }

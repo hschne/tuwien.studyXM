@@ -65,10 +65,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
                 res.add(tmp);
             }
         } catch (SQLException e) {
-            logger.error(
-                "Could not get all topics from question {}", question, e);
-            throw new DaoException(
-                "Could not get all topics from question " + question);
+            logger.error("Could not get all topics from question {}", question, e);
+            throw new DaoException("Could not get all topics from question " + question);
 
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
@@ -107,12 +105,12 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         return questions;
     }
 
-    @Override
-    public void removeQuestionFromTopic(Topic topic) throws DaoException {
+    @Override public void removeQuestionFromTopic(Topic topic) throws DaoException {
         PreparedStatement pstmt;
         try {
-            pstmt = database.getConnection().prepareStatement("DELETE FROM REL_QUESTION_TOPIC WHERE TOPICID =?;");
-            pstmt.setInt(1,topic.getTopicId());
+            pstmt = database.getConnection()
+                .prepareStatement("DELETE FROM REL_QUESTION_TOPIC WHERE TOPICID =?;");
+            pstmt.setInt(1, topic.getTopicId());
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
@@ -120,28 +118,25 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         }
     }
 
-    @Override
-    public void createQuestionTopic(Question question, Topic topic) throws DaoException {
-        logger.debug("Entering createQuestionTopic with parameters {}", question,topic);
-        if(question == null || topic == null){
+    @Override public void createQuestionTopic(Question question, Topic topic) throws DaoException {
+        logger.debug("Entering createQuestionTopic with parameters {}", question, topic);
+        if (question == null || topic == null) {
             logger.error("Question or topic should not be null");
             throw new DaoException("Question or topic should not be null");
         }
 
         PreparedStatement pstmt = null;
 
-        try{
+        try {
             pstmt = database.getConnection().prepareStatement(CREATE_SQL);
             pstmt.setInt(1, question.getQuestionId());
-            pstmt.setInt(2,topic.getTopicId());
+            pstmt.setInt(2, topic.getTopicId());
             pstmt.executeUpdate();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
             logger.error("Could not insert into rel_question_topic " + question + topic, e);
             throw new DaoException("Could not insert into rel_question_topic " + question + topic);
-        }
-        finally {
-            closeStatementsAndResultSets(new Statement[] {pstmt},null);
+        } finally {
+            closeStatementsAndResultSets(new Statement[] {pstmt}, null);
         }
 
     }
