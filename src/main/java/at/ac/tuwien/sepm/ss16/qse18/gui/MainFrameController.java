@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
@@ -132,9 +133,13 @@ import java.io.IOException;
         }
     }
 
-    public void handleSingleChoiceQuestion() {
+    public void handleSingleChoiceQuestion(ObservableTopic topic) {
         logger.debug("Loading Single Choice question screen ");
         try {
+            CreateSingleChoiceQuestionController singleChoiceQuestionController =
+                setSubView("/fxml/question/createSingleChoiceQuestion.fxml",
+                    CreateSingleChoiceQuestionController.class);
+            singleChoiceQuestionController.setTopic(topic);
             //TODO: create fxml and controller
         } catch (Exception e) {
             handleException(e);

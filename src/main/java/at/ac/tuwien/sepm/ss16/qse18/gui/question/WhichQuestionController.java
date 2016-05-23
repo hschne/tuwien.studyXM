@@ -58,7 +58,6 @@ import java.io.IOException;
         tg = new ToggleGroup();
         radioButtonMultipleChoice.setToggleGroup(tg);
         radioButtonSingleChoice.setToggleGroup(tg);
-        radioButtonSingleChoice.setDisable(true); // disabled
         radioButtonOpenQuestion.setToggleGroup(tg);
         radioButtonOpenQuestion.setDisable(true); // disabled
         radioButtonNotecard.setToggleGroup(tg);
@@ -69,11 +68,11 @@ import java.io.IOException;
     @FXML public void handleCreateQuestion() throws IOException {
         logger.debug("Opening creation screen");
 
-        if (radioButtonMultipleChoice.isSelected()) {
-            mainFrameController.handleMultipleChoiceQuestion(topic);
-        } else if (radioButtonSingleChoice.isSelected()) {
-            //TODO: mainFrameController.handleSingleChoiceQuestion();
-        } else if (radioButtonOpenQuestion.isSelected()) {
+        if(radioButtonMultipleChoice.isSelected()) {
+            mainFrameController.handleMultipleChoiceQuestion(this.topic);
+        } else if(radioButtonSingleChoice.isSelected()) {
+            mainFrameController.handleSingleChoiceQuestion(this.topic);
+        } else if(radioButtonOpenQuestion.isSelected()) {
             //TODO: mainFrameController.handleOpenQuestion();
         } else {
             mainFrameController.handleCreateImageQuestion(topic);
@@ -81,17 +80,17 @@ import java.io.IOException;
 
     }
 
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
     public void setTopic(ObservableTopic topic) {
         this.topic = topic;
     }
 
     private void showAlert(ServiceException e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("An error occured").contentText(e.getMessage()).build();
+        Alert alert = alertBuilder
+                .alertType(Alert.AlertType.ERROR)
+                .title("Error")
+                .headerText("An error occured")
+                .contentText(e.getMessage())
+                .build();
         alert.showAndWait();
     }
 
