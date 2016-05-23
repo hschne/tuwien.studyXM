@@ -75,6 +75,7 @@ import java.util.List;
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
         } catch (ServiceException e) {
+            logger.error("Could not create new question", e);
             showAlert(e);
             return;
         }
