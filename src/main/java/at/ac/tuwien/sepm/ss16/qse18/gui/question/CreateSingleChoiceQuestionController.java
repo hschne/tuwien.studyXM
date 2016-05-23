@@ -72,8 +72,9 @@ import java.util.List;
         logger.info("Now creating new question");
         Question newQuestion;
         try {
+            List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
-            questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
+            questionService.setCorrespondingAnswers(newQuestion, answers);
         } catch (ServiceException e) {
             logger.error("Could not create new question", e);
             showAlert(e);
