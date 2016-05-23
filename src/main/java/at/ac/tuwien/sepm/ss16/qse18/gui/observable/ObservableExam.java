@@ -1,8 +1,7 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity;
+package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import javafx.beans.property.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.sql.Timestamp;
 

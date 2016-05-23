@@ -1,16 +1,11 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.topic;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  * @author Philipp Ganiu

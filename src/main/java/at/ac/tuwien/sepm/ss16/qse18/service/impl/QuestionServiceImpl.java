@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -114,7 +114,7 @@ import java.util.List;
 
     @Override public List<Topic> getCorrespondingTopic(Question q) throws ServiceException {
         //TODO
-        return null;
+        return new ArrayList<>();
     }
 
     @Override public boolean setCorrespondingResource(Question q, Resource r)
@@ -125,7 +125,7 @@ import java.util.List;
 
     @Override public List<Resource> getCorrespondingResources(Question q) throws ServiceException {
         //TODO
-        return null;
+        return new ArrayList<>();
     }
 
     @Override public List<Question> getQuestionsFromTopic(Topic topic) throws ServiceException {

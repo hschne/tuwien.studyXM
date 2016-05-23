@@ -24,8 +24,8 @@ import java.sql.SQLException;
         this.database = database;
     }
 
-    @Override public void addResourceTopic(Topic topic, Resource resource) throws Exception {
-        throw new Exception("Not implemented yet");
+    @Override public void addResourceTopic(Topic topic, Resource resource) throws DaoException {
+        throw new DaoException("Not implemented yet");
     }
 
     @Override public void removeResourceTopic(Topic topic) throws DaoException {

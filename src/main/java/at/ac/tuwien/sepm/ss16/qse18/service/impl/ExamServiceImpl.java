@@ -109,10 +109,10 @@ import java.util.Map;
         long questionTimeCounter = 0;
         int random;
         List<Question> examQuestions = new ArrayList<>();
-        List<Integer> notAnsweredQuestionID = new ArrayList<>();
+        List<Integer> notAnsweredQuestionID;
         List<Question> wrongAnsweredQuestions = new ArrayList<>();
         List<Question> rightAnsweredQuestions = new ArrayList<>();
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        Map<Integer, Boolean> questionBooleans;
         List<Question> notAnsweredQuestions = new ArrayList<>();
 
         try {
@@ -143,10 +143,10 @@ import java.util.Map;
                 }
             }
 
-            while ((wrongAnsweredQuestions.size() != 0 || notAnsweredQuestions.size() != 0
-                || rightAnsweredQuestions.size() != 0)) {
+            while (!wrongAnsweredQuestions.isEmpty() || !notAnsweredQuestions.isEmpty()
+                || !rightAnsweredQuestions.isEmpty()) {
 
-                if (notAnsweredQuestions.size() != 0) {
+                if (!notAnsweredQuestions.isEmpty()) {
                     random = (int) (Math.random() * notAnsweredQuestions.size());
                     if ((questionTimeCounter + notAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {
@@ -156,7 +156,7 @@ import java.util.Map;
                     notAnsweredQuestions.remove(random);
                 }
 
-                if (wrongAnsweredQuestions.size() != 0 && notAnsweredQuestions.size() == 0) {
+                if (!wrongAnsweredQuestions.isEmpty() && notAnsweredQuestions.isEmpty()) {
                     random = (int) (Math.random() * wrongAnsweredQuestions.size());
                     if ((questionTimeCounter + wrongAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {
@@ -168,8 +168,8 @@ import java.util.Map;
                 }
 
 
-                if (rightAnsweredQuestions.size() != 0 && notAnsweredQuestions.size() == 0
-                    && wrongAnsweredQuestions.size() == 0) {
+                if (!rightAnsweredQuestions.isEmpty() && notAnsweredQuestions.isEmpty()
+                    && wrongAnsweredQuestions.isEmpty()) {
                     random = (int) (Math.random() * rightAnsweredQuestions.size());
                     if ((questionTimeCounter + rightAnsweredQuestions.get(random).getQuestionTime())
                         <= examTime) {

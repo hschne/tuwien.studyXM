@@ -5,7 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableTopic;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -65,10 +65,6 @@ public class CreateImageQuestionController implements GuiController {
     private SpringFXMLLoader springFXMLLoader;
     private Stage primaryStage;
 
-    public void setTopic(ObservableTopic topic) {
-        this.topic = topic;
-    }
-
     private ObservableTopic topic;
 
     private QuestionService questionService;
@@ -81,6 +77,10 @@ public class CreateImageQuestionController implements GuiController {
         this.questionService = questionService;
         this.answerService = answerService;
         this.alertBuilder = alertBuilder;
+    }
+
+    public void setTopic(ObservableTopic topic) {
+        this.topic = topic;
     }
 
     /**

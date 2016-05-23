@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity;
+package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import javafx.beans.property.IntegerProperty;
@@ -12,40 +12,40 @@ import javafx.beans.property.StringProperty;
  * @author Philipp Ganiu
  */
 public class ObservableTopic {
-    private final IntegerProperty topicid;
+    private final IntegerProperty topicId;
     private final StringProperty topic;
     private Topic t;
-    private StringProperty NumberOfQuestions;
-
-    public String getNumberOfQuestions() {
-        return NumberOfQuestions.get();
-    }
-
-    public StringProperty numberOfQuestionsProperty() {
-        return NumberOfQuestions;
-    }
-
-    public void setNumberOfQuestions(String numberOfQuestions) {
-        this.NumberOfQuestions.set(numberOfQuestions);
-    }
+    private StringProperty numberOfQuestions;
 
     public ObservableTopic(Topic t){
         this.t = t;
-        topicid = new SimpleIntegerProperty(t.getTopicId());
-        topic = new SimpleStringProperty(t.getTopic());
-        NumberOfQuestions = new SimpleStringProperty(t.getNumberOfQuestions());
+        this.topicId = new SimpleIntegerProperty(t.getTopicId());
+        this.topic = new SimpleStringProperty(t.getTopic());
+        this.numberOfQuestions = new SimpleStringProperty(t.getNumberOfQuestions());
+    }
+
+    public String getNumberOfQuestions() {
+        return numberOfQuestions.get();
+    }
+
+    public StringProperty numberOfQuestionsProperty() {
+        return numberOfQuestions;
+    }
+
+    public void setNumberOfQuestions(String numberOfQuestions) {
+        this.numberOfQuestions.set(numberOfQuestions);
     }
 
     public int getTopicid() {
-        return topicid.get();
+        return topicId.get();
     }
 
     public IntegerProperty topicidProperty() {
-        return topicid;
+        return topicId;
     }
 
     public void setTopicid(int topicid) {
-        this.topicid.set(topicid);
+        this.topicId.set(topicid);
     }
 
     public String getTopic() {

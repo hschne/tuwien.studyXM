@@ -1,11 +1,10 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observableEntity.ObservableQuestion;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestion;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 import org.springframework.stereotype.Component;
 
 @Component
