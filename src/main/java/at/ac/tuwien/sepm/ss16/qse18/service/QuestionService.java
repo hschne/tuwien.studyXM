@@ -33,7 +33,7 @@ public interface QuestionService {
      * @param q The question which shall be saved persistently
      * @return Returns the question with a valid question ID
      */
-    public Question createQuestion(Question q) throws ServiceException;
+    public Question createQuestion(Question q,Topic t) throws ServiceException;
 
     /**
      * updateQuestion
@@ -42,7 +42,7 @@ public interface QuestionService {
      * @param q The question with updated fields.
      * @return Returns the up-to-date question.
      */
-    public Question updateQuestion(Question q) throws ServiceException;
+    public Question updateQuestion(Question q,Topic t) throws ServiceException;
 
     /**
      * deleteQuestion

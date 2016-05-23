@@ -94,7 +94,7 @@ public class CreateImageQuestionController implements GuiController{
                 copySelectedImage();
 
                 Question newQuestion = newQuestionFromFields();
-                questionService.createQuestion(newQuestion);
+                questionService.createQuestion(newQuestion,mainFrameController.getTopicToQuestion());
 
                 List<Answer> answerList = newAnswersFromFields();
                 for(Answer a: answerList) {

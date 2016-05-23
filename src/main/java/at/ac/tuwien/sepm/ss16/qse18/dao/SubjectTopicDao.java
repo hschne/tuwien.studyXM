@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface SubjectTopicDao {
     /**
-     * Inserts a relation between a {@param topic} and a {@param topic} in the resource.
+     * Inserts a relation between a {@param subject} and a {@param topic} in the resource.
      *
      * @param subject the subject for which the relation is inserted
      * @param topic the topic for which the relation is inserted

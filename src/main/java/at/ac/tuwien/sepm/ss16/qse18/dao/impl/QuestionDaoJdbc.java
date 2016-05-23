@@ -3,9 +3,11 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,7 @@ import java.util.List;
 public class QuestionDaoJdbc implements QuestionDao {
     private DataBaseConnection con;
     private Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
+    private QuestionTopicDao questionTopicDao;
 
     private static final String GET_SINGLE_QUESTION = "SELECT * FROM ENTITY_QUESTION WHERE QUESTIONID=?";
     private static final String GET_ALL_QUESTIONS = "SELECT * FROM ENTITY_QUESTION";
@@ -37,6 +40,10 @@ public class QuestionDaoJdbc implements QuestionDao {
 
     @Autowired public QuestionDaoJdbc(DataBaseConnection database){
         this.con = database;
+    }
+
+    @Autowired public void setQuestionTopicDao(QuestionTopicDao questionTopicDao){
+        this.questionTopicDao = questionTopicDao;
     }
 
     @Override public Question getQuestion(int id) throws DaoException{
@@ -95,7 +102,7 @@ public class QuestionDaoJdbc implements QuestionDao {
         return questions;
     }
 
-    @Override public Question createQuestion(Question question) throws DaoException {
+    @Override public Question createQuestion(Question question,Topic topic) throws DaoException {
         logger.info("Now saving question in database");
         isQuestionNull(question);
 
@@ -117,6 +124,7 @@ public class QuestionDaoJdbc implements QuestionDao {
             generatedKey = ps.getGeneratedKeys();
             if(generatedKey.next()) {
                 question.setQuestionId(generatedKey.getInt(1));
+                questionTopicDao.createQuestionTopic(question,topic);
                 return question;
             } else {
                 logger.error("Primary Key for question could not be created");
@@ -154,13 +162,13 @@ public class QuestionDaoJdbc implements QuestionDao {
         }
     }
 
-    @Override public Question updateQuestion(Question question) throws DaoException {
+    @Override public Question updateQuestion(Question question,Topic topic) throws DaoException {
         logger.info("Now updating question in database");
         isQuestionNull(question);
 
         if(question.getQuestionId() < 0) {
             logger.info("Question not in database, creating new entry for the given instance");
-            return this.createQuestion(question);
+            return this.createQuestion(question,topic);
         }
 
         PreparedStatement ps = null;

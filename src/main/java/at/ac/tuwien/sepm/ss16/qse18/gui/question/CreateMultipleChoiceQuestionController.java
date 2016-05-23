@@ -57,7 +57,7 @@ import java.util.List;
         logger.info("Now creating new question");
         Question newQuestion = null;
         try {
-            newQuestion = questionService.createQuestion(newQuestionFromField());
+            newQuestion = questionService.createQuestion(newQuestionFromField(),mainFrameController.getTopicToQuestion());
         } catch (ServiceException e) {
             showAlert(e);
             return;

@@ -2,11 +2,14 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.sql.SQLException;
@@ -22,10 +25,12 @@ import static org.mockito.Mockito.*;
 public class QuestionDaoJdbcTest extends DaoBaseTest {
 
     private QuestionDaoJdbc qdao;
+    @Mock private QuestionTopicDao questionTopicDao;
 
     @Before public void setUp() throws Exception {
         super.setUp();
         qdao = new QuestionDaoJdbc(mockConnectionH2);
+        qdao.setQuestionTopicDao(questionTopicDao);
     }
 
     @Test(expected = DaoException.class) public void test_getQuestion_noDatabaseConnection()
@@ -86,22 +91,23 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
     @Test(expected = DaoException.class) public void test_createQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
         PowerMockito.verifyStatic();
         mockPreparedStatement.executeUpdate();
     }
 
     @Test(expected = DaoException.class)
     public void test_createQuestion_withAlreadyExistingId_fail() throws Exception {
-        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
     }
 
     @Test(expected = DaoException.class) public void test_createAnswer_null_fail()
         throws Exception {
-        qdao.createQuestion(null);
+        qdao.createQuestion(null,null);
     }
 
     @Test public void test_createQuestion_validQuestion() throws Exception {
+
         when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
         when(mockConnection.prepareStatement(anyString(), anyInt()))
             .thenReturn(mockPreparedStatement);
@@ -109,24 +115,24 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
         when(mockResultSet.next()).thenReturn(true);
         when(mockResultSet.getInt(1)).thenReturn(1);
         Question input = new Question("TestQuestion", QuestionType.MULTIPLECHOICE, 0L);
-        Question q = qdao.createQuestion(input);
+        Question q = qdao.createQuestion(input,new Topic(2,"abc"));
         assertTrue("Question should have received primary key", q.getQuestionId() == 1);
     }
 
     @Test(expected = DaoException.class) public void test_updateQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
     }
 
     @Test(expected = DaoException.class) public void test_updateQuestion_invalidId_fail()
         throws Exception {
-        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L),new Topic());
     }
 
     @Test(expected = DaoException.class) public void test_updateQuestion_null_fail()
         throws Exception {
-        qdao.updateQuestion(null);
+        qdao.updateQuestion(null,null);
     }
 
     @Test(expected = DaoException.class) public void test_deleteQuestion_noDatabaseConnection_fail()

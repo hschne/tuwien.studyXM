@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
@@ -37,6 +38,7 @@ import java.io.IOException;
     private SpringFXMLLoader fxmlLoader;
     private AlertBuilder alertBuilder;
     private Stage primaryStage;
+    private Topic topicToQuestion;
 
     @Autowired void setSpringFXMLLoader(SpringFXMLLoader loader) {
         this.fxmlLoader = loader;
@@ -163,8 +165,9 @@ import java.io.IOException;
         }
     }
 
-    public void handleCreateQuestion() {
+    public void handleCreateQuestion(Topic topic) {
         logger.debug("Loading create question screen");
+        this.topicToQuestion = topic;
         try {
             setSubView("/fxml/question/whichQuestion.fxml", InsertExamValuesController.class);
         } catch (Exception e) {
@@ -197,6 +200,10 @@ import java.io.IOException;
             .headerText("Could not load sub view.")
             .contentText("Unexpected Error. Please view logs for details.").build();
         alert.showAndWait();
+    }
+
+    public Topic getTopicToQuestion(){
+        return topicToQuestion;
     }
 
 }

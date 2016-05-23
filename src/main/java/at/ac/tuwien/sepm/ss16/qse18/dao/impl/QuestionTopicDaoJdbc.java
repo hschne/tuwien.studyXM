@@ -31,6 +31,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     private static final String QUESTIONTOTOPIC_SQL =
         "SELECT Q.QUESTIONID,Q.QUESTION,Q.TYPE,Q.QUESTION_TIME "
             + "FROM ENTITY_QUESTION Q NATURAL JOIN REL_QUESTION_TOPIC R WHERE R.TOPICID = ?;";
+    private static final String CREATE_SQL = "INSERT INTO REL_QUESTION_TOPIC VALUES(?,?);";
 
     @Autowired public QuestionTopicDaoJdbc(ConnectionH2 database) {
         this.database = database;
@@ -117,6 +118,32 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public void createQuestionTopic(Question question, Topic topic) throws DaoException {
+        logger.debug("Entering createQuestionTopic with parameters {}", question,topic);
+        if(question == null || topic == null){
+            logger.error("Question or topic should not be null");
+            throw new DaoException("Question or topic should not be null");
+        }
+
+        PreparedStatement pstmt = null;
+
+        try{
+            pstmt = database.getConnection().prepareStatement(CREATE_SQL);
+            pstmt.setInt(1, question.getQuestionId());
+            pstmt.setInt(2,topic.getTopicId());
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e){
+            logger.error("Could not insert into rel_question_topic " + question + topic, e);
+            throw new DaoException("Could not insert into rel_question_topic " + question + topic);
+        }
+        finally {
+            closeStatementsAndResultSets(new Statement[] {pstmt},null);
+        }
+
     }
 
 }

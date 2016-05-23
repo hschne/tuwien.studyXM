@@ -51,18 +51,18 @@ import java.util.List;
         }
     }
 
-    @Override public Question createQuestion(Question q) throws ServiceException {
+    @Override public Question createQuestion(Question q,Topic t) throws ServiceException {
         try {
-            return this.qdao.createQuestion(q);
+            return this.qdao.createQuestion(q,t);
         } catch (DaoException e) {
             logger.error("Could not save question persistently: ", e);
             throw new ServiceException("Could not save question persistently");
         }
     }
 
-    @Override public Question updateQuestion(Question q) throws ServiceException {
+    @Override public Question updateQuestion(Question q,Topic t) throws ServiceException {
         try {
-            return this.qdao.updateQuestion(q);
+            return this.qdao.updateQuestion(q,t);
         } catch(DaoException e) {
             logger.error("Could not update question: ", e);
             throw new ServiceException("Could not update question");
