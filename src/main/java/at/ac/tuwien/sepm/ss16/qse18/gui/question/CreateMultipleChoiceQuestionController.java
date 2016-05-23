@@ -54,8 +54,9 @@ public class CreateMultipleChoiceQuestionController implements GuiController {
         logger.info("Now creating new question");
         Question newQuestion;
         try {
+            List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
-            questionService.setCorrespondingAnswers(newQuestion, newAnswersFromField());
+            questionService.setCorrespondingAnswers(newQuestion, answers);
         } catch (ServiceException e) {
             showAlert(e);
             return;
