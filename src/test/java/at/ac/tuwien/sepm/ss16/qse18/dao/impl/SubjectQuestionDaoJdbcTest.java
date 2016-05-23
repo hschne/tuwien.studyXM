@@ -20,6 +20,10 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
+ * Class SubjectQuestonDaoJdbcTest
+ * Tests for the JDBC implementation in SubjectQuestionDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Zhang Haixiang
  */
 public class SubjectQuestionDaoJdbcTest extends DaoBaseTest {
@@ -50,6 +54,8 @@ public class SubjectQuestionDaoJdbcTest extends DaoBaseTest {
         this.subjectQuestionDaoJdbc = new SubjectQuestionDaoJdbc(this.mockConnectionH2);
     }
 
+    //Testing getAllQuestionsOfSubject(Exam, int)
+    //----------------------------------------------------------------------------------------------
     @Test public void test_getAllQuestionsOfSubjectWith2Elements_should_persist() throws Exception {
         when(mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);
         when(mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(2);
@@ -75,6 +81,7 @@ public class SubjectQuestionDaoJdbcTest extends DaoBaseTest {
         PowerMockito.verifyStatic();
         this.mockConnectionH2.getConnection();
     }
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() throws Exception {
 

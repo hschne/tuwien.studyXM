@@ -1,7 +1,15 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 /**
- * Created by Felix on 06.05.2016.
+ * Class Answer
+ * represents the entity answer
+ * @parameter answerId primary key of answer
+ * @parameter type indicates type of answer
+ * @parameter answerString content of answer(the actual answer to a question)
+ * @parameter isCorrect indicates whether the answer is correct
+ * @parameter q question which the answer belongs to
+ *
+ * @author Felix Almer on 06.05.2016.
  */
 public class Answer {
     private int answerId;

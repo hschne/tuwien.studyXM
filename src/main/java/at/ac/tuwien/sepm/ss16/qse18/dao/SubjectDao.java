@@ -5,7 +5,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import java.util.List;
 
 /**
- * Interface that defines the CRUD methods for a DAO object.
+ * Interface SubjectDao
+ * Data Access Object interface for subject.
+ * Retrieves, saves, updates and deletes subjects from the persistency
  *
  * @author Cem Bicer
  */
@@ -16,8 +18,8 @@ public interface SubjectDao {
      * Searches for the subject with subjectid {@param id}.
      *
      * @param id The subjectid to search for
-     * @return  If an subject with subjectid {@param id} exists then it returns the subject with
-     *          its information, else it returns null
+     * @return If an subject with subjectid {@param id} exists then it returns the subject with
+     * its information, else it returns null
      * @throws DaoException if there is no connection to the resource
      */
     Subject getSubject(int id) throws DaoException;

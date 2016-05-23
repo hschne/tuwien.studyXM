@@ -8,7 +8,10 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import java.util.List;
 
 /**
- * Author: Felix
+ * Interface QuestionService
+ * defines service layer of question
+ *
+ * @author Felix Almer
  */
 public interface QuestionService {
     /**

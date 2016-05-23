@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Implementation of the subject service layer. This class contains the business logic and delegates certain
- * methods(CRUD) to the subject Dao
+ * Class SujjectServiceImpl
+ * concrete implementatioin of SubjectService
  *
  * @author Zhang Haixiang
  */
@@ -78,12 +78,26 @@ import java.util.Objects;
         }
     }
 
+    /**
+     * verifyCreate
+     * verifies whether the subject is valid or not
+     * @param subject the subject that should be created
+     * @throws ServiceException
+     *
+     * */
     private void verifyCreate(Subject subject) throws ServiceException {
         if (getSubjects().stream().anyMatch(p -> Objects.equals(p.getName(), subject.getName()))) {
             throw new ServiceException("Subject name already taken");
         }
     }
 
+    /**
+     * verifyUpdate
+     * verifies whether the subject is valid or not
+     * @param subject the subject that should be updated
+     * @throws ServiceException
+     *
+     * */
     private void verifyUpdate(Subject subject) throws ServiceException {
         if(subject.getName().isEmpty()) {
             throw new ServiceException("Subject name must not be empty");

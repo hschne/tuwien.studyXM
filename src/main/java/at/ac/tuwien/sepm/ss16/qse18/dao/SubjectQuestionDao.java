@@ -6,7 +6,10 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import java.util.List;
 
 /**
- * Inteface that represents the relationship between Subject and Question.
+ * Inteface SubjectQuestionDao
+ * Data Access Object interface for the relation between subject and question.
+ * Retrieves, questions from a certain subject from the persistency.
+ *
  * @author Zhang Haixiang
  */
 @FunctionalInterface

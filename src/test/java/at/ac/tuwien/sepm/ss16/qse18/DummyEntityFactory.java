@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class Dummy EntityFactory
+ * contains methods that create test objects of the domain entities
+ *
  * @author Hans-Joerg Schroedl
  */
 public class DummyEntityFactory {

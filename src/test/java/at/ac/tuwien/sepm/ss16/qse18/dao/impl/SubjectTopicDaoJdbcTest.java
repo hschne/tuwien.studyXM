@@ -21,6 +21,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
+ * Class SubjectTopicDaoJdbcTest
+ * Tests for the JDBC implementation in SubjectTopicDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Philipp Ganiu
  */
 public class SubjectTopicDaoJdbcTest extends DaoBaseTest {
@@ -33,6 +37,8 @@ public class SubjectTopicDaoJdbcTest extends DaoBaseTest {
     }
 
 
+    //Testing createSubjectTopic(Subject, Topic)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class)
     public void test_createSubjectTopic_withNoDataBaseConnection_Fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -51,7 +57,10 @@ public class SubjectTopicDaoJdbcTest extends DaoBaseTest {
         dao.createSubjectTopic(new Subject(), new Topic());
         verify(mockPreparedStatement).executeUpdate();
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Testing deleteSubjectTopic(Subject)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_deleteSubectTopic_withNull_Fail()
         throws Exception {
         dao.deleteSubjectTopic(null);
@@ -77,7 +86,11 @@ public class SubjectTopicDaoJdbcTest extends DaoBaseTest {
         dao.deleteSubjectTopic(new Topic(1, "TestTopic"));
         verify(mockPreparedStatement).executeUpdate();
     }
+    //----------------------------------------------------------------------------------------------
 
+
+    //Testing getTopicToSubject(Subject)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class)
     public void test_getTopicToSubject_withNoDataBaseConnection_Fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -108,6 +121,7 @@ public class SubjectTopicDaoJdbcTest extends DaoBaseTest {
         List<Topic> topics = dao.getTopicToSubject(new Subject());
         assertEquals("The size of the resulting list should be 100", topics.size(), 100);
     }
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() throws Exception {
 

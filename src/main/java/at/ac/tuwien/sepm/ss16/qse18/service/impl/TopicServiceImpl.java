@@ -16,6 +16,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Class TopicServiceImpl
+ * concrete implementatioin of TopicService
+ *
  * @author Philipp Ganiu, Bicer Cem
  */
 @Service public class TopicServiceImpl implements TopicService {
@@ -125,6 +128,15 @@ import java.util.List;
         return getTopicsFromId('q', question.getQuestionId());
     }
 
+    /**
+     * getTopicsFromId
+     * get the topics to a certain subject or from a certain question and saves it in a list
+     * @param typeOfId defines which topic to get, whether from to a subject or from a question
+     * @param id either the id of a question or a subject
+     * @return returns a list of topics related to the given id
+     * @throws ServiceException
+     *
+     * */
     private List<Topic> getTopicsFromId(char typeOfId, int id) throws ServiceException {
         List<Topic> res = null;
 

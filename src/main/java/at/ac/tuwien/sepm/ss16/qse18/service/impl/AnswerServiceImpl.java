@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Created by Felix on 10.05.2016.
+ * Class AnswerServiceImpl
+ * concrete implementatioin of AnswerService
+ *
+ * @author Felix Almer on 10.05.2016.
  */
 @Service
 public class AnswerServiceImpl implements AnswerService {

@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Felix on 06.05.2016.
+ * Class AnswerDaoJdbc
+ * concrete implementation of Interface AnswerDao
+ * This class has access to the h2 database that is defined in the ConnectionH2 class.
+ *
+ * @author Felix Almer on 06.05.2016.
  */
 @Service
 public class AnswerDaoJdbc implements AnswerDao {

@@ -6,6 +6,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import java.util.List;
 
 /**
+ * Interface AnswerService
+ * defines service layer of answer
+ *
  * Created by Felix on 10.05.2016.
  */
 public interface AnswerService {

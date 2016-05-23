@@ -1,7 +1,13 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 /**
- * Created by Felix on 10.05.2016.
+ * Class Topic
+ * represents the entity topic
+ * @parameter topicId primary key of topic
+ * @parameter topic name of the topic
+ * @parameter numberOfQuestions questions that belongs to the topic
+ *
+ * @author Felix Almer on 10.05.2016.
  */
 public class Topic {
     private int topicId;

@@ -19,7 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Felix on 10.05.2016.
+ * Class QuestionServiceImpl
+ * concrete implementatioin of QuesitonService
+ *
+ * @author Felix Almer on 10.05.2016.
  */
 @Service public class QuestionServiceImpl implements QuestionService {
     private QuestionDao qdao;

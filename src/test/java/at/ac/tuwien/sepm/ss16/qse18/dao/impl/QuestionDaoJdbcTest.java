@@ -20,6 +20,11 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
 /**
+ *
+ * Class QuestionDaoJdbcTest
+ * Tests for the JDBC implementation in QuestionDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Felix Almer
  */
 public class QuestionDaoJdbcTest extends DaoBaseTest {
@@ -33,6 +38,8 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
         qdao.setQuestionTopicDao(questionTopicDao);
     }
 
+    //Testing getQuestion(int)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_getQuestion_noDatabaseConnection()
         throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -63,7 +70,10 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
             a.getQuestion().equals("TestQuestion"));
         assertFalse("Question with different ids should not be equal", a.equals(b));
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Testing getAllQuestions
+    //----------------------------------------------------------------------------------------------
     @Test public void test_getAllQuestions_emptyDatabase() throws Exception {
         when(mockResultSet.next()).thenReturn(false);
         assertTrue("Database should return empty list", qdao.getQuestions().isEmpty());
@@ -87,7 +97,10 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
         assertFalse("All answers should have a different id",
             first.equals(second.equals(third.equals(fourth.equals(fifth)))));
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Testing createQuestion(Question)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_createQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
@@ -118,7 +131,10 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
         Question q = qdao.createQuestion(input,new Topic(2,"abc"));
         assertTrue("Question should have received primary key", q.getQuestionId() == 1);
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Testing updateQuestion(Question)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_updateQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -134,7 +150,10 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
         throws Exception {
         qdao.updateQuestion(null,null);
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Testing deleteQuestion(Question)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_deleteQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -150,6 +169,7 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
         throws Exception {
         qdao.deleteQuestion(new Question("", QuestionType.MULTIPLECHOICE, 0L));
     }
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() {
         // Nothing to tear down

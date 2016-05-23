@@ -17,6 +17,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
+ * Class AnswerDaoJdbcTest
+ * Tests for the JDBC implementation in AnswerDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Felix Almer & Philipp Ganiu
  */
 public class AnswerDaoJdbcTest extends DaoBaseTest {
@@ -27,6 +31,8 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
         adao = new AnswerDaoJdbc(mockConnectionH2);
     }
 
+    //Testing getAnswer(int)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_getAnswer_noDatabaseConnection()
         throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -91,7 +97,10 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
         assertFalse("All answers should have a different id",
             first.equals(second.equals(third.equals(fourth.equals(fifth)))));
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Testing createAnswer(Answer)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class)
     public void test_createAnswer_withNoDatabaseConnection_Fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -123,7 +132,10 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
         adao.createAnswer(a);
         verify(mockPreparedStatement).executeUpdate();
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Testing updateAnswer(Answer)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_updateAnswer_withNull_Fail()
         throws Exception {
         adao.updateAnswer(null);
@@ -136,8 +148,10 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
         PowerMockito.verifyStatic();
         mockConnectionH2.getConnection();
     }
+    //----------------------------------------------------------------------------------------------
 
-
+    //Testing deleteAnswer(Answer)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class)
     public void test_deleteAnswer_withNoDatabaseConnection_Fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -157,6 +171,7 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
         adao.deleteAnswer(a);
         verify(mockPreparedStatement, never()).executeUpdate();
     }
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() {
         // Nothing to tear down

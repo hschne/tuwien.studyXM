@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 /**
+ * Class QuestionTopicDaoJdbc
+ * concrete implementation of Interface QuestionTopicDao
+ * This class has access to the h2 database that is defined in the ConnectionH2 class.
+ *
  * @author Philipp Ganiu, Bicer Cem
  */
 @Service public class QuestionTopicDaoJdbc implements QuestionTopicDao {

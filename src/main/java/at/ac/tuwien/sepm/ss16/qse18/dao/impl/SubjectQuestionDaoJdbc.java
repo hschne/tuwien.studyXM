@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class SubjectQuestionDaoJdbc
+ * concrete implementation of Interface SubjectQuesitonDao
+ * This class has access to the h2 database that is defined in the ConnectionH2 class.
+ *
  * @author Zhang Haixiang
  */
 @Service

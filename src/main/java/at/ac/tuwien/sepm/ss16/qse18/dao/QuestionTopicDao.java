@@ -6,6 +6,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import java.util.List;
 
 /**
+ * Interface QuestionTopicDao
+ * Data Access Object interface for the relation between question and topic .
+ * Retrieves, saves, and deletes questions and related topics from the persistency
  * @author Philipp Ganiu
  */
 public interface QuestionTopicDao {

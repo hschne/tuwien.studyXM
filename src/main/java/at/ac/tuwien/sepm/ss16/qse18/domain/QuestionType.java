@@ -11,7 +11,8 @@ import java.util.Map;
  * - Openquestion:   A text is required as user input instead of a radiobox choice, a correct answer
  *                   is determined by matching the given answer to the user input
  * - Notecard:       Learning by notecard principle: mainly used for offline learning -> printouts
- * Created by Felix on 06.05.2016.
+ *
+ * @author Felix Almer on 06.05.2016.
  */
 public enum QuestionType {
     MULTIPLECHOICE(1), SINGLECHOICE(2), OPENQUESTION(3), NOTECARD(4);

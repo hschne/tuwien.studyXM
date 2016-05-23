@@ -1,7 +1,13 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 /**
- * Created by Felix on 10.05.2016.
+ * Class Resource
+ * represents the entity resource
+ * @parameter resoureceId primary key of resourece
+ * @parameter type indicated the type of resource
+ * @parameter reference content of resource(the actual resource)
+ *
+ * @author Felix Almer on 10.05.2016.
  */
 public class Resource {
     private int resourceId;

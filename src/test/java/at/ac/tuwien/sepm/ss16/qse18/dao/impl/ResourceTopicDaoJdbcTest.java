@@ -10,6 +10,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopic;
 import static org.mockito.Mockito.verify;
 
 /**
+ * Class ResourceTopicDaoJdbcTest
+ * Tests for the JDBC implementation in ResourceTopicDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
  * @author Hans-Joerg Schroedl
  */
 public class ResourceTopicDaoJdbcTest extends DaoBaseTest   {
@@ -21,6 +24,8 @@ public class ResourceTopicDaoJdbcTest extends DaoBaseTest   {
         resourceTopicDaoJdbc = new ResourceTopicDaoJdbc(mockConnectionH2);
     }
 
+    //Testing removeResourceTopic(Topic)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_removeResourceTopic_InvalidTopicFail()
         throws Exception {
         resourceTopicDaoJdbc.removeResourceTopic(null);
@@ -33,4 +38,5 @@ public class ResourceTopicDaoJdbcTest extends DaoBaseTest   {
 
         verify(mockPreparedStatement).executeUpdate();
     }
+    //----------------------------------------------------------------------------------------------
 }

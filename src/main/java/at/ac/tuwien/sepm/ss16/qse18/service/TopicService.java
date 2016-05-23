@@ -7,6 +7,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import java.util.List;
 
 /**
+ * Interface TopicService
+ * defines service layer of topic
+ *
  * @author Philipp Ganiu, Bicer Cem
  */
 public interface TopicService {

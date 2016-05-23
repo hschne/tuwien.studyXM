@@ -24,6 +24,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
+ * Class TopicServiceImplTest
+ * Tests for the sercvice layer in TopicServiceImpl. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Philipp Ganiu, Bicer Cem
  */
 @RunWith(MockitoJUnitRunner.class) public class TopicServiceImplTest {
@@ -38,33 +42,26 @@ import static org.mockito.Mockito.when;
         topicService = new TopicServiceImpl(mockTopicDao);
     }
 
+    //Testing getTopic(int)
+    //----------------------------------------------------------------------------------------------
     @Test public void testIf_getTopic_callsRightMethodInDao() throws Exception {
         topicService.getTopic(1);
         verify(mockTopicDao).getTopic(1);
     }
+
 
     @Test public void testIf_getTopics_callsRightMethodInDao() throws Exception {
         topicService.getTopics();
         verify(mockTopicDao).getTopics();
     }
 
+    //Testing createTopic(Topic, Subject)
+    //----------------------------------------------------------------------------------------------
     @Test public void testIf_createTopic_callsRightMethodInDao() throws Exception {
         Topic t = new Topic(1, "x");
         Subject s = new Subject();
         topicService.createTopic(t, s);
         verify(mockTopicDao).createTopic(t, s);
-    }
-
-    @Test public void testIf_updateTopic_callsRightMethodInDao() throws Exception {
-        Topic t = new Topic(1, "x");
-        topicService.updateTopic(t);
-        verify(mockTopicDao).updateTopic(t);
-    }
-
-    @Test public void testIf_deleteTopic_callsRightMethodInDao() throws Exception {
-        Topic t = new Topic(1, "x");
-        topicService.deleteTopic(t);
-        verify(mockTopicDao).deleteTopic(t);
     }
 
     @Test(expected = ServiceException.class)
@@ -76,6 +73,16 @@ import static org.mockito.Mockito.when;
         throws Exception {
         topicService.createTopic(null, new Subject());
     }
+    //----------------------------------------------------------------------------------------------
+
+
+    //Testing updateTopic(Topic)
+    //----------------------------------------------------------------------------------------------
+    @Test public void testIf_updateTopic_callsRightMethodInDao() throws Exception {
+        Topic t = new Topic(1, "x");
+        topicService.updateTopic(t);
+        verify(mockTopicDao).updateTopic(t);
+    }
 
     @Test(expected = ServiceException.class)
     public void test_updateTopic_invalidTopicThrowsException() throws Exception {
@@ -85,6 +92,16 @@ import static org.mockito.Mockito.when;
     @Test(expected = ServiceException.class) public void test_updateTopic_topicNullThrowsException()
         throws Exception {
         topicService.updateTopic(null);
+    }
+    //----------------------------------------------------------------------------------------------
+
+
+    //Testing deleteTopic(Topic)
+    //----------------------------------------------------------------------------------------------
+    @Test public void testIf_deleteTopic_callsRightMethodInDao() throws Exception {
+        Topic t = new Topic(1, "x");
+        topicService.deleteTopic(t);
+        verify(mockTopicDao).deleteTopic(t);
     }
 
     @Test(expected = ServiceException.class)
@@ -96,13 +113,17 @@ import static org.mockito.Mockito.when;
         throws Exception {
         topicService.deleteTopic(null);
     }
+    //----------------------------------------------------------------------------------------------
 
-    @Test(expected = ServiceException.class) public void test_getTopicsFromSubject_withNull()
+
+    //Tesing getTopicsToSubject(Subject)
+    //----------------------------------------------------------------------------------------------
+    @Test(expected = ServiceException.class) public void test_getTopicsToSubject_withNull()
         throws Exception {
         topicService.getTopicsFromSubject(null);
     }
 
-    @Test public void test_getTopicsFromSubject_withValidSubject() throws Exception {
+    @Test public void test_getTopicsToSubject_withValidSubject() throws Exception {
         topicService =
             new TopicServiceImpl(mockSubjectTopicDao, mockSubjectDao, mockTopicDao, mockQuestionDao,
                 mockQuestionTopicDao);
@@ -132,7 +153,10 @@ import static org.mockito.Mockito.when;
         assertFalse("Both topics should have different topic names",
             test.get(0).getTopic().equals(test.get(1).getTopic()));
     }
+    //----------------------------------------------------------------------------------------------
 
+    //Tesing getTopicsFromQuestion(Question)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = ServiceException.class) public void test_getTopicsFromQuestion_withNull()
         throws Exception {
         topicService.getTopicsFromQuestion(null);
@@ -168,6 +192,7 @@ import static org.mockito.Mockito.when;
         assertFalse("Both topics should have different topic names",
             test.get(0).getTopic().equals(test.get(1).getTopic()));
     }
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() throws Exception {
 

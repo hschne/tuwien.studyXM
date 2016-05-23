@@ -31,6 +31,10 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
+ * Class ExamServiceImplTest
+ * Tests for the service layer in ExamServiceImpl. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Zhang Haixiang
  */
 @RunWith(MockitoJUnitRunner.class) public class ExamServiceImplTest {

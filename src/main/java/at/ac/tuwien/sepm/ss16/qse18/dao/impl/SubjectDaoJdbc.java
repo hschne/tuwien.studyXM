@@ -21,8 +21,9 @@ import java.util.List;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 /**
- * JDBC implementation of the CRUD methods from SubjectDao. This class has access to the h2 database
- * that is defined in the ConnectionH2 class.
+ * Class SubjectDaoJdbc
+ * concrete implementation of Interface SubjectDao
+ * This class has access to the h2 database that is defined in the ConnectionH2 class.
  *
  * @author Cem Bicer
  */

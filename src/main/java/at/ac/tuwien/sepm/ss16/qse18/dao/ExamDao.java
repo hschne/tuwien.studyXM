@@ -7,7 +7,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import java.util.List;
 
 /**
- * Interface that defines CRUD-Methods for ExamDao-Object
+ * Interface ExamDao
+ * Data Access Object interface for Exam.
+ * Retrieves, saves, and deletes exams from the persistency
  *
  * @author Zhang Haixiang
  */

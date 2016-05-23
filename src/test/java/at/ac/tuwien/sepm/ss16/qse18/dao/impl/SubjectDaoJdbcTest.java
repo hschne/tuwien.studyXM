@@ -22,6 +22,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 /**
+ * Class SubjectDaoJdbcTest
  * Tests for the JDBC implementation in SubjectDaoJdbc. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *

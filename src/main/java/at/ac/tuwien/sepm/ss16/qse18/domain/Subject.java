@@ -3,7 +3,14 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
 import java.text.MessageFormat;
 
 /**
- * Dto Class for subject
+ * Class Subject
+ * represents the entity subject
+ * @parameter subjectId primary key of subject
+ * @parameter name name of the subject
+ * @parameter ects amount of ects of the subject
+ * @parameter semester semester in which the subject is held
+ * @parameter timeSpent time spent on this subject
+ * @parameter auhtor name of the user who created this subject
  *
  * @author Hans-Joerg Schroedl
  */

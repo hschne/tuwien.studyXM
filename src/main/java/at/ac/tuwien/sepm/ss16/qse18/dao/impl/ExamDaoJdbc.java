@@ -19,7 +19,9 @@ import java.sql.*;
 import java.util.*;
 
 /**
- * JDBC Implementation of the CRUD-Method of Exam
+ * Class ExamDaoJdbc
+ * concrete implementation of Interface ExamDao
+ * This class has access to the h2 database that is defined in the ConnectionH2 class.
  *
  * @author Zhang Haixiang
  */

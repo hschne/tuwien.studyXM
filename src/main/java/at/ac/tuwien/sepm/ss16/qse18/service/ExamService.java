@@ -7,6 +7,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import java.util.List;
 
 /**
+ * Interface ExamService
+ * defines service layer of exam
+ *
  * @author Philipp Ganiu
  */
 public interface ExamService {

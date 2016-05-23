@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * This class represents the service layer of exams
+ * Class ExamServiceImpl
+ * concrete implementatioin of ExamService
  *
  * @author Zhang Haixiang
  */
@@ -96,6 +97,16 @@ import java.util.Map;
     }
 
 
+    /**
+     * getRightQuestions
+     * chooses the right questions for the exam and saves it into a list
+     * @param exam exam for which the questions are chosen
+     * @param topicID topic from which the questions are chosen
+     * @param examTime duration of the exam
+     * @return returns a List that contains the questions of the given exam
+     * @throws ServiceException
+     *
+     * */
     public List<Question> getRightQuestions(Exam exam, int topicID, int examTime)
         throws ServiceException {
         logger
@@ -109,11 +120,11 @@ import java.util.Map;
         long questionTimeCounter = 0;
         int random;
         List<Question> examQuestions = new ArrayList<>();
-        List<Integer> notAnsweredQuestionID;
-        List<Question> wrongAnsweredQuestions = new ArrayList<>();
-        List<Question> rightAnsweredQuestions = new ArrayList<>();
-        Map<Integer, Boolean> questionBooleans;
-        List<Question> notAnsweredQuestions = new ArrayList<>();
+        List<Integer> notAnsweredQuestionID; // conatins all questionID's
+        List<Question> wrongAnsweredQuestions = new ArrayList<>(); // contains the quesitions which have been answered incorrectly
+        List<Question> rightAnsweredQuestions = new ArrayList<>(); // contains the questions which have been answered correctly
+        Map<Integer, Boolean> questionBooleans; // contains the booleans(answered correctly/incorrectly) of already answred questions
+        List<Question> notAnsweredQuestions = new ArrayList<>(); // contains all questions to a certain topic and subject
 
         try {
             notAnsweredQuestionID = this.subjectQuestionDao.getAllQuestionsOfSubject(exam, topicID);
@@ -130,11 +141,11 @@ import java.util.Map;
 
             for (Map.Entry<Integer, Boolean> e : questionBooleans.entrySet()) {
                 for (int i = 0; i < notAnsweredQuestions.size(); i++) {
-                    if (e.getKey() == notAnsweredQuestions.get(i).getQuestionId()) {
-                        if (e.getValue() == true) {
+                    if (e.getKey() == notAnsweredQuestions.get(i).getQuestionId()) { // checks if the question has been answered already
+                        if (e.getValue() == true) { // if the question has already been answered correctly
                             rightAnsweredQuestions.add(temp.get(counter));
                             notAnsweredQuestions.remove(temp.get(counter));
-                        } else {
+                        } else { // if the question has already been answered incorrectly
                             wrongAnsweredQuestions.add(temp.get(counter));
                             notAnsweredQuestions.remove(temp.get(counter));
                         }
@@ -149,7 +160,7 @@ import java.util.Map;
                 if (!notAnsweredQuestions.isEmpty()) {
                     random = (int) (Math.random() * notAnsweredQuestions.size());
                     if ((questionTimeCounter + notAnsweredQuestions.get(random).getQuestionTime())
-                        <= examTime) {
+                        <= examTime) { // if time of questions are still smaller or the same as examTime
                         examQuestions.add(notAnsweredQuestions.get(random));
                         questionTimeCounter += notAnsweredQuestions.get(random).getQuestionTime();
                     }
@@ -159,7 +170,7 @@ import java.util.Map;
                 if (!wrongAnsweredQuestions.isEmpty() && notAnsweredQuestions.isEmpty()) {
                     random = (int) (Math.random() * wrongAnsweredQuestions.size());
                     if ((questionTimeCounter + wrongAnsweredQuestions.get(random).getQuestionTime())
-                        <= examTime) {
+                        <= examTime) { // if time of questions are still smaller or the same as examTime
                         examQuestions.add(wrongAnsweredQuestions.get(random));
                         questionTimeCounter += wrongAnsweredQuestions.get(random).getQuestionTime();
                     }
@@ -172,7 +183,7 @@ import java.util.Map;
                     && wrongAnsweredQuestions.isEmpty()) {
                     random = (int) (Math.random() * rightAnsweredQuestions.size());
                     if ((questionTimeCounter + rightAnsweredQuestions.get(random).getQuestionTime())
-                        <= examTime) {
+                        <= examTime) { // if time of questions are still smaller or the same as examTime
                         examQuestions.add(rightAnsweredQuestions.get(random));
                         questionTimeCounter += rightAnsweredQuestions.get(random).getQuestionTime();
                     }

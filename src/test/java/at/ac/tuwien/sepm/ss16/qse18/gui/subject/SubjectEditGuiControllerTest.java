@@ -17,6 +17,10 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 /**
+ * Class SubjectEditGuiControllerTest
+ * Tests for the gui layer in SubjectEditGuiController. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Hans-Joerg Schroedl
  */
 @RunWith(MockitoJUnitRunner.class) public class SubjectEditGuiControllerTest {

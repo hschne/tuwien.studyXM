@@ -13,8 +13,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.mockito.Mockito.verify;
 
 /**
- * Tests for the subject layer implementation. Mocks were used to verify that the right methods in the subject Dao
- * were called
+ * Class ExamServiceImplTest
+ * Tests for the sercvice layer in ExamServiceImpl. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
  *
  * @author Zhang Haixiang
  */
@@ -30,6 +31,7 @@ import static org.mockito.Mockito.verify;
     }
 
     //Testing getSubject(int)
+    //----------------------------------------------------------------------------------------------
     @Test public void testIf_getSubject_callsRightMethodInDao() throws Exception {
         subjectService.getSubject(1);
         verify(mockDaoJdbc).getSubject(1);
@@ -69,6 +71,7 @@ import static org.mockito.Mockito.verify;
         subjectService.deleteSubject(subject);
         verify(mockDaoJdbc).deleteSubject(subject);
     }
+    //----------------------------------------------------------------------------------------------
 
     private Subject createDummySubject() {
         return createDummySubject("SEPM", 6.0f);

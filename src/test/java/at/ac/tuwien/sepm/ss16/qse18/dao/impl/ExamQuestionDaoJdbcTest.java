@@ -25,6 +25,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
+ * Class ExamQuestionDaoJdbcTest
+ * Tests for the JDBC implementation in ExamQuestionDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Zhang Haixiang
  */
 public class ExamQuestionDaoJdbcTest extends DaoBaseTest {

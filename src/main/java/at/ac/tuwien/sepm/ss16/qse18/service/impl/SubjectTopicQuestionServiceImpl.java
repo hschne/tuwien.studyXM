@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class SubjectTopicQuestionServiceImpl
+ * concrete implementatioin of SubjectTopicQuesitonService
+ *
  * @author Philipp Ganiu
  */
 @Service

@@ -6,6 +6,10 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import java.util.List;
 
 /**
+ * Interface TopicDao
+ * Data Access Object interface for topic.
+ * Retrieves, saves, updates and deletes topics from the persistency
+ *
  * @author Philipp Ganiu
  */
 public interface TopicDao {

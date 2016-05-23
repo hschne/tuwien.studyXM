@@ -1,5 +1,16 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+/**
+ * Class Question
+ * represents the entity question
+ * @parameter questionId primary key of question
+ * @parameter questionString content of question(the actual question)
+ * @parameter type indicated the type of question
+ * @parameter questionTime indicates the estimated time needed to answer the question
+ *
+ * @author Felix Almer
+ *
+ * */
 public class Question {
     private int questionId;
     private String questionString;

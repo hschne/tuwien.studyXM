@@ -21,6 +21,10 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 
 /**
+ * Class SubjectTopicQuestionServiceImplTest
+ * Tests for the sercvice layer in SubjectTopicQuestionDaoImpl. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Philipp Ganiu
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -33,6 +37,8 @@ public class SubjectTopicQuestionServiceImplTest {
         service = new SubjectTopicQuestionServiceImpl(mockDaoJdbc,mockDaoJdbc2);
     }
 
+    //Testing getTopicToSubject(Subject)
+    //----------------------------------------------------------------------------------------------
     @Test
     public void testIf_getTopicToSubjectWithNumberOfQuestions_callsRightMethodInDao() throws Exception {
         Subject s = new Subject();
@@ -45,6 +51,8 @@ public class SubjectTopicQuestionServiceImplTest {
     public void testIf_getTopicToSubjectWithNumberOfQuestion_SubjectNullThrowsException() throws Exception{
         service.getTopicToSubjectWithNumberOfQuestions(null);
     }
+    //----------------------------------------------------------------------------------------------
+
     @After public void tearDown() throws Exception {
 
     }

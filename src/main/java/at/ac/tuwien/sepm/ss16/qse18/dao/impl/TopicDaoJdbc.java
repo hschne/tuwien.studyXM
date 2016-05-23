@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class TopicDaoJdbc
  * Implementor of TopicDao
+ * This class has access to the h2 database that is defined in the ConnectionH2 class.
  *
  * @author Philipp Ganiu, Hans-Jörg Schrödl
  */

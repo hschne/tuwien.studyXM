@@ -5,6 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Class Exam
+ * represents the entity exam
+ * @parameter examid primary key of exam
+ * @parameter created indicates the date in which the exam was created
+ * @parameter passed indicates whether exam has been passed or not
+ * @parameter author name of the user who created the exam
+ * @parameter subjectID id of the subject which the exam belongs to
+ * @parameter examQuestions List containing the questions of an exam
+ *
  * @author Zhang Haixiang
  */
 public class Exam {

@@ -17,6 +17,9 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 /**
+ * Class DaoBaseTest
+ * defines the setUp method for the Dao Tests
+ *
  * @author Hans-Joerg Schroedl
  */
 @Ignore

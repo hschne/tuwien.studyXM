@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * Interface ExamQuestionDao
+ * Data Access Object interface for the relation between exams and questions.
+ * Retrieves, saves, and deletes exams with the related questions from the persistency
+ *
  * @author Zhang Haixiang
  */
 public interface ExamQuestionDao {

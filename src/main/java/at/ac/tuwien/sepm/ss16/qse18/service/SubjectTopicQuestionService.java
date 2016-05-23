@@ -6,6 +6,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import java.util.List;
 
 /**
+ * Interface SubjectTopicQuestionService
+ * defines service layer of questions of subject and topic
+ *
  * @author Philipp Ganiu
  */
 public interface SubjectTopicQuestionService {

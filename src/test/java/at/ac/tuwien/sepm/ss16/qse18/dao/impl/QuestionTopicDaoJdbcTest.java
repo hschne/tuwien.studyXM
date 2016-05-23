@@ -19,6 +19,10 @@ import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.when;
 
 /**
+ * Class QuestionTopicDaoJdbcTest
+ * Tests for the JDBC implementation in QuestonTopicDaoJdbc. In order to be isolated while testing, this
+ * test class uses mocks primarily to bypass the database connection procedure.
+ *
  * @author Philipp Ganiu, Bicer Cem
  */
 public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
@@ -29,6 +33,8 @@ public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
         dao = new QuestionTopicDaoJdbc(mockConnectionH2);
     }
 
+    //Testing getQuestionToTopic(Topic)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class)
     public void test_getQuestionToTopic_withNoDataBaseConnection_Fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -57,7 +63,11 @@ public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
         assertTrue("Question content should be TestQuestion",
             questions.get(0).getQuestion().equals("TestQuestion"));
     }
+    //----------------------------------------------------------------------------------------------
 
+
+    //Testing getTopicsFromQuestion(Question)
+    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_getTopicsFromQuestion_withNull_Fail()
         throws Exception {
         dao.getTopicsFromQuestion(null);
@@ -87,6 +97,7 @@ public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
         assertEquals("The second topic's name should be \"TestTopic2\"", topics.get(1).getTopic(),
             "TestTopic2");
     }
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() throws Exception {
 

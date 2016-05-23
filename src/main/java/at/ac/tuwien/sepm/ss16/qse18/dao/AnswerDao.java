@@ -8,7 +8,8 @@ import java.util.List;
  * Interface AnswerDao
  * Data Access Object interface for answer.
  * Retrieves, saves, updates and deletes answers from the persistency
- * Created by Felix on 06.05.2016.
+ *
+ * @author Felix Almer on 06.05.2016.
  */
 public interface AnswerDao {
     /**

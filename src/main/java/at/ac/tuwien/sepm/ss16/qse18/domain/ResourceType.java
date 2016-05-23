@@ -10,7 +10,8 @@ import java.util.Map;
  * - WEBLINK:   A HTML reference
  * - NOTE:      Plain text
  * - OTHER:     Different type of resource, filesystem reference
- * Created by Felix on 10.05.2016.
+ *
+ * @author Felix Almer on 10.05.2016.
  */
 public enum ResourceType {
     PDF(1), WEBLINK(2), NOTE(3), OTHER(4);

@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * necessary for any database. An implementing class shall operate as singleton; only one
  * instance of java.sql.Connection shall be active at any given time.
  *
- * Created by Felix on 04.05.2016.
+ * @author Felix Almer on 04.05.2016.
  */
 public interface DataBaseConnection {
     /**

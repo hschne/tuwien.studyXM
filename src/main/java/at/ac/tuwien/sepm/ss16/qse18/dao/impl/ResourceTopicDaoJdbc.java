@@ -12,7 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 /**
+ * Class ResourceToicDaoJdbc
  * Implementation for H2 for {@link ResourceTopicDao}
+ * This class has access to the h2 database that is defined in the ConnectionH2 class.
  *
  * @author Hans-Joerg Schroedl
  */

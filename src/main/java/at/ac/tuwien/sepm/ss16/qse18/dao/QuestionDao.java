@@ -7,6 +7,10 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import java.util.List;
 
 /**
+ * Interface QuestionDao
+ * Data Access Object interface for question.
+ * Retrieves, saves, and deletes questions from the persistency
+ *
  * @author Felix Almer
  */
 public interface QuestionDao {
