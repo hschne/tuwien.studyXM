@@ -90,8 +90,7 @@ import java.util.List;
         if(textAreaQuestion.getText().isEmpty()) {
             throw new ServiceException("The question must not be empty.");
         }
-
-        return new Question(textAreaQuestion.getText(), QuestionType.SINGLECHOICE, 0L);
+        return new Question(textAreaQuestion.getText(), QuestionType.SINGLECHOICE, 1L);
     }
 
     private List<Answer> newAnswersFromField() throws ServiceException {

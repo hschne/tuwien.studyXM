@@ -72,7 +72,7 @@ public class CreateMultipleChoiceQuestionController implements GuiController {
             throw new ServiceException("The question must not be empty.");
         }
 
-        return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 0L);
+        return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 1L);
     }
 
     private List<Answer> newAnswersFromField() throws ServiceException {
