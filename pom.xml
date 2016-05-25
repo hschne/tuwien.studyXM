@@ -89,6 +89,7 @@
 		<junit.version>4.11</junit.version>
 		<mockito-all.version>2.0.2-beta</mockito-all.version>
 		<maven-surefire-plugin.version>2.19.1</maven-surefire-plugin.version>
+		<jacoco.version>0.7.6.201602180812</jacoco.version>
 	</properties>
 
 	<dependencies>
@@ -233,6 +234,22 @@
 					<shadedArtifactAttached>false</shadedArtifactAttached>
 					<createDependencyReducedPom>false</createDependencyReducedPom>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<version>${jacoco.version}</version>
+				<executions>
+					<execution>
+						<id>default-prepare-agent</id>
+						<goals><goal>prepare-agent</goal></goals>
+					</execution>
+					<execution>
+						<id>default-report</id>
+						<phase>prepare-package</phase>
+						<goals><goal>report</goal></goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
