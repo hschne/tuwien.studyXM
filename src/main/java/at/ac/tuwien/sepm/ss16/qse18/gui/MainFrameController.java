@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateOpenQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
@@ -140,16 +141,18 @@ import java.io.IOException;
                 setSubView("/fxml/question/createSingleChoiceQuestion.fxml",
                     CreateSingleChoiceQuestionController.class);
             singleChoiceQuestionController.setTopic(topic);
-            //TODO: create fxml and controller
         } catch (Exception e) {
             handleException(e);
         }
     }
 
-    public void handleOpenQuestion() {
+    public void handleOpenQuestion(ObservableTopic topic) {
         logger.debug("Loading Open question screen ");
         try {
-            //TODO: create fxml and controller
+            CreateOpenQuestionController openQuestionController =
+                    setSubView("/fxml/question/createOpenQuestion.fxml",
+                            CreateMultipleChoiceQuestionController.class);
+           openQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }

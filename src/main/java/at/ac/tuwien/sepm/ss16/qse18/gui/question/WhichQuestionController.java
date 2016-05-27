@@ -59,7 +59,6 @@ import java.io.IOException;
         radioButtonMultipleChoice.setToggleGroup(tg);
         radioButtonSingleChoice.setToggleGroup(tg);
         radioButtonOpenQuestion.setToggleGroup(tg);
-        radioButtonOpenQuestion.setDisable(true); // disabled
         radioButtonNotecard.setToggleGroup(tg);
         radioButtonMultipleChoice.setSelected(true);
 
@@ -73,7 +72,7 @@ import java.io.IOException;
         } else if(radioButtonSingleChoice.isSelected()) {
             mainFrameController.handleSingleChoiceQuestion(this.topic);
         } else if(radioButtonOpenQuestion.isSelected()) {
-            //TODO: mainFrameController.handleOpenQuestion();
+           mainFrameController.handleOpenQuestion(this.topic);
         } else {
             mainFrameController.handleCreateImageQuestion(topic);
         }

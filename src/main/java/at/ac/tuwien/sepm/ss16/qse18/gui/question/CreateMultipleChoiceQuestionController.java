@@ -81,6 +81,8 @@ import java.util.List;
         return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 1L);
     }
 
+
+
     private List<Answer> newAnswersFromField() throws ServiceException {
         logger.debug("Collecting all answers");
         List<Answer> newAnswers = new LinkedList<>();
