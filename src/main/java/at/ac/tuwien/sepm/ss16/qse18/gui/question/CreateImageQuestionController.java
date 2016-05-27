@@ -3,9 +3,6 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -34,7 +31,7 @@ import java.util.*;
  * @author Julian on 14.05.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class CreateImageQuestionController implements GuiController {
+public class CreateImageQuestionController extends QuestionController{
 
     private static final String W = "Warning";
 
@@ -53,26 +50,17 @@ public class CreateImageQuestionController implements GuiController {
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
-    @Autowired MainFrameController mainFrameController;
 
     private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
-    private AlertBuilder alertBuilder;
 
-    private ObservableTopic topic;
-
-    private QuestionService questionService;
     private AnswerService answerService;
     private File out;
 
     @Autowired public CreateImageQuestionController(QuestionService questionService,
         AnswerService answerService, AlertBuilder alertBuilder) {
-        this.questionService = questionService;
+        super(questionService, alertBuilder);
         this.answerService = answerService;
-        this.alertBuilder = alertBuilder;
-    }
 
-    public void setTopic(ObservableTopic topic) {
-        this.topic = topic;
     }
 
     /**

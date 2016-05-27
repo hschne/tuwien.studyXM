@@ -3,38 +3,30 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Controller for managing creation of multiple choice questions
+ *
  * Created by Julian on 15.05.2016.
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class CreateMultipleChoiceQuestionController implements GuiController {
+@Component public class CreateMultipleChoiceQuestionController extends QuestionController {
 
-    @Autowired MainFrameController mainFrameController;
     private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
-    private AlertBuilder alertBuilder;
-    private QuestionService questionService;
-    private ObservableTopic topic;
+
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;
     @FXML private TextField textfieldAnswerTwo;
@@ -45,11 +37,9 @@ public class CreateMultipleChoiceQuestionController implements GuiController {
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
 
-
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         AlertBuilder alertBuilder) {
-        this.questionService = questionService;
-        this.alertBuilder = alertBuilder;
+        super(questionService, alertBuilder);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -67,9 +57,6 @@ public class CreateMultipleChoiceQuestionController implements GuiController {
         showSuccess("Inserted new question into database");
     }
 
-    public void setTopic(ObservableTopic topic) {
-        this.topic = topic;
-    }
 
     private boolean createQuestion() {
         logger.info("Now creating new question");
@@ -125,17 +112,5 @@ public class CreateMultipleChoiceQuestionController implements GuiController {
         }
 
         throw new ServiceException("At least one answer must be true.");
-    }
-
-    private void showAlert(ServiceException e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("An error occurred").contentText(e.getMessage()).build();
-        alert.showAndWait();
-    }
-
-    private void showSuccess(String msg) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Success")
-            .headerText("The operation was successful!").contentText(msg).build();
-        alert.showAndWait();
     }
 }

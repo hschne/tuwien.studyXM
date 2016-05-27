@@ -3,16 +3,13 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.stage.Stage;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,17 +21,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
+ * Controller for managing creation of single choice questions
+ *
  * Created by Felix on 19.05.2016.
  */
-@Component
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateSingleChoiceQuestionController
-    implements GuiController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public class CreateSingleChoiceQuestionController extends QuestionController {
 
     private Logger logger = LogManager.getLogger(CreateSingleChoiceQuestionController.class);
-    private Stage primaryStage;
-    private AlertBuilder alertBuilder;
-    private QuestionService questionService;
-    private SpringFXMLLoader springFXMLLoader;
+
 
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;
@@ -45,27 +40,19 @@ import java.util.List;
     @FXML private RadioButton radioButtonAnswerTwo;
     @FXML private RadioButton radioButtonAnswerThree;
     @FXML private RadioButton radioButtonAnswerFour;
-    @Autowired MainFrameController mainFrameController;
-    private ObservableTopic topic;
+
 
     /**
      * Creates a controller for the single choice question creation.
      *
-     * @param springFXMLLoader The autowired spring framework FXML loader.
      * @param questionService The question service which saves a given question and answers
      *                        persistently.
-     * @param alertBuilder An alert builder which wraps pop ups for user interaction.
+     * @param alertBuilder    An alert builder which wraps pop ups for user interaction.
      */
-    @Autowired
-    public CreateSingleChoiceQuestionController(SpringFXMLLoader springFXMLLoader,
-        QuestionService questionService, AlertBuilder alertBuilder) {
-        this.springFXMLLoader = springFXMLLoader;
-        this.questionService = questionService;
-        this.alertBuilder = alertBuilder;
-    }
+    @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
+        AlertBuilder alertBuilder) {
+        super(questionService, alertBuilder);
 
-    public void setTopic(ObservableTopic topic) {
-        this.topic = topic;
     }
 
     @FXML public void handleCreateQuestion() {
@@ -75,14 +62,15 @@ import java.util.List;
         showSuccess("Inserted new question into database.");
     }
 
-    @FXML public void handleCreateContinue(){
-        if(createQuestion()){
+    @FXML public void handleCreateContinue() {
+        if (createQuestion()) {
             return;
         }
         mainFrameController.handleSingleChoiceQuestion(this.topic);
         showSuccess("Inserted new question into database.");
 
     }
+
     private boolean createQuestion() {
         logger.info("Now creating new question");
         Question newQuestion;
@@ -100,7 +88,7 @@ import java.util.List;
 
     private Question newQuestionFromField() throws ServiceException {
         logger.info("Collecting question from field.");
-        if(textAreaQuestion.getText().isEmpty()) {
+        if (textAreaQuestion.getText().isEmpty()) {
             throw new ServiceException("The question must not be empty.");
         }
         return new Question(textAreaQuestion.getText(), QuestionType.SINGLECHOICE, 1L);
@@ -110,57 +98,33 @@ import java.util.List;
         logger.debug("Collecting all answers");
         List<Answer> newAnswers = new LinkedList<>();
 
-        if(!textfieldAnswerOne.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE,
-                textfieldAnswerOne.getText(),
+        if (!textfieldAnswerOne.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerOne.getText(),
                 radioButtonAnswerOne.isSelected()));
         }
-        if(!textfieldAnswerTwo.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE,
-                textfieldAnswerTwo.getText(),
+        if (!textfieldAnswerTwo.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerTwo.getText(),
                 radioButtonAnswerTwo.isSelected()));
         }
-        if(!textfieldAnswerThree.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE,
-                textfieldAnswerThree.getText(),
+        if (!textfieldAnswerThree.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerThree.getText(),
                 radioButtonAnswerThree.isSelected()));
         }
-        if(!textfieldAnswerFour.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE,
-                textfieldAnswerFour.getText(),
+        if (!textfieldAnswerFour.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerFour.getText(),
                 radioButtonAnswerFour.isSelected()));
         }
 
-        if(newAnswers.isEmpty()) {
+        if (newAnswers.isEmpty()) {
             throw new ServiceException("At least one answer must be given.");
         }
 
-        for(Answer a : newAnswers) {
-            if(a.isCorrect()) {
+        for (Answer a : newAnswers) {
+            if (a.isCorrect()) {
                 return newAnswers;
             }
         }
 
         throw new ServiceException("At least one given answer must be true.");
-    }
-
-    private void showAlert(ServiceException e) {
-        Alert alert = alertBuilder
-            .alertType(Alert.AlertType.ERROR)
-            .title("Error")
-            .headerText("An error occurred")
-            .contentText(e.getMessage())
-            .build();
-        alert.showAndWait();
-    }
-
-    private void showSuccess(String msg) {
-        Alert alert = alertBuilder
-            .alertType(Alert.AlertType.INFORMATION)
-            .title("Success")
-            .headerText("The operation was successful!")
-            .contentText(msg)
-            .build();
-        alert.showAndWait();
     }
 }
