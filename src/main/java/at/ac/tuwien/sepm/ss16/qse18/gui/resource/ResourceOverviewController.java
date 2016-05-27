@@ -45,7 +45,6 @@ import java.util.stream.Collectors;
     @FXML public void initialize() {
         try {
             logger.debug("Initializing subject table");
-            //Lambdas to create a new observable subject for each subject
             initializeListView();
         } catch (ServiceException e) {
             logger.error(e);
@@ -65,15 +64,5 @@ import java.util.stream.Collectors;
     @FXML public void handleNew(){
 
     }
-
-    @FXML public void handleEdit(){
-
-    }
-
-    @FXML public void handleDelete(){
-
-    }
-
-
 
 }

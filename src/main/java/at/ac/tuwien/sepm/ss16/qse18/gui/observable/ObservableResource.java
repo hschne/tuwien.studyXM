@@ -37,6 +37,10 @@ public class ObservableResource {
         return type.get();
     }
 
+    public ResourceType getResourceType(){
+        return resource.getType();
+    }
+
     public void setType(String type) {
         this.resource.setType(ResourceType.valueOf(type));
         this.type.set(type);

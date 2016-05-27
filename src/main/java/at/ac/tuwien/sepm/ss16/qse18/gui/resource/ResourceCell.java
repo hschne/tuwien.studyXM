@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
-import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectItemController;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
 import org.apache.logging.log4j.LogManager;
@@ -16,30 +15,38 @@ import java.io.IOException;
 /**
  * @author Hans-Joerg Schroedl
  */
-@Component  @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
-public class ResourceCell extends ListCell<ObservableResource> {
-
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ResourceCell
+    extends ListCell<ObservableResource> {
 
     @Autowired SpringFXMLLoader springFXMLLoader;
 
     private Logger logger = LogManager.getLogger();
 
-    @Override public void updateItem(ObservableResource subject, boolean empty) {
-        super.updateItem(subject, empty);
-        if (subject != null) {
+    @Override public void updateItem(ObservableResource resource, boolean empty) {
+        super.updateItem(resource, empty);
+        if (resource != null) {
             ResourceItemController itemController = getController();
-            setControllerProperties(subject, itemController);
+            setControllerProperties(resource, itemController);
         }
 
     }
 
     private void setControllerProperties(ObservableResource resource,
         ResourceItemController itemController) {
+        itemController.setResource(resource);
         setGraphic(itemController.getRoot());
     }
 
     private ResourceItemController getController() {
-        return null;
+        SpringFXMLLoader.FXMLWrapper<Object, ResourceItemController> editResourceController;
+        try {
+            editResourceController = springFXMLLoader
+                .loadAndWrap("/fxml/resource/resourceItem.fxml", ResourceItemController.class);
+            return editResourceController.getController();
+        } catch (IOException e) {
+            logger.error(e);
+            throw new RuntimeException("Error loading subject item", e);
+        }
     }
 
 }
