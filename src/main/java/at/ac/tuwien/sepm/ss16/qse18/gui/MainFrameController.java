@@ -5,11 +5,8 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.QuestionOverviewController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.WhichQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
+import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
@@ -18,7 +15,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,40 +35,6 @@ import java.io.IOException;
     @FXML public Pane paneContent;
     private SpringFXMLLoader fxmlLoader;
     private AlertBuilder alertBuilder;
-    private Stage primaryStage;
-
-    @Autowired void setSpringFXMLLoader(SpringFXMLLoader loader) {
-        this.fxmlLoader = loader;
-    }
-
-    @Autowired void setAlertBuilder(AlertBuilder alertBuilder) {
-        this.alertBuilder = alertBuilder;
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
-    private <T extends GuiController> T setSubView(String fxmlPath, Class T) throws IOException {
-        logger.debug("Loading view from " + fxmlPath);
-        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
-        T controller = mfWrapper.getController();
-        configureSubPane(mfWrapper);
-        return controller;
-    }
-
-    private <T extends GuiController> void configureSubPane(
-        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper) {
-        paneContent.getChildren().clear();
-        Pane pane = (Pane) mfWrapper.getLoadedObject();
-        pane.setPrefWidth(paneContent.getWidth());
-        pane.setPrefHeight(paneContent.getHeight());
-        AnchorPane.setTopAnchor(pane, 0.0);
-        AnchorPane.setRightAnchor(pane, 0.0);
-        AnchorPane.setLeftAnchor(pane, 0.0);
-        AnchorPane.setBottomAnchor(pane, 0.0);
-        paneContent.getChildren().add(pane);
-    }
 
     @FXML public void handleHome() {
         logger.debug("Loading home view");
@@ -92,19 +54,24 @@ import java.io.IOException;
         }
     }
 
-    public void handleCreateSubject(ObservableSubject subject){
+    public void handleCreateSubject(ObservableSubject subject) {
         logger.debug("Loading create subject view");
-        try{
-            SubjectEditController controller = setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
+        try {
+            SubjectEditController controller =
+                setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
             controller.setSubject(subject);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             handleException(e);
         }
     }
 
     @FXML public void handleResources() {
-        //TODO: Display view here
+        logger.debug("Loading resource view");
+        try {
+            setSubView("/fxml/resource/resourceOverview.fxml", ResourceOverviewController.class);
+        } catch (IOException e) {
+            handleException(e);
+        }
     }
 
     @FXML public void handleStatistics() {
@@ -119,7 +86,6 @@ import java.io.IOException;
             handleException(e);
         }
     }
-
 
     public void handleMultipleChoiceQuestion(ObservableTopic topic) {
         logger.debug("Loading Multiple Choice question screen ");
@@ -196,15 +162,35 @@ import java.io.IOException;
         }
     }
 
-    public void handleShowQuestions(){
+    public void handleShowQuestions() {
         logger.debug("Loading ShowQuestions screen");
-        try{
+        try {
             setSubView("/fxml/exam/showQuestions.fxml", ShowQuestionsController.class);
-        }catch (IOException e){
+        } catch (IOException e) {
             handleException(e);
         }
     }
 
+    private <T extends GuiController> T setSubView(String fxmlPath, Class T) throws IOException {
+        logger.debug("Loading view from " + fxmlPath);
+        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
+        T controller = mfWrapper.getController();
+        configureSubPane(mfWrapper);
+        return controller;
+    }
+
+    private <T extends GuiController> void configureSubPane(
+        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper) {
+        paneContent.getChildren().clear();
+        Pane pane = (Pane) mfWrapper.getLoadedObject();
+        pane.setPrefWidth(paneContent.getWidth());
+        pane.setPrefHeight(paneContent.getHeight());
+        AnchorPane.setTopAnchor(pane, 0.0);
+        AnchorPane.setRightAnchor(pane, 0.0);
+        AnchorPane.setLeftAnchor(pane, 0.0);
+        AnchorPane.setBottomAnchor(pane, 0.0);
+        paneContent.getChildren().add(pane);
+    }
 
     private void handleException(Exception e) {
         logger.error(e);
@@ -212,6 +198,14 @@ import java.io.IOException;
             .headerText("Could not load sub view.")
             .contentText("Unexpected Error. Please view logs for details.").build();
         alert.showAndWait();
+    }
+
+    @Autowired void setSpringFXMLLoader(SpringFXMLLoader loader) {
+        this.fxmlLoader = loader;
+    }
+
+    @Autowired void setAlertBuilder(AlertBuilder alertBuilder) {
+        this.alertBuilder = alertBuilder;
     }
 
 

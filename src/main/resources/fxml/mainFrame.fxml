@@ -57,7 +57,7 @@
                               <Font name="Arial Bold" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="buttonResources" disable="true" mnemonicParsing="false" onAction="#handleResources" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #22374A;" text="resources" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                        <Button fx:id="buttonResources" mnemonicParsing="false" onAction="#handleResources" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #22374A;" text="resources" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.rowIndex="2" GridPane.valignment="TOP">
                            <font>
                               <Font name="Arial Bold" size="18.0" />
                            </font>
