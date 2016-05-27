@@ -10,15 +10,12 @@ import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +26,6 @@ import org.springframework.stereotype.Component;
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 import java.util.*;
 
 /**
@@ -42,7 +38,6 @@ public class CreateImageQuestionController implements GuiController {
 
     private static final String W = "Warning";
 
-    @FXML public Button buttonCreateQuestion;
     @FXML public Button buttonAddImage;
 
     @FXML public ImageView imageViewQuestionImage;
@@ -62,8 +57,6 @@ public class CreateImageQuestionController implements GuiController {
 
     private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
     private AlertBuilder alertBuilder;
-    private SpringFXMLLoader springFXMLLoader;
-    private Stage primaryStage;
 
     private ObservableTopic topic;
 
@@ -71,9 +64,8 @@ public class CreateImageQuestionController implements GuiController {
     private AnswerService answerService;
     private File out;
 
-    @Autowired public CreateImageQuestionController(SpringFXMLLoader springFXMLLoader,
-        QuestionService questionService, AnswerService answerService, AlertBuilder alertBuilder) {
-        this.springFXMLLoader = springFXMLLoader;
+    @Autowired public CreateImageQuestionController(QuestionService questionService,
+        AnswerService answerService, AlertBuilder alertBuilder) {
         this.questionService = questionService;
         this.answerService = answerService;
         this.alertBuilder = alertBuilder;
@@ -87,40 +79,23 @@ public class CreateImageQuestionController implements GuiController {
      * Creates a new image question from the users input and stores it in the database.
      */
     @FXML public void handleCreateQuestion() {
+        if (createQuestion())
+            return;
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
+            "Your question is now in the database.");
+        mainFrameController.handleSubjects();
+    }
 
-        if (!validateInput()) {
-            logger.debug("User input is not valid, can't create question.");
-        } else {
-            logger.debug("Creating new question from valid user input.");
-            try {
-                copySelectedImage();
-
-                Question newQuestion = newQuestionFromFields();
-                questionService.createQuestion(newQuestion, topic.getT());
-
-                List<Answer> answerList = newAnswersFromFields();
-                for (Answer a : answerList) {
-                    a.setQuestion(newQuestion);
-                    answerService.createAnswer(a);
-                }
-                questionService.setCorrespondingAnswers(newQuestion, answerList);
-
-            } catch (IOException e) {
-                logger.debug("Unable to copy image " + e.getMessage());
-                showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to copy image");
-                return;
-            } catch (ServiceException e) {
-                logger.debug("Unable to create question. " + e.getMessage());
-                showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to create question");
-                return;
-            }
-
-            logger.debug("Question successfully created");
-            mainFrameController.handleSubjects();
-            showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
-                "Your question is now in the database.");
-
+    /**
+     * Create a new image question and stores it in the database. Displays same view again afterwards.
+     */
+    @FXML public void handleCreateContinue() {
+        if (createQuestion()) {
+            return;
         }
+        showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
+            "Your question is now in the database.");
+        mainFrameController.handleCreateImageQuestion(this.topic);
     }
 
     /**
@@ -149,6 +124,37 @@ public class CreateImageQuestionController implements GuiController {
             out = new File(defaultPath + generateFileName(selectedFile.getName()));
             textFieldImagePath.setText(defaultPath + selectedFile.getName());
         }
+    }
+
+    private boolean createQuestion() {
+        if (!validateInput()) {
+            logger.debug("User input is not valid, can't create question.");
+            return true;
+        }
+        logger.debug("Creating new question from valid user input.");
+        try {
+            copySelectedImage();
+
+            Question newQuestion = newQuestionFromFields();
+            questionService.createQuestion(newQuestion, topic.getT());
+
+            List<Answer> answerList = newAnswersFromFields();
+            for (Answer a : answerList) {
+                a.setQuestion(newQuestion);
+                answerService.createAnswer(a);
+            }
+            questionService.setCorrespondingAnswers(newQuestion, answerList);
+
+        } catch (IOException e) {
+            logger.debug("Unable to copy image " + e.getMessage());
+            showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to copy image");
+            return true;
+        } catch (ServiceException e) {
+            logger.debug("Unable to create question. " + e.getMessage());
+            showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to create question");
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -343,10 +349,6 @@ public class CreateImageQuestionController implements GuiController {
         Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
             .contentText(e.getMessage()).build();
         alert.showAndWait();
-    }
-
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
     }
 }
 

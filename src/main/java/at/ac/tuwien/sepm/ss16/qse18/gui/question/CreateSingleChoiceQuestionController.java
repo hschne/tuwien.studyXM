@@ -68,7 +68,22 @@ import java.util.List;
         this.topic = topic;
     }
 
-    @FXML public void createQuestion() {
+    @FXML public void handleCreateQuestion() {
+        if (createQuestion())
+            return;
+        mainFrameController.handleSubjects();
+        showSuccess("Inserted new question into database.");
+    }
+
+    @FXML public void handleCreateContinue(){
+        if(createQuestion()){
+            return;
+        }
+        mainFrameController.handleSingleChoiceQuestion(this.topic);
+        showSuccess("Inserted new question into database.");
+
+    }
+    private boolean createQuestion() {
         logger.info("Now creating new question");
         Question newQuestion;
         try {
@@ -78,11 +93,9 @@ import java.util.List;
         } catch (ServiceException e) {
             logger.error("Could not create new question", e);
             showAlert(e);
-            return;
+            return true;
         }
-
-        mainFrameController.handleSubjects();
-        showSuccess("Inserted new question into database.");
+        return false;
     }
 
     private Question newQuestionFromField() throws ServiceException {

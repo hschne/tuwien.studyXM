@@ -3,21 +3,49 @@
     -fx-text-fill: white;
 }
 
+.menu-button {
+    -fx-background-color: #22374A;
+    -fx-text-fill: white;
+}
+
+.split-menu-button .label {
+    -fx-background-color: #22374A;
+    -fx-text-fill: white;
+}
+
+.split-menu-button .arrow-button {
+    -fx-background-color: #22374A;
+    -fx-text-fill: white;
+    -fx-mark-color: white;
+}
+
+.split-menu-item {
+    -fx-background-color: #22374A;
+    -fx-text-fill: white; ;
+}
+
+.context-menu {
+    -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
+    -fx-background-color: #22374A;
+    -fx-background-radius: 0 2 2 2, 0 2 2 2, 0 2 2 2;
+}
+
+/** Header used for each subview, e.g. Create Question **/
 .subview-header{
     -fx-font: 24px "Arial";
     -fx-font-weight: bold;
 }
 
+/** Generic header 1 **/
 .header1 {
     -fx-font: 18px "Arial";
     -fx-font-weight: bold;
 }
-
+/** Generic header 2 **/
 .header2 {
     -fx-font: 14px "Arial";
     -fx-font-weight: bold;
 }
-
 
 
 /** Listview for border pane **/
