@@ -50,6 +50,7 @@ public class CreateImageQuestionController extends QuestionController{
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
+    @FXML private CheckBox checkBoxContinue;
 
     private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
 
@@ -67,23 +68,17 @@ public class CreateImageQuestionController extends QuestionController{
      * Creates a new image question from the users input and stores it in the database.
      */
     @FXML public void handleCreateQuestion() {
-        if (createQuestion())
-            return;
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
-            "Your question is now in the database.");
-        mainFrameController.handleSubjects();
-    }
-
-    /**
-     * Create a new image question and stores it in the database. Displays same view again afterwards.
-     */
-    @FXML public void handleCreateContinue() {
         if (createQuestion()) {
             return;
         }
+        if(checkBoxContinue.isSelected()){
+            mainFrameController.handleCreateImageQuestion(this.topic);
+        }
+        else {
+            mainFrameController.handleSubjects();
+        }
         showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
-            "Your question is now in the database.");
-        mainFrameController.handleCreateImageQuestion(this.topic);
+                "Your question is now in the database.");
     }
 
     /**

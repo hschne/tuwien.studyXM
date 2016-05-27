@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextArea?>
@@ -21,7 +16,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController">
    <children>
       <GridPane layoutX="146.0" layoutY="132.0" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -70,8 +65,8 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="297.0" minHeight="10.0" prefHeight="215.0" valignment="CENTER" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="279.0" minHeight="10.0" prefHeight="232.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="55.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="279.0" minHeight="10.0" prefHeight="221.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="66.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <GridPane prefHeight="24.0" prefWidth="1002.0" GridPane.rowIndex="2">
@@ -80,17 +75,16 @@
                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="495.0" minWidth="10.0" prefWidth="209.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="23.0" minHeight="10.0" prefHeight="17.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <SplitMenuButton mnemonicParsing="false" onAction="#handleCreateQuestion" text="create question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP">
-                          <items>
-                            <MenuItem mnemonicParsing="false" onAction="#handleCreateContinue" styleClass="split-menu-item" text="create and continue" />
-                          </items>
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </SplitMenuButton>
+                         <Button mnemonicParsing="false" onAction="#handleCreateQuestion" text="create question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+                             <font>
+                                 <Font size="18.0" />
+                             </font>
+                         </Button>
+                        <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="true" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." GridPane.valignment="CENTER">

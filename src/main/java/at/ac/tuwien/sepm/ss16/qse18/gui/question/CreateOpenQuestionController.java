@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
@@ -34,6 +35,7 @@ import java.util.regex.Pattern;
     @FXML private TextField textfieldAnswerTwo;
     @FXML private TextField textfieldAnswerThree;
     @FXML private TextField textfieldAnswerFour;
+    @FXML private CheckBox checkBoxContinue;
 
     @Autowired public CreateOpenQuestionController(QuestionService questionService,
                                                              AlertBuilder alertBuilder) {
@@ -47,20 +49,13 @@ import java.util.regex.Pattern;
         if (!createQuestion()) {
             return;
         }
-        mainFrameController.handleSubjects();
-        showSuccess("Inserted new question into database.");
-    }
-
-    /**
-     * Handles the button event of the "create and continue" button.
-     * this is the default method.
-     */
-    @FXML public void handleCreateContinue() {
-        if (!createQuestion()) {
-            return;
+        if(checkBoxContinue.isSelected()){
+            mainFrameController.handleOpenQuestion(this.topic);
         }
-        mainFrameController.handleOpenQuestion(this.topic);
-        showSuccess("Inserted new question into database");
+        else {
+            mainFrameController.handleSubjects();
+        }
+        showSuccess("Inserted new question into database.");
     }
 
     /**
