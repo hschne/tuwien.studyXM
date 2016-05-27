@@ -15,6 +15,11 @@ public class ObservableResource {
     private IntegerProperty id;
     private StringProperty type;
     private StringProperty reference;
+
+    public Resource getResource() {
+        return resource;
+    }
+
     private Resource resource;
 
     public ObservableResource(Resource resource) {

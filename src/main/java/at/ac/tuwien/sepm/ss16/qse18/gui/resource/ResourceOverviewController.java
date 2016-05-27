@@ -52,6 +52,20 @@ import java.util.stream.Collectors;
         }
     }
 
+    public void addResource(ObservableResource resource) {
+        try {
+            resourceService.createResource(resource.getResource());
+            resourceList.add(resource);
+        } catch (ServiceException e) {
+
+        }
+    }
+
+    @FXML public void handleNew() {
+        logger.debug("Creating new resource");
+        mainFrameController.handleCreateResource(null);
+    }
+
     private void initializeListView() throws ServiceException {
         List<ObservableResource> observableResources =
             resourceService.getResources().stream().map(ObservableResource::new)
@@ -59,10 +73,6 @@ import java.util.stream.Collectors;
         resourceList = FXCollections.observableArrayList(observableResources);
         resourceListView.setItems(resourceList);
         resourceListView.setCellFactory(listView -> applicationContext.getBean(ResourceCell.class));
-    }
-
-    @FXML public void handleNew(){
-
     }
 
 }

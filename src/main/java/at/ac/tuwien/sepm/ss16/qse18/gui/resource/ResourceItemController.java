@@ -37,11 +37,12 @@ import java.io.InputStream;
     }
 
     @FXML public void handleOpen() {
+        logger.debug("Opening resource");
         //TODO: Implement opening!
     }
 
     @FXML public void removeResource() {
-
+        logger.debug("Removing resource");
     }
 
     private void loadResourceIcon() {

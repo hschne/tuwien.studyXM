@@ -3,9 +3,11 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
+import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
@@ -72,6 +74,16 @@ import java.io.IOException;
         } catch (IOException e) {
             handleException(e);
         }
+    }
+
+    public void handleCreateResource(ObservableResource resource) {
+        logger.debug("Loading create resource ");
+        try {
+            setSubView("/fxml/resource/resourceEditView.fxml", ResourceEditController.class);
+        } catch (IOException e) {
+            handleException(e);
+        }
+
     }
 
     @FXML public void handleStatistics() {
