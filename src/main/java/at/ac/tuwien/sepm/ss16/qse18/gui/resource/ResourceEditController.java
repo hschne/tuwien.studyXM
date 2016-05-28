@@ -21,9 +21,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.channels.FileChannel;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -45,6 +42,8 @@ import java.util.UUID;
 
     private File out;
 
+    private File in;
+
     @FXML public void handleSelectFile() {
         FileChooser fileChooser = new FileChooser();
         String defaultPath = "src/main/resources/resources/";
@@ -57,14 +56,14 @@ import java.util.UUID;
         if (selectedFile != null) {
             logger.debug("A File was selected");
             out = new File(defaultPath + generateFileName(selectedFile.getName()));
+            in = selectedFile;
             filePath.setText(defaultPath + selectedFile.getName());
         }
     }
 
     @FXML public void handleOk() {
-        File file = new File(filePath.getText());
         try {
-            copyFile(file, out);
+            copyFile(in, out);
             Resource resource = createResourceFromFields();
             overviewController.addResource(new ObservableResource(resource));
             mainFrameController.handleResources();
@@ -80,24 +79,15 @@ import java.util.UUID;
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
-        boolean creationSuccessful = true;
-        if (!destFile.exists()) {
-//            creationSuccessful = destFile.createNewFile();
-        }
-        tryCopyFile(sourceFile,destFile);
-    }
-
-    private void tryCopyFile(File sourceFile, File destFile) throws IOException {
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
             int b;
-            int av = source.available();
-            System.out.println(source.available());
             while ((b = source.read()) != -1) {
                 destination.write(b);
             }
         }
     }
+
 
     private Resource createResourceFromFields() {
         Resource resource = new Resource();
