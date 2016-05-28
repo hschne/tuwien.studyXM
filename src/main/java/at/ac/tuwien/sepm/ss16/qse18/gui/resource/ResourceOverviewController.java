@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import org.apache.logging.log4j.LogManager;
@@ -34,12 +35,12 @@ import java.util.stream.Collectors;
     private ObservableList<ObservableResource> resourceList;
 
     private ResourceService resourceService;
-    private AlertBuilder builder;
+    private AlertBuilder alertBuilder;
 
     @Autowired
-    public ResourceOverviewController(ResourceService resourceService, AlertBuilder builder) {
+    public ResourceOverviewController(ResourceService resourceService, AlertBuilder alertBuilder) {
         this.resourceService = resourceService;
-        this.builder = builder;
+        this.alertBuilder = alertBuilder;
     }
 
     @FXML public void initialize() {
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
             initializeListView();
         } catch (ServiceException e) {
             logger.error(e);
-
+            showAlert(e);
         }
     }
 
@@ -58,7 +59,7 @@ import java.util.stream.Collectors;
             resourceList.add(resource);
         } catch (ServiceException e) {
             logger.error(e);
-
+            showAlert(e);
         }
     }
 
@@ -74,6 +75,12 @@ import java.util.stream.Collectors;
         resourceList = FXCollections.observableArrayList(observableResources);
         resourceListView.setItems(resourceList);
         resourceListView.setCellFactory(listView -> applicationContext.getBean(ResourceCell.class));
+    }
+
+    private void showAlert(ServiceException e) {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
+            .headerText("An error occurred").contentText(e.getMessage()).setResizable(true).build();
+        alert.showAndWait();
     }
 
 }

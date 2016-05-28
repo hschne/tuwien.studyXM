@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidationException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 /**
  * @author Hans-Joerg Schroedl
@@ -29,6 +32,7 @@ import java.util.List;
     @Autowired public ResourceDaoJdbc(ConnectionH2 database) {
         this.database = database;
     }
+
 
     @Override public Resource getResource(int id) throws DaoException {
         String query = "SELECT * FROM ENTITY_RESOURCE WHERE RESOURCEID = ?";
@@ -63,6 +67,7 @@ import java.util.List;
 
     @Override public Resource createResource(Resource resource) throws DaoException {
         String query = "INSERT INTO ENTITY_RESOURCE (TYPE, REFERENCE) VALUES (?,?)";
+        tryValidateResource(resource);
         try {
             PreparedStatement statement =
                 database.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -88,6 +93,15 @@ import java.util.List;
 
     @Override public Resource updateResource(Resource resource) throws DaoException {
         return null;
+    }
+
+    private void tryValidateResource(Resource resource) throws DaoException {
+        try {
+            validate(resource);
+        } catch (DtoValidationException e) {
+            logger.error(e);
+            throw new DaoException(e);
+        }
     }
 
     private Resource handleSqlError(SQLException e) throws DaoException {

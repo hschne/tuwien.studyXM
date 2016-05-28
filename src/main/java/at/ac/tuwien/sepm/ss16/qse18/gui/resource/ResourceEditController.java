@@ -5,7 +5,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
+import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +22,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,6 +41,8 @@ import java.util.UUID;
 
     @Autowired ResourceOverviewController overviewController;
     @Autowired MainFrameController mainFrameController;
+    @Autowired AlertBuilder alertBuilder;
+
     private File out;
 
     @FXML public void handleSelectFile() {
@@ -52,7 +58,6 @@ import java.util.UUID;
             logger.debug("A File was selected");
             out = new File(defaultPath + generateFileName(selectedFile.getName()));
             filePath.setText(defaultPath + selectedFile.getName());
-
         }
     }
 
@@ -65,6 +70,7 @@ import java.util.UUID;
             mainFrameController.handleResources();
         } catch (IOException e) {
             logger.error(e);
+            showAlert(e);
         }
 
     }
@@ -74,23 +80,23 @@ import java.util.UUID;
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
-        boolean creationSuccessful = false;
+        boolean creationSuccessful = true;
         if (!destFile.exists()) {
-            creationSuccessful = destFile.createNewFile();
+//            creationSuccessful = destFile.createNewFile();
         }
-        if (creationSuccessful) {
-            tryCopyFile(sourceFile, destFile);
-        }
+        tryCopyFile(sourceFile,destFile);
     }
 
     private void tryCopyFile(File sourceFile, File destFile) throws IOException {
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
-            FileChannel sourceChannel = source.getChannel();
-            FileChannel destinationChannel = destination.getChannel();
-            destinationChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+            int b;
+            int av = source.available();
+            System.out.println(source.available());
+            while ((b = source.read()) != -1) {
+                destination.write(b);
+            }
         }
-
     }
 
     private Resource createResourceFromFields() {
@@ -102,17 +108,22 @@ import java.util.UUID;
 
     private ResourceType getResourceType() {
         String fileName = out.getName();
-        int i = fileName.lastIndexOf('.');
-        String extension = "";
-        if (i > 0) {
-            extension = fileName.substring(i + 1);
-        }
+        String extension = getExtension(fileName);
         switch (extension) {
             case "pdf":
                 return ResourceType.PDF;
             default:
                 return ResourceType.NOTE;
         }
+    }
+
+    private String getExtension(String fileName) {
+        int i = fileName.lastIndexOf('.');
+        String extension = "";
+        if (i > 0) {
+            extension = fileName.substring(i + 1);
+        }
+        return extension;
     }
 
     private String generateFileName(String fileName) {
@@ -124,11 +135,18 @@ import java.util.UUID;
 
         if (fileSet.contains(fileName)) {
             logger.debug("Duplicate found, generating new file name");
-            return UUID.randomUUID().toString() + ".png";
+            String extension = getExtension(fileName);
+            return UUID.randomUUID().toString() + "." + extension;
         } else {
             logger.debug("No duplicate found");
             return fileName;
         }
+    }
+
+    private void showAlert(Exception e) {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
+            .headerText("An error occurred").contentText(e.getMessage()).setResizable(true).build();
+        alert.showAndWait();
     }
 
 }

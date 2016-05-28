@@ -13,6 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -35,8 +37,9 @@ import static org.mockito.Mockito.when;
     protected void setUp() throws Exception {
         when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
         when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
+        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
+        when(mockConnection.prepareStatement(anyString(),anyInt())).thenReturn(mockPreparedStatement);
         when(mockConnection.createStatement()).thenReturn(mockStatement);
     }
 }
