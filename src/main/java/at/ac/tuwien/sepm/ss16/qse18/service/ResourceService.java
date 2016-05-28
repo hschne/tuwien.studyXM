@@ -19,5 +19,5 @@ public interface ResourceService {
 
     Resource deleteResource(Resource resource) throws ServiceException;
 
-    Resource updateQuestion(Resource resource) throws ServiceException;
+    Resource updateResource(Resource resource) throws ServiceException;
 }

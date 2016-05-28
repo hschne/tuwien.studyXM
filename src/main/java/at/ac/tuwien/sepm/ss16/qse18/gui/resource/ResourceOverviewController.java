@@ -57,6 +57,7 @@ import java.util.stream.Collectors;
             resourceService.createResource(resource.getResource());
             resourceList.add(resource);
         } catch (ServiceException e) {
+            logger.error(e);
 
         }
     }

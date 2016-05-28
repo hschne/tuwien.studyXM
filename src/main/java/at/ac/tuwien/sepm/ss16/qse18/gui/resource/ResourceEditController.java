@@ -39,26 +39,6 @@ import java.util.UUID;
     @Autowired MainFrameController mainFrameController;
     private File out;
 
-    public static void copyFile(File sourceFile, File destFile) throws IOException {
-        if (!destFile.exists()) {
-            destFile.createNewFile();
-        }
-        FileChannel source = null;
-        FileChannel destination = null;
-        try {
-            source = new FileInputStream(sourceFile).getChannel();
-            destination = new FileOutputStream(destFile).getChannel();
-            destination.transferFrom(source, 0, source.size());
-        } finally {
-            if (source != null) {
-                source.close();
-            }
-            if (destination != null) {
-                destination.close();
-            }
-        }
-    }
-
     @FXML public void handleSelectFile() {
         FileChooser fileChooser = new FileChooser();
         String defaultPath = "src/main/resources/resources/";
@@ -93,10 +73,30 @@ import java.util.UUID;
         mainFrameController.handleResources();
     }
 
+    private void copyFile(File sourceFile, File destFile) throws IOException {
+        boolean creationSuccessful = false;
+        if (!destFile.exists()) {
+            creationSuccessful = destFile.createNewFile();
+        }
+        if (creationSuccessful) {
+            tryCopyFile(sourceFile, destFile);
+        }
+    }
+
+    private void tryCopyFile(File sourceFile, File destFile) throws IOException {
+        try (FileInputStream source = new FileInputStream(sourceFile);
+            FileOutputStream destination = new FileOutputStream(destFile)) {
+            FileChannel sourceChannel = source.getChannel();
+            FileChannel destinationChannel = destination.getChannel();
+            destinationChannel.transferFrom(sourceChannel, 0, sourceChannel.size());
+        }
+
+    }
+
     private Resource createResourceFromFields() {
         Resource resource = new Resource();
         resource.setType(getResourceType());
-        resource.setReference(resourceName.getText());
+        resource.setReference(out.getAbsolutePath());
         return resource;
     }
 

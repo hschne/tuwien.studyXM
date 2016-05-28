@@ -19,5 +19,5 @@ public interface ResourceDao {
 
     Resource deleteResource(Resource resource) throws DaoException;
 
-    Resource updateQuestion(Resource resource) throws DaoException;
+    Resource updateResource(Resource resource) throws DaoException;
 }
