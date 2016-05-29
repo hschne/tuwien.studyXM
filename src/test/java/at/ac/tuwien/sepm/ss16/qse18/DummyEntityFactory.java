@@ -44,7 +44,7 @@ public class DummyEntityFactory {
     }
 
     public static Resource createDummyResource() {
-        Resource resource = new Resource(1, ResourceType.NOTE, "reference");
+        Resource resource = new Resource(1, ResourceType.NOTE,"name","reference");
         return resource;
     }
 

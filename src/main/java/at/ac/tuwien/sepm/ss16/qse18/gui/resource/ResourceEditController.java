@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.channels.FileChannel;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -81,10 +82,9 @@ import java.util.UUID;
     private void copyFile(File sourceFile, File destFile) throws IOException {
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
-            int b;
-            while ((b = source.read()) != -1) {
-                destination.write(b);
-            }
+            FileChannel sourceChannel = source.getChannel();
+            FileChannel destinationChannel = destination.getChannel();
+            sourceChannel.transferTo(0, sourceChannel.size(), destinationChannel);
         }
     }
 
@@ -92,6 +92,7 @@ import java.util.UUID;
     private Resource createResourceFromFields() {
         Resource resource = new Resource();
         resource.setType(getResourceType());
+        resource.setName(resourceName.getText());
         resource.setReference(out.getAbsolutePath());
         return resource;
     }

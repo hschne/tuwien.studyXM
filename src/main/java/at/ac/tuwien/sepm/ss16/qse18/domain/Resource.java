@@ -3,27 +3,34 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
 /**
  * Class Resource
  * represents the entity resource
- * @parameter resoureceId primary key of resourece
- * @parameter type indicated the type of resource
- * @parameter reference content of resource(the actual resource)
  *
  * @author Felix Almer on 10.05.2016.
  */
 public class Resource {
     private int resourceId;
     private ResourceType type;
+    private String name;
     private String reference;
 
-    public Resource(int resourceId, ResourceType type, String reference) {
+    public Resource(int resourceId, ResourceType type, String name, String reference) {
         this.resourceId = resourceId;
         this.type = type;
+        this.name = name;
         this.reference = reference;
     }
-
     public Resource() {
         this.resourceId = -1;
         this.type = null;
+        this.name = "";
         this.reference = "";
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getResourceId() {
@@ -54,6 +61,7 @@ public class Resource {
         return "Resource{" +
             "resourceId=" + resourceId +
             ", type=" + type +
+            ", name='" + name + '\'' +
             ", reference='" + reference + '\'' +
             '}';
     }

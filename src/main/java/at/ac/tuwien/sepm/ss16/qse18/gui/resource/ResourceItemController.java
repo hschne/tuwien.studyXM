@@ -32,7 +32,7 @@ import java.io.InputStream;
 
     public void setResource(ObservableResource resource) {
         this.resource = resource;
-        resourceName.setText(resource.getReference());
+        resourceName.setText(resource.getName());
         loadResourceIcon();
     }
 

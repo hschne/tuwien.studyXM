@@ -14,7 +14,7 @@ CREATE TABLE rel_question_topic(questionid INTEGER REFERENCES entity_question(qu
 
 CREATE TABLE entity_answer(answerid INTEGER AUTO_INCREMENT PRIMARY KEY, type INTEGER NOT NULL, answer VARCHAR(2000) NOT NULL, is_correct BOOLEAN, question INTEGER REFERENCES entity_question(questionid));
 
-CREATE TABLE entity_resource(resourceid INTEGER AUTO_INCREMENT PRIMARY KEY, type INTEGER NOT NULL, reference VARCHAR(500));
+CREATE TABLE entity_resource(resourceid INTEGER AUTO_INCREMENT PRIMARY KEY, type INTEGER NOT NULL, name VARCHAR(100), reference VARCHAR(500));
 
 CREATE TABLE rel_resource_topic(resourceid INTEGER REFERENCES entity_resource(resourceid), topicid INTEGER REFERENCES entity_topic(topicid),PRIMARY KEY(resourceid,topicid));
 

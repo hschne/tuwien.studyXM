@@ -15,6 +15,7 @@ public class ObservableResource {
     private IntegerProperty id;
     private StringProperty type;
     private StringProperty reference;
+    private StringProperty name;
 
     public Resource getResource() {
         return resource;
@@ -26,6 +27,7 @@ public class ObservableResource {
         this.resource = resource;
         id = new SimpleIntegerProperty(resource.getResourceId());
         type = new SimpleStringProperty(resource.getType().toString());
+        name = new SimpleStringProperty(resource.getName());
         reference = new SimpleStringProperty(resource.getReference());
     }
 
@@ -58,5 +60,14 @@ public class ObservableResource {
     public void setReference(String reference) {
         this.resource.setReference(reference);
         this.reference.set(reference);
+    }
+
+    public String getName() {
+        return name.get();
+    }
+
+    public void setName(String name) {
+        this.resource.setName(name);
+        this.name.set(name);
     }
 }

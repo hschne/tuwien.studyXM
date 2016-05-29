@@ -112,7 +112,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     private Resource readResourceFrom(ResultSet resultSet) throws SQLException {
         int id = resultSet.getInt("resourceId");
         int type = resultSet.getInt("type");
+        String name = resultSet.getString("name");
         String reference = resultSet.getString("reference");
-        return new Resource(id, ResourceType.valueOf(type), reference);
+        return new Resource(id, ResourceType.valueOf(type), name, reference);
     }
 }
