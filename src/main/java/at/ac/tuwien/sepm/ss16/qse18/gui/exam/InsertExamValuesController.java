@@ -119,14 +119,15 @@ import java.util.stream.Collectors;
 
         if (fieldAuthor.getText().isEmpty()) {
             logger.error("TextField \'author\' is empty");
-            showAlert(Alert.AlertType.WARNING, "Textfield author must not be empty");
+            showAlert("No author given", "Textfield author must not be empty");
         } else if (fieldTime.getText().isEmpty() || !fieldTime.getText().matches("\\d*")) {
             logger.error("No valid time has been given");
-            showAlert(Alert.AlertType.WARNING,
-                "No valid time has been given. Make sure to fill the Time textfield with only whole numbers.");
+            showAlert("No valid time has been given.",
+                "Make sure to fill the Time textfield with only whole numbers.");
         } else if (topicListView.getSelectionModel().getSelectedItem() == null) {
             logger.warn("No topic selected");
-            showAlert(Alert.AlertType.WARNING, "No topic selected.");
+            showAlert("No topic selected.",
+                "You have to select the topic you want to create an exam to.");
         } else {
             Exam exam = new Exam();
             exam.setAuthor(fieldAuthor.getText());
@@ -147,19 +148,19 @@ import java.util.stream.Collectors;
                 examService
                     .createExam(exam, topicListView.getSelectionModel().getSelectedItem().getT(),
                         examTime);
-                showAlert(Alert.AlertType.INFORMATION, "Exam created");
+                showAlert("Success", "Exam created");
                 mainFrameController.handleExams();
             } catch (ServiceException e) {
                 logger.error("Could not create exam: ", e);
-                showAlert(Alert.AlertType.ERROR, "Could not create exam. " + "\n\nHints: "
-                    + "\nCheck if the choosen topic has already questions to answer."
-                    + "\nCheck if the length of the author do not exceed 80 characters."
-                    + "\nCheck if there are enough questions in this topic to cover the exam time.");
+                showAlert("Could not create exam. ",
+                    "\n\nHints: " + "\nCheck if the choosen topic has already questions to answer."
+                        + "\nCheck if the length of the author do not exceed 80 characters."
+                        + "\nCheck if there are enough questions in this topic to cover the exam time.");
             } catch (NumberFormatException e) {
                 logger.error("Could not create exam: ", e);
-                showAlert(Alert.AlertType.ERROR,
-                    "Could not parse exam time. Make sure it only contains numbers and is lower than "
-                        + Integer.MAX_VALUE + ".");
+                showAlert("Could not parse exam time.",
+                    "Make sure it only contains numbers and is lower than " + Integer.MAX_VALUE
+                        + ".");
             }
         }
     }
@@ -169,19 +170,9 @@ import java.util.stream.Collectors;
         mainFrameController.handleExams();
     }
 
-    private void showAlert(Alert.AlertType type, String contentMsg) {
-        String header = "";
-
-        if (type == Alert.AlertType.ERROR) {
-            header = "Error";
-        } else if (type == Alert.AlertType.WARNING) {
-            header = "Warning";
-        } else if (type == Alert.AlertType.INFORMATION) {
-            header = "Success";
-        }
-
-        Alert alert =
-            alertBuilder.alertType(type).headerText(header).contentText(contentMsg).build();
+    private void showAlert(String headerMsg, String contentMsg) {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).headerText(headerMsg)
+            .contentText(contentMsg).build();
         alert.showAndWait();
     }
 }
