@@ -53,14 +53,9 @@ import java.util.stream.Collectors;
         }
     }
 
-    public void addResource(ObservableResource resource) {
-        try {
-            resourceService.createResource(resource.getResource());
-            resourceList.add(resource);
-        } catch (ServiceException e) {
-            logger.error(e);
-            showAlert(e);
-        }
+    public void addResource(ObservableResource resource) throws ServiceException {
+        resourceService.createResource(resource.getResource());
+        resourceList.add(resource);
     }
 
     @FXML public void handleNew() {

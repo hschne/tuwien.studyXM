@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
+import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,7 +69,7 @@ import java.util.UUID;
             Resource resource = createResourceFromFields();
             overviewController.addResource(new ObservableResource(resource));
             mainFrameController.handleResources();
-        } catch (IOException e) {
+        } catch (Exception e) {
             logger.error(e);
             showAlert(e);
         }
@@ -80,6 +81,9 @@ import java.util.UUID;
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
+        if(sourceFile == null || destFile == null){
+            throw new NoSuchFileException("Can not create a new resource. Please select a file first");
+        }
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
             FileChannel sourceChannel = source.getChannel();

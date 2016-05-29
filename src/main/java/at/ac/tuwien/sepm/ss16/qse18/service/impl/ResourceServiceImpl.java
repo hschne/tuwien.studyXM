@@ -33,7 +33,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             return resourceDao.getResource(id);
         } catch (DaoException e) {
             logger.error(e);
-            throw new ServiceException(e);
+            throw new ServiceException(e.getMessage(),e);
         }
     }
 
@@ -42,7 +42,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             return resourceDao.getResources();
         } catch (DaoException e) {
             logger.error(e);
-            throw new ServiceException(e);
+            throw new ServiceException(e.getMessage(),e);
         }
     }
 
@@ -52,7 +52,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             return resourceDao.createResource(resource);
         } catch (DtoValidationException | DaoException e) {
             logger.error(e);
-            throw new ServiceException(e);
+            throw new ServiceException(e.getMessage(),e);
         }
     }
 

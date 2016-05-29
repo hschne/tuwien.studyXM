@@ -66,13 +66,14 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     @Override public Resource createResource(Resource resource) throws DaoException {
-        String query = "INSERT INTO ENTITY_RESOURCE (TYPE, REFERENCE) VALUES (?,?)";
+        String query = "INSERT INTO ENTITY_RESOURCE (TYPE, NAME ,REFERENCE) VALUES (?,?,?)";
         tryValidateResource(resource);
         try {
             PreparedStatement statement =
                 database.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
             statement.setInt(1, resource.getType().getValue());
-            statement.setString(2, resource.getReference());
+            statement.setString(2, resource.getName());
+            statement.setString(3, resource.getReference());
             statement.executeUpdate();
             ResultSet generatedKeys = statement.getGeneratedKeys();
             if (generatedKeys.next()) {
