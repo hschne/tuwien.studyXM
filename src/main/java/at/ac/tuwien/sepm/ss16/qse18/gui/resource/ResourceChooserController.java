@@ -2,21 +2,57 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Component public class ResourceChooserController {
+    private static final Logger logger = LogManager.getLogger();
+
+    @Autowired private ResourceService resourceService;
+
     @FXML public Button newButton;
     @FXML public Button cancelButton;
     @FXML public Button chooseButton;
-    @FXML public ListView<Resource> resourceListView;
+    @FXML public ListView<ObservableResource> resourceListView;
 
-    private ObservableList<ObservableResource> resourcesList;
+    private ObservableList<ObservableResource> resourceList;
 
     @FXML public void initialize() {
-
+        try {
+            List<ObservableResource> observableResources =
+                resourceService.getResources().stream().map(ObservableResource::new)
+                    .collect(Collectors.toList());
+            resourceList = FXCollections.observableList(observableResources);
+            resourceListView.setItems(resourceList);
+            resourceListView.setCellFactory(lv -> new ListCell<ObservableResource>() {
+                @Override public void updateItem(ObservableResource item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                    } else {
+                        String text =
+                            item.getResource().getResourceId() + ": " + item.getName() + " (" + item
+                                .getReference() + ")";
+                        setText(text);
+                    }
+                }
+            });
+        } catch (ServiceException e) {
+            logger.error("Could not fill resource list", e);
+        }
     }
 }

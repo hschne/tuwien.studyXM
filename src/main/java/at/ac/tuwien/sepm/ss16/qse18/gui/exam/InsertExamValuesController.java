@@ -109,8 +109,10 @@ import java.util.stream.Collectors;
                     }
                 }
             });
-        } catch (Exception e) {
-            logger.error("Initialize in InsertExamValuesController not successful", e);
+        } catch (ServiceException e) {
+            logger.error("Initialize not successful", e);
+            showAlert("Could not fill subject list",
+                "Make sure that there is a connection to the database.");
         }
     }
 
