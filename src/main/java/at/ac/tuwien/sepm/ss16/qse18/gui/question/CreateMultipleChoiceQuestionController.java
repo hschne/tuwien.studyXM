@@ -3,24 +3,32 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
+import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Controller for managing creation of multiple choice questions
- *
+ * <p>
  * Created by Julian on 15.05.2016.
  */
 @Component public class CreateMultipleChoiceQuestionController extends QuestionController {
@@ -38,6 +46,8 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerFour;
     @FXML private CheckBox checkBoxContinue;
 
+    @Autowired private SpringFXMLLoader fxmlLoader;
+
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         AlertBuilder alertBuilder) {
         super(questionService, alertBuilder);
@@ -47,13 +57,35 @@ import java.util.List;
         if (createQuestion()) {
             return;
         }
-        if(checkBoxContinue.isSelected()){
+        if (checkBoxContinue.isSelected()) {
             mainFrameController.handleMultipleChoiceQuestion(this.topic);
-        }
-        else {
+        } else {
             mainFrameController.handleSubjects();
         }
         showSuccess("Inserted new question into database.");
+    }
+
+    @FXML public void handleAddResource() {
+        Stage stage = new Stage();
+        SpringFXMLLoader.FXMLWrapper<Object, ResourceChooserController> resourceChooserWrapper =
+            null;
+        try {
+            resourceChooserWrapper = fxmlLoader.loadAndWrap("/fxml/resource/resourceChooser.fxml",
+                ResourceChooserController.class);
+        } catch (IOException e) {
+            logger.error("Could not load resourceChooser.fxml", e);
+        }
+        ResourceChooserController childController = null;
+        if (resourceChooserWrapper != null) {
+            childController = resourceChooserWrapper.getController();
+            childController.setStage(stage);
+            stage.setTitle("Add resource");
+            stage.setScene(new Scene((Parent) resourceChooserWrapper.getLoadedObject(), 500, 400));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+        }
+
     }
 
     private boolean createQuestion() {

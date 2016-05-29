@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -83,6 +84,14 @@
                            </font>
                         </Button>
                         <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="true" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddResource" text="add resource">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="50.0" />
+                           </GridPane.margin>
+                        </Button>
                      </children>
                   </GridPane>
                   <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." GridPane.valignment="CENTER">
