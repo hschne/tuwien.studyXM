@@ -1,8 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,4 +43,14 @@ public class DummyEntityFactory {
         return exams;
     }
 
+    public static Resource createDummyResource() {
+        Resource resource = new Resource(1, ResourceType.NOTE,"name","reference");
+        return resource;
+    }
+
+    public static List<Resource> createDummyResources() {
+        List<Resource> resources = new ArrayList<>();
+        resources.add(createDummyResource());
+        return resources;
+    }
 }

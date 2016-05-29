@@ -28,7 +28,6 @@ import java.io.IOException;
             SubjectItemController itemController = getController();
             setControllerProperties(subject, itemController);
         }
-
     }
 
     private void setControllerProperties(ObservableSubject subject,
@@ -47,8 +46,7 @@ import java.io.IOException;
             return editSubjectWrapper.getController();
         } catch (IOException e) {
             logger.error(e);
+            throw new RuntimeException("Error loading subject item", e);
         }
-        //This should never happen in production. Murphy's Law?
-        return null;
     }
 }

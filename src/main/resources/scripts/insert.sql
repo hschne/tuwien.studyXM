@@ -39,7 +39,7 @@ INSERT INTO rel_question_topic VALUES(1,1),(1,2),(1,3),(2,3),(3,3),(5,6);
 --Insert for answer
 INSERT INTO entity_answer VALUES(DEFAULT,1,'42',TRUE,1),(DEFAULT,1,'69',FALSE,1),(DEFAULT,1,'42',FALSE,2),(DEFAULT,1,'2',TRUE,2),(DEFAULT,1,'George Washington',TRUE,3),(DEFAULT,1,'Barack Obama',FALSE,3),(DEFAULT,1,'Wien',TRUE,4),(DEFAULT,1,'Graz',FALSE,4),(DEFAULT,3,'bild.png',TRUE,5),(DEFAULT,2,'lange Definiton',TRUE,6);
 --Insert for resource
-INSERT INTO entity_resource VALUES(DEFAULT,1,'reference1'),(DEFAULT,2,'reference2'),(DEFAULT,1,'reference3'),(DEFAULT,2,'reference4'),(DEFAULT,4,'reference5'),(DEFAULT,4,'reference6');
+INSERT INTO entity_resource VALUES(DEFAULT,1,'name1','reference1'),(DEFAULT,2,'name2','reference2'),(DEFAULT,1,'name3','reference3'),(DEFAULT,2,'name4','reference4'),(DEFAULT,4,'name5','reference5'),(DEFAULT,4,'name6','reference6');
 --Insert for resource_topic
 INSERT INTO rel_resource_topic VALUES(1,1),(1,2),(2,4),(5,4),(6,6),(2,2);
 --Insert for resource_question

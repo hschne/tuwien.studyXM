@@ -7,18 +7,13 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import at.ac.tuwien.sepm.util.AlertBuilder;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +25,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * A controller for subjectView, to create, delete, and edit subjectListView.
+ * A controller for subjectView, to create, delete, and edit resourceListView.
  *
  * @author Hans-Joerg Schroedl
  */
@@ -43,11 +38,12 @@ import java.util.stream.Collectors;
     @Autowired MainFrameController mainFrameController;
     private Logger logger = LogManager.getLogger();
     private ObservableList<ObservableSubject> subjectList;
-    private Stage primaryStage;
+
     private SubjectService subjectService;
     private AlertBuilder alertBuilder;
 
-    @Autowired public SubjectOverviewController(SubjectService subjectService, AlertBuilder alertBuilder) {
+    @Autowired
+    public SubjectOverviewController(SubjectService subjectService, AlertBuilder alertBuilder) {
         this.subjectService = subjectService;
         this.alertBuilder = alertBuilder;
     }
@@ -122,15 +118,6 @@ import java.util.stream.Collectors;
     }
 
     /**
-     * Sets the primary stage of this view
-     *
-     * @param primaryStage The primary stage
-     */
-    public void setPrimaryStage(Stage primaryStage) {
-        this.primaryStage = primaryStage;
-    }
-
-    /**
      * Updates a subject in the list and in the database
      *
      * @param observableSubject The current subject in the list
@@ -171,16 +158,6 @@ import java.util.stream.Collectors;
         alert.showAndWait();
         ButtonType result = alert.getResult();
         return result == ButtonType.OK;
-    }
-
-    private void configureStage(Stage stage, String title,
-        SpringFXMLLoader.FXMLWrapper<Object, SubjectEditController> editSubjectWrapper)
-        throws IOException {
-        stage.setTitle(title);
-        stage.setScene(new Scene((Parent) editSubjectWrapper.getLoadedObject(), 400, 400));
-        stage.initModality(Modality.WINDOW_MODAL);
-        stage.initOwner(this.primaryStage);
-        stage.showAndWait();
     }
 
     private void updateEntry(ObservableSubject observableSubject, Subject subject) {

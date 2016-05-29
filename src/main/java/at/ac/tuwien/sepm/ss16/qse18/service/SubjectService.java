@@ -21,9 +21,9 @@ public interface SubjectService {
     Subject getSubject(int id) throws ServiceException;
 
     /**
-     * Implementations return a list of subjectListView
+     * Implementations return a list of resourceListView
      *
-     * @return A list of subjectListView
+     * @return A list of resourceListView
      * @throws ServiceException
      */
     List<Subject> getSubjects() throws ServiceException;

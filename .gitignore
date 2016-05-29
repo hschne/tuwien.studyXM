@@ -4,8 +4,8 @@
 *.iws
 *.class
 
-*.png
-*.jpg
+**/resources/images/
+**/resources/resources/
 !graph.jpg
 !graph.png
 !imagePlaceholder.png

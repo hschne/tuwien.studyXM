@@ -15,8 +15,8 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Class SujjectServiceImpl
- * concrete implementatioin of SubjectService
+ * Class SubjectServiceImpl
+ * concrete implementation of SubjectService
  *
  * @author Zhang Haixiang
  */

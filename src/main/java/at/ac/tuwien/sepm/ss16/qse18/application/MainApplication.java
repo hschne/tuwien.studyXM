@@ -45,7 +45,6 @@ import java.util.Optional;
         SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
         SpringFXMLLoader.FXMLWrapper<Object, MainFrameController> mfWrapper =
             springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);
-        mfWrapper.getController().setPrimaryStage(primaryStage);
         primaryStage.setTitle("Study XM");
         Scene scene = new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
         String css = this.getClass().getResource("/style.css").toExternalForm();

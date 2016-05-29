@@ -7,7 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.util.DTOValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -39,7 +39,7 @@ public class ExamDaoJdbc implements ExamDao{
     @Override public Exam create(Exam exam, List<Question> questions) throws DaoException {
         logger.debug("entering method create with parameters {}", exam);
 
-        if (!DTOValidator.validate(exam)) {
+        if (!DtoValidator.validate(exam)) {
             logger.error("Dao Exception create() {}", exam);
             throw new DaoException("Invalid values, please check your input");
         }
@@ -90,7 +90,7 @@ public class ExamDaoJdbc implements ExamDao{
     @Override public Exam delete(Exam exam) throws DaoException {
         logger.debug("entering method delete with parameters {}", exam);
 
-        if(!DTOValidator.validate(exam)){
+        if(!DtoValidator.validate(exam)){
             logger.error("Dao Exception delete() {}", exam);
             throw new DaoException("Invalid values, please check your input");
         }

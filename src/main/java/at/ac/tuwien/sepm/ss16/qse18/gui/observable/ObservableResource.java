@@ -11,6 +11,7 @@ import javafx.beans.property.StringProperty;
  * @author Hans-Joerg Schroedl
  */
 public class ObservableResource {
+
     private IntegerProperty id;
     private StringProperty type;
     private StringProperty reference;
@@ -43,7 +44,7 @@ public class ObservableResource {
         return type.get();
     }
 
-    public ResourceType getResourceType() {
+    public ResourceType getResourceType(){
         return resource.getType();
     }
 

@@ -6,14 +6,13 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.DTOValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -67,7 +66,7 @@ import java.util.Map;
 
     @Override public Exam createExam(Exam exam, Topic topic, int examTime) throws ServiceException {
         logger.debug("entering method createExam with parameters {}", exam);
-        if (!DTOValidator.validate(exam)) {
+        if (!DtoValidator.validate(exam)) {
             logger.error("Service Exception createExam {}", exam);
             throw new ServiceException("Invalid values, please check your input");
         }
@@ -83,7 +82,7 @@ import java.util.Map;
 
     @Override public Exam deleteExam(Exam exam) throws ServiceException {
         logger.debug("entering method deleteExam with parameters {}", exam);
-        if (!DTOValidator.validate(exam)) {
+        if (!DtoValidator.validate(exam)) {
             logger.error("Service Exception deleteExam {}", exam);
             throw new ServiceException("Invalid values, please check your input");
         }

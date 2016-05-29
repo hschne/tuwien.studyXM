@@ -4,7 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.util.DTOValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +39,7 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         logger.debug("entering method getAllQuestionsOfSubject with parameters {}", exam);
         ArrayList<Integer> questionIDList = new ArrayList<>();
 
-        if(!DTOValidator.validate(exam) || topicID <= 0) {
+        if(!DtoValidator.validate(exam) || topicID <= 0) {
             logger.error("Dao Exception create() {}", exam, topicID);
             throw new DaoException("Invalid values, please check your input");
         }
