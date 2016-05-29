@@ -36,6 +36,7 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerTwo;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
+    @FXML private CheckBox checkBoxContinue;
 
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         AlertBuilder alertBuilder) {
@@ -43,20 +44,17 @@ import java.util.List;
     }
 
     @FXML public void handleCreateQuestion() {
-        if (createQuestion())
-            return;
-        mainFrameController.handleSubjects();
-        showSuccess("Inserted new question into database.");
-    }
-
-    @FXML public void handleCreateContinue() {
         if (createQuestion()) {
             return;
         }
-        mainFrameController.handleCreateQuestion(this.topic);
-        showSuccess("Inserted new question into database");
+        if(checkBoxContinue.isSelected()){
+            mainFrameController.handleMultipleChoiceQuestion(this.topic);
+        }
+        else {
+            mainFrameController.handleSubjects();
+        }
+        showSuccess("Inserted new question into database.");
     }
-
 
     private boolean createQuestion() {
         logger.info("Now creating new question");
@@ -80,6 +78,8 @@ import java.util.List;
 
         return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 1L);
     }
+
+
 
     private List<Answer> newAnswersFromField() throws ServiceException {
         logger.debug("Collecting all answers");

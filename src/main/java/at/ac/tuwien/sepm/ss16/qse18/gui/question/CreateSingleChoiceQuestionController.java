@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -40,7 +41,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     @FXML private RadioButton radioButtonAnswerTwo;
     @FXML private RadioButton radioButtonAnswerThree;
     @FXML private RadioButton radioButtonAnswerFour;
-
+    @FXML private CheckBox checkBoxContinue;
 
     /**
      * Creates a controller for the single choice question creation.
@@ -56,19 +57,16 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     }
 
     @FXML public void handleCreateQuestion() {
-        if (createQuestion())
-            return;
-        mainFrameController.handleSubjects();
-        showSuccess("Inserted new question into database.");
-    }
-
-    @FXML public void handleCreateContinue() {
         if (createQuestion()) {
             return;
         }
-        mainFrameController.handleSingleChoiceQuestion(this.topic);
+        if(checkBoxContinue.isSelected()){
+            mainFrameController.handleSingleChoiceQuestion(this.topic);
+        }
+        else {
+            mainFrameController.handleSubjects();
+        }
         showSuccess("Inserted new question into database.");
-
     }
 
     private boolean createQuestion() {

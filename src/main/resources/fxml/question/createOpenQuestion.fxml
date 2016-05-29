@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPaneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController">
+<AnchorPane fx:id="anchorPaneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateOpenQuestionController">
    <children>
       <GridPane layoutX="146.0" layoutY="132.0" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -50,7 +50,7 @@
                          </image></ImageView>
                      </children>
                   </GridPane>
-                  <Label fx:id="labelHeadline" text="new multiple choice question">
+                  <Label text="new open question">
                      <font>
                         <Font name="System Bold" size="24.0" />
                      </font>
@@ -63,25 +63,25 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="297.0" minHeight="10.0" prefHeight="215.0" valignment="CENTER" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="279.0" minHeight="10.0" prefHeight="226.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="61.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="279.0" minHeight="10.0" prefHeight="222.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <GridPane prefHeight="70.0" prefWidth="1003.0" GridPane.rowIndex="2">
+                  <GridPane prefHeight="24.0" prefWidth="1002.0" GridPane.rowIndex="2">
                     <columnConstraints>
                       <ColumnConstraints hgrow="SOMETIMES" maxWidth="854.0" minWidth="10.0" prefWidth="791.0" />
                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="495.0" minWidth="10.0" prefWidth="209.0" />
                     </columnConstraints>
                     <rowConstraints>
-                      <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="23.0" minHeight="10.0" prefHeight="17.0" vgrow="SOMETIMES" />
+                      <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="23.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Button mnemonicParsing="false" onAction="#handleCreateQuestion" text="create question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </Button>
+                         <Button mnemonicParsing="false" onAction="#handleCreateQuestion" text="create question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP">
+                             <font>
+                                 <Font size="18.0" />
+                             </font>
+                         </Button>
                         <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="true" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
@@ -102,38 +102,38 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField fx:id="textfieldAnswerOne" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="add answer one here...">
+                        <TextField fx:id="textfieldAnswerOne" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="add keyword one here...">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="textfieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer two here..." GridPane.rowIndex="1">
+                        <TextField fx:id="textfieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword two here..." GridPane.rowIndex="1">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="textfieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer three here..." GridPane.rowIndex="2">
+                        <TextField fx:id="textfieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword three here..." GridPane.rowIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="textfieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer four here..." GridPane.rowIndex="3">
+                        <TextField fx:id="textfieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword four here..." GridPane.rowIndex="3">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <CheckBox fx:id="checkBoxAnswerOne" mnemonicParsing="false" text="correct answer" GridPane.columnIndex="1">
+                        <CheckBox fx:id="checkBoxAnswerOne" mnemonicParsing="false" text="correct answer" visible="false" GridPane.columnIndex="1">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </CheckBox>
-                        <CheckBox fx:id="checkBoxAnswerTwo" mnemonicParsing="false" text="correct answer" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                        <CheckBox fx:id="checkBoxAnswerTwo" mnemonicParsing="false" text="correct answer" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="1">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </CheckBox>
-                        <CheckBox fx:id="checkBoxAnswerThree" mnemonicParsing="false" text="correct answer" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                        <CheckBox fx:id="checkBoxAnswerThree" mnemonicParsing="false" text="correct answer" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font>
                         </CheckBox>
-                        <CheckBox fx:id="checkBoxAnswerFour" mnemonicParsing="false" text="correct answer" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                        <CheckBox fx:id="checkBoxAnswerFour" mnemonicParsing="false" text="correct answer" visible="false" GridPane.columnIndex="1" GridPane.rowIndex="3">
                            <font>
                               <Font size="13.0" />
                            </font>

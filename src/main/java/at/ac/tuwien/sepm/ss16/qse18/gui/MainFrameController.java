@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
@@ -76,7 +75,7 @@ import java.io.IOException;
         }
     }
 
-    public void handleCreateResource(ObservableResource resource) {
+    public void handleCreateResource() {
         logger.debug("Loading create resource ");
         try {
             setSubView("/fxml/resource/resourceEditView.fxml", ResourceEditController.class);
@@ -118,16 +117,18 @@ import java.io.IOException;
                 setSubView("/fxml/question/createSingleChoiceQuestion.fxml",
                     CreateSingleChoiceQuestionController.class);
             singleChoiceQuestionController.setTopic(topic);
-            //TODO: create fxml and controller
         } catch (Exception e) {
             handleException(e);
         }
     }
 
-    public void handleOpenQuestion() {
+    public void handleOpenQuestion(ObservableTopic topic) {
         logger.debug("Loading Open question screen ");
         try {
-            //TODO: create fxml and controller
+            CreateOpenQuestionController openQuestionController =
+                setSubView("/fxml/question/createOpenQuestion.fxml",
+                    CreateMultipleChoiceQuestionController.class);
+            openQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }
@@ -212,11 +213,11 @@ import java.io.IOException;
         alert.showAndWait();
     }
 
-    @Autowired void setSpringFXMLLoader(SpringFXMLLoader loader) {
+    @Autowired private void setSpringFXMLLoader(SpringFXMLLoader loader) {
         this.fxmlLoader = loader;
     }
 
-    @Autowired void setAlertBuilder(AlertBuilder alertBuilder) {
+    @Autowired private void setAlertBuilder(AlertBuilder alertBuilder) {
         this.alertBuilder = alertBuilder;
     }
 
