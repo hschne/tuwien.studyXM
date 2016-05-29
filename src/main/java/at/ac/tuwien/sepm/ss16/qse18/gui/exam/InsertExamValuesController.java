@@ -23,6 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * Controller of the create exam window in which in which new exams can be saved into the database
+ *
  * @author Zhang Haixiang, Bicer Cem
  */
 @Component public class InsertExamValuesController implements GuiController {
@@ -121,7 +122,7 @@ import java.util.stream.Collectors;
             showAlert(Alert.AlertType.WARNING, "Textfield author must not be empty");
         } else if (fieldTime.getText().isEmpty() || !fieldTime.getText().matches("\\d*")) {
             logger.error("No valid time has been given");
-            showAlert(Alert.AlertType.ERROR,
+            showAlert(Alert.AlertType.WARNING,
                 "No valid time has been given. Make sure to fill the Time textfield with only whole numbers.");
         } else if (topicListView.getSelectionModel().getSelectedItem() == null) {
             logger.warn("No topic selected");
@@ -146,15 +147,14 @@ import java.util.stream.Collectors;
                 examService
                     .createExam(exam, topicListView.getSelectionModel().getSelectedItem().getT(),
                         examTime);
-                showAlert(Alert.AlertType.CONFIRMATION, "Exam created");
+                showAlert(Alert.AlertType.INFORMATION, "Exam created");
                 mainFrameController.handleExams();
             } catch (ServiceException e) {
                 logger.error("Could not create exam: ", e);
-                showAlert(Alert.AlertType.ERROR,
-                    "Could not create exam. Check logs for more information." + "\n\nHints: "
-                        + "\nCheck if the choosen topic has already questions to answer."
-                        + "\nCheck if the length of the author do not exceed 80 characters."
-                        + "\nCheck if there are enough questions in this topic to cover the exam time.");
+                showAlert(Alert.AlertType.ERROR, "Could not create exam. " + "\n\nHints: "
+                    + "\nCheck if the choosen topic has already questions to answer."
+                    + "\nCheck if the length of the author do not exceed 80 characters."
+                    + "\nCheck if there are enough questions in this topic to cover the exam time.");
             } catch (NumberFormatException e) {
                 logger.error("Could not create exam: ", e);
                 showAlert(Alert.AlertType.ERROR,
@@ -176,7 +176,7 @@ import java.util.stream.Collectors;
             header = "Error";
         } else if (type == Alert.AlertType.WARNING) {
             header = "Warning";
-        } else if (type == Alert.AlertType.CONFIRMATION) {
+        } else if (type == Alert.AlertType.INFORMATION) {
             header = "Success";
         }
 
