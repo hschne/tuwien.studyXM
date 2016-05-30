@@ -80,7 +80,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     @Override public List<Question> getQuestionToTopic(Topic topic) throws DaoException {
-        logger.debug("Entering getQuesitonToTopic with parameters {}", topic);
+        logger.debug("Entering getQuestionToTopic with parameters {}", topic);
         if (topic == null) {
             logger.error("Topic cannot be null");
             throw new DaoException("Topic cannot be null");

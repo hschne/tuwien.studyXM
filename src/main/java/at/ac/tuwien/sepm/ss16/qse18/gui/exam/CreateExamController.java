@@ -42,7 +42,7 @@ import java.util.List;
     @Autowired ExamServiceImpl examService;
     @Autowired QuestionService questionService;
     @Autowired MainFrameController mainFrameController;
-    private Logger logger = LogManager.getLogger(CreateExamController.class);
+    private static final Logger logger = LogManager.getLogger(CreateExamController.class);
     private AlertBuilder alertBuilder;
     private Exam exam;
     private List<Question> questionList = new ArrayList<>();

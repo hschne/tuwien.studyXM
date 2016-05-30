@@ -29,7 +29,7 @@ import java.util.List;
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CreateSingleChoiceQuestionController extends QuestionController {
 
-    private Logger logger = LogManager.getLogger(CreateSingleChoiceQuestionController.class);
+    private static final Logger logger = LogManager.getLogger(CreateSingleChoiceQuestionController.class);
 
 
     @FXML private TextArea textAreaQuestion;

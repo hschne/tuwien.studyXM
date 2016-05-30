@@ -20,7 +20,7 @@ import java.io.InputStream;
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ResourceItemController {
 
-    private final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     @FXML public Node root;
     @FXML public Label resourceName;
     @FXML public ImageView resourceIcon;

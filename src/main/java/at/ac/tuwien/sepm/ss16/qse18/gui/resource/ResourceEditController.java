@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.apache.logging.log4j.LogManager;
@@ -34,9 +35,10 @@ import java.util.UUID;
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class ResourceEditController
     implements GuiController {
 
-    private final Logger logger = LogManager.getLogger();
-    @FXML TextField resourceName;
-    @FXML TextField filePath;
+    private static final Logger logger = LogManager.getLogger();
+    @FXML private TextField resourceName;
+    @FXML private TextField filePath;
+    @FXML private CheckBox checkBoxContinue;
 
     @Autowired ResourceOverviewController overviewController;
     @Autowired MainFrameController mainFrameController;
@@ -47,6 +49,7 @@ import java.util.UUID;
     private File in;
 
     @FXML public void handleSelectFile() {
+        logger.debug("Selecting file");
         FileChooser fileChooser = new FileChooser();
         String defaultPath = "src/main/resources/resources/";
         File defaultDirectory = new File(defaultPath);
@@ -56,33 +59,51 @@ import java.util.UUID;
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            logger.debug("A File was selected");
+            logger.debug("A file was selected: {}", selectedFile);
             out = new File(defaultPath + generateFileName(selectedFile.getName()));
             in = selectedFile;
             filePath.setText(defaultPath + selectedFile.getName());
         }
     }
 
-    @FXML public void handleOk() {
+    @FXML public void handleCreateResource() {
+        logger.debug("Creating resource in database");
         try {
             copyFile(in, out);
             Resource resource = createResourceFromFields();
             overviewController.addResource(new ObservableResource(resource));
-            mainFrameController.handleResources();
+            resetOrChangeView();
+            showSuccess("Resource has been created.");
         } catch (Exception e) {
             logger.error(e);
             showAlert(e);
         }
+    }
 
+    private void resetOrChangeView() {
+        if(checkBoxContinue.isSelected()){
+            resetFields();
+        }
+        else{
+            mainFrameController.handleResources();
+        }
+    }
+
+    private void resetFields(){
+        in = null;
+        out = null;
+        resourceName.clear();
+        filePath.clear();
     }
 
     @FXML public void handleCancel() {
+        logger.debug("Canceling action");
         mainFrameController.handleResources();
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
         if(sourceFile == null || destFile == null){
-            throw new NoSuchFileException("Can not create a new resource. Please select a file first");
+            throw new NoSuchFileException("Could not create a new resource. Please select a file first.");
         }
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
@@ -108,7 +129,7 @@ import java.util.UUID;
             case "pdf":
                 return ResourceType.PDF;
             default:
-                return ResourceType.NOTE;
+                return ResourceType.OTHER;
         }
     }
 
@@ -139,8 +160,14 @@ import java.util.UUID;
     }
 
     private void showAlert(Exception e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
+        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Error")
             .headerText("An error occurred").contentText(e.getMessage()).setResizable(true).build();
+        alert.showAndWait();
+    }
+
+    private void showSuccess(String msg) {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Success")
+            .headerText("The operation was successful!").contentText(msg).build();
         alert.showAndWait();
     }
 

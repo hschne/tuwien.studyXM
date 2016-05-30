@@ -25,7 +25,7 @@ import java.util.List;
  */
 @Component public class CreateMultipleChoiceQuestionController extends QuestionController {
 
-    private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
+    private static final Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
 
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;

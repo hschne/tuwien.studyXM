@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Component public class QuestionOverviewController implements GuiController {
 
-    private final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     @FXML public ListView<ObservableQuestion> questionListView;
 

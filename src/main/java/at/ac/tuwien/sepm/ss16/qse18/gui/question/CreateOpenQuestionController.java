@@ -28,7 +28,7 @@ import java.util.regex.Pattern;
  */
 @Component public class CreateOpenQuestionController extends QuestionController {
 
-    private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
+    private static final Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
 
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;

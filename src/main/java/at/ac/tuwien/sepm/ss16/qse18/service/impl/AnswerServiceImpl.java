@@ -23,7 +23,7 @@ import java.util.List;
 @Service
 public class AnswerServiceImpl implements AnswerService {
     private AnswerDao adao;
-    private Logger logger = LogManager.getLogger(AnswerServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(AnswerServiceImpl.class);
 
     @Autowired  public AnswerServiceImpl(AnswerDao ad) {
         this.adao = ad;

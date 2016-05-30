@@ -20,7 +20,7 @@ import java.io.IOException;
 
     @Autowired SpringFXMLLoader springFXMLLoader;
 
-    private Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     @Override public void updateItem(ObservableSubject subject, boolean empty) {
         super.updateItem(subject, empty);

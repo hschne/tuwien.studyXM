@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
     @FXML public Button deleteButton;
     @Autowired ApplicationContext applicationContext;
     @Autowired MainFrameController mainFrameController;
-    private Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     private ObservableList<ObservableSubject> subjectList;
 
     private SubjectService subjectService;
