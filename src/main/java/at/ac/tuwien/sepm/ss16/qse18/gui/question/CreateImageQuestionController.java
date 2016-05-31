@@ -7,14 +7,13 @@ import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
+import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -52,14 +51,12 @@ public class CreateImageQuestionController extends QuestionController{
     @FXML public CheckBox checkBoxAnswerFour;
     @FXML private CheckBox checkBoxContinue;
 
-    private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
-
     private AnswerService answerService;
     private File out;
 
     @Autowired public CreateImageQuestionController(QuestionService questionService,
-        AnswerService answerService, AlertBuilder alertBuilder) {
-        super(questionService, alertBuilder);
+        AnswerService answerService, AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
+        super(questionService, alertBuilder, fxmlLoader);
         this.answerService = answerService;
 
     }
@@ -332,6 +329,15 @@ public class CreateImageQuestionController extends QuestionController{
         Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
             .contentText(e.getMessage()).build();
         alert.showAndWait();
+    }
+
+    @Override protected void fillFieldsAndCheckboxes() {
+        // TODO: make this view fill its fields and checkboxes
+    }
+
+    @Override protected List getUserInput() {
+        // TODO: read user input and save it in inputs
+        return null;
     }
 }
 

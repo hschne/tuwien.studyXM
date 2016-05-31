@@ -6,13 +6,12 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
+import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -23,15 +22,11 @@ import java.util.List;
 
 /**
  * Controller for managing creation of single choice questions
- *
+ * <p>
  * Created by Felix on 19.05.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CreateSingleChoiceQuestionController extends QuestionController {
-
-    private Logger logger = LogManager.getLogger(CreateSingleChoiceQuestionController.class);
-
-
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;
     @FXML private TextField textfieldAnswerTwo;
@@ -51,19 +46,27 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
      * @param alertBuilder    An alert builder which wraps pop ups for user interaction.
      */
     @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
-        AlertBuilder alertBuilder) {
-        super(questionService, alertBuilder);
+        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
+        super(questionService, alertBuilder, fxmlLoader);
 
+    }
+
+    @Override protected void fillFieldsAndCheckboxes() {
+        // TODO: make this view fill its fields and checkboxes
+    }
+
+    @Override protected List getUserInput() {
+        // TODO: read user input and save it in inputs
+        return null;
     }
 
     @FXML public void handleCreateQuestion() {
         if (createQuestion()) {
             return;
         }
-        if(checkBoxContinue.isSelected()){
+        if (checkBoxContinue.isSelected()) {
             mainFrameController.handleSingleChoiceQuestion(this.topic);
-        }
-        else {
+        } else {
             mainFrameController.handleSubjects();
         }
         showSuccess("Inserted new question into database.");

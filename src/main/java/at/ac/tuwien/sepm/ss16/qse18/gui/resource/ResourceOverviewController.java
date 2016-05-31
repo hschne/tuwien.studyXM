@@ -60,7 +60,7 @@ import java.util.stream.Collectors;
 
     @FXML public void handleNew() {
         logger.debug("Creating new resource");
-        mainFrameController.handleCreateResource();
+        mainFrameController.handleCreateResource(null, null);
     }
 
     private void initializeListView() throws ServiceException {

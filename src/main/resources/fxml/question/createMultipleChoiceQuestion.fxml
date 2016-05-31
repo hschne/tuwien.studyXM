@@ -92,6 +92,11 @@
                               <Insets left="50.0" />
                            </GridPane.margin>
                         </Button>
+                        <Label fx:id="resourceLabel" text="resource: null">
+                           <GridPane.margin>
+                              <Insets left="200.0" />
+                           </GridPane.margin>
+                        </Label>
                      </children>
                   </GridPane>
                   <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." GridPane.valignment="CENTER">

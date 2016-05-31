@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
@@ -9,23 +10,22 @@ import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * @author Bicer Cem
+ */
 @Component public class ResourceChooserController {
     private static final Logger logger = LogManager.getLogger();
 
@@ -41,6 +41,8 @@ import java.util.stream.Collectors;
     @FXML public ListView<ObservableResource> resourceListView;
 
     private ObservableList<ObservableResource> resourceList;
+    private List inputs;
+    private QuestionType questionTypeOfResource;
 
     @Autowired
     public ResourceChooserController(ResourceService resourceService, AlertBuilder alertBuilder,
@@ -53,6 +55,11 @@ import java.util.stream.Collectors;
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void saveUserInput(List inputs, QuestionType questionType) {
+        this.inputs = inputs;
+        this.questionTypeOfResource = questionType;
     }
 
     @FXML public void initialize() {
@@ -85,7 +92,7 @@ import java.util.stream.Collectors;
     @FXML public void newResource() {
         logger.debug("Opening create resource window");
         stage.close();
-        mainFrameController.handleCreateResource();
+        mainFrameController.handleCreateResource(inputs, questionTypeOfResource);
     }
 
     @FXML public void chooseResource() {

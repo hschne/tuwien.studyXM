@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +99,7 @@ import java.util.Optional;
         Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
             .contentText(contentText).setResizable(true).build();
         ObservableList<ButtonType> buttons =  alert.getButtonTypes();
+        alert.initModality(Modality.APPLICATION_MODAL);
 
         for (ButtonType b : buttons) {
             if (b == ButtonType.CANCEL) {

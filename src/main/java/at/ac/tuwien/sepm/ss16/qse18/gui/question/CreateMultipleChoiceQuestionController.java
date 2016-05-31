@@ -3,26 +3,18 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -32,9 +24,6 @@ import java.util.List;
  * Created by Julian on 15.05.2016.
  */
 @Component public class CreateMultipleChoiceQuestionController extends QuestionController {
-
-    private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
-
     @FXML private TextArea textAreaQuestion;
     @FXML private TextField textfieldAnswerOne;
     @FXML private TextField textfieldAnswerTwo;
@@ -46,11 +35,9 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerFour;
     @FXML private CheckBox checkBoxContinue;
 
-    @Autowired private SpringFXMLLoader fxmlLoader;
-
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
-        AlertBuilder alertBuilder) {
-        super(questionService, alertBuilder);
+        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
+        super(questionService, alertBuilder, fxmlLoader);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -65,27 +52,20 @@ import java.util.List;
         showSuccess("Inserted new question into database.");
     }
 
-    @FXML public void handleAddResource() {
-        Stage stage = new Stage();
-        SpringFXMLLoader.FXMLWrapper<Object, ResourceChooserController> resourceChooserWrapper =
-            null;
-        try {
-            resourceChooserWrapper = fxmlLoader.loadAndWrap("/fxml/resource/resourceChooser.fxml",
-                ResourceChooserController.class);
-        } catch (IOException e) {
-            logger.error("Could not load resourceChooser.fxml", e);
-        }
-        ResourceChooserController childController = null;
-        if (resourceChooserWrapper != null) {
-            childController = resourceChooserWrapper.getController();
-            childController.setStage(stage);
-            stage.setTitle("Add resource");
-            stage.setScene(new Scene((Parent) resourceChooserWrapper.getLoadedObject(), 500, 400));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.showAndWait();
-        }
+    protected void fillFieldsAndCheckboxes() {
+        this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
+        this.textfieldAnswerOne.setText(inputs == null ? "" : (String) inputs.get(1));
+        this.textfieldAnswerTwo.setText(inputs == null ? "" : (String) inputs.get(2));
+        this.textfieldAnswerThree.setText(inputs == null ? "" : (String) inputs.get(3));
+        this.textfieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(4));
+
+        this.checkBoxAnswerOne.setSelected(inputs != null && (boolean) inputs.get(5));
+        this.checkBoxAnswerTwo.setSelected(inputs != null && (boolean) inputs.get(6));
+        this.checkBoxAnswerThree.setSelected(inputs != null && (boolean) inputs.get(7));
+        this.checkBoxAnswerFour.setSelected(inputs != null && (boolean) inputs.get(8));
+
+        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(9));
     }
 
     private boolean createQuestion() {
@@ -111,7 +91,55 @@ import java.util.List;
         return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 1L);
     }
 
+    @Override protected List getUserInput() {
+        List inputs = new ArrayList<>();
 
+        saveAnswerFields(inputs);
+        saveCheckboxes(inputs);
+
+        return inputs;
+    }
+
+    private void saveAnswerFields(List inputs) {
+        if (textAreaQuestion.getText() != null) {
+            inputs.add(textAreaQuestion.getText());
+        } else {
+            inputs.add(null);
+        }
+
+        if (textfieldAnswerOne.getText() != null) {
+            inputs.add(textfieldAnswerOne.getText());
+        } else {
+            inputs.add(null);
+        }
+
+        if (textfieldAnswerTwo.getText() != null) {
+            inputs.add(textfieldAnswerTwo.getText());
+        } else {
+            inputs.add(null);
+        }
+
+        if (textfieldAnswerThree.getText() != null) {
+            inputs.add(textfieldAnswerThree.getText());
+        } else {
+            inputs.add(null);
+        }
+
+        if (textfieldAnswerFour.getText() != null) {
+            inputs.add(textfieldAnswerFour.getText());
+        } else {
+            inputs.add(null);
+        }
+    }
+
+    private void saveCheckboxes(List inputs) {
+        inputs.add(checkBoxAnswerOne.isSelected());
+        inputs.add(checkBoxAnswerTwo.isSelected());
+        inputs.add(checkBoxAnswerThree.isSelected());
+        inputs.add(checkBoxAnswerFour.isSelected());
+
+        inputs.add(checkBoxContinue.isSelected());
+    }
 
     private List<Answer> newAnswersFromField() throws ServiceException {
         logger.debug("Collecting all answers");

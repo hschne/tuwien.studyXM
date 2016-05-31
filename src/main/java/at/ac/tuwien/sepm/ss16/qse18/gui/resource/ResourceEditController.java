@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
@@ -23,10 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.NoSuchFileException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Hans-Joerg Schroedl
@@ -45,6 +43,10 @@ import java.util.UUID;
     private File out;
 
     private File in;
+
+    private List inputs;
+
+    private QuestionType questionTypeOfResource;
 
     @FXML public void handleSelectFile() {
         FileChooser fileChooser = new FileChooser();
@@ -77,12 +79,32 @@ import java.util.UUID;
     }
 
     @FXML public void handleCancel() {
-        mainFrameController.handleResources();
+        if (inputs != null) {
+            switch (questionTypeOfResource) {
+                case MULTIPLECHOICE:
+                    mainFrameController.handleMultipleChoiceQuestion(null, inputs);
+                    break;
+                case OPENQUESTION:
+                    break;
+                case SINGLECHOICE:
+                    break;
+                case NOTECARD:
+                    break;
+            }
+        } else {
+            mainFrameController.handleResources();
+        }
+    }
+
+    public void setInput(List inputs, QuestionType questionType) {
+        this.inputs = inputs;
+        this.questionTypeOfResource = questionType;
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
-        if(sourceFile == null || destFile == null){
-            throw new NoSuchFileException("Can not create a new resource. Please select a file first");
+        if (sourceFile == null || destFile == null) {
+            throw new NoSuchFileException(
+                "Can not create a new resource. Please select a file first");
         }
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
