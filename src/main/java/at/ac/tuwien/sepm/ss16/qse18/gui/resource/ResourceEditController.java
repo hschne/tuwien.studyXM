@@ -85,10 +85,13 @@ import java.util.*;
                     mainFrameController.handleMultipleChoiceQuestion(null, inputs);
                     break;
                 case OPENQUESTION:
+                    mainFrameController.handleOpenQuestion(null, inputs);
                     break;
                 case SINGLECHOICE:
+                    mainFrameController.handleSingleChoiceQuestion(null, inputs);
                     break;
                 case NOTECARD:
+                    mainFrameController.handleCreateImageQuestion(null, inputs);
                     break;
             }
         } else {

@@ -10,11 +10,9 @@ import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,15 +23,10 @@ import java.util.List;
  */
 @Component public class CreateMultipleChoiceQuestionController extends QuestionController {
     @FXML private TextArea textAreaQuestion;
-    @FXML private TextField textfieldAnswerOne;
-    @FXML private TextField textfieldAnswerTwo;
-    @FXML private TextField textfieldAnswerThree;
-    @FXML private TextField textfieldAnswerFour;
     @FXML private CheckBox checkBoxAnswerOne;
     @FXML private CheckBox checkBoxAnswerTwo;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
-    @FXML private CheckBox checkBoxContinue;
 
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
@@ -55,10 +48,7 @@ import java.util.List;
     protected void fillFieldsAndCheckboxes() {
         this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
-        this.textfieldAnswerOne.setText(inputs == null ? "" : (String) inputs.get(1));
-        this.textfieldAnswerTwo.setText(inputs == null ? "" : (String) inputs.get(2));
-        this.textfieldAnswerThree.setText(inputs == null ? "" : (String) inputs.get(3));
-        this.textfieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(4));
+        fillAnswerFields(1);
 
         this.checkBoxAnswerOne.setSelected(inputs != null && (boolean) inputs.get(5));
         this.checkBoxAnswerTwo.setSelected(inputs != null && (boolean) inputs.get(6));
@@ -66,6 +56,27 @@ import java.util.List;
         this.checkBoxAnswerFour.setSelected(inputs != null && (boolean) inputs.get(8));
 
         this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(9));
+    }
+
+    @Override protected void saveQuestionInput(List inputs) {
+        if (textAreaQuestion != null) {
+            inputs.add(textAreaQuestion.getText());
+        } else {
+            inputs.add(null);
+        }
+    }
+
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+        inputs.add(checkBoxAnswerOne.isSelected());
+        inputs.add(checkBoxAnswerTwo.isSelected());
+        inputs.add(checkBoxAnswerThree.isSelected());
+        inputs.add(checkBoxAnswerFour.isSelected());
+
+        inputs.add(checkBoxContinue.isSelected());
+    }
+
+    @Override protected QuestionType getQuestionType() {
+        return QuestionType.MULTIPLECHOICE;
     }
 
     private boolean createQuestion() {
@@ -91,73 +102,23 @@ import java.util.List;
         return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 1L);
     }
 
-    @Override protected List getUserInput() {
-        List inputs = new ArrayList<>();
-
-        saveAnswerFields(inputs);
-        saveCheckboxes(inputs);
-
-        return inputs;
-    }
-
-    private void saveAnswerFields(List inputs) {
-        if (textAreaQuestion.getText() != null) {
-            inputs.add(textAreaQuestion.getText());
-        } else {
-            inputs.add(null);
-        }
-
-        if (textfieldAnswerOne.getText() != null) {
-            inputs.add(textfieldAnswerOne.getText());
-        } else {
-            inputs.add(null);
-        }
-
-        if (textfieldAnswerTwo.getText() != null) {
-            inputs.add(textfieldAnswerTwo.getText());
-        } else {
-            inputs.add(null);
-        }
-
-        if (textfieldAnswerThree.getText() != null) {
-            inputs.add(textfieldAnswerThree.getText());
-        } else {
-            inputs.add(null);
-        }
-
-        if (textfieldAnswerFour.getText() != null) {
-            inputs.add(textfieldAnswerFour.getText());
-        } else {
-            inputs.add(null);
-        }
-    }
-
-    private void saveCheckboxes(List inputs) {
-        inputs.add(checkBoxAnswerOne.isSelected());
-        inputs.add(checkBoxAnswerTwo.isSelected());
-        inputs.add(checkBoxAnswerThree.isSelected());
-        inputs.add(checkBoxAnswerFour.isSelected());
-
-        inputs.add(checkBoxContinue.isSelected());
-    }
-
     private List<Answer> newAnswersFromField() throws ServiceException {
         logger.debug("Collecting all answers");
         List<Answer> newAnswers = new LinkedList<>();
-        if (!textfieldAnswerOne.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerOne.getText(),
+        if (!textFieldAnswerOne.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerOne.getText(),
                 checkBoxAnswerOne.isSelected()));
         }
-        if (!textfieldAnswerTwo.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerTwo.getText(),
+        if (!textFieldAnswerTwo.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerTwo.getText(),
                 checkBoxAnswerTwo.isSelected()));
         }
-        if (!textfieldAnswerThree.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerThree.getText(),
+        if (!textFieldAnswerThree.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerThree.getText(),
                 checkBoxAnswerThree.isSelected()));
         }
-        if (!textfieldAnswerFour.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textfieldAnswerFour.getText(),
+        if (!textFieldAnswerFour.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerFour.getText(),
                 checkBoxAnswerFour.isSelected()));
         }
 

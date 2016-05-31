@@ -30,7 +30,7 @@ import java.util.*;
  * @author Julian on 14.05.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class CreateImageQuestionController extends QuestionController{
+public class CreateImageQuestionController extends QuestionController {
 
     private static final String W = "Warning";
 
@@ -39,17 +39,12 @@ public class CreateImageQuestionController extends QuestionController{
     @FXML public ImageView imageViewQuestionImage;
     @FXML public ImageView imageViewIcon;
 
-    @FXML public TextField textFieldAnswerOne;
-    @FXML public TextField textFieldAnswerTwo;
-    @FXML public TextField textFieldAnswerThree;
-    @FXML public TextField textFieldAnswerFour;
     @FXML public TextField textFieldImagePath;
 
     @FXML public CheckBox checkBoxAnswerOne;
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
-    @FXML private CheckBox checkBoxContinue;
 
     private AnswerService answerService;
     private File out;
@@ -61,6 +56,45 @@ public class CreateImageQuestionController extends QuestionController{
 
     }
 
+    @Override protected void fillFieldsAndCheckboxes() {
+        this.imageViewQuestionImage.setImage(inputs == null ?
+            new Image("/images/imagePlaceholder.png") :
+            (Image) inputs.get(0));
+        this.textFieldImagePath.setText(inputs == null ? "" : (String) inputs.get(1));
+
+        fillAnswerFields(2);
+
+        this.checkBoxAnswerOne.setSelected(inputs != null && (boolean) inputs.get(6));
+        this.checkBoxAnswerTwo.setSelected(inputs != null && (boolean) inputs.get(7));
+        this.checkBoxAnswerThree.setSelected(inputs != null && (boolean) inputs.get(8));
+        this.checkBoxAnswerFour.setSelected(inputs != null && (boolean) inputs.get(9));
+
+        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(10));
+    }
+
+    @Override protected void saveQuestionInput(List inputs) {
+        inputs.add(imageViewQuestionImage.getImage());
+
+        if (textFieldImagePath != null) {
+            inputs.add(textFieldImagePath.getText());
+        } else {
+            inputs.add(null);
+        }
+    }
+
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+        inputs.add(checkBoxAnswerOne.isSelected());
+        inputs.add(checkBoxAnswerTwo.isSelected());
+        inputs.add(checkBoxAnswerThree.isSelected());
+        inputs.add(checkBoxAnswerFour.isSelected());
+
+        inputs.add(checkBoxContinue.isSelected());
+    }
+
+    @Override protected QuestionType getQuestionType() {
+        return QuestionType.NOTECARD;
+    }
+
     /**
      * Creates a new image question from the users input and stores it in the database.
      */
@@ -68,14 +102,13 @@ public class CreateImageQuestionController extends QuestionController{
         if (createQuestion()) {
             return;
         }
-        if(checkBoxContinue.isSelected()){
+        if (checkBoxContinue.isSelected()) {
             mainFrameController.handleCreateImageQuestion(this.topic);
-        }
-        else {
+        } else {
             mainFrameController.handleSubjects();
         }
         showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
-                "Your question is now in the database.");
+            "Your question is now in the database.");
     }
 
     /**
@@ -329,15 +362,6 @@ public class CreateImageQuestionController extends QuestionController{
         Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
             .contentText(e.getMessage()).build();
         alert.showAndWait();
-    }
-
-    @Override protected void fillFieldsAndCheckboxes() {
-        // TODO: make this view fill its fields and checkboxes
-    }
-
-    @Override protected List getUserInput() {
-        // TODO: read user input and save it in inputs
-        return null;
     }
 }
 

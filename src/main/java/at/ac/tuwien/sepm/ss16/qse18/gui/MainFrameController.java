@@ -212,6 +212,7 @@ import java.util.List;
                 setSubView("/fxml/question/createImageQuestion.fxml",
                     CreateImageQuestionController.class);
             imageQuestionController.setTopic(topic);
+            imageQuestionController.setInput(inputs);
         } catch (Exception e) {
             handleException(e);
         }
@@ -277,7 +278,7 @@ import java.util.List;
     }
 
     private void handleException(Exception e) {
-        logger.error(e);
+        logger.error("Exception thrown", e);
         Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
             .headerText("Could not load sub view.")
             .contentText("Unexpected Error. Please view logs for details.").build();

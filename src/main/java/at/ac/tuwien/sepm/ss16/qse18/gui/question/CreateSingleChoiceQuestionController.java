@@ -28,15 +28,10 @@ import java.util.List;
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CreateSingleChoiceQuestionController extends QuestionController {
     @FXML private TextArea textAreaQuestion;
-    @FXML private TextField textfieldAnswerOne;
-    @FXML private TextField textfieldAnswerTwo;
-    @FXML private TextField textfieldAnswerThree;
-    @FXML private TextField textfieldAnswerFour;
     @FXML private RadioButton radioButtonAnswerOne;
     @FXML private RadioButton radioButtonAnswerTwo;
     @FXML private RadioButton radioButtonAnswerThree;
     @FXML private RadioButton radioButtonAnswerFour;
-    @FXML private CheckBox checkBoxContinue;
 
     /**
      * Creates a controller for the single choice question creation.
@@ -52,12 +47,37 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     }
 
     @Override protected void fillFieldsAndCheckboxes() {
-        // TODO: make this view fill its fields and checkboxes
+        this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
+
+        fillAnswerFields(1);
+
+        this.radioButtonAnswerOne.setSelected(inputs != null && (boolean) inputs.get(5));
+        this.radioButtonAnswerTwo.setSelected(inputs != null && (boolean) inputs.get(6));
+        this.radioButtonAnswerThree.setSelected(inputs != null && (boolean) inputs.get(7));
+        this.radioButtonAnswerFour.setSelected(inputs != null && (boolean) inputs.get(8));
+
+        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(9));
     }
 
-    @Override protected List getUserInput() {
-        // TODO: read user input and save it in inputs
-        return null;
+    @Override protected void saveQuestionInput(List inputs) {
+        if (textAreaQuestion != null) {
+            inputs.add(textAreaQuestion.getText());
+        } else {
+            inputs.add(null);
+        }
+    }
+
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+        inputs.add(radioButtonAnswerOne.isSelected());
+        inputs.add(radioButtonAnswerTwo.isSelected());
+        inputs.add(radioButtonAnswerThree.isSelected());
+        inputs.add(radioButtonAnswerFour.isSelected());
+
+        inputs.add(checkBoxContinue.isSelected());
+    }
+
+    @Override protected QuestionType getQuestionType() {
+        return QuestionType.SINGLECHOICE;
     }
 
     @FXML public void handleCreateQuestion() {
@@ -99,20 +119,20 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         logger.debug("Collecting all answers");
         List<Answer> newAnswers = new LinkedList<>();
 
-        if (!textfieldAnswerOne.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerOne.getText(),
+        if (!textFieldAnswerOne.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerOne.getText(),
                 radioButtonAnswerOne.isSelected()));
         }
-        if (!textfieldAnswerTwo.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerTwo.getText(),
+        if (!textFieldAnswerTwo.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerTwo.getText(),
                 radioButtonAnswerTwo.isSelected()));
         }
-        if (!textfieldAnswerThree.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerThree.getText(),
+        if (!textFieldAnswerThree.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerThree.getText(),
                 radioButtonAnswerThree.isSelected()));
         }
-        if (!textfieldAnswerFour.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textfieldAnswerFour.getText(),
+        if (!textFieldAnswerFour.getText().isEmpty()) {
+            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerFour.getText(),
                 radioButtonAnswerFour.isSelected()));
         }
 

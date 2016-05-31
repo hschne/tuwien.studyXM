@@ -13,6 +13,9 @@ import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +25,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -41,6 +45,13 @@ import java.util.List;
     protected ObservableTopic topic;
     protected List inputs;
 
+    @FXML protected TextField textFieldAnswerOne;
+    @FXML protected TextField textFieldAnswerTwo;
+    @FXML protected TextField textFieldAnswerThree;
+    @FXML protected TextField textFieldAnswerFour;
+    @FXML protected CheckBox checkBoxContinue;
+    @FXML protected Label resourceLabel;
+
     @Autowired protected MainFrameController mainFrameController;
 
     @Autowired public QuestionController(QuestionService questionService, AlertBuilder alertBuilder,
@@ -52,7 +63,56 @@ import java.util.List;
 
     protected abstract void fillFieldsAndCheckboxes();
 
-    protected abstract List getUserInput();
+    protected abstract void saveQuestionInput(List inputs);
+
+    protected void fillAnswerFields(int startWith) {
+        int counter = startWith;
+        this.textFieldAnswerOne.setText(inputs == null ? "" : (String) inputs.get(counter));
+        this.textFieldAnswerTwo.setText(inputs == null ? "" : (String) inputs.get(++counter));
+        this.textFieldAnswerThree.setText(inputs == null ? "" : (String) inputs.get(++counter));
+        this.textFieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(++counter));
+    }
+
+    protected List getUserInput() {
+        List inputs = new ArrayList<>();
+
+        saveAnswerFields(inputs);
+        saveCheckboxesAndRadiobuttons(inputs);
+
+        return inputs;
+    }
+
+    protected void saveAnswerFields(List inputs) {
+        saveQuestionInput(inputs);
+
+        if (textFieldAnswerOne.getText() != null) {
+            inputs.add(textFieldAnswerOne.getText());
+        } else {
+            inputs.add(null);
+        }
+
+        if (textFieldAnswerTwo.getText() != null) {
+            inputs.add(textFieldAnswerTwo.getText());
+        } else {
+            inputs.add(null);
+        }
+
+        if (textFieldAnswerThree.getText() != null) {
+            inputs.add(textFieldAnswerThree.getText());
+        } else {
+            inputs.add(null);
+        }
+
+        if (textFieldAnswerFour.getText() != null) {
+            inputs.add(textFieldAnswerFour.getText());
+        } else {
+            inputs.add(null);
+        }
+    }
+
+    protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
+
+    protected abstract QuestionType getQuestionType();
 
     /**
      * Sets the topic in which the question should be created
@@ -88,7 +148,7 @@ import java.util.List;
         if (resourceChooserWrapper != null) {
             childController = resourceChooserWrapper.getController();
             childController.setStage(stage);
-            childController.saveUserInput(inputs, QuestionType.MULTIPLECHOICE);
+            childController.saveUserInput(inputs, getQuestionType());
 
             stage.setTitle("Add resource");
             stage.setScene(new Scene((Parent) resourceChooserWrapper.getLoadedObject(), 500, 400));

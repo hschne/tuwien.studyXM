@@ -8,9 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -29,14 +27,7 @@ import java.util.regex.Pattern;
  */
 @Component public class CreateOpenQuestionController extends QuestionController {
 
-    private Logger logger = LogManager.getLogger(CreateMultipleChoiceQuestionController.class);
-
     @FXML private TextArea textAreaQuestion;
-    @FXML private TextField textfieldAnswerOne;
-    @FXML private TextField textfieldAnswerTwo;
-    @FXML private TextField textfieldAnswerThree;
-    @FXML private TextField textfieldAnswerFour;
-    @FXML private CheckBox checkBoxContinue;
 
     @Autowired
     public CreateOpenQuestionController(QuestionService questionService, AlertBuilder alertBuilder,
@@ -45,12 +36,30 @@ import java.util.regex.Pattern;
     }
 
     @Override protected void fillFieldsAndCheckboxes() {
-        // TODO: make this view fill its fields and checkboxes
+        this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
+
+        fillAnswerFields(1);
+
+        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(5));
     }
 
-    @Override protected List getUserInput() {
-        // TODO: read user input and save it in inputs
-        return null;
+    @Override protected void saveQuestionInput(List inputs) {
+        if (textAreaQuestion != null) {
+            inputs.add(textAreaQuestion.getText());
+        } else {
+            inputs.add(null);
+        }
+    }
+
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+        // There are no correct or incorrect answers given for this
+        // type of question therefore there are no other checkboxes to save.
+
+        inputs.add(checkBoxContinue.isSelected());
+    }
+
+    @Override protected QuestionType getQuestionType() {
+        return QuestionType.OPENQUESTION;
     }
 
     /**
@@ -111,25 +120,25 @@ import java.util.regex.Pattern;
     private List<Answer> newAnswersFromField() throws ServiceException {
         logger.info("Collecting keywords from fields");
         List<Answer> newAnswers = new LinkedList<>();
-        if (!textfieldAnswerOne.getText().isEmpty()) {
-            checkKeywordForSpaces(textfieldAnswerOne.getText());
+        if (!textFieldAnswerOne.getText().isEmpty()) {
+            checkKeywordForSpaces(textFieldAnswerOne.getText());
             newAnswers
-                .add(new Answer(QuestionType.OPENQUESTION, textfieldAnswerOne.getText(), true));
+                .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerOne.getText(), true));
         }
-        if (!textfieldAnswerTwo.getText().isEmpty()) {
-            checkKeywordForSpaces(textfieldAnswerTwo.getText());
+        if (!textFieldAnswerTwo.getText().isEmpty()) {
+            checkKeywordForSpaces(textFieldAnswerTwo.getText());
             newAnswers
-                .add(new Answer(QuestionType.OPENQUESTION, textfieldAnswerTwo.getText(), true));
+                .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerTwo.getText(), true));
         }
-        if (!textfieldAnswerThree.getText().isEmpty()) {
-            checkKeywordForSpaces(textfieldAnswerThree.getText());
+        if (!textFieldAnswerThree.getText().isEmpty()) {
+            checkKeywordForSpaces(textFieldAnswerThree.getText());
             newAnswers
-                .add(new Answer(QuestionType.OPENQUESTION, textfieldAnswerThree.getText(), true));
+                .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerThree.getText(), true));
         }
-        if (!textfieldAnswerFour.getText().isEmpty()) {
-            checkKeywordForSpaces(textfieldAnswerFour.getText());
+        if (!textFieldAnswerFour.getText().isEmpty()) {
+            checkKeywordForSpaces(textFieldAnswerFour.getText());
             newAnswers
-                .add(new Answer(QuestionType.OPENQUESTION, textfieldAnswerFour.getText(), true));
+                .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerFour.getText(), true));
         }
         if (newAnswers.isEmpty()) {
             logger.info("No keyword was given.");
