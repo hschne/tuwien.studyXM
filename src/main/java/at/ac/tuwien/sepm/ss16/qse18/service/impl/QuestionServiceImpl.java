@@ -28,7 +28,7 @@ import java.util.List;
     private QuestionDao qdao;
     private AnswerDao adao;
     private QuestionTopicDao tqDao;
-    private Logger logger = LogManager.getLogger(QuestionServiceImpl.class);
+    private static final Logger logger = LogManager.getLogger(QuestionServiceImpl.class);
 
     @Autowired public QuestionServiceImpl(QuestionDao qd, AnswerDao ad, QuestionTopicDao tqDao) {
         this.qdao = qd;

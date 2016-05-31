@@ -3,11 +3,9 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidationException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 
@@ -17,8 +15,6 @@ import java.util.List;
 
 import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyResource;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.powermock.api.mockito.PowerMockito.spy;

@@ -3,7 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidationException;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
@@ -20,7 +20,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
  */
 @Service public class ResourceServiceImpl implements ResourceService {
 
-    private final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     private ResourceDao resourceDao;
 
@@ -29,6 +29,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     @Override public Resource getResource(int id) throws ServiceException {
+        logger.debug("Getting resource with id {}", id);
         try {
             return resourceDao.getResource(id);
         } catch (DaoException e) {
@@ -38,6 +39,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     @Override public List<Resource> getResources() throws ServiceException {
+        logger.debug("Getting resources");
         try {
             return resourceDao.getResources();
         } catch (DaoException e) {
@@ -47,10 +49,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     @Override public Resource createResource(Resource resource) throws ServiceException {
+        logger.debug("Creating resource with parameters {}", resource);
         try {
             validate(resource);
             return resourceDao.createResource(resource);
-        } catch (DtoValidationException | DaoException e) {
+        } catch (DtoValidatorException | DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage(),e);
         }

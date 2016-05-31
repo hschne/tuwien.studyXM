@@ -32,26 +32,26 @@ public class DtoValidator {
         return e != null && e.getAuthor().length() <= 80 && !e.getAuthor().trim().isEmpty();
     }
 
-    public static void validate(Resource resource) throws DtoValidationException {
+    public static void validate(Resource resource) throws DtoValidatorException {
         if (resource == null) {
-            throw new DtoValidationException("Resource must not be null");
+            throw new DtoValidatorException("Resource must not be null");
         }
         if (resource.getType() == null) {
-            throw new DtoValidationException("Resource type must not be null");
+            throw new DtoValidatorException("Resource type must not be null");
         }
         validateFields(resource);
     }
 
-    private static void validateFields(Resource resource) throws DtoValidationException {
+    private static void validateFields(Resource resource) throws DtoValidatorException {
         if (resource.getName().isEmpty()) {
-            throw new DtoValidationException("Resource name must not be empty");
+            throw new DtoValidatorException("Resource name must not be empty. Please enter a resource name.");
         }
         if (resource.getReference().isEmpty()) {
-            throw new DtoValidationException("Resource reference must not be empty");
+            throw new DtoValidatorException("Resource reference must not be empty. Select a file to reference.");
         }
         File file = new File(resource.getReference());
         if (!(file.exists() || file.isDirectory())) {
-            throw new DtoValidationException("File referenced by resource does not exist");
+            throw new DtoValidatorException("File referenced by resource does not exist. Make sure that the file selected is available.");
         }
     }
 }

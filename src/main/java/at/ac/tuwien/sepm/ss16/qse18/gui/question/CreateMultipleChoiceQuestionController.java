@@ -31,9 +31,9 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerFour;
 
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, AlertBuilder alertBuilder,
+        ResourceQuestionService resourceQuestionService,
         SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, alertBuilder, fxmlLoader);
+        super(questionService, resourceQuestionService, fxmlLoader);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -77,7 +77,6 @@ import java.util.List;
         inputs.add(checkBoxAnswerTwo.isSelected());
         inputs.add(checkBoxAnswerThree.isSelected());
         inputs.add(checkBoxAnswerFour.isSelected());
-
         inputs.add(checkBoxContinue.isSelected());
     }
 
@@ -98,10 +97,10 @@ import java.util.List;
                     .createReference(resource.getResource(), newQuestion);
             }
         } catch (ServiceException e) {
-            showAlert(e);
+            showError(e);
             return true;
         } catch (IllegalArgumentException e) {
-            showAlert(e);
+            showError(e);
             return true;
         }
         return false;

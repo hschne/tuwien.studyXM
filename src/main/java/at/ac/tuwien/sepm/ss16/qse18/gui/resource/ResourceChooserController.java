@@ -1,19 +1,16 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,12 +20,10 @@ import java.util.stream.Collectors;
 /**
  * @author Bicer Cem
  */
-@Component public class ResourceChooserController {
-    private static final Logger logger = LogManager.getLogger();
+@Component public class ResourceChooserController extends BaseController {
 
     private ResourceService resourceService;
-    private AlertBuilder alertBuilder;
-    private MainFrameController mainFrameController;
+
     private Stage stage;
     private SpringFXMLLoader fxmlLoader;
     private Label resourceLabel;
@@ -43,11 +38,8 @@ import java.util.stream.Collectors;
     private QuestionType questionTypeOfResource;
 
     @Autowired
-    public ResourceChooserController(ResourceService resourceService, AlertBuilder alertBuilder,
-        MainFrameController mainFrameController, SpringFXMLLoader fxmlLoader) {
+    public ResourceChooserController(ResourceService resourceService, SpringFXMLLoader fxmlLoader) {
         this.resourceService = resourceService;
-        this.alertBuilder = alertBuilder;
-        this.mainFrameController = mainFrameController;
         this.fxmlLoader = fxmlLoader;
     }
 
@@ -82,8 +74,7 @@ import java.util.stream.Collectors;
             });
         } catch (ServiceException e) {
             logger.error("Could not fill resource list", e);
-            showAlert("Could not fill resource list",
-                "Make sure that there is a connection to the database.");
+            showError(e);
         }
     }
 
@@ -97,8 +88,7 @@ import java.util.stream.Collectors;
         logger.debug("Choose clicked");
 
         if (resourceListView.getSelectionModel().getSelectedItem() == null) {
-            showAlert("No resource chosen",
-                "You have to select the resource you want to refer to from the list.");
+            showError("You have to select the resource you want to refer to from the list.");
             return;
         }
 
@@ -119,9 +109,5 @@ import java.util.stream.Collectors;
         this.resourceLabel = resourceLabel;
     }
 
-    private void showAlert(String headerMsg, String contentMsg) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).headerText(headerMsg)
-            .contentText(contentMsg).build();
-        alert.showAndWait();
-    }
+
 }

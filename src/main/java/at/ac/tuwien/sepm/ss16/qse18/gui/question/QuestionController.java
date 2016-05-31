@@ -1,28 +1,21 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -38,12 +31,11 @@ import java.util.List;
  */
 
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public abstract class QuestionController
-    implements GuiController {
+    extends BaseController {
 
-    protected final static Logger logger = LogManager.getLogger();
     protected final QuestionService questionService;
     protected final ResourceQuestionService resourceQuestionService;
-    protected final AlertBuilder alertBuilder;
+
     protected SpringFXMLLoader fxmlLoader;
 
     protected ObservableTopic topic;
@@ -58,14 +50,12 @@ import java.util.List;
     @FXML protected CheckBox checkBoxContinue;
     @FXML protected Label resourceLabel;
 
-    @Autowired protected MainFrameController mainFrameController;
-
     @Autowired public QuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, AlertBuilder alertBuilder,
+        ResourceQuestionService resourceQuestionService,
         SpringFXMLLoader fxmlLoader) {
         this.questionService = questionService;
         this.resourceQuestionService = resourceQuestionService;
-        this.alertBuilder = alertBuilder;
+
         this.fxmlLoader = fxmlLoader;
     }
 
@@ -135,7 +125,7 @@ import java.util.List;
             logger.error("Could not load resourceChooser.fxml", e);
         }
 
-        ResourceChooserController childController = null;
+        ResourceChooserController childController;
 
         if (resourceChooserWrapper != null) {
             childController = resourceChooserWrapper.getController();
@@ -174,16 +164,4 @@ import java.util.List;
         fillFieldsAndCheckboxes();
     }
 
-    protected void showAlert(Exception e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Error")
-            .headerText("An error occurred").contentText(e.getMessage()).build();
-        alert.showAndWait();
-    }
-
-
-    protected void showSuccess(String msg) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Success")
-            .headerText("The operation was successful!").contentText(msg).build();
-        alert.showAndWait();
-    }
 }

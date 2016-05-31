@@ -11,13 +11,48 @@ import java.util.List;
  */
 public interface ResourceService {
 
+    /**
+     * Returns a resource with resourceid {@param id.
+     *
+     * @param id The id of the resource
+     * @return A resource with the given parameter
+     * @throws ServiceException If resource could not be retrieved
+     */
     Resource getResource(int id) throws ServiceException;
 
+    /**
+     * Gets all available resources
+     *
+     * @return A list of all resources
+     * @throws ServiceException If no resources could be retrieved
+     */
     List<Resource> getResources() throws ServiceException;
 
+    /**
+     * Creates a new resource
+     *
+     * @param resource The {@link Resource} to be saved to the database
+     * @return A resource with a set resourceid
+     * @throws ServiceException If the resource could not be saved
+     */
     Resource createResource(Resource resource) throws ServiceException;
 
+    /**
+     * Deletes the given resource
+     *
+     * @param resource The resource to be deleted
+     * @return The deleted resource
+     * @throws ServiceException If the resource could not be deleted
+     */
     Resource deleteResource(Resource resource) throws ServiceException;
 
+
+    /**
+     * Updates the given resources
+     *
+     * @param resource The resource to be updated
+     * @return The resource with updated fields
+     * @throws ServiceException If the resource could not be updated
+     */
     Resource updateResource(Resource resource) throws ServiceException;
 }

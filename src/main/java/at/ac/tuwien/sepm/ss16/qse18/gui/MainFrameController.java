@@ -34,7 +34,7 @@ import java.util.List;
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class MainFrameController {
 
-    private final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
     @FXML public Pane paneContent;
     private SpringFXMLLoader fxmlLoader;
     private AlertBuilder alertBuilder;

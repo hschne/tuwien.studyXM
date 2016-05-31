@@ -2,19 +2,15 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -31,7 +27,7 @@ import java.util.List;
  */
 
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateExamController
-    implements GuiController {
+    extends BaseController {
     @FXML public Button buttonShowQuestions;
     @FXML public Button buttonNewExam;
     @FXML public TableView<Exam> tableExam;
@@ -41,27 +37,16 @@ import java.util.List;
     @FXML public TableColumn<Exam, String> columnAuthor;
     @Autowired ExamServiceImpl examService;
     @Autowired QuestionService questionService;
-    @Autowired MainFrameController mainFrameController;
-    private Logger logger = LogManager.getLogger(CreateExamController.class);
-    private AlertBuilder alertBuilder;
     private Exam exam;
     private List<Question> questionList = new ArrayList<>();
-
-    @Autowired public CreateExamController(AlertBuilder alertBuilder) {
-        this.alertBuilder = alertBuilder;
-    }
 
     @FXML public void initialize() {
         this.exam = null;
         try {
             initializeTable();
         } catch (ServiceException e) {
-            logger.error("Could not fill exam-table: ", e);
-            Alert alert =
-                alertBuilder.alertType(Alert.AlertType.ERROR).title("Error").setResizable(true)
-                    .headerText("Could not fill exam-table.")
-                    .contentText("Please make sure you are connected to the database").build();
-            alert.showAndWait();
+            logger.error(e);
+            showError(e);
         }
     }
 
@@ -119,9 +104,7 @@ import java.util.List;
             mainFrameController.handleShowQuestions();
         } catch (ServiceException e) {
             logger.error(e);
-            alertBuilder.alertType(Alert.AlertType.ERROR).
-                title("Error").headerText("Could load questions for exam")
-                .contentText(e.getMessage()).build().showAndWait();
+            showError(e);
         }
 
     }

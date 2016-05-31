@@ -3,17 +3,11 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -31,15 +25,12 @@ import java.util.*;
  * @author Hans-Joerg Schroedl
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class ResourceEditController
-    implements GuiController {
+    extends BaseController {
 
-    private final Logger logger = LogManager.getLogger();
     @FXML TextField resourceName;
     @FXML TextField filePath;
 
     @Autowired ResourceOverviewController overviewController;
-    @Autowired MainFrameController mainFrameController;
-    @Autowired AlertBuilder alertBuilder;
 
     private File out;
 
@@ -70,13 +61,12 @@ import java.util.*;
         try {
             copyFile(in, out);
             Resource resource = createResourceFromFields();
-
             overviewController.addResource(new ObservableResource(resource));
 
             openRightWindowNext(new ObservableResource(resource));
         } catch (Exception e) {
             logger.error(e);
-            showAlert(e);
+            showError(e);
         }
 
     }
@@ -181,10 +171,5 @@ import java.util.*;
         }
     }
 
-    private void showAlert(Exception e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("An error occurred").contentText(e.getMessage()).setResizable(true).build();
-        alert.showAndWait();
-    }
 
 }

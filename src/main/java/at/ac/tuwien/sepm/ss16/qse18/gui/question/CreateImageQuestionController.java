@@ -53,9 +53,8 @@ public class CreateImageQuestionController extends QuestionController {
     private File out;
 
     @Autowired public CreateImageQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, AnswerService answerService,
-        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, alertBuilder, fxmlLoader);
+        ResourceQuestionService resourceQuestionService, AnswerService answerService, SpringFXMLLoader fxmlLoader) {
+        super(questionService, resourceQuestionService, fxmlLoader);
         this.answerService = answerService;
 
     }
@@ -113,8 +112,7 @@ public class CreateImageQuestionController extends QuestionController {
         } else {
             mainFrameController.handleSubjects();
         }
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
-            "Your question is now in the database.");
+        showSuccess("Question is now in the database");
     }
 
     /**
@@ -170,12 +168,12 @@ public class CreateImageQuestionController extends QuestionController {
             questionService.setCorrespondingAnswers(newQuestion, answerList);
 
         } catch (IOException e) {
-            logger.debug("Unable to copy image " + e.getMessage());
-            showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to copy image");
+            logger.error(e);
+            showError("Unable to copy image. Please view logs for more details.");
             return true;
         } catch (ServiceException e) {
-            logger.debug("Unable to create question. " + e.getMessage());
-            showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to create question");
+            logger.error(e);
+            showError(e);
             return true;
         }
         return false;
@@ -284,30 +282,26 @@ public class CreateImageQuestionController extends QuestionController {
         logger.debug("Validating user input.");
 
         if (!checkIfImageWasSelected()) {
-            logger.debug("No image was selected.");
-            showAlert(Alert.AlertType.WARNING, W, "No image selected",
-                "Please select an image for this question");
+            logger.error("No image was selected.");
+            showError("Please select an image for this question.");
             return false;
         }
 
         if (!checkIfAnswerWasGiven()) {
-            logger.debug("No answer was given.");
-            showAlert(Alert.AlertType.WARNING, W, "No answer was given",
-                "Please give at least one answer to this question.");
+            logger.error("No answer was given.");
+            showError("Please give at least one answer to this question.");
             return false;
         }
 
         if (!checkIfCorrectAnswerWasGiven()) {
-            logger.debug("No correct answer was given.");
-            showAlert(Alert.AlertType.WARNING, W, "No correct answer was given",
-                "Please give at least one correct answer to this question.");
+            logger.error("No correct answer was given.");
+            showError("Please give at least one correct answer to this question.");
             return false;
         }
 
         if (!checkIfCorrectAnswerHasText()) {
-            logger.debug("The answer selected as correct has no text.");
-            showAlert(Alert.AlertType.WARNING, W, "Correct answer has no text",
-                "Please add text to the question selected as correct.");
+            logger.error("The answer selected as correct has no text.");
+            showError("Please select an image for this question.");
             return false;
         }
         return true;
@@ -345,35 +339,7 @@ public class CreateImageQuestionController extends QuestionController {
         }
     }
 
-    /**
-     * Creates and shows a new Alert.
-     *
-     * @param type        alert type
-     * @param title       alert title
-     * @param headerText  alert header text
-     * @param contentText alert content text
-     */
-    private void showAlert(Alert.AlertType type, String title, String headerText,
-        String contentText) {
-        Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
-            .contentText(contentText).build();
-        alert.showAndWait();
-    }
 
-    /**
-     * Creates and shows a new Alert for a given Exception.
-     *
-     * @param e          Exception
-     * @param type       alert type
-     * @param title      alert title
-     * @param headerText alert header text
-     */
-    private void showExceptionAlert(Exception e, Alert.AlertType type, String title,
-        String headerText) {
-        Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
-            .contentText(e.getMessage()).build();
-        alert.showAndWait();
-    }
 }
 
 
