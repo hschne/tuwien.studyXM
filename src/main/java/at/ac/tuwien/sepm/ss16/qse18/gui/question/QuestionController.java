@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -41,6 +42,7 @@ import java.util.List;
 
     protected final static Logger logger = LogManager.getLogger();
     protected final QuestionService questionService;
+    protected final ResourceQuestionService resourceQuestionService;
     protected final AlertBuilder alertBuilder;
     protected SpringFXMLLoader fxmlLoader;
 
@@ -58,9 +60,11 @@ import java.util.List;
 
     @Autowired protected MainFrameController mainFrameController;
 
-    @Autowired public QuestionController(QuestionService questionService, AlertBuilder alertBuilder,
+    @Autowired public QuestionController(QuestionService questionService,
+        ResourceQuestionService resourceQuestionService, AlertBuilder alertBuilder,
         SpringFXMLLoader fxmlLoader) {
         this.questionService = questionService;
+        this.resourceQuestionService = resourceQuestionService;
         this.alertBuilder = alertBuilder;
         this.fxmlLoader = fxmlLoader;
     }
@@ -147,7 +151,7 @@ import java.util.List;
         }
 
         // Save the chosen or newly created resource
-        resource = (ObservableResource) inputs.get(inputs.size()-1);
+        resource = (ObservableResource) inputs.get(inputs.size() - 1);
     }
 
     protected abstract void saveCheckboxesAndRadiobuttons(List inputs);

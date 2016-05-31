@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -42,8 +43,9 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
      * @param alertBuilder    An alert builder which wraps pop ups for user interaction.
      */
     @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
-        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
-        super(questionService, alertBuilder, fxmlLoader);
+        ResourceQuestionService resourceQuestionService, AlertBuilder alertBuilder,
+        SpringFXMLLoader fxmlLoader) {
+        super(questionService, resourceQuestionService, alertBuilder, fxmlLoader);
 
     }
 
@@ -103,6 +105,10 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
             List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, answers);
+
+            if (resource != null) {
+                resourceQuestionService.createReference(resource.getResource(), newQuestion);
+            }
         } catch (ServiceException e) {
             logger.error("Could not create new question", e);
             showAlert(e);

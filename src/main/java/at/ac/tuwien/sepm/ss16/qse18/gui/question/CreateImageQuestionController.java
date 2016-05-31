@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -51,16 +52,16 @@ public class CreateImageQuestionController extends QuestionController {
     private File out;
 
     @Autowired public CreateImageQuestionController(QuestionService questionService,
-        AnswerService answerService, AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
-        super(questionService, alertBuilder, fxmlLoader);
+        ResourceQuestionService resourceQuestionService, AnswerService answerService,
+        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
+        super(questionService, resourceQuestionService, alertBuilder, fxmlLoader);
         this.answerService = answerService;
 
     }
 
     @Override protected void fillFieldsAndCheckboxes() {
-        this.imageViewQuestionImage.setImage(inputs == null ?
-            new Image("/images/imagePlaceholder.png") :
-            (Image) inputs.get(0));
+        this.imageViewQuestionImage.setImage(
+            inputs == null ? new Image("/images/imagePlaceholder.png") : (Image) inputs.get(0));
         this.textFieldImagePath.setText(inputs == null ? "" : (String) inputs.get(1));
 
         fillAnswerFields(2);
@@ -154,6 +155,11 @@ public class CreateImageQuestionController extends QuestionController {
 
             Question newQuestion = newQuestionFromFields();
             questionService.createQuestion(newQuestion, topic.getT());
+
+            if (resource != null) {
+                resourceQuestionService
+                    .createReference(resource.getResource(), newQuestion);
+            }
 
             List<Answer> answerList = newAnswersFromFields();
             for (Answer a : answerList) {

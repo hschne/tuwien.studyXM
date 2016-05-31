@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -30,8 +31,9 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerFour;
 
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
-        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
-        super(questionService, alertBuilder, fxmlLoader);
+        ResourceQuestionService resourceQuestionService, AlertBuilder alertBuilder,
+        SpringFXMLLoader fxmlLoader) {
+        super(questionService, resourceQuestionService, alertBuilder, fxmlLoader);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -90,6 +92,11 @@ import java.util.List;
             List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, answers);
+
+            if (resource != null) {
+                resourceQuestionService
+                    .createReference(resource.getResource(), newQuestion);
+            }
         } catch (ServiceException e) {
             showAlert(e);
             return true;
