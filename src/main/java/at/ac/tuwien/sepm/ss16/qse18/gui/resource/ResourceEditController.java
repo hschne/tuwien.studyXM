@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -69,6 +70,7 @@ import java.util.*;
         try {
             copyFile(in, out);
             Resource resource = createResourceFromFields();
+
             overviewController.addResource(new ObservableResource(resource));
 
             openRightWindowNext(new ObservableResource(resource));
@@ -80,12 +82,19 @@ import java.util.*;
     }
 
     @FXML public void handleCancel() {
-        openRightWindowNext(null);
+        try {
+            openRightWindowNext(null);
+        } catch (ServiceException e) {
+            logger.error(e);
+            showAlert(e);
+        }
     }
 
-    private void openRightWindowNext(ObservableResource resource) {
+    private void openRightWindowNext(ObservableResource resource) throws ServiceException {
         if (inputs != null) {
             if (resource != null) {
+                // Replace resource with newly created one
+                inputs.remove(inputs.size()-1);
                 inputs.add(resource);
             }
 

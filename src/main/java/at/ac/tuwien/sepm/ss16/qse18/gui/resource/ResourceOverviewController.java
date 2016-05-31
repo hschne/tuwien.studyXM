@@ -55,7 +55,10 @@ import java.util.stream.Collectors;
 
     public void addResource(ObservableResource resource) throws ServiceException {
         resourceService.createResource(resource.getResource());
-        resourceList.add(resource);
+
+        if (resourceList != null) {
+            resourceList.add(resource);
+        }
     }
 
     @FXML public void handleNew() {

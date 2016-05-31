@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
@@ -154,11 +155,11 @@ public class CreateImageQuestionController extends QuestionController {
             copySelectedImage();
 
             Question newQuestion = newQuestionFromFields();
-            questionService.createQuestion(newQuestion, topic.getT());
+            Question createdQuestion = questionService.createQuestion(newQuestion, topic.getT());
 
             if (resource != null) {
                 resourceQuestionService
-                    .createReference(resource.getResource(), newQuestion);
+                    .createReference(resource.getResource(), createdQuestion);
             }
 
             List<Answer> answerList = newAnswersFromFields();

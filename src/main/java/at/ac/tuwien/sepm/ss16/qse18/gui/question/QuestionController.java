@@ -164,7 +164,9 @@ import java.util.List;
      * @param topic The topic
      */
     public void setTopic(ObservableTopic topic) {
-        this.topic = topic;
+        if (topic != null) {
+            this.topic = topic;
+        }
     }
 
     public void setInput(List inputs) {
