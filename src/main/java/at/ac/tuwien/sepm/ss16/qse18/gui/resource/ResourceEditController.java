@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -76,7 +77,7 @@ import java.util.*;
             openRightWindowNext(null);
         } catch (ServiceException e) {
             logger.error(e);
-            showAlert(e);
+            showError(e);
         }
     }
 
