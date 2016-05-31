@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 
     @FXML public void initialize() {
         try {
-            logger.debug("Initializing subject table");
+            logger.debug("Initializing resource table");
             initializeListView();
         } catch (ServiceException e) {
             logger.error(e);

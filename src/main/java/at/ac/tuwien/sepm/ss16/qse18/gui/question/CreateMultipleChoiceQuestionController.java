@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -14,7 +15,6 @@ import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.IllegalFormatCodePointException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,8 +30,10 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
 
-    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService, SpringFXMLLoader fxmlLoader) {
-        super(questionService, fxmlLoader);
+    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
+        ResourceQuestionService resourceQuestionService,
+        SpringFXMLLoader fxmlLoader) {
+        super(questionService, resourceQuestionService, fxmlLoader);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -89,7 +91,15 @@ import java.util.List;
             List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, answers);
-        } catch (ServiceException | IllegalArgumentException e) {
+
+            if (resource != null) {
+                resourceQuestionService
+                    .createReference(resource.getResource(), newQuestion);
+            }
+        } catch (ServiceException e) {
+            showError(e);
+            return true;
+        } catch (IllegalArgumentException e) {
             showError(e);
             return true;
         }

@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
@@ -37,8 +38,10 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
      * @param questionService The question service which saves a given question and answers
      *                        persistently.
      */
-    @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService, SpringFXMLLoader fxmlLoader) {
-        super(questionService, fxmlLoader);
+    @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
+        ResourceQuestionService resourceQuestionService,
+        SpringFXMLLoader fxmlLoader) {
+        super(questionService, resourceQuestionService, fxmlLoader);
 
     }
 
@@ -98,6 +101,9 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
             List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, answers);
+            if (resource != null) {
+                resourceQuestionService.createReference(resource.getResource(), newQuestion);
+            }
         } catch (ServiceException | IllegalArgumentException e) {
             logger.error("Could not create new question", e);
             showError(e);

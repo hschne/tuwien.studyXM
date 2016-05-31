@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
@@ -33,6 +34,8 @@ import java.util.List;
     extends BaseController {
 
     protected final QuestionService questionService;
+    protected final ResourceQuestionService resourceQuestionService;
+
     protected SpringFXMLLoader fxmlLoader;
 
     protected ObservableTopic topic;
@@ -48,57 +51,12 @@ import java.util.List;
     @FXML protected Label resourceLabel;
 
     @Autowired public QuestionController(QuestionService questionService,
+        ResourceQuestionService resourceQuestionService,
         SpringFXMLLoader fxmlLoader) {
         this.questionService = questionService;
+        this.resourceQuestionService = resourceQuestionService;
+
         this.fxmlLoader = fxmlLoader;
-    }
-
-    @FXML public void handleAddResource() {
-        // saving input from user to be able to recover later
-        inputs = getUserInput();
-
-        Stage stage = new Stage();
-        SpringFXMLLoader.FXMLWrapper<Object, ResourceChooserController> resourceChooserWrapper =
-            null;
-
-        try {
-            resourceChooserWrapper = fxmlLoader.loadAndWrap("/fxml/resource/resourceChooser.fxml",
-                ResourceChooserController.class);
-        } catch (IOException e) {
-            logger.error("Could not load resourceChooser.fxml", e);
-        }
-
-        ResourceChooserController childController = null;
-
-        if (resourceChooserWrapper != null) {
-            childController = resourceChooserWrapper.getController();
-            childController.setStage(stage);
-            childController.saveUserInput(inputs, getQuestionType());
-            childController.setResourceLabel(resourceLabel);
-
-            stage.setTitle("Add resource");
-            stage.setScene(new Scene((Parent) resourceChooserWrapper.getLoadedObject(), 500, 400));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.showAndWait();
-        }
-
-        // Save the chosen or newly created resource
-        resource = (ObservableResource) inputs.get(inputs.size() - 1);
-    }
-
-    /**
-     * Sets the topic in which the question should be created
-     *
-     * @param topic The topic
-     */
-    public void setTopic(ObservableTopic topic) {
-        this.topic = topic;
-    }
-
-    public void setInput(List inputs) {
-        this.inputs = inputs;
-        fillFieldsAndCheckboxes();
     }
 
     protected abstract void fillFieldsAndCheckboxes();
@@ -152,8 +110,56 @@ import java.util.List;
         }
     }
 
+    @FXML public void handleAddResource() {
+        // saving input from user to be able to recover later
+        inputs = getUserInput();
+
+        Stage stage = new Stage();
+        SpringFXMLLoader.FXMLWrapper<Object, ResourceChooserController> resourceChooserWrapper =
+            null;
+
+        try {
+            resourceChooserWrapper = fxmlLoader.loadAndWrap("/fxml/resource/resourceChooser.fxml",
+                ResourceChooserController.class);
+        } catch (IOException e) {
+            logger.error("Could not load resourceChooser.fxml", e);
+        }
+
+        ResourceChooserController childController;
+
+        if (resourceChooserWrapper != null) {
+            childController = resourceChooserWrapper.getController();
+            childController.setStage(stage);
+            childController.saveUserInput(inputs, getQuestionType());
+            childController.setResourceLabel(resourceLabel);
+
+            stage.setTitle("Add resource");
+            stage.setScene(new Scene((Parent) resourceChooserWrapper.getLoadedObject(), 500, 400));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            stage.setResizable(false);
+            stage.showAndWait();
+        }
+
+        // Save the chosen or newly created resource
+        resource = (ObservableResource) inputs.get(inputs.size() - 1);
+    }
+
     protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
 
     protected abstract QuestionType getQuestionType();
+
+    /**
+     * Sets the topic in which the question should be created
+     *
+     * @param topic The topic
+     */
+    public void setTopic(ObservableTopic topic) {
+        this.topic = topic;
+    }
+
+    public void setInput(List inputs) {
+        this.inputs = inputs;
+        fillFieldsAndCheckboxes();
+    }
 
 }
