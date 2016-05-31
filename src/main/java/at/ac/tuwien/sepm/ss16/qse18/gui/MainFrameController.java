@@ -77,15 +77,6 @@ import java.util.List;
         }
     }
 
-    public void handleCreateResource() {
-        logger.debug("Loading create resource ");
-        try {
-            setSubView("/fxml/resource/resourceEditView.fxml", ResourceEditController.class);
-        } catch (IOException e) {
-            handleException(e);
-        }
-    }
-
     public void handleCreateResource(List inputs, QuestionType questionType) {
         logger.debug("Loading create resource with input list");
         try {

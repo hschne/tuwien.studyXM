@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
@@ -57,6 +58,9 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         this.radioButtonAnswerFour.setSelected(inputs != null && (boolean) inputs.get(8));
 
         this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(9));
+
+        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(10));
+        this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
     @Override protected void saveQuestionInput(List inputs) {
@@ -103,6 +107,9 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
             logger.error("Could not create new question", e);
             showAlert(e);
             return true;
+        } catch (IllegalArgumentException e) {
+            showAlert(e);
+            return true;
         }
         return false;
     }
@@ -110,7 +117,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     private Question newQuestionFromField() throws ServiceException {
         logger.info("Collecting question from field.");
         if (textAreaQuestion.getText().isEmpty()) {
-            throw new ServiceException("The question must not be empty.");
+            throw new IllegalArgumentException("The question must not be empty.");
         }
         return new Question(textAreaQuestion.getText(), QuestionType.SINGLECHOICE, 1L);
     }
@@ -137,7 +144,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         }
 
         if (newAnswers.isEmpty()) {
-            throw new ServiceException("At least one answer must be given.");
+            throw new IllegalArgumentException("At least one answer must be given.");
         }
 
         for (Answer a : newAnswers) {
@@ -146,6 +153,6 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
             }
         }
 
-        throw new ServiceException("At least one given answer must be true.");
+        throw new IllegalArgumentException("At least one given answer must be true.");
     }
 }

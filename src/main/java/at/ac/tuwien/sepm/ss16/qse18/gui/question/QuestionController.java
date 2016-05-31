@@ -1,8 +1,10 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
@@ -45,6 +47,8 @@ import java.util.List;
     protected ObservableTopic topic;
     protected List inputs;
 
+    protected ObservableResource resource;
+
     @FXML protected TextField textFieldAnswerOne;
     @FXML protected TextField textFieldAnswerTwo;
     @FXML protected TextField textFieldAnswerThree;
@@ -79,6 +83,8 @@ import java.util.List;
         saveAnswerFields(inputs);
         saveCheckboxesAndRadiobuttons(inputs);
 
+        inputs.add(resource);
+
         return inputs;
     }
 
@@ -110,24 +116,6 @@ import java.util.List;
         }
     }
 
-    protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
-
-    protected abstract QuestionType getQuestionType();
-
-    /**
-     * Sets the topic in which the question should be created
-     *
-     * @param topic The topic
-     */
-    public void setTopic(ObservableTopic topic) {
-        this.topic = topic;
-    }
-
-    public void setInput(List inputs) {
-        this.inputs = inputs;
-        fillFieldsAndCheckboxes();
-    }
-
     @FXML public void handleAddResource() {
         // saving input from user to be able to recover later
         inputs = getUserInput();
@@ -149,6 +137,7 @@ import java.util.List;
             childController = resourceChooserWrapper.getController();
             childController.setStage(stage);
             childController.saveUserInput(inputs, getQuestionType());
+            childController.setResourceLabel(resourceLabel);
 
             stage.setTitle("Add resource");
             stage.setScene(new Scene((Parent) resourceChooserWrapper.getLoadedObject(), 500, 400));
@@ -156,10 +145,31 @@ import java.util.List;
             stage.setResizable(false);
             stage.showAndWait();
         }
+
+        // Save the chosen or newly created resource
+        resource = (ObservableResource) inputs.get(inputs.size()-1);
     }
 
-    protected void showAlert(ServiceException e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
+    protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
+
+    protected abstract QuestionType getQuestionType();
+
+    /**
+     * Sets the topic in which the question should be created
+     *
+     * @param topic The topic
+     */
+    public void setTopic(ObservableTopic topic) {
+        this.topic = topic;
+    }
+
+    public void setInput(List inputs) {
+        this.inputs = inputs;
+        fillFieldsAndCheckboxes();
+    }
+
+    protected void showAlert(Exception e) {
+        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Error")
             .headerText("An error occurred").contentText(e.getMessage()).build();
         alert.showAndWait();
     }

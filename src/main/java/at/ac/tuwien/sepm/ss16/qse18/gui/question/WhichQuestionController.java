@@ -14,8 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -40,7 +39,7 @@ import java.io.IOException;
 
     private ToggleGroup tg;
 
-    private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
+    private Logger logger = org.apache.logging.log4j.LogManager.getLogger();
     private SpringFXMLLoader springFXMLLoader;
     private AlertBuilder alertBuilder;
     private Stage primaryStage;

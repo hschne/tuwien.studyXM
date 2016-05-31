@@ -70,7 +70,8 @@ import java.util.*;
             copyFile(in, out);
             Resource resource = createResourceFromFields();
             overviewController.addResource(new ObservableResource(resource));
-            mainFrameController.handleResources();
+
+            openRightWindowNext(new ObservableResource(resource));
         } catch (Exception e) {
             logger.error(e);
             showAlert(e);
@@ -79,7 +80,15 @@ import java.util.*;
     }
 
     @FXML public void handleCancel() {
+        openRightWindowNext(null);
+    }
+
+    private void openRightWindowNext(ObservableResource resource) {
         if (inputs != null) {
+            if (resource != null) {
+                inputs.add(resource);
+            }
+
             switch (questionTypeOfResource) {
                 case MULTIPLECHOICE:
                     mainFrameController.handleMultipleChoiceQuestion(null, inputs);

@@ -10,10 +10,7 @@ import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +31,7 @@ import java.util.stream.Collectors;
     private MainFrameController mainFrameController;
     private Stage stage;
     private SpringFXMLLoader fxmlLoader;
+    private Label resourceLabel;
 
     @FXML public Button newButton;
     @FXML public Button cancelButton;
@@ -96,12 +94,29 @@ import java.util.stream.Collectors;
     }
 
     @FXML public void chooseResource() {
-        // TODO: implement choose resource
+        logger.debug("Choose clicked");
+
+        if (resourceListView.getSelectionModel().getSelectedItem() == null) {
+            showAlert("No resource chosen",
+                "You have to select the resource you want to refer to from the list.");
+            return;
+        }
+
+        // Replace resource with chosen one
+        inputs.remove(inputs.size()-1);
+        inputs.add(resourceListView.getSelectionModel().getSelectedItem());
+
+        resourceLabel.setText(resourceListView.getSelectionModel().getSelectedItem().getName());
+        cancel();
     }
 
     @FXML public void cancel() {
         logger.debug("Closing ResourceChooser window");
         stage.close();
+    }
+
+    public void setResourceLabel(Label resourceLabel) {
+        this.resourceLabel = resourceLabel;
     }
 
     private void showAlert(String headerMsg, String contentMsg) {
