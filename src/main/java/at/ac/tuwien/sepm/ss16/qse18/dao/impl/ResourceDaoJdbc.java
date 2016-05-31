@@ -5,7 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidationException;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
  */
 @Component public class ResourceDaoJdbc implements ResourceDao {
 
-    private final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     private ConnectionH2 database;
 
@@ -35,6 +35,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
 
     @Override public Resource getResource(int id) throws DaoException {
+        logger.debug("Getting resource with id {}", id);
         String query = "SELECT * FROM ENTITY_RESOURCE WHERE RESOURCEID = ?";
         try {
             PreparedStatement statement = database.getConnection().prepareStatement(query);
@@ -50,6 +51,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     @Override public List<Resource> getResources() throws DaoException {
+        logger.debug("Getting resources from database");
         String query = "SELECT * FROM ENTITY_RESOURCE";
         try {
             PreparedStatement statement = database.getConnection().prepareStatement(query);
@@ -62,10 +64,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         } catch (SQLException e) {
             handleSqlError(e);
         }
-        throw new DaoException("Getting resources was not successful");
+        throw new DaoException("Getting resources was not successful. Please view logs for more details.");
     }
 
     @Override public Resource createResource(Resource resource) throws DaoException {
+        logger.debug("Creating resource with parameters {}", resource);
         String query = "INSERT INTO ENTITY_RESOURCE (TYPE, NAME ,REFERENCE) VALUES (?,?,?)";
         tryValidateResource(resource);
         try {
@@ -81,11 +84,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
                 resource.setResourceId(generatedId);
                 return resource;
             }
-            throw new DaoException("Resource could not be created");
+            throw new DaoException("Resource could not be created. Please view logs for more details.");
         } catch (SQLException e) {
             handleSqlError(e);
         }
-        throw new DaoException("Creating resources was not successful");
+        throw new DaoException("Creating resources was not successful. Please view logs for more details.");
     }
 
     @Override public Resource deleteResource(Resource resource) throws DaoException {
@@ -99,7 +102,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     private void tryValidateResource(Resource resource) throws DaoException {
         try {
             validate(resource);
-        } catch (DtoValidationException e) {
+        } catch (DtoValidatorException e) {
             logger.error(e);
             throw new DaoException(e);
         }
@@ -107,7 +110,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     private Resource handleSqlError(SQLException e) throws DaoException {
         logger.error(e);
-        throw new DaoException("Unknown SQL error", e);
+        throw new DaoException("Unknown SQL error. Please view logs for more details.", e);
     }
 
     private Resource readResourceFrom(ResultSet resultSet) throws SQLException {

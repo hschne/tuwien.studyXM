@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class AnswerDaoJdbc implements AnswerDao {
     private DataBaseConnection con;
-    private Logger logger = LogManager.getLogger(AnswerDaoJdbc.class);
+    private static final Logger logger = LogManager.getLogger(AnswerDaoJdbc.class);
     private static final String GET_SINGLE_ANSWER = "SELECT * FROM ENTITY_ANSWER WHERE ANSWERID=?";
     private static final String GET_ALL_ANSWERS = "SELECT * FROM ENTITY_ANSWER";
     private static final String UPDATE_ANSWER = "UPDATE ENTITY_ANSWER SET TYPE=?," +

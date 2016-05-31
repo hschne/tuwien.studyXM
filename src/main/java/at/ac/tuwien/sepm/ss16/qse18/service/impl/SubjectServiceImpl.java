@@ -21,7 +21,7 @@ import java.util.Objects;
  * @author Zhang Haixiang
  */
 @Service public class SubjectServiceImpl implements SubjectService {
-    private final Logger logger = LogManager.getLogger(this.getClass());
+    private static final Logger logger = LogManager.getLogger();
     private SubjectDao sd;
 
     @Autowired public SubjectServiceImpl(SubjectDaoJdbc sd) {

@@ -22,7 +22,7 @@ import java.util.List;
  * @author Philipp Ganiu, Bicer Cem
  */
 @Service public class TopicServiceImpl implements TopicService {
-    private final Logger logger = LogManager.getLogger(this.getClass());
+    private static final Logger logger = LogManager.getLogger();
     private TopicDao topicDao;
     private QuestionDao qDao;
     private SubjectDao sdao;

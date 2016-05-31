@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 public class QuestionDaoJdbc implements QuestionDao {
     private DataBaseConnection con;
-    private Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
+    private static final Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
     private QuestionTopicDao questionTopicDao;
 
     private static final String GET_SINGLE_QUESTION = "SELECT * FROM ENTITY_QUESTION WHERE QUESTIONID=?";

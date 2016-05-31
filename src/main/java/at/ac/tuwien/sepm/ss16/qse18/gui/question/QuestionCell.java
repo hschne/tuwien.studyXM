@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
     @Autowired SpringFXMLLoader springFXMLLoader;
 
-    private Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger();
 
     @Override public void updateItem(ObservableQuestion question, boolean empty) {
         super.updateItem(question, empty);

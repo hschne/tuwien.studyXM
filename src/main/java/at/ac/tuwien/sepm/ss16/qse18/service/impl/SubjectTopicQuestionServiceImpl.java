@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Service
 public class SubjectTopicQuestionServiceImpl implements SubjectTopicQuestionService {
-    private final Logger logger = LogManager.getLogger(this.getClass());
+    private static final Logger logger = LogManager.getLogger();
     private SubjectTopicDao subjectTopicDao;
     private QuestionTopicDao questionTopicDao;
 
