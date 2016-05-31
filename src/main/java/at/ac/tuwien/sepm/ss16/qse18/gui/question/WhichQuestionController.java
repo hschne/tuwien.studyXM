@@ -14,6 +14,7 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -39,7 +40,7 @@ import java.io.IOException;
 
     private ToggleGroup tg;
 
-    private Logger logger = org.apache.logging.log4j.LogManager.getLogger();
+    private static Logger logger = LogManager.getLogger();
     private SpringFXMLLoader springFXMLLoader;
     private AlertBuilder alertBuilder;
     private Stage primaryStage;

@@ -40,8 +40,8 @@ import static org.mockito.Mockito.when;
     private SubjectOverviewController controller;
 
     @Before public void setUp() {
-        controller = new SubjectOverviewController(mockSubjectService,
-            mockAlertBuilder);
+        controller = new SubjectOverviewController(mockSubjectService);
+        controller.setAlertBuilder(mockAlertBuilder);
         controller.subjectListView = new ListView<>();
         controller.editButton = new Button();
         controller.deleteButton = new Button();

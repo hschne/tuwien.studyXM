@@ -14,6 +14,7 @@ import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,9 +30,8 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
 
-    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
-        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
-        super(questionService, alertBuilder, fxmlLoader);
+    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService, SpringFXMLLoader fxmlLoader) {
+        super(questionService, fxmlLoader);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -75,7 +75,6 @@ import java.util.List;
         inputs.add(checkBoxAnswerTwo.isSelected());
         inputs.add(checkBoxAnswerThree.isSelected());
         inputs.add(checkBoxAnswerFour.isSelected());
-
         inputs.add(checkBoxContinue.isSelected());
     }
 
@@ -90,11 +89,8 @@ import java.util.List;
             List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, answers);
-        } catch (ServiceException e) {
-            showAlert(e);
-            return true;
-        } catch (IllegalArgumentException e) {
-            showAlert(e);
+        } catch (ServiceException | IllegalArgumentException e) {
+            showError(e);
             return true;
         }
         return false;

@@ -6,13 +6,10 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -39,11 +36,9 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
      *
      * @param questionService The question service which saves a given question and answers
      *                        persistently.
-     * @param alertBuilder    An alert builder which wraps pop ups for user interaction.
      */
-    @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
-        AlertBuilder alertBuilder, SpringFXMLLoader fxmlLoader) {
-        super(questionService, alertBuilder, fxmlLoader);
+    @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService, SpringFXMLLoader fxmlLoader) {
+        super(questionService, fxmlLoader);
 
     }
 
@@ -103,12 +98,9 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
             List<Answer> answers = newAnswersFromField();
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, answers);
-        } catch (ServiceException e) {
+        } catch (ServiceException | IllegalArgumentException e) {
             logger.error("Could not create new question", e);
-            showAlert(e);
-            return true;
-        } catch (IllegalArgumentException e) {
-            showAlert(e);
+            showError(e);
             return true;
         }
         return false;

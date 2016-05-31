@@ -1,21 +1,15 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -29,23 +23,18 @@ import java.util.stream.Collectors;
  *
  * @author Hans-Joerg Schroedl
  */
-@Component public class SubjectOverviewController implements GuiController {
+@Component public class SubjectOverviewController extends BaseController {
 
     @FXML public ListView<ObservableSubject> subjectListView;
     @FXML public Button editButton;
     @FXML public Button deleteButton;
     @Autowired ApplicationContext applicationContext;
-    @Autowired MainFrameController mainFrameController;
-    private Logger logger = LogManager.getLogger();
     private ObservableList<ObservableSubject> subjectList;
-
     private SubjectService subjectService;
-    private AlertBuilder alertBuilder;
 
-    @Autowired
-    public SubjectOverviewController(SubjectService subjectService, AlertBuilder alertBuilder) {
+    @Autowired public SubjectOverviewController(SubjectService subjectService) {
         this.subjectService = subjectService;
-        this.alertBuilder = alertBuilder;
+
     }
 
     @FXML public void initialize() {
@@ -56,7 +45,7 @@ import java.util.stream.Collectors;
             initializeListView();
         } catch (ServiceException e) {
             logger.error(e);
-            showAlert();
+            showError(e);
         }
     }
 
@@ -76,7 +65,7 @@ import java.util.stream.Collectors;
     @FXML public void handleDelete() {
         try {
             logger.debug("Delete subject from table");
-            if (!actionConfirmed()) {
+            if (!showConfirmation("This will remove the subject and all associated questions, materials and exams.")) {
                 return;
             }
             ObservableSubject subjectToDelete =
@@ -87,7 +76,7 @@ import java.util.stream.Collectors;
             }
         } catch (ServiceException e) {
             logger.error(e);
-            showAlert();
+            showError(e);
         }
     }
 
@@ -113,7 +102,7 @@ import java.util.stream.Collectors;
             subjectList.add(new ObservableSubject(s));
         } catch (ServiceException e) {
             logger.error(e);
-            showAlert();
+            showError(e);
         }
     }
 
@@ -129,7 +118,7 @@ import java.util.stream.Collectors;
             updateEntry(observableSubject, subject);
         } catch (ServiceException e) {
             logger.error(e);
-            showAlert();
+            showError(e);
         }
     }
 
@@ -150,16 +139,6 @@ import java.util.stream.Collectors;
 
     }
 
-    private boolean actionConfirmed() {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
-            .setResizable(true).headerText("Are you sure?").contentText(
-                "This will remove the subject and all associated questions, materials and exams.")
-            .build();
-        alert.showAndWait();
-        ButtonType result = alert.getResult();
-        return result == ButtonType.OK;
-    }
-
     private void updateEntry(ObservableSubject observableSubject, Subject subject) {
         observableSubject.setName(subject.getName());
         observableSubject.setEcts(subject.getEcts());
@@ -167,12 +146,5 @@ import java.util.stream.Collectors;
         observableSubject.setAuthor(subject.getAuthor());
     }
 
-    private void showAlert() {
-        Alert alert =
-            alertBuilder.alertType(Alert.AlertType.ERROR).title("Error").setResizable(true)
-                .headerText("Could not load Subjects")
-                .contentText("Please make sure you are connected to the database").build();
-        alert.showAndWait();
-    }
 
 }

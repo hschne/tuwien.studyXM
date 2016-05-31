@@ -6,13 +6,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -31,9 +27,9 @@ import java.util.regex.Pattern;
     @FXML private TextArea textAreaQuestion;
 
     @Autowired
-    public CreateOpenQuestionController(QuestionService questionService, AlertBuilder alertBuilder,
+    public CreateOpenQuestionController(QuestionService questionService,
         SpringFXMLLoader fxmlLoader) {
-        super(questionService, alertBuilder, fxmlLoader);
+        super(questionService, fxmlLoader);
     }
 
     @Override protected void fillFieldsAndCheckboxes() {
@@ -94,7 +90,7 @@ import java.util.regex.Pattern;
             newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
             questionService.setCorrespondingAnswers(newQuestion, answers);
         } catch (ServiceException e) {
-            showAlert(e);
+            showError(e);
             return false;
         }
         return true;
