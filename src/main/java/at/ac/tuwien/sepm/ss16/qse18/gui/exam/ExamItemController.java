@@ -32,7 +32,7 @@ import java.util.List;
     }
 
     @FXML public void handleStudy() {
-
+        mainFrameController.handleStudy();
     }
 
     public void setExam(ObservableExam exam) {

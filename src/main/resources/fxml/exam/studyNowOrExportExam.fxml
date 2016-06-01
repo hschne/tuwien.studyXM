@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.StudyNowController">
    <children>
       <GridPane AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -30,7 +30,7 @@
                   <Font name="System Bold" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="buttonResumeExam" minWidth="200.0" mnemonicParsing="false" onAction="#showQuestions" style="-fx-background-color: #22374A;" text="resume an exam" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Button fx:id="buttonResumeExam" disable="true" minWidth="200.0" mnemonicParsing="false" onAction="#resumeExam" style="-fx-background-color: #22374A;" text="resume an exam" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>
@@ -38,13 +38,13 @@
                   <Font name="Arial" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="buttonNewExam" alignment="CENTER" contentDisplay="CENTER" minWidth="200.0" mnemonicParsing="false" onAction="#insertExamValues" style="-fx-background-color: #22374A;" text="start a new exam now!" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button fx:id="buttonNewExam" alignment="CENTER" contentDisplay="CENTER" minWidth="200.0" mnemonicParsing="false" onAction="#newExam" style="-fx-background-color: #22374A;" text="start a new exam now!" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <font>
                   <Font name="Arial" size="14.0" />
                </font>
             </Button>
             <Line endX="160.0" startX="-100.0" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="TOP" />
-            <Button fx:id="buttonPrintExam" minWidth="200.0" mnemonicParsing="false" onAction="#showQuestions" style="-fx-background-color: #22374A;" text="export an exam as pdf" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="4">
+            <Button fx:id="buttonPrintExam" disable="true" minWidth="200.0" mnemonicParsing="false" onAction="#exportAsPDF" style="-fx-background-color: #22374A;" text="export an exam as pdf" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="4">
                <font>
                   <Font name="Arial" size="14.0" />
                </font>

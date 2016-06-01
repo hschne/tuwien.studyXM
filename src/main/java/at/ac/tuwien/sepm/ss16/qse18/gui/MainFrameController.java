@@ -1,10 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowExamsController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
@@ -231,9 +228,9 @@ import java.util.List;
     }
 
     public void handleExams() {
-        logger.debug("Loading home view");
+        logger.debug("Loading exam view");
         try {
-            setSubView("/fxml/exam/createExam.fxml", CreateExamController.class);
+            setSubView("/fxml/exam/examOverview.fxml", ShowExamsController.class);
         } catch (IOException e) {
             handleException(e);
         }
@@ -243,6 +240,15 @@ import java.util.List;
         logger.debug("Loading ShowQuestions screen");
         try {
             setSubView("/fxml/exam/showQuestions.fxml", ShowQuestionsController.class);
+        } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleStudy() {
+        logger.debug("Loading study screen");
+        try {
+            setSubView("/fxml/exam/studyNowOrExportExam.fxml", StudyNowController.class);
         } catch (IOException e) {
             handleException(e);
         }
