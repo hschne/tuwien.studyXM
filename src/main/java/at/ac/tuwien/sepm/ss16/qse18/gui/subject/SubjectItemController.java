@@ -83,24 +83,7 @@ import org.springframework.stereotype.Component;
     public void setAddTopicButtonAction(ObservableSubject subject,ObservableList<ObservableTopic> topicList){
         addTopicButton.setOnAction(event -> {
             mainFrameController.handleCreateTopic(subject,topicList);
-            /*
-            Stage stage = new Stage();
-            SpringFXMLLoader.FXMLWrapper<Object, TopicEditController> editTopicWrapper = null;
-            try {
-                editTopicWrapper = springFXMLLoader
-                    .loadAndWrap("/fxml/topic/topicEditView.fxml", TopicEditController.class);
-            } catch (IOException e) {
-                logger.error("Couldn't load new Topic stage", e);
-            }
-            TopicEditController childController = editTopicWrapper.getController();
-            childController.setStage(stage);
-            childController.setSubject(subject.getSubject());
-            childController.setTopicList(topicList);
-            stage.setTitle("New Topic");
-            stage.setScene(new Scene((Parent) editTopicWrapper.getLoadedObject(), 400, 300));
-            stage.initModality(Modality.WINDOW_MODAL);
-            stage.showAndWait();*/});
-
+            });
     }
 
     @FXML public void handleDelete() {
