@@ -12,8 +12,10 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicEditController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.AnchorPane;
@@ -65,6 +67,20 @@ import java.util.List;
                 setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
             controller.setSubject(subject);
         } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateTopic(ObservableSubject subject, ObservableList<ObservableTopic> topicList){
+        logger.debug("Loading create topic view");
+        try{
+            TopicEditController controller = setSubView("/fxml/topic/topicEditView.fxml",
+                                                                    TopicEditController.class);
+            //controller.setStage(stage);
+            controller.setSubject(subject.getSubject());
+            controller.setTopicList(topicList);
+        }
+        catch (IOException e){
             handleException(e);
         }
     }
