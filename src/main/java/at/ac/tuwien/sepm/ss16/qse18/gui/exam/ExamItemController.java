@@ -68,8 +68,6 @@ import java.util.List;
         } else {
             examProgress.setStyle("-fx-accent:red;");
         }
-
-
     }
 
     public Node getRoot() {
