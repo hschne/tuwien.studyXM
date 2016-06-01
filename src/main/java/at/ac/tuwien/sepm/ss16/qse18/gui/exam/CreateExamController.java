@@ -70,6 +70,11 @@ import java.util.List;
         mainFrameController.handleCreateExam();
     }
 
+    @FXML public void startExamButtonClicked(){
+        logger.debug("Button Start exam clicked");
+        mainFrameController.handleStartExam();
+    }
+
     @FXML public void showQuestions() {
         this.questionList = new ArrayList<>();
         logger.debug("Entering showQuestions()");

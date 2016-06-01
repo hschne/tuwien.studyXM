@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.DoExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
@@ -171,6 +172,16 @@ import java.io.IOException;
         try {
             setSubView("/fxml/exam/createExam.fxml", CreateExamController.class);
         } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleStartExam(){
+        logger.debug("Loading doExam screen");
+        try{
+            setSubView("/fxml/exam/doExam.fxml", DoExamController.class);
+        }
+        catch (IOException e){
             handleException(e);
         }
     }
