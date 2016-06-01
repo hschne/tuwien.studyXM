@@ -229,4 +229,23 @@ import java.util.Map;
         }
     }
 
+    @Override public List<Integer> getAnsweredQuestionsOfExam(int examID) throws ServiceException {
+        logger.debug("entering getAnsweredQuestionsOfExam");
+
+        if(examID <= 0) {
+            logger.error("Service Exception getAnsweredQuestionsOfExam with parameters {}", examID);
+            throw new ServiceException("Invalid examID, please check your input");
+        }
+
+        List<Integer> answeredQuestions = new ArrayList<>();
+
+        try {
+            answeredQuestions.addAll(this.examQuestionDao.getAnsweredQuestionsPerExam(examID));
+        } catch (DaoException e) {
+            logger.error("Service Exception getAnsweredQuestionsOfExam with parameters", e);
+            throw new ServiceException("Could not get answered questions of exam", e);
+        }
+        return answeredQuestions;
+    }
+
 }

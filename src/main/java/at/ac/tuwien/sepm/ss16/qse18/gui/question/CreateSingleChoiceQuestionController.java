@@ -112,7 +112,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         return false;
     }
 
-    private Question newQuestionFromField() throws ServiceException {
+    private Question newQuestionFromField() throws IllegalArgumentException {
         logger.info("Collecting question from field.");
         if (textAreaQuestion.getText().isEmpty()) {
             throw new IllegalArgumentException("The question must not be empty.");
@@ -120,7 +120,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         return new Question(textAreaQuestion.getText(), QuestionType.SINGLECHOICE, 1L);
     }
 
-    private List<Answer> newAnswersFromField() throws ServiceException {
+    private List<Answer> newAnswersFromField() throws IllegalArgumentException {
         logger.debug("Collecting all answers");
         List<Answer> newAnswers = new LinkedList<>();
 

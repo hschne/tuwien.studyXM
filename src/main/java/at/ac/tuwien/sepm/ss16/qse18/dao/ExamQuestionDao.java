@@ -55,4 +55,6 @@ public interface ExamQuestionDao {
      * */
     List<Integer> getAllQuestionsOfExam(int examID) throws DaoException;
 
+    List<Integer> getAnsweredQuestionsPerExam(int examID) throws DaoException;
+
 }

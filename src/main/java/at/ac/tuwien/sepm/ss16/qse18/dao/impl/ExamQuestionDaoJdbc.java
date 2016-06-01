@@ -161,5 +161,36 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         return questionIDList;
     }
 
+    @Override public List<Integer> getAnsweredQuestionsPerExam(int examID) throws DaoException {
+        logger.debug("entering method getALlQuestionsOfExam with parameters {}", examID);
+        ArrayList<Integer> questionIDList = new ArrayList<>();
 
+        if(examID <= 0) {
+            logger.error("Dao Exception in getAnsweredQuestionsPerExam with parameters", examID);
+            throw new DaoException("Invalid Exam ID, please check your input");
+        }
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            pstmt = this.database.getConnection()
+                .prepareStatement("SELECT * FROM REL_EXAM_QUESTION WHERE EXAMID = ? "
+                    + "AND ALREADY_ANSWERED = TRUE");
+
+            pstmt.setInt(1, examID);
+            rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                questionIDList.add(rs.getInt("questionid"));
+            }
+
+        } catch(SQLException e) {
+            logger.error("SQL Exception in getAnsweredQuestionsPerExam with parameters {}", examID, e);
+            throw new DaoException("Could not get List with all Questions for Exam ID " + examID);
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
+        }
+        return questionIDList;
+    }
 }

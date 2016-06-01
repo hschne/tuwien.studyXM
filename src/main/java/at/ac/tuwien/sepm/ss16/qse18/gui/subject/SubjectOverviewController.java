@@ -34,7 +34,6 @@ import java.util.stream.Collectors;
 
     @Autowired public SubjectOverviewController(SubjectService subjectService) {
         this.subjectService = subjectService;
-
     }
 
     @FXML public void initialize() {
