@@ -84,7 +84,7 @@
                           <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
                       </rowConstraints>
                       <children>
-                          <Button mnemonicParsing="false" onAction="#handleCreateResource" text="create resource" GridPane.columnIndex="2" GridPane.halignment="LEFT">
+                          <Button mnemonicParsing="false" onAction="#handleOk" text="create resource" GridPane.columnIndex="2" GridPane.halignment="LEFT">
                               <font>
                                   <Font size="18.0" />
                               </font>

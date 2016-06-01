@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+  </columnConstraints>
+  <rowConstraints>
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="262.0" minHeight="10.0" prefHeight="262.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="129.0" minHeight="4.0" prefHeight="4.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Choose the resource you want the question to refer to or add a new resource." GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <ListView fx:id="resourceListView" prefHeight="175.0" prefWidth="600.0" GridPane.rowIndex="1" />
+      <HBox prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="2">
+         <children>
+            <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button fx:id="newButton" mnemonicParsing="false" onAction="#newResource" text="New">
+                     <HBox.margin>
+                        <Insets left="20.0" />
+                     </HBox.margin></Button>
+               </children>
+            </HBox>
+            <HBox alignment="CENTER_RIGHT" prefHeight="133.0" prefWidth="519.0">
+               <children>
+                  <ButtonBar>
+                     <buttons>
+                        <Button fx:id="cancelButton" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+                        <Button fx:id="chooseButton" mnemonicParsing="false" onAction="#chooseResource" text="Choose" />
+                     </buttons>
+                     <HBox.margin>
+                        <Insets right="20.0" />
+                     </HBox.margin>
+                  </ButtonBar>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </children>
+</GridPane>

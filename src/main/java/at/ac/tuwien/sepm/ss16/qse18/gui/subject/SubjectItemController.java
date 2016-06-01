@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicCell;
@@ -10,7 +10,6 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicEditController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectTopicQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +17,6 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -30,8 +28,6 @@ import java.util.stream.Collectors;
 
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -40,24 +36,20 @@ import org.springframework.stereotype.Component;
 /**
  * @author Hans-Joerg Schroedl,Philipp Ganiu
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectItemController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectItemController extends
+    BaseController {
 
     @FXML public Node root;
     @FXML Label name;
     @FXML public ListView<ObservableTopic> topicListView;
     @FXML public Button addTopicButton;
 
-    private Logger logger = LoggerFactory.getLogger(SubjectItemController.class);
     private ObservableSubject subject;
     private ObservableList<ObservableTopic> topicList;
 
     @Autowired private SpringFXMLLoader springFXMLLoader;
-    @Autowired private AlertBuilder alertBuilder;
     @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
     @Autowired private TopicService topicService;
-    @Autowired private MainFrameController mainFrameController;
-    @Autowired private SubjectOverviewController subjectOverviewController;
-
 
     @FXML
     public void initialize(ObservableSubject subject){
@@ -75,7 +67,7 @@ import org.springframework.stereotype.Component;
             });
         }
         catch (ServiceException e){
-            showAlert(e);
+            showError(e);
         }
     }
 
@@ -132,15 +124,10 @@ import org.springframework.stereotype.Component;
             topicList.add(new ObservableTopic(t));
         }
         catch (ServiceException e){
-            showAlert(e);
+            showError(e);
         }
     }
 
-    private void showAlert(ServiceException e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("An error occured").contentText(e.getMessage()).build();
-        alert.showAndWait();
-    }
 
     public ObservableList<ObservableTopic> getTopicList(){
         return this.topicList;

@@ -3,18 +3,20 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.AlertBuilder;
+import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -31,7 +33,7 @@ import java.util.*;
  * @author Julian on 14.05.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class CreateImageQuestionController extends QuestionController{
+public class CreateImageQuestionController extends QuestionController {
 
     private static final String W = "Warning";
 
@@ -40,28 +42,62 @@ public class CreateImageQuestionController extends QuestionController{
     @FXML public ImageView imageViewQuestionImage;
     @FXML public ImageView imageViewIcon;
 
-    @FXML public TextField textFieldAnswerOne;
-    @FXML public TextField textFieldAnswerTwo;
-    @FXML public TextField textFieldAnswerThree;
-    @FXML public TextField textFieldAnswerFour;
     @FXML public TextField textFieldImagePath;
 
     @FXML public CheckBox checkBoxAnswerOne;
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
-    @FXML private CheckBox checkBoxContinue;
-
-    private Logger logger = LoggerFactory.getLogger(CreateImageQuestionController.class);
 
     private AnswerService answerService;
     private File out;
 
     @Autowired public CreateImageQuestionController(QuestionService questionService,
-        AnswerService answerService, AlertBuilder alertBuilder) {
-        super(questionService, alertBuilder);
+        ResourceQuestionService resourceQuestionService, AnswerService answerService, SpringFXMLLoader fxmlLoader) {
+        super(questionService, resourceQuestionService, fxmlLoader);
         this.answerService = answerService;
 
+    }
+
+    @Override protected void fillFieldsAndCheckboxes() {
+        this.imageViewQuestionImage.setImage(
+            inputs == null ? new Image("/images/imagePlaceholder.png") : (Image) inputs.get(0));
+        this.textFieldImagePath.setText(inputs == null ? "" : (String) inputs.get(1));
+
+        fillAnswerFields(2);
+
+        this.checkBoxAnswerOne.setSelected(inputs != null && (boolean) inputs.get(6));
+        this.checkBoxAnswerTwo.setSelected(inputs != null && (boolean) inputs.get(7));
+        this.checkBoxAnswerThree.setSelected(inputs != null && (boolean) inputs.get(8));
+        this.checkBoxAnswerFour.setSelected(inputs != null && (boolean) inputs.get(9));
+
+        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(10));
+
+        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(11));
+        this.resourceLabel.setText(resource == null ? "none" : resource.getName());
+    }
+
+    @Override protected void saveQuestionInput(List inputs) {
+        inputs.add(imageViewQuestionImage.getImage());
+
+        if (textFieldImagePath != null) {
+            inputs.add(textFieldImagePath.getText());
+        } else {
+            inputs.add(null);
+        }
+    }
+
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+        inputs.add(checkBoxAnswerOne.isSelected());
+        inputs.add(checkBoxAnswerTwo.isSelected());
+        inputs.add(checkBoxAnswerThree.isSelected());
+        inputs.add(checkBoxAnswerFour.isSelected());
+
+        inputs.add(checkBoxContinue.isSelected());
+    }
+
+    @Override protected QuestionType getQuestionType() {
+        return QuestionType.NOTECARD;
     }
 
     /**
@@ -71,14 +107,12 @@ public class CreateImageQuestionController extends QuestionController{
         if (createQuestion()) {
             return;
         }
-        if(checkBoxContinue.isSelected()){
+        if (checkBoxContinue.isSelected()) {
             mainFrameController.handleCreateImageQuestion(this.topic);
-        }
-        else {
+        } else {
             mainFrameController.handleSubjects();
         }
-        showAlert(Alert.AlertType.INFORMATION, "Success", "Question successfully created",
-                "Your question is now in the database.");
+        showSuccess("Question is now in the database");
     }
 
     /**
@@ -119,7 +153,12 @@ public class CreateImageQuestionController extends QuestionController{
             copySelectedImage();
 
             Question newQuestion = newQuestionFromFields();
-            questionService.createQuestion(newQuestion, topic.getT());
+            Question createdQuestion = questionService.createQuestion(newQuestion, topic.getT());
+
+            if (resource != null) {
+                resourceQuestionService
+                    .createReference(resource.getResource(), createdQuestion);
+            }
 
             List<Answer> answerList = newAnswersFromFields();
             for (Answer a : answerList) {
@@ -129,12 +168,12 @@ public class CreateImageQuestionController extends QuestionController{
             questionService.setCorrespondingAnswers(newQuestion, answerList);
 
         } catch (IOException e) {
-            logger.debug("Unable to copy image " + e.getMessage());
-            showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to copy image");
+            logger.error(e);
+            showError("Unable to copy image. Please view logs for more details.");
             return true;
         } catch (ServiceException e) {
-            logger.debug("Unable to create question. " + e.getMessage());
-            showExceptionAlert(e, Alert.AlertType.ERROR, "Error", "Unable to create question");
+            logger.error(e);
+            showError(e);
             return true;
         }
         return false;
@@ -243,30 +282,26 @@ public class CreateImageQuestionController extends QuestionController{
         logger.debug("Validating user input.");
 
         if (!checkIfImageWasSelected()) {
-            logger.debug("No image was selected.");
-            showAlert(Alert.AlertType.WARNING, W, "No image selected",
-                "Please select an image for this question");
+            logger.error("No image was selected.");
+            showError("Please select an image for this question.");
             return false;
         }
 
         if (!checkIfAnswerWasGiven()) {
-            logger.debug("No answer was given.");
-            showAlert(Alert.AlertType.WARNING, W, "No answer was given",
-                "Please give at least one answer to this question.");
+            logger.error("No answer was given.");
+            showError("Please give at least one answer to this question.");
             return false;
         }
 
         if (!checkIfCorrectAnswerWasGiven()) {
-            logger.debug("No correct answer was given.");
-            showAlert(Alert.AlertType.WARNING, W, "No correct answer was given",
-                "Please give at least one correct answer to this question.");
+            logger.error("No correct answer was given.");
+            showError("Please give at least one correct answer to this question.");
             return false;
         }
 
         if (!checkIfCorrectAnswerHasText()) {
-            logger.debug("The answer selected as correct has no text.");
-            showAlert(Alert.AlertType.WARNING, W, "Correct answer has no text",
-                "Please add text to the question selected as correct.");
+            logger.error("The answer selected as correct has no text.");
+            showError("Please select an image for this question.");
             return false;
         }
         return true;
@@ -304,35 +339,7 @@ public class CreateImageQuestionController extends QuestionController{
         }
     }
 
-    /**
-     * Creates and shows a new Alert.
-     *
-     * @param type        alert type
-     * @param title       alert title
-     * @param headerText  alert header text
-     * @param contentText alert content text
-     */
-    private void showAlert(Alert.AlertType type, String title, String headerText,
-        String contentText) {
-        Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
-            .contentText(contentText).build();
-        alert.showAndWait();
-    }
 
-    /**
-     * Creates and shows a new Alert for a given Exception.
-     *
-     * @param e          Exception
-     * @param type       alert type
-     * @param title      alert title
-     * @param headerText alert header text
-     */
-    private void showExceptionAlert(Exception e, Alert.AlertType type, String title,
-        String headerText) {
-        Alert alert = alertBuilder.alertType(type).title(title).headerText(headerText)
-            .contentText(e.getMessage()).build();
-        alert.showAndWait();
-    }
 }
 
 

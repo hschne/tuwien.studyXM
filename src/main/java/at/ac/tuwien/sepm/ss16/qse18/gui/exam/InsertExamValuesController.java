@@ -1,8 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.*;
@@ -13,8 +12,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Timestamp;
 import java.util.Date;
@@ -26,9 +23,7 @@ import java.util.stream.Collectors;
  *
  * @author Zhang Haixiang, Bicer Cem
  */
-@Component public class InsertExamValuesController implements GuiController {
-    private Logger logger = LoggerFactory.getLogger(InsertExamValuesController.class);
-    private AlertBuilder alertBuilder;
+@Component public class InsertExamValuesController extends BaseController{
     private ObservableList<ObservableSubject> subjectList;
     private ObservableList<ObservableTopic> topicList;
     private ExamService examService;
@@ -36,7 +31,6 @@ import java.util.stream.Collectors;
     private TopicService topicService;
     private QuestionService questionService;
 
-    @Autowired MainFrameController mainFrameController;
 
     @FXML public Button buttonCreate;
     @FXML public Button buttonCancel;
@@ -51,12 +45,11 @@ import java.util.stream.Collectors;
 
     @Autowired
     public InsertExamValuesController(ExamService examService, SubjectService subjectService,
-        TopicService topicService, QuestionService questionService, AlertBuilder alertBuilder) {
+        TopicService topicService, QuestionService questionService) {
         this.examService = examService;
         this.subjectService = subjectService;
         this.topicService = topicService;
         this.questionService = questionService;
-        this.alertBuilder = alertBuilder;
     }
 
     @FXML public void initialize() {
@@ -109,8 +102,9 @@ import java.util.stream.Collectors;
                     }
                 }
             });
-        } catch (Exception e) {
-            logger.error("Initialize in InsertExamValuesController not successful", e);
+        } catch (ServiceException e) {
+            logger.error("Initialize not successful", e);
+            showError(e);
         }
     }
 
@@ -119,15 +113,13 @@ import java.util.stream.Collectors;
 
         if (fieldAuthor.getText().isEmpty()) {
             logger.error("TextField \'author\' is empty");
-            showAlert("No author given", "Textfield author must not be empty.");
+            showError("No author given. Textfield author must not be empty.");
         } else if (fieldTime.getText().isEmpty() || !fieldTime.getText().matches("\\d*")) {
             logger.error("No valid time has been given");
-            showAlert("No valid time has been given",
-                "Make sure to fill the Time textfield with only whole numbers.");
+            showError("No valid time has been given. Make sure to fill the Time textfield with only whole numbers.");
         } else if (topicListView.getSelectionModel().getSelectedItem() == null) {
             logger.warn("No topic selected");
-            showAlert("No topic selected",
-                "You have to select the topic you want to create an exam to.");
+            showError("No topic selected. You have to select the topic you want to create an exam to.");
         } else {
             Exam exam = new Exam();
             exam.setAuthor(fieldAuthor.getText());
@@ -148,17 +140,16 @@ import java.util.stream.Collectors;
                 examService
                     .createExam(exam, topicListView.getSelectionModel().getSelectedItem().getT(),
                         examTime);
-                showAlert("Success", "Exam created");
+                showSuccess("Exam was created");
                 mainFrameController.handleExams();
             } catch (ServiceException e) {
                 logger.error("Could not create exam: ", e);
-                showAlert("Could not create exam ",
-                    "Hints: " + "\nCheck if the choosen topic has already questions to answer."
+                showError("Check if the choosen topic has already questions to answer."
                         + "\nCheck if the length of the author do not exceed 80 characters."
                         + "\nCheck if there are enough questions in this topic to cover the exam time.");
             } catch (NumberFormatException e) {
                 logger.error("Could not create exam: ", e);
-                showAlert("Could not parse exam time",
+                showError("Could not parse exam time. " +
                     "Make sure it only contains numbers and is lower than " + Integer.MAX_VALUE
                         + ".");
             }
@@ -170,9 +161,4 @@ import java.util.stream.Collectors;
         mainFrameController.handleExams();
     }
 
-    private void showAlert(String headerMsg, String contentMsg) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).headerText(headerMsg)
-            .contentText(contentMsg).build();
-        alert.showAndWait();
-    }
 }

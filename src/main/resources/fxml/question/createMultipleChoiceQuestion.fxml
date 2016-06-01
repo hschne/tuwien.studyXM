@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
@@ -83,6 +84,27 @@
                            </font>
                         </Button>
                         <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="true" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                        <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddResource" text="add resource">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="50.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <Label text="resource:">
+                           <GridPane.margin>
+                              <Insets left="200.0" />
+                           </GridPane.margin>
+                        </Label>
+                        <Label fx:id="resourceLabel" text="none">
+                           <GridPane.margin>
+                              <Insets left="270.0" />
+                           </GridPane.margin>
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Label>
                      </children>
                   </GridPane>
                   <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." GridPane.valignment="CENTER">
@@ -102,19 +124,19 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField fx:id="textfieldAnswerOne" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="add answer one here...">
+                        <TextField fx:id="textFieldAnswerOne" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="add answer one here...">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="textfieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer two here..." GridPane.rowIndex="1">
+                        <TextField fx:id="textFieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer two here..." GridPane.rowIndex="1">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="textfieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer three here..." GridPane.rowIndex="2">
+                        <TextField fx:id="textFieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer three here..." GridPane.rowIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>
-                        <TextField fx:id="textfieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer four here..." GridPane.rowIndex="3">
+                        <TextField fx:id="textFieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer four here..." GridPane.rowIndex="3">
                            <font>
                               <Font size="13.0" />
                            </font></TextField>

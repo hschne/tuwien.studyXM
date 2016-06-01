@@ -1,18 +1,14 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
-import at.ac.tuwien.sepm.util.AlertBuilder;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -24,32 +20,28 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.nio.file.NoSuchFileException;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @author Hans-Joerg Schroedl
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class ResourceEditController
-    implements GuiController {
+    extends BaseController {
 
-    private static final Logger logger = LogManager.getLogger();
-    @FXML private TextField resourceName;
-    @FXML private TextField filePath;
-    @FXML private CheckBox checkBoxContinue;
+    @FXML TextField resourceName;
+    @FXML TextField filePath;
 
     @Autowired ResourceOverviewController overviewController;
-    @Autowired MainFrameController mainFrameController;
-    @Autowired AlertBuilder alertBuilder;
 
     private File out;
 
     private File in;
 
+    private List inputs;
+
+    private QuestionType questionTypeOfResource;
+
     @FXML public void handleSelectFile() {
-        logger.debug("Selecting file");
         FileChooser fileChooser = new FileChooser();
         String defaultPath = "src/main/resources/resources/";
         File defaultDirectory = new File(defaultPath);
@@ -59,51 +51,72 @@ import java.util.UUID;
         File selectedFile = fileChooser.showOpenDialog(null);
 
         if (selectedFile != null) {
-            logger.debug("A file was selected: {}", selectedFile);
+            logger.debug("A File was selected");
             out = new File(defaultPath + generateFileName(selectedFile.getName()));
             in = selectedFile;
             filePath.setText(defaultPath + selectedFile.getName());
         }
     }
 
-    @FXML public void handleCreateResource() {
-        logger.debug("Creating resource in database");
+    @FXML public void handleOk() {
         try {
             copyFile(in, out);
             Resource resource = createResourceFromFields();
             overviewController.addResource(new ObservableResource(resource));
-            resetOrChangeView();
-            showSuccess("Resource has been created.");
+
+            openRightWindowNext(new ObservableResource(resource));
         } catch (Exception e) {
             logger.error(e);
-            showAlert(e);
+            showError(e);
+        }
+
+    }
+
+    @FXML public void handleCancel() {
+        try {
+            openRightWindowNext(null);
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
         }
     }
 
-    private void resetOrChangeView() {
-        if(checkBoxContinue.isSelected()){
-            resetFields();
-        }
-        else{
+    private void openRightWindowNext(ObservableResource resource) throws ServiceException {
+        if (inputs != null) {
+            if (resource != null) {
+                // Replace resource with newly created one
+                inputs.remove(inputs.size()-1);
+                inputs.add(resource);
+            }
+
+            switch (questionTypeOfResource) {
+                case MULTIPLECHOICE:
+                    mainFrameController.handleMultipleChoiceQuestion(null, inputs);
+                    break;
+                case OPENQUESTION:
+                    mainFrameController.handleOpenQuestion(null, inputs);
+                    break;
+                case SINGLECHOICE:
+                    mainFrameController.handleSingleChoiceQuestion(null, inputs);
+                    break;
+                case NOTECARD:
+                    mainFrameController.handleCreateImageQuestion(null, inputs);
+                    break;
+            }
+        } else {
             mainFrameController.handleResources();
         }
     }
 
-    private void resetFields(){
-        in = null;
-        out = null;
-        resourceName.clear();
-        filePath.clear();
-    }
-
-    @FXML public void handleCancel() {
-        logger.debug("Canceling action");
-        mainFrameController.handleResources();
+    public void setInput(List inputs, QuestionType questionType) {
+        this.inputs = inputs;
+        this.questionTypeOfResource = questionType;
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
-        if(sourceFile == null || destFile == null){
-            throw new NoSuchFileException("Could not create a new resource. Please select a file first.");
+        if (sourceFile == null || destFile == null) {
+            throw new NoSuchFileException(
+                "Can not create a new resource. Please select a file first");
         }
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
@@ -129,7 +142,7 @@ import java.util.UUID;
             case "pdf":
                 return ResourceType.PDF;
             default:
-                return ResourceType.OTHER;
+                return ResourceType.NOTE;
         }
     }
 
@@ -159,16 +172,5 @@ import java.util.UUID;
         }
     }
 
-    private void showAlert(Exception e) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Error")
-            .headerText("An error occurred").contentText(e.getMessage()).setResizable(true).build();
-        alert.showAndWait();
-    }
-
-    private void showSuccess(String msg) {
-        Alert alert = alertBuilder.alertType(Alert.AlertType.INFORMATION).title("Success")
-            .headerText("The operation was successful!").contentText(msg).build();
-        alert.showAndWait();
-    }
 
 }
