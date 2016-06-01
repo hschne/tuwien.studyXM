@@ -68,12 +68,13 @@ import java.util.Map;
 
     @Override public Exam createExam(Exam exam, Topic topic, int examTime) throws ServiceException {
         logger.debug("entering method createExam with parameters {}", exam);
-        if (!DtoValidator.validate(exam)) {
+        if (!DtoValidator.validate(exam) || examTime <= 0) {
             logger.error("Service Exception createExam {}", exam);
             throw new ServiceException("Invalid values, please check your input");
         }
 
         try {
+            exam.setExamTime(examTime);
             exam.setExamQuestions(getRightQuestions(exam, topic.getTopicId(), examTime));
             return this.examDao.create(exam, exam.getExamQuestions());
         } catch (DaoException e) {
@@ -129,25 +130,9 @@ import java.util.Map;
 
             splitQuestions();
 
-
-            while (!egp.getWrongAnsweredQuestions().isEmpty() || !egp.getNotAnsweredQuestions().isEmpty()
-                || !egp.getRightAnsweredQuestions().isEmpty()) {
-                System.out.println("hier");
-
-                if (!egp.getNotAnsweredQuestions().isEmpty()) {
-                    egp.getNotAnsweredQuestions().remove(chooseQuestions(egp.getNotAnsweredQuestions(), examTime));
-                }
-
-                if (!egp.getWrongAnsweredQuestions().isEmpty() && egp.getNotAnsweredQuestions().isEmpty()) {
-                    egp.getWrongAnsweredQuestions().remove(chooseQuestions(egp.getWrongAnsweredQuestions(), examTime));
-                }
-
-
-                if (!egp.getRightAnsweredQuestions().isEmpty() && egp.getNotAnsweredQuestions().isEmpty()
-                    && egp.getWrongAnsweredQuestions().isEmpty()) {
-                    egp.getRightAnsweredQuestions().remove(chooseQuestions(egp.getRightAnsweredQuestions(), examTime));
-                }
-            }
+            selectQuestions(egp.getNotAnsweredQuestions(), examTime);
+            selectQuestions(egp.getWrongAnsweredQuestions(), examTime);
+            selectQuestions(egp.getRightAnsweredQuestions(), examTime);
 
         } catch (DaoException e) {
             logger.error("Service Exception getRightQuestions with parameters{}", exam, topicID,
@@ -197,8 +182,8 @@ import java.util.Map;
         }
 
         for (Map.Entry<Integer, Boolean> e : egp.getQuestionBooleans().entrySet()) {
-            for (int i = 0; i < egp.getNotAnsweredQuestions().size(); i++) {
-                if (e.getKey() == egp.getNotAnsweredQuestions().get(i).getQuestionId()) { // checks if the question has been answered already
+            for (int i = 0; i < temp.size(); i++) {
+                if (e.getKey() == temp.get(i).getQuestionId()) { // checks if the question has been answered already
                     if (e.getValue() == true) { // if the question has already been answered correctly
                         egp.getRightAnsweredQuestions().add(temp.get(counter));
                         egp.getNotAnsweredQuestions().remove(temp.get(counter));
@@ -206,9 +191,16 @@ import java.util.Map;
                         egp.getWrongAnsweredQuestions().add(temp.get(counter));
                         egp.getNotAnsweredQuestions().remove(temp.get(counter));
                     }
-                    counter++;
                 }
+                counter++;
             }
+            counter = 0;
+        }
+    }
+
+    public void selectQuestions(List<Question> questionList, int examTime){
+        while(!questionList.isEmpty()){
+            questionList.remove(chooseQuestions(questionList, examTime));
         }
     }
 
@@ -223,6 +215,7 @@ import java.util.Map;
         return random;
     }
 
+    /*
     public List<Integer> gradeExam(Exam exam) throws ServiceException{
         logger.debug("entering gradeExam with parameters {}",exam);
         List <Integer> questionIDList = new ArrayList<>();
@@ -263,5 +256,6 @@ import java.util.Map;
 
         return null;
     }
+    */
 
 }

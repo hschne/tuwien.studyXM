@@ -23,6 +23,7 @@ public class Exam {
     private String author;
     private int subjectID;
     private List<Question> examQuestions = new ArrayList<>();
+    private long examTime;
 
     public int getExamid(){
         return this.examid;
@@ -72,9 +73,23 @@ public class Exam {
         this.examQuestions = examQuestions;
     }
 
+    public long getExamTime() {
+        return examTime;
+    }
+
+    public void setExamTime(long examTime) {
+        this.examTime = examTime;
+    }
+
     @Override public String toString(){
-        return "Exam{" + "examID=" + this.examid + ", created=" + this.getCreated() + ", passed="
+        String ret =  "Exam{" + "examID=" + this.examid + ", created=" + this.getCreated() + ", passed="
             + this.getPassed() + ", author= \"" + this.getAuthor() + "\", subjectID="+ this.getSubjectID()
-            + "}"; //TODO anpassen nachdem Question dazu gemerged wurde
+            + "}";
+
+        for(Question q: examQuestions){
+            ret += q.toString();
+        }
+
+        return ret;
     }
 }
