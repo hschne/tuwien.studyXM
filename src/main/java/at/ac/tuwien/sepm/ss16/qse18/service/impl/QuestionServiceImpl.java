@@ -98,7 +98,8 @@ import java.util.List;
     @Override public List<Answer> getCorrespondingAnswers(Question q) throws ServiceException {
         try {
             List<Answer> al = adao.getAnswer();
-            for (Answer a : al) {
+            List<Answer> answerList = adao.getAnswer();
+            for (Answer a : answerList) {
                 if (!a.getQuestion().equals(q)) {
                     al.remove(a);
                 }

@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
+import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,19 +29,22 @@ import java.util.List;
 
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class CreateExamController
     extends BaseController {
-    @FXML public Button buttonShowQuestions;
-    @FXML public Button buttonNewExam;
-    @FXML public TableView<Exam> tableExam;
-    @FXML public TableColumn<Exam, Integer> columnExamID;
-    @FXML public TableColumn<Exam, Timestamp> columnCreated;
-    @FXML public TableColumn<Exam, Boolean> columnPassed;
-    @FXML public TableColumn<Exam, String> columnAuthor;
+    @FXML private Button buttonShowQuestions;
+    @FXML private Button buttonNewExam;
+    @FXML private Button startExamButton;
+    @FXML private TableView<Exam> tableExam;
+    @FXML private TableColumn<Exam, Integer> columnExamID;
+    @FXML private TableColumn<Exam, Timestamp> columnCreated;
+    @FXML private TableColumn<Exam, Boolean> columnPassed;
+    @FXML private TableColumn<Exam, String> columnAuthor;
     @Autowired ExamServiceImpl examService;
     @Autowired QuestionService questionService;
     private Exam exam;
     private List<Question> questionList = new ArrayList<>();
 
     @FXML public void initialize() {
+        startExamButton.disableProperty().bind(Bindings.isEmpty(tableExam.getSelectionModel().
+                                                                            getSelectedItems()));
         this.exam = null;
         try {
             initializeTable();
@@ -57,7 +61,7 @@ import java.util.List;
 
     @FXML public void startExamButtonClicked(){
         logger.debug("Button Start exam clicked");
-        mainFrameController.handleStartExam();
+        mainFrameController.handleStartExam(tableExam.getSelectionModel().getSelectedItem());
     }
 
     @FXML public void showQuestions() {
@@ -117,7 +121,7 @@ import java.util.List;
     private void showAlert(String contentMsg) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("Warning Dialog");
-        alert.setHeaderText("Such Input, Much Wow");
+        alert.setHeaderText("An error has occured");
         alert.setContentText(contentMsg);
         alert.showAndWait();
     }

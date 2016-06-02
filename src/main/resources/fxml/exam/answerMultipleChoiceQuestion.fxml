@@ -25,23 +25,23 @@
             <Insets right="250.0" />
          </GridPane.margin>
       </Line>
-      <Label text="What is the meaning of life?" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
-      <RadioButton fx:id="answer1" mnemonicParsing="false" text="Answer 1" GridPane.rowIndex="1">
+      <Label fx:id="questionLabel" text="What is the meaning of life?" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+      <RadioButton fx:id="answer1Button" mnemonicParsing="false" text="Answer 1" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
-      <RadioButton fx:id="answer2" mnemonicParsing="false" text="Answer 2" GridPane.rowIndex="2">
+      <RadioButton fx:id="answer2Button" mnemonicParsing="false" text="Answer 2" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
-      <RadioButton fx:id="answer3" mnemonicParsing="false" text="Answer 3" GridPane.rowIndex="3">
+      <RadioButton fx:id="answer3Button" mnemonicParsing="false" text="Answer 3" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
-      <RadioButton fx:id="answer4" mnemonicParsing="false" text="Answer 4" GridPane.rowIndex="4">
+      <RadioButton fx:id="answer4Button" mnemonicParsing="false" text="Answer 4" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>

@@ -229,4 +229,16 @@ import java.util.Map;
         }
     }
 
+    @Override public void update(int examid, int questionid, boolean questionPassed,
+        boolean alreadyAnswered) throws ServiceException {
+        logger.debug("Entering method update with parameters {}",examid,questionid,questionPassed,alreadyAnswered);
+        try{
+            this.examQuestionDao.update(examid,questionid,questionPassed,alreadyAnswered);
+        }
+        catch (DaoException e){
+            logger.error(e.getMessage(),e);
+            throw new ServiceException(e.getMessage(),e);
+        }
+    }
+
 }

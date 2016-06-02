@@ -55,7 +55,7 @@
                   <Font name="Arial" size="14.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#startExamButtonClicked" text="Start exam" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+            <Button fx:id="startExamButton" mnemonicParsing="false" onAction="#startExamButtonClicked" text="Start exam" GridPane.halignment="CENTER" GridPane.rowIndex="2">
                <font>
                   <Font name="Arial" size="14.0" />
                </font></Button>

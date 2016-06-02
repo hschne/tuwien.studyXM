@@ -80,8 +80,9 @@
                   <Insets bottom="50.0" left="100.0" right="100.0" />
                </GridPane.margin>
             </AnchorPane>
-            <Button mnemonicParsing="false" text="Next Question" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+            <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#handleNextQuestionButton" text="Next Question" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <Label text="subject area xyz" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Button fx:id="finishExamButton" mnemonicParsing="false" text="Finish Exam" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>

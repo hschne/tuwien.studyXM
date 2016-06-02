@@ -32,6 +32,8 @@ import java.util.Map;
 public class ExamQuestionDaoJdbc implements ExamQuestionDao {
     private ConnectionH2 database;
     private static final Logger logger = LogManager.getLogger();
+    private static final String UPDATE_SQL = "UPDATE REL_EXAM_QUESTION SET QUESTION_PASSED = ?, "
+        + "ALREADY_ANSWERED = ? WHERE EXAMID = ? AND QUESTIONID = ?;";
 
     @Autowired public ExamQuestionDaoJdbc(ConnectionH2 database) {
         this.database = database;
@@ -159,6 +161,31 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
         return questionIDList;
+    }
+
+    @Override public void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered)
+        throws DaoException {
+        logger.debug("Entering method update with parameters {}",examid,questionid,questionPassed,alreadyAnswered);
+
+        PreparedStatement pstmt = null;
+
+        try{
+            pstmt = database.getConnection().prepareStatement(UPDATE_SQL);
+            pstmt.setBoolean(1,questionPassed);
+            pstmt.setBoolean(2,alreadyAnswered);
+            pstmt.setInt(3,examid);
+            pstmt.setInt(4,questionid);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e){
+            logger.error("Could not update relation exam question for exam with id " + examid +
+                "and question with id " + questionid,e);
+            throw new DaoException("Could not update relation exam question for exam with id " + examid +
+                "and question with id " + questionid,e);
+        }
+        finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt},null);
+        }
     }
 
 

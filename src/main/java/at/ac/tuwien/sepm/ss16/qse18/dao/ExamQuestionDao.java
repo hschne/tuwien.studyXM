@@ -55,4 +55,15 @@ public interface ExamQuestionDao {
      * */
     List<Integer> getAllQuestionsOfExam(int examID) throws DaoException;
 
+    /***
+     * update
+     * updates the values question_passed and already_answered for the specified exam and question
+     * relation.
+     * @param examid specifies the exam for which the relation is updated
+     * @param questionid specifies the quesiton for which the relation is updated
+     * @param questionPassed the new value of question_passed in the resource
+     * @param alreadyAnswered the new value for already_answered in the resource
+     * @throws DaoException if an error occurs with the resource
+     * */
+    void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered) throws DaoException;
 }

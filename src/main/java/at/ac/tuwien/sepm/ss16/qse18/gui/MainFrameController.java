@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.DoExamController;
@@ -255,10 +256,11 @@ import java.util.List;
         }
     }
 
-    public void handleStartExam(){
+    public void handleStartExam(Exam exam){
         logger.debug("Loading doExam screen");
         try{
-            setSubView("/fxml/exam/doExam.fxml", DoExamController.class);
+            DoExamController controller = setSubView("/fxml/exam/doExam.fxml", DoExamController.class);
+            controller.initialize(exam);
         }
         catch (IOException e){
             handleException(e);
