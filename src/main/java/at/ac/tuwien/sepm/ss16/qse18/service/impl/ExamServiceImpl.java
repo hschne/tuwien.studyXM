@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -215,11 +216,12 @@ import java.util.Map;
         return random;
     }
 
-    /*
-    public List<Integer> gradeExam(Exam exam) throws ServiceException{
+
+    public String[] gradeExam(Exam exam) throws ServiceException{
         logger.debug("entering gradeExam with parameters {}",exam);
         List <Integer> questionIDList = new ArrayList<>();
-        List <Question> questionList = new ArrayList<>();
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        String[] result = new String[3];
 
         if(!DtoValidator.validate(exam)){
             logger.error("Service Exception gradeExam {}", exam);
@@ -229,9 +231,9 @@ import java.util.Map;
         try{
 
             questionIDList = getAllQuestionsOfExam(exam.getExamid());
-            for(int i = 0; i < questionIDList.size(); i++){
-                questionList.add(this.questionDao.getQuestion(questionIDList.get(i)));
-            }
+            questionBooleans = this.examQuestionDao.getAllQuestionBooleans(questionIDList);
+
+            result = calculateResult(questionBooleans);
 
 
         }catch (DaoException e){
@@ -240,22 +242,48 @@ import java.util.Map;
         }
 
 
-        return null;
+        return result;
     }
 
-    public List<Integer> calculateResult(List<Question> questionList){
-        int incorrect = 0;
-        int correct = 0;
-        List<Integer> result = new ArrayList<>();
+    public String[] calculateResult(Map<Integer, Boolean> questionBooleans){
+        double incorrect = 0;
+        double correct = 0;
+        String[] result = new String[3];
 
-        if(questionList != null && questionList.size() > 0){
-            for(int i = 0; i < questionList.size(); i++){
-
+        if(questionBooleans != null && questionBooleans.size() > 0){
+            for(Map.Entry<Integer, Boolean> m: questionBooleans.entrySet()){
+                if(m.getValue()){
+                    correct++;
+                }else{
+                    incorrect++;
+                }
             }
         }
 
-        return null;
-    }
-    */
+        result[0] = correct + "";
+        result[1] = incorrect + "";
+        result[2] = getGrade(correct, incorrect);
 
+        return result;
+    }
+
+    public String getGrade(double correct, double incorrect){
+        double per = correct/((correct+incorrect)/100);
+
+        if(per >= 96){
+            return "A";
+
+        }else if( per >= 81){
+            return "B";
+
+        }else if(per >= 66){
+            return "C";
+
+        }else if(per >= 51){
+            return "D";
+
+        }else{
+            return "F";
+        }
+    }
 }

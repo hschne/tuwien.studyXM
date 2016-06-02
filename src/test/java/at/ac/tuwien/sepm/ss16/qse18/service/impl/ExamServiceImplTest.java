@@ -298,8 +298,6 @@ import static org.mockito.Mockito.*;
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(3));
 
         assertTrue("List should only contain 2 Elements", test.size() == 2);
-        System.out.println(test.get(0).getQuestion());
-        System.out.println(test.get(1).getQuestion());
         assertTrue("First Element should be in the List", test.get(0).equals(q1) || test.get(0).equals(q2));
         assertTrue("Second Question should be in the List", test.get(1).equals(q2)|| test.get(1).equals(q1));
 
@@ -360,6 +358,65 @@ import static org.mockito.Mockito.*;
         PowerMockito.verifyStatic();
         mockConnectionH2.getConnection();
     }
+    //----------------------------------------------------------------------------------------------
+
+    //Testing gradeExam(Exam)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_gradeExamCallsRightMethodInDao_should_persist()throws Exception{
+        List<Integer> questionID = new ArrayList<>();
+        questionID.add(1);
+        questionID.add(2);
+
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        questionBooleans.put(1, true);
+        questionBooleans.put(2, false);
+
+        when(this.mockExamQuestionDaoJdbc.getAllQuestionsOfExam(this.exam.getExamid())).thenReturn(questionID);
+        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionID)).thenReturn(questionBooleans);
+
+        this.examService.gradeExam(this.exam);
+        verify(mockExamQuestionDaoJdbc).getAllQuestionsOfExam(this.exam.getExamid());
+        verify(mockExamQuestionDaoJdbc).getAllQuestionBooleans(questionID);
+    }
+
+    @Test public void test_gradeExamWith3CorrectAnd2IncorrectQuestions_should_persist() throws Exception{
+        String[] test;
+        List<Integer> questionID = new ArrayList<>();
+        questionID.add(1);
+        questionID.add(2);
+        questionID.add(3);
+        questionID.add(4);
+        questionID.add(5);
+
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        questionBooleans.put(1, true);
+        questionBooleans.put(2, true);
+        questionBooleans.put(3, true);
+        questionBooleans.put(4, false);
+        questionBooleans.put(5, false);
+
+        when(this.mockExamQuestionDaoJdbc.getAllQuestionsOfExam(this.exam.getExamid())).thenReturn(questionID);
+        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionID)).thenReturn(questionBooleans);
+
+        test = this.examService.gradeExam(this.exam);
+
+        assertTrue("3 should be correct", Double.parseDouble(test[0]) == 3);
+        assertTrue("2 should be incorrect", Double.parseDouble(test[1]) == 2);
+        assertTrue("Grade should be D", test[2].equals("D"));
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_gradeExamWithNull_should_fail() throws Exception{
+        this.examService.gradeExam(null);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_gradeExamWithInvalidExamID_should_fail()throws Exception{
+        this.exam.setExamid(0);
+        this.examService.gradeExam(this.exam);
+    }
+
+
     //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() throws Exception {

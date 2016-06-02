@@ -55,6 +55,7 @@
                   <Font name="Arial" size="14.0" />
                </font>
             </Button>
+            <Button fx:id="buttonTest" mnemonicParsing="false" onAction="#showResults" text="test" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
          </children>
       </GridPane>
    </children>

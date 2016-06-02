@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.CreateExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.InsertExamValuesController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowResultController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
@@ -243,6 +244,15 @@ import java.util.List;
         try {
             setSubView("/fxml/exam/showQuestions.fxml", ShowQuestionsController.class);
         } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleShowResult(){
+        logger.debug("Loading ShowResult screen");
+        try{
+            setSubView("/fxml/exam/showResult.fxml", ShowResultController.class);
+        }catch (IOException e){
             handleException(e);
         }
     }

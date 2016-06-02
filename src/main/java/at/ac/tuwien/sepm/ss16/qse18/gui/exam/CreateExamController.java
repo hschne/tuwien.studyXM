@@ -67,6 +67,12 @@ import java.util.List;
         }
     }
 
+    @FXML Button buttonTest;
+
+    @FXML public void showResults(){
+        mainFrameController.handleShowResult();
+    }
+
     public List<Question> getQuestionList() {
         return this.questionList;
     }
