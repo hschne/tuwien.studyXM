@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.*;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
@@ -15,7 +16,6 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -39,8 +39,8 @@ import java.util.List;
 /**
  * @author Philipp Ganiu
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class DoExamController implements
-    GuiController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class DoExamController extends
+    BaseController {
     @FXML private Label timeLeftLabel;
     @FXML private Label titleLabel;
     @FXML private Label progressLabel;
@@ -158,15 +158,19 @@ import java.util.List;
         }
     }
 
+    private void loadNoteCard(){
+        //TODO implement this class
+    }
+
     private void countDown(){
         if (timeline != null) {
             timeline.stop();
         }
         timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.minutes(starttime+1),
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(starttime+1),
                                                                             new KeyValue(time, 0)));
         timeline.playFromStart();
-        timeline.setOnFinished(e -> {showAlert("Unfortunatly you are out of time :(");});
+        timeline.setOnFinished(e -> {showInformation("Unfortunatly you are out of time :(");});
     }
 
     private <T extends GuiController> T setSubView(String fxmlPath, Class T) throws IOException {
@@ -185,29 +189,12 @@ import java.util.List;
     }
 
     private void loadCorrectSubScreen(QuestionType type){
-        if(type == QuestionType.MULTIPLECHOICE){
+        if(type == QuestionType.MULTIPLECHOICE || type == QuestionType.SINGLECHOICE){
             loadMultipleChoice();
         }
-
-    }
-
-    private void showAlert(String s) {
-        Alert alert = alertBuilder
-            .alertType(Alert.AlertType.INFORMATION)
-            .title("Info")
-            .headerText("")
-            .contentText(s)
-            .build();
-        alert.show();
-    }
-    private void showError(Exception e) {
-        Alert alert = alertBuilder
-            .alertType(Alert.AlertType.INFORMATION)
-            .title("Error")
-            .headerText("An Error occured")
-            .contentText(e.getMessage())
-            .build();
-        alert.show();
+        else if(type == QuestionType.NOTECARD){
+            loadNoteCard();
+        }
     }
 
 }

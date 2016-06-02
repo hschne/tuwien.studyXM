@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -17,8 +18,8 @@ import org.springframework.stereotype.Component;
 /**
  * @author Philipp Ganiu
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class AnswerMultipleChoiceQuestionController implements GuiController{
+@Component
+public class AnswerMultipleChoiceQuestionController extends BaseController{
     @FXML private Label questionLabel;
     @FXML private RadioButton answer1Button;
     @FXML private RadioButton answer2Button;
