@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.*;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExamGenParams;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
@@ -28,6 +29,7 @@ import java.util.Map;
     private SubjectQuestionDao subjectQuestionDao;
     private ExamQuestionDao examQuestionDao;
     private QuestionDao questionDao;
+    private ExamGenParams egp;
 
 
     @Autowired public ExamServiceImpl(ExamDao examDao, SubjectQuestionDao subjectQuestionDao,
@@ -66,12 +68,13 @@ import java.util.Map;
 
     @Override public Exam createExam(Exam exam, Topic topic, int examTime) throws ServiceException {
         logger.debug("entering method createExam with parameters {}", exam);
-        if (!DtoValidator.validate(exam)) {
+        if (!DtoValidator.validate(exam) || examTime <= 0) {
             logger.error("Service Exception createExam {}", exam);
             throw new ServiceException("Invalid values, please check your input");
         }
 
         try {
+            exam.setExamTime(examTime);
             exam.setExamQuestions(getRightQuestions(exam, topic.getTopicId(), examTime));
             return this.examDao.create(exam, exam.getExamQuestions());
         } catch (DaoException e) {
@@ -115,80 +118,21 @@ import java.util.Map;
             throw new ServiceException("Invalid values, please check your input");
         }
 
-        int counter = 0;
-        long questionTimeCounter = 0;
-        int random;
-        List<Question> examQuestions = new ArrayList<>();
-        List<Integer> notAnsweredQuestionID; // conatins all questionID's
-        List<Question> wrongAnsweredQuestions = new ArrayList<>(); // contains the quesitions which have been answered incorrectly
-        List<Question> rightAnsweredQuestions = new ArrayList<>(); // contains the questions which have been answered correctly
-        Map<Integer, Boolean> questionBooleans; // contains the booleans(answered correctly/incorrectly) of already answred questions
-        List<Question> notAnsweredQuestions = new ArrayList<>(); // contains all questions to a certain topic and subject
+        this.egp = new ExamGenParams();
 
         try {
-            notAnsweredQuestionID = this.subjectQuestionDao.getAllQuestionsOfSubject(exam, topicID);
-            questionBooleans = this.examQuestionDao.getAllQuestionBooleans(notAnsweredQuestionID);
+            this.egp.setNotAnsweredQuestionID(this.subjectQuestionDao.getAllQuestionsOfSubject(exam, topicID));
+            egp.setQuestionBooleans(this.examQuestionDao.getAllQuestionBooleans(egp.getNotAnsweredQuestionID()));
 
-            for (int e : notAnsweredQuestionID) {
-                notAnsweredQuestions.add(this.questionDao.getQuestion(e));
+            for (int e : egp.getNotAnsweredQuestionID()) {
+                egp.getNotAnsweredQuestions().add(this.questionDao.getQuestion(e));
             }
 
-            List<Question> temp = new ArrayList<>();
-            for (Question q : notAnsweredQuestions) {
-                temp.add(q);
-            }
+            splitQuestions();
 
-            for (Map.Entry<Integer, Boolean> e : questionBooleans.entrySet()) {
-                for (int i = 0; i < notAnsweredQuestions.size(); i++) {
-                    if (e.getKey() == notAnsweredQuestions.get(i).getQuestionId()) { // checks if the question has been answered already
-                        if (e.getValue() == true) { // if the question has already been answered correctly
-                            rightAnsweredQuestions.add(temp.get(counter));
-                            notAnsweredQuestions.remove(temp.get(counter));
-                        } else { // if the question has already been answered incorrectly
-                            wrongAnsweredQuestions.add(temp.get(counter));
-                            notAnsweredQuestions.remove(temp.get(counter));
-                        }
-                        counter++;
-                    }
-                }
-            }
-
-            while (!wrongAnsweredQuestions.isEmpty() || !notAnsweredQuestions.isEmpty()
-                || !rightAnsweredQuestions.isEmpty()) {
-
-                if (!notAnsweredQuestions.isEmpty()) {
-                    random = (int) (Math.random() * notAnsweredQuestions.size());
-                    if ((questionTimeCounter + notAnsweredQuestions.get(random).getQuestionTime())
-                        <= examTime) { // if time of questions are still smaller or the same as examTime
-                        examQuestions.add(notAnsweredQuestions.get(random));
-                        questionTimeCounter += notAnsweredQuestions.get(random).getQuestionTime();
-                    }
-                    notAnsweredQuestions.remove(random);
-                }
-
-                if (!wrongAnsweredQuestions.isEmpty() && notAnsweredQuestions.isEmpty()) {
-                    random = (int) (Math.random() * wrongAnsweredQuestions.size());
-                    if ((questionTimeCounter + wrongAnsweredQuestions.get(random).getQuestionTime())
-                        <= examTime) { // if time of questions are still smaller or the same as examTime
-                        examQuestions.add(wrongAnsweredQuestions.get(random));
-                        questionTimeCounter += wrongAnsweredQuestions.get(random).getQuestionTime();
-                    }
-
-                    wrongAnsweredQuestions.remove(random);
-                }
-
-
-                if (!rightAnsweredQuestions.isEmpty() && notAnsweredQuestions.isEmpty()
-                    && wrongAnsweredQuestions.isEmpty()) {
-                    random = (int) (Math.random() * rightAnsweredQuestions.size());
-                    if ((questionTimeCounter + rightAnsweredQuestions.get(random).getQuestionTime())
-                        <= examTime) { // if time of questions are still smaller or the same as examTime
-                        examQuestions.add(rightAnsweredQuestions.get(random));
-                        questionTimeCounter += rightAnsweredQuestions.get(random).getQuestionTime();
-                    }
-                    rightAnsweredQuestions.remove(random);
-                }
-            }
+            selectQuestions(egp.getNotAnsweredQuestions(), examTime);
+            selectQuestions(egp.getWrongAnsweredQuestions(), examTime);
+            selectQuestions(egp.getRightAnsweredQuestions(), examTime);
 
         } catch (DaoException e) {
             logger.error("Service Exception getRightQuestions with parameters{}", exam, topicID,
@@ -196,21 +140,21 @@ import java.util.Map;
             throw new ServiceException(e.getMessage());
         }
 
-        if (examQuestions.isEmpty()) {
+        if (egp.getExamQuestions().isEmpty()) {
             logger.error("Service Exception getRightQuestions with parameters{}", exam);
             throw new ServiceException(
                 "Could not get Questions with subjectId " + exam.getSubjectID() + " and topicID "
                     + topicID + " or examTime " + examTime + " is too small");
         }
 
-        if (questionTimeCounter < examTime * 0.8) {
+        if (egp.getQuestionTime() < examTime * 0.8) {
             logger.error("Service Exception getRightQuestions with parameters{}", exam);
             throw new ServiceException(
                 "There aren't enough questions to cover the exam time " + examTime
                     + " ,please reduce the exam time");
         }
 
-        return examQuestions;
+        return egp.getExamQuestions();
     }
 
     @Override public List<Integer> getAllQuestionsOfExam(int examID) throws ServiceException {
@@ -240,5 +184,90 @@ import java.util.Map;
             throw new ServiceException(e.getMessage(),e);
         }
     }
+
+    public void splitQuestions(){
+        List<Question> temp = new ArrayList<>();
+        int counter = 0;
+
+        for(Question q: egp.getNotAnsweredQuestions()){
+            temp.add(q);
+        }
+
+        for (Map.Entry<Integer, Boolean> e : egp.getQuestionBooleans().entrySet()) {
+            for (int i = 0; i < temp.size(); i++) {
+                if (e.getKey() == temp.get(i).getQuestionId()) { // checks if the question has been answered already
+                    if (e.getValue() == true) { // if the question has already been answered correctly
+                        egp.getRightAnsweredQuestions().add(temp.get(counter));
+                        egp.getNotAnsweredQuestions().remove(temp.get(counter));
+                    } else { // if the question has already been answered incorrectly
+                        egp.getWrongAnsweredQuestions().add(temp.get(counter));
+                        egp.getNotAnsweredQuestions().remove(temp.get(counter));
+                    }
+                }
+                counter++;
+            }
+            counter = 0;
+        }
+    }
+
+    public void selectQuestions(List<Question> questionList, int examTime){
+        while(!questionList.isEmpty()){
+            questionList.remove(chooseQuestions(questionList, examTime));
+        }
+    }
+
+    public int chooseQuestions(List<Question> questionList, int examTime){
+        int random = (int) (Math.random() * questionList.size());
+        if ((this.egp.getQuestionTime() + questionList.get(random).getQuestionTime())
+            <= examTime) { // if time of questions are still smaller or the same as examTime
+            egp.getExamQuestions().add(questionList.get(random));
+            egp.setQuestionTime(egp.getQuestionTime() + questionList.get(random).getQuestionTime());
+        }
+
+        return random;
+    }
+
+    /*
+    public List<Integer> gradeExam(Exam exam) throws ServiceException{
+        logger.debug("entering gradeExam with parameters {}",exam);
+        List <Integer> questionIDList = new ArrayList<>();
+        List <Question> questionList = new ArrayList<>();
+
+        if(!DtoValidator.validate(exam)){
+            logger.error("Service Exception gradeExam {}", exam);
+            throw new ServiceException("Invalid values, please check your input");
+        }
+
+        try{
+
+            questionIDList = getAllQuestionsOfExam(exam.getExamid());
+            for(int i = 0; i < questionIDList.size(); i++){
+                questionList.add(this.questionDao.getQuestion(questionIDList.get(i)));
+            }
+
+
+        }catch (DaoException e){
+            logger.error("Dao Exception gradeExam with parameters {}", exam, e);
+            throw new ServiceException(e.getMessage());
+        }
+
+
+        return null;
+    }
+
+    public List<Integer> calculateResult(List<Question> questionList){
+        int incorrect = 0;
+        int correct = 0;
+        List<Integer> result = new ArrayList<>();
+
+        if(questionList != null && questionList.size() > 0){
+            for(int i = 0; i < questionList.size(); i++){
+
+            }
+        }
+
+        return null;
+    }
+    */
 
 }

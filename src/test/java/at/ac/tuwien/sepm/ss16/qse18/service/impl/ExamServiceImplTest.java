@@ -47,6 +47,7 @@ import static org.mockito.Mockito.*;
     @Mock private Statement mockStatement;
     @Mock private PreparedStatement mockPreparedStatement;
     @Mock private ResultSet mockResultSet;
+    @Mock private ExamServiceImpl mockExam;
     private ExamServiceImpl examService;
     private Exam exam;
     private Topic topic;
@@ -257,9 +258,76 @@ import static org.mockito.Mockito.*;
         assertTrue("Should only contain one Element", test.size() == 1);
     }
 
+    @Test public void test_getRightQuestionsOnlyTheFirst2OutOf4QuestionsShouldBeInTheList()throws Exception{
+        List<Integer> questionIDList = new ArrayList<>();
+        Question q1 = createDummyQuestion(1, "question1");
+        Question q2 = createDummyQuestion(2, "question2");
+        Question q3 = createDummyQuestion(3, "question3");
+        Question q4 = createDummyQuestion(4, "question4");
+
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        questionBooleans.put(3, false);
+        questionBooleans.put(4, true);
+
+        questionIDList.add(1);
+        questionIDList.add(2);
+        questionIDList.add(3);
+        questionIDList.add(4);
+
+        List<Question> questions = new ArrayList<>();
+        questions.add(q1);
+        questions.add(q2);
+        questions.add(q3);
+        questions.add(q4);
+
+        List<Question> test;
+
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+            .thenReturn(questionIDList);
+        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
+            .thenReturn(questionBooleans);
+        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
+            .thenReturn(q3).thenReturn(q4);
+
+        test = this.examService.getRightQuestions(this.exam, 1, 1000);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
+        this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(2));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(3));
+
+        assertTrue("List should only contain 2 Elements", test.size() == 2);
+        System.out.println(test.get(0).getQuestion());
+        System.out.println(test.get(1).getQuestion());
+        assertTrue("First Element should be in the List", test.get(0).equals(q1) || test.get(0).equals(q2));
+        assertTrue("Second Question should be in the List", test.get(1).equals(q2)|| test.get(1).equals(q1));
+
+    }
+
     @Test(expected = ServiceException.class)
-    public void test_getRightQuestionsTooSmallExamTime_should_fail() throws Exception {
+    public void test_getRightQuestionsWithEmptyExamQuestionList_should_fail() throws Exception {
         this.examService.getRightQuestions(this.exam, 1, 2);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_getRightQuestionsWithTooSmallExamTime_should_fail() throws Exception{
+        List<Integer> questionIDList = new ArrayList<>();
+        Question q1 = createDummyQuestion(1, "question1");
+        questionIDList.add(1);
+
+        List<Question> questions = new ArrayList<>();
+        questions.add(q1);
+
+        List<Question> test;
+
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+            .thenReturn(questionIDList);
+        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1);
+
+        this.examService.getRightQuestions(this.exam, 1, 700);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
     }
 
     @Test(expected = ServiceException.class)
