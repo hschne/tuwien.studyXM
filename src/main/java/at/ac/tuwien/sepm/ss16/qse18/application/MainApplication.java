@@ -51,8 +51,7 @@ import java.util.Optional;
         String css = this.getClass().getResource("/style.css").toExternalForm();
         scene.getStylesheets().add(css);
         primaryStage.setScene(scene);
-        //TODO change
-        primaryStage.setResizable(true);
+        primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(this::closeWithConfirmation);
         primaryStage.show();
 
