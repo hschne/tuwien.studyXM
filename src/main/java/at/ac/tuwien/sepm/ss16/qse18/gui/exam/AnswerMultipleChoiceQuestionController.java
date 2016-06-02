@@ -49,7 +49,7 @@ public class AnswerMultipleChoiceQuestionController extends BaseController{
         else {
             s = "(SINGLECHOICE)";
         }
-        questionLabel.setText(question.getQuestion());
+        questionLabel.setText(question.getQuestion() + " " + s);
         if(answer1 != null) {
             answer1Button.setText(answer1.getAnswer());
         }

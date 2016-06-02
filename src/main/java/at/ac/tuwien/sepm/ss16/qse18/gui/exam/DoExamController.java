@@ -167,7 +167,7 @@ import java.util.List;
             timeline.stop();
         }
         timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(starttime+1),
+        timeline.getKeyFrames().add(new KeyFrame(Duration.minutes(starttime+1),
                                                                             new KeyValue(time, 0)));
         timeline.playFromStart();
         timeline.setOnFinished(e -> {showInformation("Unfortunatly you are out of time :(");});
