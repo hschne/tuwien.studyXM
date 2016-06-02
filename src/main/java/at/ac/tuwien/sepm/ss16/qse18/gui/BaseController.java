@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +33,8 @@ import org.springframework.stereotype.Component;
     private void showAlert(String title, String headerMsg, String contentMsg) {
         Alert alert =
             alertBuilder.alertType(Alert.AlertType.INFORMATION).title(title).headerText(headerMsg)
-                .contentText(contentMsg).setResizable(true).build();
+                .modality(Modality.APPLICATION_MODAL).contentText(contentMsg).setResizable(true)
+                .build();
         alert.showAndWait();
     }
 
@@ -50,7 +52,8 @@ import org.springframework.stereotype.Component;
 
     protected boolean showConfirmation(String contentMsg) {
         Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
-            .setResizable(true).headerText("Are you sure?").contentText(contentMsg).build();
+            .setResizable(true).headerText("Are you sure?").contentText(contentMsg)
+            .modality(Modality.APPLICATION_MODAL).build();
         alert.showAndWait();
         ButtonType result = alert.getResult();
         return result == ButtonType.OK;
