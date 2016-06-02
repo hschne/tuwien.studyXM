@@ -126,22 +126,18 @@ import java.util.regex.Pattern;
         logger.info("Collecting keywords from fields");
         List<Answer> newAnswers = new LinkedList<>();
         if (!textFieldAnswerOne.getText().isEmpty()) {
-            checkKeywordForSpaces(textFieldAnswerOne.getText());
             newAnswers
                 .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerOne.getText(), true));
         }
         if (!textFieldAnswerTwo.getText().isEmpty()) {
-            checkKeywordForSpaces(textFieldAnswerTwo.getText());
             newAnswers
                 .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerTwo.getText(), true));
         }
         if (!textFieldAnswerThree.getText().isEmpty()) {
-            checkKeywordForSpaces(textFieldAnswerThree.getText());
             newAnswers
                 .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerThree.getText(), true));
         }
         if (!textFieldAnswerFour.getText().isEmpty()) {
-            checkKeywordForSpaces(textFieldAnswerFour.getText());
             newAnswers
                 .add(new Answer(QuestionType.OPENQUESTION, textFieldAnswerFour.getText(), true));
         }
@@ -150,23 +146,6 @@ import java.util.regex.Pattern;
             throw new ServiceException("At least one keyword must be given.");
         }
         return newAnswers;
-    }
-
-    /**
-     * Checks if a keyword is valid. A keyword is valid if it contains no white spaces.
-     *
-     * @param keyword keyword to check
-     * @throws ServiceException
-     */
-    private void checkKeywordForSpaces(String keyword) throws ServiceException {
-        logger.info("Validating keyword: " + keyword);
-        Pattern p = Pattern.compile("\\s");
-        Matcher m = p.matcher(keyword);
-        if (m.find()) {
-            logger.info(keyword + "is not a valid keyword.");
-            throw new ServiceException(keyword + " is not a valid keyword. ");
-        }
-        logger.info(keyword + "is a valid keyword.");
     }
 }
 
