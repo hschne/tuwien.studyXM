@@ -15,6 +15,7 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -63,7 +64,7 @@ import java.util.List;
     private Answer answer2;
     private Answer answer3;
     private Answer answer4;
-    private AlertBuilder alertBuilder;
+    @Autowired private AlertBuilder alertBuilder;
     private int currentQuestionNumber = 0;
     private AnswerMultipleChoiceQuestionController mcController;
     private IntegerProperty progress = new SimpleIntegerProperty(0);
@@ -92,7 +93,7 @@ import java.util.List;
         }
         catch (ServiceException e){
             logger.error("An error occured",e);
-            showAlert("Error","An unexpected error occured",e);
+            showError(e);
         }
         loadCorrectSubScreen(questions.get(currentQuestionNumber).getType());
     }
@@ -104,7 +105,7 @@ import java.util.List;
                         mcController.isCorrect(), true);
                 } catch (ServiceException e) {
                     logger.error(e.getMessage());
-                    showAlert("Error", "Unexpected error", e);
+                    showError(e);
                 }
             }
         progress.setValue(progress.intValue() + 1);
@@ -124,7 +125,7 @@ import java.util.List;
         }
         catch (ServiceException e){
             logger.error("An error occured",e);
-            showAlert("Error","An unexpected error occured",e);
+            showError(e);
         }
 
         answer1 = answers.get(0);
@@ -153,17 +154,19 @@ import java.util.List;
         }
         catch (IOException e){
             logger.error(e.getMessage());
-            showAlert("Error","Could not load subview",e);
+            showError(e);
         }
     }
 
     private void countDown(){
         if (timeline != null) {
             timeline.stop();
-        }timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.minutes(starttime+1),
+        }
+        timeline = new Timeline();
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(starttime+1),
                                                                             new KeyValue(time, 0)));
         timeline.playFromStart();
+        timeline.setOnFinished(e -> {showAlert("Unfortunatly you are out of time :(");});
     }
 
     private <T extends GuiController> T setSubView(String fxmlPath, Class T) throws IOException {
@@ -188,12 +191,23 @@ import java.util.List;
 
     }
 
-    private void showAlert(String title, String headerMsg, Exception e) {
-        Alert alert =
-            alertBuilder.alertType(Alert.AlertType.INFORMATION).title(title).headerText(headerMsg)
-                .contentText(e.getMessage()).setResizable(true).build();
-        alert.showAndWait();
+    private void showAlert(String s) {
+        Alert alert = alertBuilder
+            .alertType(Alert.AlertType.INFORMATION)
+            .title("Info")
+            .headerText("")
+            .contentText(s)
+            .build();
+        alert.show();
     }
-
+    private void showError(Exception e) {
+        Alert alert = alertBuilder
+            .alertType(Alert.AlertType.INFORMATION)
+            .title("Error")
+            .headerText("An Error occured")
+            .contentText(e.getMessage())
+            .build();
+        alert.show();
+    }
 
 }

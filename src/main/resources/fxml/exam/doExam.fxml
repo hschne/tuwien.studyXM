@@ -81,7 +81,7 @@
                </GridPane.margin>
             </AnchorPane>
             <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#handleNextQuestionButton" text="Next Question" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Label text="subject area xyz" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
+            <Label text="All subjects are covered" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM" />
             <Button fx:id="finishExamButton" mnemonicParsing="false" text="Finish Exam" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
          </children>
       </GridPane>
