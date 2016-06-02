@@ -71,7 +71,7 @@ import java.util.List;
 
     @FXML public void initialize(Exam exam){
         this.exam = exam;
-        starttime = 60;
+        starttime = (int)exam.getExamTime();
         time = new SimpleIntegerProperty(starttime);
         timeLeftLabel.textProperty().bind(Bindings.concat(time.asString())
                                                     .concat(new SimpleStringProperty(" min left")));

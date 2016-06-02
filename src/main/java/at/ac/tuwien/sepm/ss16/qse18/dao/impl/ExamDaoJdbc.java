@@ -53,12 +53,13 @@ public class ExamDaoJdbc implements ExamDao{
             exam.setPassed(false);
 
             pstmt = database.getConnection().prepareStatement("INSERT INTO ENTITY_EXAM "
-                + "(CREATED, PASSED, AUTHOR, SUBJECT) VALUES (?, ?, ?, ?)",
+                + "(CREATED, PASSED, AUTHOR, SUBJECT,EXAMTIME) VALUES (?, ?, ?, ?,?)",
                 Statement.RETURN_GENERATED_KEYS);
             pstmt.setTimestamp(1, exam.getCreated());
             pstmt.setBoolean(2, exam.getPassed());
             pstmt.setString(3, exam.getAuthor());
             pstmt.setInt(4, exam.getSubjectID());
+            pstmt.setLong(5,exam.getExamTime());
             pstmt.executeUpdate();
 
             generatedKey = pstmt.getGeneratedKeys();
@@ -227,6 +228,7 @@ public class ExamDaoJdbc implements ExamDao{
             exam.setAuthor(rs.getString("author"));
             exam.setPassed(rs.getBoolean("passed"));
             exam.setSubjectID(rs.getInt("subject"));
+            exam.setExamTime(rs.getLong("examtime"));
 
             examList.add(exam);
         }
