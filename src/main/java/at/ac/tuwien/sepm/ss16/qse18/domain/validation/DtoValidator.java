@@ -56,9 +56,6 @@ public class DtoValidator {
         if (exam.getCreated() == null) {
             throw new DtoValidatorException("Exam timestamp must not be null");
         }
-        if (exam.getExamTime() < 1) {
-            throw new DtoValidatorException("Exam time must at least be 1");
-        }
     }
 
     private static void validateAuthor(Exam exam) throws DtoValidatorException {
