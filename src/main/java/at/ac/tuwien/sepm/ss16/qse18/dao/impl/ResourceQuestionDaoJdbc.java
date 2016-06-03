@@ -30,14 +30,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     @Override public void createResourceQuestion(Resource resource, Question question)
         throws DaoException {
-        logger.debug("Entering createResourceQuestion with params [{}] and [{}]");
+        logger
+            .debug("Entering createResourceQuestion with params [{}] and [{}]", resource, question);
 
         tryValidateResource(resource);
-
-        if (!validate(question)) {
-            logger.error("Question [" + question + "] is invalid");
-            throw new DaoException("Validation of question [" + question + "] failed");
-        }
+        tryValidateQuestion(question);
 
         PreparedStatement ps = null;
 
@@ -61,8 +58,17 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         try {
             validate(resource);
         } catch (DtoValidatorException e) {
-            logger.error("Resource is invalid", e);
-            throw new DaoException("Resource is invalid: " + e);
+            logger.error("Resource [" + resource + "] is invalid", e);
+            throw new DaoException("Resource [" + resource + "] is invalid: " + e);
+        }
+    }
+
+    private void tryValidateQuestion(Question question) throws DaoException {
+        try {
+            validate(question);
+        } catch (DtoValidatorException e) {
+            logger.error("Question [" + question + "] is invalid", e);
+            throw new DaoException("Question [" + question + "] is invalid: " + e);
         }
     }
 }

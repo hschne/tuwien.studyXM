@@ -8,12 +8,14 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 import java.sql.*;
 import java.util.*;
@@ -39,10 +41,7 @@ public class ExamDaoJdbc implements ExamDao{
     @Override public Exam create(Exam exam, List<Question> questions) throws DaoException {
         logger.debug("entering method create with parameters {}", exam);
 
-        if (!DtoValidator.validate(exam)) {
-            logger.error("Dao Exception create() {}", exam);
-            throw new DaoException("Invalid values, please check your input");
-        }
+        tryValidateExam(exam);
 
         PreparedStatement pstmt = null;
         ResultSet generatedKey = null;
@@ -90,10 +89,7 @@ public class ExamDaoJdbc implements ExamDao{
     @Override public Exam delete(Exam exam) throws DaoException {
         logger.debug("entering method delete with parameters {}", exam);
 
-        if(!DtoValidator.validate(exam)){
-            logger.error("Dao Exception delete() {}", exam);
-            throw new DaoException("Invalid values, please check your input");
-        }
+        tryValidateExam(exam);
 
         PreparedStatement pstmt = null;
 
@@ -232,6 +228,15 @@ public class ExamDaoJdbc implements ExamDao{
         }
 
         return examList;
+    }
+
+    private void tryValidateExam(Exam exam) throws DaoException {
+        try {
+            validate(exam);
+        } catch (DtoValidatorException e) {
+            logger.error("Exam [" + exam + "] is invalid", e);
+            throw new DaoException("Exam [" + exam + "] is invalid: " + e);
+        }
     }
 
 }

@@ -5,11 +5,14 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,9 +42,11 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         logger.debug("entering method getAllQuestionsOfSubject with parameters {}", exam);
         ArrayList<Integer> questionIDList = new ArrayList<>();
 
-        if(!DtoValidator.validate(exam) || topicID <= 0) {
-            logger.error("Dao Exception create() {}", exam, topicID);
-            throw new DaoException("Invalid values, please check your input");
+        tryValidateExam(exam);
+
+        if(topicID <= 0) {
+            logger.error("topicId must be greater than 0");
+            throw new DaoException("topicId must be greater than 0");
         }
 
         PreparedStatement pstmt = null;
@@ -71,5 +76,14 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         }
 
         return questionIDList;
+    }
+
+    private void tryValidateExam(Exam exam) throws DaoException {
+        try {
+            validate(exam);
+        } catch (DtoValidatorException e) {
+            logger.error("Exam [" + exam + "] is invalid", e);
+            throw new DaoException("Exam [" + exam + "] is invalid: " + e);
+        }
     }
 }

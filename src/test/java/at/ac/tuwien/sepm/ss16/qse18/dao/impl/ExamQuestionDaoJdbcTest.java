@@ -47,6 +47,7 @@ public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
         question.setQuestion("TestQuestion");
         question.setQuestionId(1);
         question.setType(QuestionType.valueOf(1));
+        question.setQuestionTime(1);
         al.add(question);
 
 
@@ -57,6 +58,7 @@ public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
         testExam.setAuthor("Test1");
         testExam.setSubjectID(1);
         testExam.setExamQuestions(al);
+        testExam.setExamTime(1);
     }
 
     //Testing create(Exam, Question)

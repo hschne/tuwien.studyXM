@@ -14,22 +14,56 @@ public class DtoValidator {
     /**
      * Checks if a question is valid. This means the question is not empty or null and shorter than 2000 chars.
      *
-     * @param q Question that is validated
-     * @return true if quesiton is valid
+     * @param question Question that is validated
      */
-    public static boolean validate(Question q) {
-        return q != null && q.getQuestion() != null && !q.getQuestion().trim().isEmpty()
-            && q.getQuestion().length() <= 2000;
+    public static void validate(Question question) throws DtoValidatorException {
+        if (question == null) {
+            throw new DtoValidatorException("Question must not be null");
+        }
+        if (question.getQuestion() == null) {
+            throw new DtoValidatorException("Question text must not be null");
+        }
+        if (question.getQuestion().length() > 2000) {
+            throw new DtoValidatorException(
+                "Question text must not be longer than 2000 characters");
+        }
+        if (question.getQuestion().trim().isEmpty()) {
+            throw new DtoValidatorException(
+                "Question text must not be empty (whitespaces are ignored)");
+        }
+        if (question.getQuestionTime() < 1) {
+            throw new DtoValidatorException("Question time must be greater than 0");
+        }
+        if (question.getType() == null) {
+            throw new DtoValidatorException("Question must have an questiontype");
+        }
     }
 
     /**
      * Checks if an exam is valid. This means the exam is not null, the author is not empty and shorter than 80 chars.
      *
-     * @param e exam that is validated
-     * @return true if exam is valid
+     * @param exam exam that is validated
      */
-    public static boolean validate(Exam e) {
-        return e != null && e.getAuthor().length() <= 80 && !e.getAuthor().trim().isEmpty();
+    public static void validate(Exam exam) throws DtoValidatorException {
+        if (exam == null) {
+            throw new DtoValidatorException("Exam must not be null");
+        }
+        if (exam.getAuthor() == null) {
+            throw new DtoValidatorException("Exam author must not be null");
+        }
+        if (exam.getAuthor().isEmpty() || exam.getAuthor().trim().isEmpty()) {
+            throw new DtoValidatorException(
+                "Exam author must not be empty (leading or trailing whitespaces are ignored)");
+        }
+        if (exam.getAuthor().length() > 80) {
+            throw new DtoValidatorException("Exam author must not be longer than 80 characters");
+        }
+        if (exam.getCreated() == null) {
+            throw new DtoValidatorException("Exam timestamp must not be null");
+        }
+        if (exam.getExamTime() < 1) {
+            throw new DtoValidatorException("Exam time must at least be 1");
+        }
     }
 
     public static void validate(Resource resource) throws DtoValidatorException {
@@ -44,14 +78,17 @@ public class DtoValidator {
 
     private static void validateFields(Resource resource) throws DtoValidatorException {
         if (resource.getName().isEmpty()) {
-            throw new DtoValidatorException("Resource name must not be empty. Please enter a resource name.");
+            throw new DtoValidatorException(
+                "Resource name must not be empty. Please enter a resource name.");
         }
         if (resource.getReference().isEmpty()) {
-            throw new DtoValidatorException("Resource reference must not be empty. Select a file to reference.");
+            throw new DtoValidatorException(
+                "Resource reference must not be empty. Select a file to reference.");
         }
         File file = new File(resource.getReference());
         if (!(file.exists() || file.isDirectory())) {
-            throw new DtoValidatorException("File referenced by resource does not exist. Make sure that the file selected is available.");
+            throw new DtoValidatorException(
+                "File referenced by resource does not exist. Make sure that the file selected is available.");
         }
     }
 }
