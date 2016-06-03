@@ -72,14 +72,14 @@ import java.util.List;
     }
 
     protected List getUserInput() {
-        List inputs = new ArrayList<>();
+        List tmpInputs = new ArrayList<>();
 
-        saveAnswerFields(inputs);
-        saveCheckboxesAndRadiobuttons(inputs);
+        saveAnswerFields(tmpInputs);
+        saveCheckboxesAndRadiobuttons(tmpInputs);
 
-        inputs.add(resource);
+        tmpInputs.add(resource);
 
-        return inputs;
+        return tmpInputs;
     }
 
     protected void saveAnswerFields(List inputs) {
