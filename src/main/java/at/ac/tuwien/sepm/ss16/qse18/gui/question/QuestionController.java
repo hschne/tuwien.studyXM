@@ -158,6 +158,7 @@ import java.util.List;
         // saving input from user to be able to recover later
         inputs = getUserInput();
 
+        /*
         Stage stage = new Stage();
         SpringFXMLLoader.FXMLWrapper<Object, ResourceChooserController> resourceChooserWrapper =
             null;
@@ -183,6 +184,9 @@ import java.util.List;
             stage.setResizable(false);
             stage.showAndWait();
         }
+        */
+
+        mainFrameController.handleChooseResource(inputs, resourceLabel, getQuestionType());
 
         // Save the chosen or newly created resource
         resource = (ObservableResource) inputs.get(inputs.size() - 1);

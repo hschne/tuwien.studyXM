@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.text.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.geometry.*?>
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController">
+<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController">
     <children>
         <GridPane prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -20,7 +23,7 @@
                 <RowConstraints maxHeight="233.0" minHeight="0.0" prefHeight="60.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ListView fx:id="resourceListView" styleClass="custom-list-view" GridPane.rowIndex="1">
+                <ListView fx:id="resourceListView" onMouseClicked="#selectedItem" styleClass="custom-list-view" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </GridPane.margin></ListView>
@@ -55,6 +58,14 @@
                     <children>
                         <Label styleClass="subview-header" text="resource management" />
                         <Line endX="400.0" startX="-400.0" GridPane.rowIndex="1" />
+                  <Label fx:id="chooseText" text="" GridPane.rowIndex="1">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                     <GridPane.margin>
+                        <Insets top="10.0" />
+                     </GridPane.margin>
+                  </Label>
                     </children>
                 </GridPane>
             </children>

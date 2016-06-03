@@ -51,7 +51,7 @@ import java.io.IOException;
         } else if(radioButtonOpenQuestion.isSelected()) {
            mainFrameController.handleOpenQuestion(this.topic);
         } else {
-            mainFrameController.handleCreateImageQuestion(topic);
+            mainFrameController.handleImageQuestion(topic);
         }
 
     }

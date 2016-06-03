@@ -59,6 +59,7 @@ import java.util.*;
     }
 
     @FXML public void handleOk() {
+        logger.debug("Creating resource");
         try {
             copyFile(in, out);
             Resource resource = createResourceFromFields();
@@ -73,11 +74,11 @@ import java.util.*;
     }
 
     @FXML public void handleCancel() {
-        try {
-            openRightWindowNext(null);
-        } catch (ServiceException e) {
-            logger.error(e);
-            showError(e);
+        logger.debug("Canceling edit view");
+        if (inputs == null) {
+            mainFrameController.handleResources();
+        } else {
+            mainFrameController.handleChooseResource(inputs, null, null);
         }
     }
 
@@ -100,7 +101,7 @@ import java.util.*;
                     mainFrameController.handleSingleChoiceQuestion(null, inputs);
                     break;
                 case NOTECARD:
-                    mainFrameController.handleCreateImageQuestion(null, inputs);
+                    mainFrameController.handleImageQuestion(null, inputs);
                     break;
             }
         } else {
