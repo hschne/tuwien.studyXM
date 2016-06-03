@@ -40,8 +40,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public abstract class QuestionController
     extends BaseController {
 
-    final QuestionService questionService;
-    final ResourceQuestionService resourceQuestionService;
+    private final QuestionService questionService;
+    private final ResourceQuestionService resourceQuestionService;
     protected ObservableTopic topic;
     protected ObservableResource resource;
     @FXML protected TextField textFieldAnswerOne;
@@ -123,18 +123,18 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         this.textFieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(++counter));
     }
 
-    List getUserInput() {
-        List inputs = new ArrayList<>();
+    private List getUserInput() {
+        List result = new ArrayList<>();
 
-        saveAnswerFields(inputs);
-        saveCheckboxesAndRadiobuttons(inputs);
+        saveAnswerFields(result);
+        saveCheckboxesAndRadiobuttons(result);
 
-        inputs.add(resource);
+        result.add(resource);
 
-        return inputs;
+        return result;
     }
 
-    void saveAnswerFields(List inputs) {
+    private void saveAnswerFields(List inputs) {
         saveQuestionInput(inputs);
 
         if (textFieldAnswerOne.getText() != null) {
@@ -191,7 +191,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
      *
      * @return list of answers
      */
-    List<Answer> newAnswersFromFields(List<Boolean> checkBoxResults) {
+    private List<Answer> newAnswersFromFields(List<Boolean> checkBoxResults) {
         List<Answer> answers = new LinkedList<>();
         QuestionType questionType = getQuestionType();
         if (!textFieldAnswerOne.getText().isEmpty()) {

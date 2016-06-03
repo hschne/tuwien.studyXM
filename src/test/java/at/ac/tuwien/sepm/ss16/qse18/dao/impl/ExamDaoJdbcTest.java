@@ -59,6 +59,7 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
         testExam.setAuthor("Test1");
         testExam.setSubjectID(1);
         testExam.setExamQuestions(al);
+        testExam.setExamTime(1);
     }
 
     // Testing create(Exam)

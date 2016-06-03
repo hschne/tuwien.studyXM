@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
@@ -8,7 +7,6 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
@@ -17,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-
-import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 /**
  * Controller for managing creation of multiple choice questions
