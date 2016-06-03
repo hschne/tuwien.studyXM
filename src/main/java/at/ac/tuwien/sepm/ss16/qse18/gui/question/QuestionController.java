@@ -213,58 +213,6 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         fillFieldsAndCheckboxes();
     }
 
-    protected abstract void fillFieldsAndCheckboxes();
-
-    protected abstract void saveQuestionInput(List inputs);
-
-    void fillAnswerFields(int startWith) {
-        int counter = startWith;
-        this.textFieldAnswerOne.setText(inputs == null ? "" : (String) inputs.get(counter));
-        this.textFieldAnswerTwo.setText(inputs == null ? "" : (String) inputs.get(++counter));
-        this.textFieldAnswerThree.setText(inputs == null ? "" : (String) inputs.get(++counter));
-        this.textFieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(++counter));
-    }
-
-    private List getUserInput() {
-        List result = new ArrayList<>();
-
-        saveAnswerFields(result);
-        saveCheckboxesAndRadiobuttons(result);
-
-        result.add(resource);
-
-        return result;
-    }
-
-    private void saveAnswerFields(List inputs) {
-        saveQuestionInput(inputs);
-
-        if (textFieldAnswerOne.getText() != null) {
-            inputs.add(textFieldAnswerOne.getText());
-        } else {
-            inputs.add(null);
-        }
-
-        if (textFieldAnswerTwo.getText() != null) {
-            inputs.add(textFieldAnswerTwo.getText());
-        } else {
-            inputs.add(null);
-        }
-
-        if (textFieldAnswerThree.getText() != null) {
-            inputs.add(textFieldAnswerThree.getText());
-        } else {
-            inputs.add(null);
-        }
-
-        if (textFieldAnswerFour.getText() != null) {
-            inputs.add(textFieldAnswerFour.getText());
-        } else {
-            inputs.add(null);
-        }
-    }
-
-
     void createQuestionAndAnswers() throws DtoValidatorException, ServiceException {
         Question question = newQuestionFromFields();
         validate(question);
@@ -277,11 +225,6 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             resourceQuestionService.createReference(resource.getResource(), createdQuestion);
         }
     }
-
-
-    protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
-
-    protected abstract QuestionType getQuestionType();
 
     protected abstract List<Boolean> createCheckBoxResults();
 
