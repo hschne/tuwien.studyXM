@@ -52,6 +52,16 @@ public class DtoValidator {
         if (exam == null) {
             throw new DtoValidatorException("Exam must not be null");
         }
+        validateAuthor(exam);
+        if (exam.getCreated() == null) {
+            throw new DtoValidatorException("Exam timestamp must not be null");
+        }
+        if (exam.getExamTime() < 1) {
+            throw new DtoValidatorException("Exam time must at least be 1");
+        }
+    }
+
+    private static void validateAuthor(Exam exam) throws DtoValidatorException {
         if (exam.getAuthor() == null) {
             throw new DtoValidatorException("Exam author must not be null");
         }
@@ -62,12 +72,6 @@ public class DtoValidator {
         if (exam.getAuthor().length() > 80) {
             throw new DtoValidatorException("Exam author must not be longer than 80 characters");
         }
-        if (exam.getCreated() == null) {
-            throw new DtoValidatorException("Exam timestamp must not be null");
-        }
-        if (exam.getExamTime() < 1) {
-            throw new DtoValidatorException("Exam time must at least be 1");
-        }
     }
 
     public static void validate(List<Answer> answers) throws DtoValidatorException {
@@ -75,13 +79,11 @@ public class DtoValidator {
             throw new DtoValidatorException("Answers must not be null");
         }
         if(answers.isEmpty()){
-            throw new DtoValidatorException("There must be at least one answer");
+            throw new DtoValidatorException("There must be at least one answer.");
         }
-
-
         int correctAnswers = answers.stream().filter(Answer::isCorrect).collect(Collectors.toList()).size();
         if(correctAnswers < 1){
-            throw new DtoValidatorException("There must be at least one correct answer");
+            throw new DtoValidatorException("There must be at least one correct answer.");
         }
     }
 
