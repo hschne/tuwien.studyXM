@@ -95,16 +95,16 @@ public class DtoValidator {
     }
 
     private static void validateFields(Resource resource) throws DtoValidatorException {
-        if (resource.getName().isEmpty()) {
+        if (resource.getName().isEmpty()|| resource.getName().trim().isEmpty()) {
             throw new DtoValidatorException(
-                "Resource name must not be empty. Please enter a resource name.");
+                "Resource name must not be empty. (leading or trailing whitespaces are ignored)");
         }
         if (resource.getReference().isEmpty()) {
             throw new DtoValidatorException(
                 "Resource reference must not be empty. Select a file to reference.");
         }
         File file = new File(resource.getReference());
-        if (!(file.exists() || file.isDirectory())) {
+        if (!file.exists() || file.isDirectory()) {
             throw new DtoValidatorException(
                 "File referenced by resource does not exist. Make sure that the file selected is available.");
         }
