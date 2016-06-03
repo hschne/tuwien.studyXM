@@ -17,7 +17,6 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -66,7 +65,7 @@ import java.util.List;
     private Answer answer4;
     @Autowired private AlertBuilder alertBuilder;
     private int currentQuestionNumber = 0;
-    private AnswerMultipleChoiceQuestionController mcController;
+    private AnswerQuestionController controller;
     private IntegerProperty progress = new SimpleIntegerProperty(0);
 
 
@@ -99,15 +98,14 @@ import java.util.List;
     }
 
     public void handleNextQuestionButton(){
-        if (questions.get(currentQuestionNumber).getType() == QuestionType.MULTIPLECHOICE) {
-                try {
-                    examService.update(exam.getExamid(), questions.get(currentQuestionNumber).getQuestionId(),
-                        mcController.isCorrect(), true);
-                } catch (ServiceException e) {
-                    logger.error(e.getMessage());
-                    showError(e);
-                }
-            }
+        try {
+            examService.update(exam.getExamid(), questions.get(currentQuestionNumber).getQuestionId(),
+                controller.isCorrect(), true);
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            showError(e);
+        }
+
         progress.setValue(progress.intValue() + 1);
         currentQuestionNumber++;
         if(currentQuestionNumber < questions.size()) {
@@ -116,8 +114,11 @@ import java.util.List;
         else{
             nextQuestionButton.setVisible(false);
             finishExamButton.setVisible(true);
+            loadExamFinished();
         }
     }
+
+    public void handleShowResults(){}
 
     private void setAnswers(int currentQuestionNumber){
         try {
@@ -131,10 +132,13 @@ import java.util.List;
         answer1 = answers.get(0);
         if(answers.size() == 2){
             answer2 = answers.get(1);
+            answer3 = null;
+            answer4 = null;
         }
         else if(answers.size() == 3){
             answer2 = answers.get(1);
             answer3 = answers.get(2);
+            answer4 = null;
         }
         else{
             answer2 = answers.get(1);
@@ -145,11 +149,11 @@ import java.util.List;
 
     private void loadMultipleChoice(){
         try {
-            mcController =
-                setSubView("/fxml/exam/answerMultipleChoiceQuestion.fxml",
-                    AnswerMultipleChoiceQuestionController.class);
+            controller =
+                setSubView("/fxml/exam/answerChoiceQuestion.fxml",
+                    AnswerChoiceQuestionController.class);
             setAnswers(currentQuestionNumber);
-            mcController.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
+            controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
                 answer3,answer4);
         }
         catch (IOException e){
@@ -158,8 +162,28 @@ import java.util.List;
         }
     }
 
+    private void loadExamFinished(){
+        try{
+            setSubView("/fxml/exam/examFinished.fxml",ExamFinishedController.class);
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            showError(e);
+        }
+    }
+
     private void loadNoteCard(){
-        //TODO implement this class
+        try{
+            controller = setSubView("/fxml/exam/answerImageQuestion.fxml",
+                AnswerImageQuestionController.class);
+            setAnswers(currentQuestionNumber);
+            controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
+                answer3,answer4);
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            showError(e);
+        }
     }
 
     private void countDown(){
