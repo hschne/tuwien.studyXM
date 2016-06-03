@@ -13,6 +13,12 @@
     -fx-text-fill: white;
 }
 
+
+.choice-box .context-menu .label {
+    -fx-text-fill: white;
+
+}
+
 .split-menu-button .arrow-button {
     -fx-background-color: #22374A;
     -fx-text-fill: white;
