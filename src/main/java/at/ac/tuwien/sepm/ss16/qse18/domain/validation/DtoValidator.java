@@ -1,10 +1,13 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain.validation;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 
 import java.io.File;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Philipp Ganiu
@@ -15,6 +18,7 @@ public class DtoValidator {
      * Checks if a question is valid. This means the question is not empty or null and shorter than 2000 chars.
      *
      * @param question Question that is validated
+     * @exception DtoValidatorException
      */
     public static void validate(Question question) throws DtoValidatorException {
         if (question == null) {
@@ -48,6 +52,13 @@ public class DtoValidator {
         if (exam == null) {
             throw new DtoValidatorException("Exam must not be null");
         }
+        validateAuthor(exam);
+        if (exam.getCreated() == null) {
+            throw new DtoValidatorException("Exam timestamp must not be null");
+        }
+    }
+
+    private static void validateAuthor(Exam exam) throws DtoValidatorException {
         if (exam.getAuthor() == null) {
             throw new DtoValidatorException("Exam author must not be null");
         }
@@ -58,11 +69,18 @@ public class DtoValidator {
         if (exam.getAuthor().length() > 80) {
             throw new DtoValidatorException("Exam author must not be longer than 80 characters");
         }
-        if (exam.getCreated() == null) {
-            throw new DtoValidatorException("Exam timestamp must not be null");
+    }
+
+    public static void validate(List<Answer> answers) throws DtoValidatorException {
+        if(answers == null){
+            throw new DtoValidatorException("Answers must not be null");
         }
-        if (exam.getExamTime() < 1) {
-            throw new DtoValidatorException("Exam time must at least be 1");
+        if(answers.isEmpty()){
+            throw new DtoValidatorException("There must be at least one answer.");
+        }
+        int correctAnswers = answers.stream().filter(Answer::isCorrect).collect(Collectors.toList()).size();
+        if(correctAnswers < 1){
+            throw new DtoValidatorException("There must be at least one correct answer.");
         }
     }
 
