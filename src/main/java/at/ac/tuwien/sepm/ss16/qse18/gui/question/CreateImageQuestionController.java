@@ -12,6 +12,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,6 +46,7 @@ public class CreateImageQuestionController extends QuestionController {
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
     private File out;
 
@@ -219,7 +221,8 @@ public class CreateImageQuestionController extends QuestionController {
      */
     @Override protected Question newQuestionFromFields() {
         logger.debug("Creating new question");
-        return new Question(textFieldImagePath.getText(), getQuestionType(), 1);
+        return new Question(textFieldImagePath.getText(), getQuestionType()
+                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {

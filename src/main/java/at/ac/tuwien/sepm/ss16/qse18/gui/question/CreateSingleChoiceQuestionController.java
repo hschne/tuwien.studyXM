@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     @FXML private RadioButton radioButtonAnswerTwo;
     @FXML private RadioButton radioButtonAnswerThree;
     @FXML private RadioButton radioButtonAnswerFour;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
     /**
      * Creates a controller for the single choice question creation.
@@ -103,7 +105,8 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
 
     @Override protected Question newQuestionFromFields() {
         logger.info("Collecting question from field.");
-        return new Question(textAreaQuestion.getText(), getQuestionType(), 1L);
+        return new Question(textAreaQuestion.getText(), getQuestionType()
+                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {

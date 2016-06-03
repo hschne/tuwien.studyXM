@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,6 +25,7 @@ import java.util.List;
 @Component public class CreateOpenQuestionController extends QuestionController {
 
     @FXML private TextArea textAreaQuestion;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
     @Autowired public CreateOpenQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
@@ -101,7 +103,8 @@ import java.util.List;
 
     @Override protected Question newQuestionFromFields() {
         logger.debug("Collecting question from field.");
-        return new Question(textAreaQuestion.getText(), getQuestionType(), 1L);
+        return new Question(textAreaQuestion.getText(), getQuestionType()
+                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
     }
 
 
