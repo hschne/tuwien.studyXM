@@ -63,7 +63,6 @@ import java.util.List;
     private Answer answer2;
     private Answer answer3;
     private Answer answer4;
-    @Autowired private AlertBuilder alertBuilder;
     private int currentQuestionNumber = 0;
     private AnswerQuestionController controller;
     private IntegerProperty progress = new SimpleIntegerProperty(0);
@@ -118,7 +117,9 @@ import java.util.List;
         }
     }
 
-    public void handleShowResults(){}
+    public void handleShowResults(){
+        //TODO implement
+    }
 
     private void setAnswers(int currentQuestionNumber){
         try {
@@ -140,7 +141,7 @@ import java.util.List;
             answer3 = answers.get(2);
             answer4 = null;
         }
-        else{
+        else if(answers.size() == 4){
             answer2 = answers.get(1);
             answer3 = answers.get(2);
             answer4 = answers.get(3);
