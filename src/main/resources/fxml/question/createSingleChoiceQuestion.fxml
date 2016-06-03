@@ -85,7 +85,7 @@
                                  <Font size="18.0" />
                              </font>
                          </Button>
-                        <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="true" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                        <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="false" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                         <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddResource" text="add resource">
                            <font>
                               <Font size="18.0" />
