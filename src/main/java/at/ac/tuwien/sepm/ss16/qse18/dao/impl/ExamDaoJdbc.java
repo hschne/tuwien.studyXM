@@ -58,7 +58,7 @@ public class ExamDaoJdbc implements ExamDao{
             pstmt.setBoolean(2, exam.getPassed());
             pstmt.setString(3, exam.getAuthor());
             pstmt.setInt(4, exam.getSubjectID());
-            pstmt.setDouble(5,exam.getExamTime());
+            pstmt.setLong(5,exam.getExamTime());
             pstmt.executeUpdate();
 
             generatedKey = pstmt.getGeneratedKeys();
