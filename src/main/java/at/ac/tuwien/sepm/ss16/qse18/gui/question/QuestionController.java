@@ -51,26 +51,23 @@ import java.util.List;
     @FXML protected Label resourceLabel;
 
     @Autowired public QuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService,
-        SpringFXMLLoader fxmlLoader) {
+        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
         this.questionService = questionService;
         this.resourceQuestionService = resourceQuestionService;
 
         this.fxmlLoader = fxmlLoader;
     }
 
-    protected abstract void fillFieldsAndCheckboxes();
-
-    protected abstract void saveQuestionInput(List inputs);
-
-    protected void fillAnswerFields(int startWith) {
-        int counter = startWith;
-        this.textFieldAnswerOne.setText(inputs == null ? "" : (String) inputs.get(counter));
-        this.textFieldAnswerTwo.setText(inputs == null ? "" : (String) inputs.get(++counter));
-        this.textFieldAnswerThree.setText(inputs == null ? "" : (String) inputs.get(++counter));
-        this.textFieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(++counter));
-    }
-
+    /**
+     * Saves all textfields and checkboxes/radiobuttons and the resource the user typed in
+     * or selected so the current state can be restored after exiting the view.
+     * This is especially useful when the user gets redirected to the resource mask
+     * when selecting a resource.
+     *
+     * @return  a list of all inputs from the user (textfields/checkboxes/radiobuttons)
+     *          Note:   if a textfield is empty this method saves null instead of nothing to
+     *                  have a consistent list structure
+     */
     protected List getUserInput() {
         List tmpInputs = new ArrayList<>();
 
@@ -82,31 +79,78 @@ import java.util.List;
         return tmpInputs;
     }
 
-    protected void saveAnswerFields(List inputs) {
-        saveQuestionInput(inputs);
+    /**
+     * This abstract method fills every textfield, checkbox and radiobutton. The content of these
+     * are given via the global "inputs" list.
+     *
+     * The method is abstract because not every question type has checkboxes
+     * and therefore it can not be unified.
+     */
+    protected abstract void fillFieldsAndCheckboxes();
+
+    /**
+     * Saves the question input. This method has to be abstract because the openquestion type
+     * has an image AND an filepath to save.
+     *
+     * @param inputs The list to save the input
+     */
+    protected abstract void saveQuestionInput(List inputs);
+
+    /**
+     * Saves the state of the checkboxes and/or radiobuttons. this method has to be abstract because
+     * the singlechoicequestion type has radiobuttons instead of checkboxes.
+     *
+     * @param inputs The list to save the input
+     */
+    protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
+
+    /**
+     * Fills all answerfields if the previous input from the user is saved.
+     *
+     * @param startWith Because the input-list has a consistent structure
+     *                  (question, answerfields, checkboxes/radiobuttons,
+     *                  continue-chechbox, resource) the method needs the index where the
+     *                  answerfields should start
+     */
+    protected void fillAnswerFields(int startWith) {
+        int counter = startWith;
+        this.textFieldAnswerOne.setText(inputs == null ? "" : (String) inputs.get(counter));
+        this.textFieldAnswerTwo.setText(inputs == null ? "" : (String) inputs.get(++counter));
+        this.textFieldAnswerThree.setText(inputs == null ? "" : (String) inputs.get(++counter));
+        this.textFieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(++counter));
+    }
+
+    /**
+     * Saves the answerfield texts. If a textfield is empty it saves null instead of nothing to be
+     * consistent.
+     *
+     * @param listForInputs The list to save the input
+     */
+    protected void saveAnswerFields(List listForInputs) {
+        saveQuestionInput(listForInputs);
 
         if (textFieldAnswerOne.getText() != null) {
-            inputs.add(textFieldAnswerOne.getText());
+            listForInputs.add(textFieldAnswerOne.getText());
         } else {
-            inputs.add(null);
+            listForInputs.add(null);
         }
 
         if (textFieldAnswerTwo.getText() != null) {
-            inputs.add(textFieldAnswerTwo.getText());
+            listForInputs.add(textFieldAnswerTwo.getText());
         } else {
-            inputs.add(null);
+            listForInputs.add(null);
         }
 
         if (textFieldAnswerThree.getText() != null) {
-            inputs.add(textFieldAnswerThree.getText());
+            listForInputs.add(textFieldAnswerThree.getText());
         } else {
-            inputs.add(null);
+            listForInputs.add(null);
         }
 
         if (textFieldAnswerFour.getText() != null) {
-            inputs.add(textFieldAnswerFour.getText());
+            listForInputs.add(textFieldAnswerFour.getText());
         } else {
-            inputs.add(null);
+            listForInputs.add(null);
         }
     }
 
@@ -143,8 +187,6 @@ import java.util.List;
         // Save the chosen or newly created resource
         resource = (ObservableResource) inputs.get(inputs.size() - 1);
     }
-
-    protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
 
     protected abstract QuestionType getQuestionType();
 
