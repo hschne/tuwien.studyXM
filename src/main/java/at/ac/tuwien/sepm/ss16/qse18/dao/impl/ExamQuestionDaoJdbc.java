@@ -6,11 +6,13 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -42,10 +44,8 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
     @Override public void create(Exam exam, Question question) throws DaoException {
         logger.debug("entering method create with parameters {}", exam, question);
 
-        if (!DtoValidator.validate(exam) || !DtoValidator.validate(question)) {
-            logger.error("Dao Exception create {}", exam);
-            throw new DaoException("Invalid values, please check your input");
-        }
+        tryValidateExam(exam);
+        tryValidateQuestion(question);
 
         PreparedStatement pstmt = null;
 
@@ -188,5 +188,21 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         }
     }
 
+    private void tryValidateExam(Exam exam) throws DaoException {
+        try {
+            validate(exam);
+        } catch (DtoValidatorException e) {
+            logger.error("Exam [" + exam + "] is invalid", e);
+            throw new DaoException("Exam [" + exam + "] is invalid: " + e);
+        }
+    }
 
+    private void tryValidateQuestion(Question question) throws DaoException {
+        try {
+            validate(question);
+        } catch (DtoValidatorException e) {
+            logger.error("Question [" + question + "] is invalid", e);
+            throw new DaoException("Question [" + question + "] is invalid: " + e);
+        }
+    }
 }

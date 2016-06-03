@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
@@ -16,7 +16,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,10 +39,33 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
      *                        persistently.
      */
     @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService,
-        SpringFXMLLoader fxmlLoader) {
+        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
         super(questionService, resourceQuestionService, fxmlLoader);
 
+    }
+
+    @FXML public void handleCreateQuestion() {
+        if (createQuestion()) {
+            return;
+        }
+        if (checkBoxContinue.isSelected()) {
+            mainFrameController.handleSingleChoiceQuestion(this.topic);
+        } else {
+            mainFrameController.handleSubjects();
+        }
+        showSuccess("Inserted new question into database.");
+    }
+
+    private boolean createQuestion() {
+        logger.info("Now creating new question");
+        try {
+            createQuestionAndAnswers();
+        } catch (ServiceException | DtoValidatorException e) {
+            logger.error("Could not create new question", e);
+            showError(e);
+            return true;
+        }
+        return false;
     }
 
     @Override protected void fillFieldsAndCheckboxes() {
@@ -70,11 +93,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     }
 
     @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
-        inputs.add(radioButtonAnswerOne.isSelected());
-        inputs.add(radioButtonAnswerTwo.isSelected());
-        inputs.add(radioButtonAnswerThree.isSelected());
-        inputs.add(radioButtonAnswerFour.isSelected());
-
+        inputs.addAll(createCheckBoxResults());
         inputs.add(checkBoxContinue.isSelected());
     }
 
@@ -82,75 +101,18 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         return QuestionType.SINGLECHOICE;
     }
 
-    @FXML public void handleCreateQuestion() {
-        if (createQuestion()) {
-            return;
-        }
-        if (checkBoxContinue.isSelected()) {
-            mainFrameController.handleSingleChoiceQuestion(this.topic);
-        } else {
-            mainFrameController.handleSubjects();
-        }
-        showSuccess("Inserted new question into database.");
-    }
-
-    private boolean createQuestion() {
-        logger.info("Now creating new question");
-        Question newQuestion;
-        try {
-            List<Answer> answers = newAnswersFromField();
-            newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
-            questionService.setCorrespondingAnswers(newQuestion, answers);
-            if (resource != null) {
-                resourceQuestionService.createReference(resource.getResource(), newQuestion);
-            }
-        } catch (ServiceException | IllegalArgumentException e) {
-            logger.error("Could not create new question", e);
-            showError(e);
-            return true;
-        }
-        return false;
-    }
-
-    private Question newQuestionFromField() throws ServiceException {
+    @Override protected Question newQuestionFromFields() {
         logger.info("Collecting question from field.");
-        if (textAreaQuestion.getText().isEmpty()) {
-            throw new IllegalArgumentException("The question must not be empty.");
-        }
-        return new Question(textAreaQuestion.getText(), QuestionType.SINGLECHOICE, 1L);
+        return new Question(textAreaQuestion.getText(), getQuestionType(), 1L);
     }
 
-    private List<Answer> newAnswersFromField() throws ServiceException {
-        logger.debug("Collecting all answers");
-        List<Answer> newAnswers = new LinkedList<>();
-
-        if (!textFieldAnswerOne.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerOne.getText(),
-                radioButtonAnswerOne.isSelected()));
-        }
-        if (!textFieldAnswerTwo.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerTwo.getText(),
-                radioButtonAnswerTwo.isSelected()));
-        }
-        if (!textFieldAnswerThree.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerThree.getText(),
-                radioButtonAnswerThree.isSelected()));
-        }
-        if (!textFieldAnswerFour.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.SINGLECHOICE, textFieldAnswerFour.getText(),
-                radioButtonAnswerFour.isSelected()));
-        }
-
-        if (newAnswers.isEmpty()) {
-            throw new IllegalArgumentException("At least one answer must be given.");
-        }
-
-        for (Answer a : newAnswers) {
-            if (a.isCorrect()) {
-                return newAnswers;
-            }
-        }
-
-        throw new IllegalArgumentException("At least one given answer must be true.");
+    @Override protected List<Boolean> createCheckBoxResults() {
+        List<Boolean> result = new ArrayList<>();
+        result.add(radioButtonAnswerOne.isSelected());
+        result.add(radioButtonAnswerTwo.isSelected());
+        result.add(radioButtonAnswerThree.isSelected());
+        result.add(radioButtonAnswerFour.isSelected());
+        return result;
     }
+
 }

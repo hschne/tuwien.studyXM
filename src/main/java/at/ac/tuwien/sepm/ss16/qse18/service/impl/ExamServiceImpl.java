@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExamGenParams;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 /**
  * Class ExamServiceImpl
@@ -68,9 +71,12 @@ import java.util.Map;
 
     @Override public Exam createExam(Exam exam, Topic topic, int examTime) throws ServiceException {
         logger.debug("entering method createExam with parameters {}", exam);
-        if (!DtoValidator.validate(exam) || examTime <= 0) {
-            logger.error("Service Exception createExam {}", exam);
-            throw new ServiceException("Invalid values, please check your input");
+
+        tryValidateExam(exam);
+
+        if (examTime <= 0) {
+            logger.error("ExamTime must at least be 1");
+            throw new ServiceException("ExamTime must at least be 1");
         }
 
         try {
@@ -85,10 +91,8 @@ import java.util.Map;
 
     @Override public Exam deleteExam(Exam exam) throws ServiceException {
         logger.debug("entering method deleteExam with parameters {}", exam);
-        if (!DtoValidator.validate(exam)) {
-            logger.error("Service Exception deleteExam {}", exam);
-            throw new ServiceException("Invalid values, please check your input");
-        }
+
+        tryValidateExam(exam);
 
         try {
             return this.examDao.delete(exam);
@@ -225,6 +229,15 @@ import java.util.Map;
         }
 
         return random;
+    }
+
+    private void tryValidateExam(Exam exam) throws ServiceException {
+        try {
+            validate(exam);
+        } catch (DtoValidatorException e) {
+            logger.error("Exam [" + exam + "] is invalid", e);
+            throw new ServiceException("Exam [" + exam + "] is invalid: " + e);
+        }
     }
 
     /*
