@@ -16,6 +16,7 @@ import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import org.apache.logging.log4j.LogManager;
@@ -71,8 +72,16 @@ import java.util.List;
 
     @FXML public void handleResources() {
         logger.debug("Loading resource view");
+        handleChooseResource(null, null, null);
+    }
+
+    public void handleChooseResource(List inputs, Label resourceLabel, QuestionType questionType) {
+        logger.debug("Loading resource view with input");
         try {
-            setSubView("/fxml/resource/resourceOverview.fxml", ResourceOverviewController.class);
+            ResourceOverviewController resourceOverviewController =
+                setSubView("/fxml/resource/resourceOverview.fxml",
+                    ResourceOverviewController.class);
+            resourceOverviewController.setInput(inputs, resourceLabel, questionType);
         } catch (IOException e) {
             handleException(e);
         }
@@ -109,8 +118,8 @@ import java.util.List;
     /**
      * Load Multiple Choice Question screen with saved input
      *
-     * @param topic The topic for which the multiplechoice question is created for
-     *              if null then the topic is already set
+     * @param topic  The topic for which the multiplechoice question is created for
+     *               if null then the topic is already set
      * @param inputs This list contains all inputs of the user
      */
     public void handleMultipleChoiceQuestion(ObservableTopic topic, List inputs) {
@@ -137,8 +146,8 @@ import java.util.List;
     /**
      * Load Single Choice Question screen with saved input
      *
-     * @param topic The topic for which the singlechoice question is created for
-     *              if null then the topic is already set
+     * @param topic  The topic for which the singlechoice question is created for
+     *               if null then the topic is already set
      * @param inputs This list contains all inputs of the user
      */
     public void handleSingleChoiceQuestion(ObservableTopic topic, List inputs) {
@@ -165,8 +174,8 @@ import java.util.List;
     /**
      * Load Open Question screen with saved input
      *
-     * @param topic The topic for which the open question is created for
-     *              if null then the topic is already set
+     * @param topic  The topic for which the open question is created for
+     *               if null then the topic is already set
      * @param inputs This list contains all inputs of the user
      */
     public void handleOpenQuestion(ObservableTopic topic, List inputs) {
@@ -186,18 +195,18 @@ import java.util.List;
         }
     }
 
-    public void handleCreateImageQuestion(ObservableTopic topic) {
-        handleCreateImageQuestion(topic, null);
+    public void handleImageQuestion(ObservableTopic topic) {
+        handleImageQuestion(topic, null);
     }
 
     /**
      * Load Image Question screen with saved input
      *
-     * @param topic The topic for which the image question is created for
-     *              if null then the topic is already set
+     * @param topic  The topic for which the image question is created for
+     *               if null then the topic is already set
      * @param inputs This list contains all inputs of the user
      */
-    public void handleCreateImageQuestion(ObservableTopic topic, List inputs) {
+    public void handleImageQuestion(ObservableTopic topic, List inputs) {
         logger.debug("Loading Image question screen ");
         try {
             CreateImageQuestionController imageQuestionController =

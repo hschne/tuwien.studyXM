@@ -50,6 +50,7 @@ public class SubjectQuestionDaoJdbcTest extends DaoBaseTest {
         testExam.setAuthor("Test1");
         testExam.setSubjectID(1);
         testExam.setExamQuestions(al);
+        testExam.setExamTime(1);
 
         this.subjectQuestionDaoJdbc = new SubjectQuestionDaoJdbc(this.mockConnectionH2);
     }

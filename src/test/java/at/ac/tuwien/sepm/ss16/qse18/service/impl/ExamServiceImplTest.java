@@ -74,6 +74,7 @@ import static org.mockito.Mockito.*;
 
         this.exam = createDummyExam(1, "auhtor");
         exam.setExamQuestions(al);
+        exam.setExamTime(1);
 
         this.topic = new Topic();
         topic.setTopic("Topic1");

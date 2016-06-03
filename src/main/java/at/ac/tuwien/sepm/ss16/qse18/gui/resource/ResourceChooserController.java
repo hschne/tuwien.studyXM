@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 /**
  * @author Bicer Cem
  */
+@Deprecated
 @Component public class ResourceChooserController extends BaseController {
 
     private ResourceService resourceService;

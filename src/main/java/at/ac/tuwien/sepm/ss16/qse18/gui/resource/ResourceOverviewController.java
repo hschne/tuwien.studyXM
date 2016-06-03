@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
@@ -8,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -24,9 +26,13 @@ import java.util.stream.Collectors;
     @FXML public ListView<ObservableResource> resourceListView;
     @FXML public Button editButton;
     @FXML public Button deleteButton;
+    @FXML public Label chooseText;
     @Autowired ApplicationContext applicationContext;
     private ObservableList<ObservableResource> resourceList;
     private ResourceService resourceService;
+    private List inputs;
+    private Label resourceLabel;
+    private QuestionType questionTypeOfResource;
 
 
     @Autowired public ResourceOverviewController(ResourceService resourceService) {
@@ -37,23 +43,49 @@ import java.util.stream.Collectors;
         try {
             logger.debug("Initializing resource table");
             initializeListView();
+
+            if (inputs == null) {
+                chooseText.setText("");
+            }
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
         }
     }
 
-    public void addResource(ObservableResource resource) throws ServiceException {
-        resourceService.createResource(resource.getResource());
+    @FXML public void selectedItem() {
+        if (inputs == null) {
+            return;
+        }
 
-        if (resourceList != null) {
-            resourceList.add(resource);
+        // Replace resource with newly created one
+        inputs.remove(inputs.size()-1);
+        inputs.add(resourceListView.getSelectionModel().getSelectedItem());
+
+        switch (questionTypeOfResource) {
+            case MULTIPLECHOICE:
+                mainFrameController.handleMultipleChoiceQuestion(null, inputs);
+                break;
+            case SINGLECHOICE:
+                mainFrameController.handleSingleChoiceQuestion(null, inputs);
+                break;
+            case OPENQUESTION:
+                mainFrameController.handleOpenQuestion(null, inputs);
+                break;
+            case NOTECARD:
+                mainFrameController.handleImageQuestion(null, inputs);
+                break;
         }
     }
 
     @FXML public void handleNew() {
         logger.debug("Creating new resource");
-        mainFrameController.handleCreateResource(null, null);
+        mainFrameController.handleCreateResource(inputs, questionTypeOfResource);
+    }
+
+    public void addResource(ObservableResource resource) throws ServiceException {
+        resourceService.createResource(resource.getResource());
+        resourceList.add(resource);
     }
 
     private void initializeListView() throws ServiceException {
@@ -65,4 +97,14 @@ import java.util.stream.Collectors;
         resourceListView.setCellFactory(listView -> applicationContext.getBean(ResourceCell.class));
     }
 
+    public void setInput(List listOfInputs, Label resourceLabel, QuestionType questionType) {
+        this.inputs = listOfInputs;
+        this.resourceLabel = resourceLabel;
+        this.questionTypeOfResource = questionType;
+
+        if (inputs != null) {
+            chooseText.setText(
+                "Choose a resource by selecting it or add a new resource by clicking the button below!");
+        }
+    }
 }
