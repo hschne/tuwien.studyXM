@@ -4,7 +4,7 @@ CREATE TABLE entity_topic(topicid INTEGER AUTO_INCREMENT PRIMARY KEY, topic VARC
 
 CREATE TABLE rel_subject_topic(subjectid INTEGER REFERENCES entity_subject(subjectid),topicid INTEGER REFERENCES entity_topic(topicid), PRIMARY KEY(subjectid,topicid));
 
-CREATE TABLE entity_exam(examid INTEGER AUTO_INCREMENT PRIMARY KEY, created TIMESTAMP NOT NULL, passed BOOLEAN NOT NULL, author VARCHAR(80) NOT NULL, subject INTEGER REFERENCES entity_subject(subjectid));
+CREATE TABLE entity_exam(examid INTEGER AUTO_INCREMENT PRIMARY KEY, created TIMESTAMP NOT NULL, passed BOOLEAN NOT NULL, author VARCHAR(80) NOT NULL, subject INTEGER REFERENCES entity_subject(subjectid), examTime BIGINT NOT NULL);
 
 CREATE TABLE entity_question(questionid INTEGER AUTO_INCREMENT PRIMARY KEY, question VARCHAR(2000) NOT NULL, type INTEGER NOT NULL,question_time BIGINT NOT NULL);
 

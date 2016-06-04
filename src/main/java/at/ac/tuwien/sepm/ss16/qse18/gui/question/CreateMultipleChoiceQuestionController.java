@@ -1,21 +1,20 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.AlertBuilder;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,11 +28,11 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerTwo;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService,
-        SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, fxmlLoader);
+        ResourceQuestionService resourceQuestionService) {
+        super(questionService, resourceQuestionService);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -48,7 +47,7 @@ import java.util.List;
         showSuccess("Inserted new question into database.");
     }
 
-    protected void fillFieldsAndCheckboxes() {
+    @Override protected void fillFieldsAndCheckboxes() {
         this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
         fillAnswerFields(1);
@@ -73,10 +72,7 @@ import java.util.List;
     }
 
     @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
-        inputs.add(checkBoxAnswerOne.isSelected());
-        inputs.add(checkBoxAnswerTwo.isSelected());
-        inputs.add(checkBoxAnswerThree.isSelected());
-        inputs.add(checkBoxAnswerFour.isSelected());
+        inputs.addAll(createCheckBoxResults());
         inputs.add(checkBoxContinue.isSelected());
     }
 
@@ -86,65 +82,29 @@ import java.util.List;
 
     private boolean createQuestion() {
         logger.info("Now creating new question");
-        Question newQuestion;
         try {
-            List<Answer> answers = newAnswersFromField();
-            newQuestion = questionService.createQuestion(newQuestionFromField(), topic.getT());
-            questionService.setCorrespondingAnswers(newQuestion, answers);
-
-            if (resource != null) {
-                resourceQuestionService
-                    .createReference(resource.getResource(), newQuestion);
-            }
-        } catch (ServiceException e) {
-            showError(e);
-            return true;
-        } catch (IllegalArgumentException e) {
+            createQuestionAndAnswers();
+        } catch (ServiceException | DtoValidatorException e) {
             showError(e);
             return true;
         }
         return false;
     }
 
-    private Question newQuestionFromField() {
-        logger.info("Collecting question from field.");
-        if (textAreaQuestion.getText().isEmpty()) {
-            throw new IllegalArgumentException("The question must not be empty.");
-        }
 
-        return new Question(textAreaQuestion.getText(), QuestionType.MULTIPLECHOICE, 1L);
+    @Override
+    protected List<Boolean> createCheckBoxResults(){
+        List<Boolean> result = new ArrayList<>();
+        result.add(checkBoxAnswerOne.isSelected());
+        result.add(checkBoxAnswerTwo.isSelected());
+        result.add(checkBoxAnswerThree.isSelected());
+        result.add(checkBoxAnswerFour.isSelected());
+        return result;
     }
 
-    private List<Answer> newAnswersFromField() {
-        logger.debug("Collecting all answers");
-        List<Answer> newAnswers = new LinkedList<>();
-        if (!textFieldAnswerOne.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerOne.getText(),
-                checkBoxAnswerOne.isSelected()));
-        }
-        if (!textFieldAnswerTwo.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerTwo.getText(),
-                checkBoxAnswerTwo.isSelected()));
-        }
-        if (!textFieldAnswerThree.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerThree.getText(),
-                checkBoxAnswerThree.isSelected()));
-        }
-        if (!textFieldAnswerFour.getText().isEmpty()) {
-            newAnswers.add(new Answer(QuestionType.MULTIPLECHOICE, textFieldAnswerFour.getText(),
-                checkBoxAnswerFour.isSelected()));
-        }
-
-        if (newAnswers.isEmpty()) {
-            throw new IllegalArgumentException("At least one answer must be given.");
-        }
-
-        for (Answer a : newAnswers) {
-            if (a.isCorrect()) {
-                return newAnswers;
-            }
-        }
-
-        throw new IllegalArgumentException("At least one answer must be true.");
+    @Override protected Question newQuestionFromFields() {
+        logger.debug("Collecting question from field.");
+        return new Question(textAreaQuestion.getText(), getQuestionType()
+                ,Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
     }
 }

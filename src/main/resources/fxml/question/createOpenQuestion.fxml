@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
+<?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
@@ -83,28 +86,7 @@
                                  <Font size="18.0" />
                              </font>
                          </Button>
-                        <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="true" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-                        <Button fx:id="addResource" mnemonicParsing="false" onAction="#handleAddResource" text="add resource">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets left="50.0" />
-                           </GridPane.margin>
-                        </Button>
-                        <Label text="resource:">
-                           <GridPane.margin>
-                              <Insets left="200.0" />
-                           </GridPane.margin>
-                        </Label>
-                        <Label fx:id="resourceLabel" text="none">
-                           <font>
-                              <Font name="System Bold" size="13.0" />
-                           </font>
-                           <GridPane.margin>
-                              <Insets left="270.0" />
-                           </GridPane.margin>
-                        </Label>
+                        <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="false" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>
                   <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." GridPane.valignment="CENTER">
@@ -114,32 +96,46 @@
                   </TextArea>
                   <GridPane GridPane.rowIndex="1">
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="508.0" minWidth="10.0" prefWidth="492.0" />
+                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="328.0" minWidth="10.0" prefWidth="226.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="297.0" minWidth="10.0" prefWidth="276.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
                         <TextField fx:id="textFieldAnswerOne" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="add keyword one here...">
                            <font>
                               <Font size="13.0" />
-                           </font></TextField>
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword two here..." GridPane.rowIndex="1">
                            <font>
                               <Font size="13.0" />
-                           </font></TextField>
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword three here..." GridPane.rowIndex="2">
                            <font>
                               <Font size="13.0" />
-                           </font></TextField>
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword four here..." GridPane.rowIndex="3">
                            <font>
                               <Font size="13.0" />
-                           </font></TextField>
+                           </font>
+                           <GridPane.margin>
+                              <Insets left="10.0" />
+                           </GridPane.margin></TextField>
                         <CheckBox fx:id="checkBoxAnswerOne" mnemonicParsing="false" text="correct answer" visible="false" GridPane.columnIndex="1">
                            <font>
                               <Font size="13.0" />
@@ -160,6 +156,57 @@
                               <Font size="13.0" />
                            </font>
                         </CheckBox>
+                        <Button fx:id="addResource" mnemonicParsing="false" onAction="#handleAddResource" text="add resource" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                           <font>
+                              <Font size="13.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Button>
+                        <Label fx:id="resourceLabel" text="none" GridPane.columnIndex="2" GridPane.rowIndex="3" GridPane.valignment="TOP">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                           <GridPane.margin>
+                              <Insets />
+                           </GridPane.margin>
+                        </Label>
+                        <ImageView fx:id="imageViewPdf" fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="2">
+                           <image>
+                              <Image url="/icons/highrespdf.png" />
+                           </image>
+                        </ImageView>
+                        <GridPane GridPane.rowIndex="4">
+                          <columnConstraints>
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="242.0" minWidth="10.0" prefWidth="153.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="352.0" minWidth="10.0" prefWidth="341.0" />
+                          </columnConstraints>
+                          <rowConstraints>
+                            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                           <children>
+                              <ChoiceBox fx:id="choiceBoxQuestionTime" prefHeight="25.0" prefWidth="97.0" value="1 minute">
+                                 <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                       <String fx:value="1 minute" />
+                                       <String fx:value="2 minutes" />
+                                       <String fx:value="3 minutes" />
+                                       <String fx:value="5 minutes" />
+                                       <String fx:value="8 minutes" />
+                                    </FXCollections>
+                                 </items>
+                                 <GridPane.margin>
+                                    <Insets left="50.0" />
+                                 </GridPane.margin>
+                              </ChoiceBox>
+                              <Label text="question time" GridPane.columnIndex="1">
+                                 <font>
+                                    <Font size="13.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </GridPane>
                      </children>
                   </GridPane>
                </children>
