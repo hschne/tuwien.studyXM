@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface ExamService
@@ -60,4 +61,26 @@ public interface ExamService {
      * @return Returns a list of the ID of all questions of the given examID
      */
     List<Integer> getAllQuestionsOfExam(int examID)throws ServiceException;
+
+    /**
+     * gradeExam
+     * grades the given exam
+     * @param exam the given exam that will be graded
+     * @throws ServiceException
+     * @return returns a String-Array with the length 3 containing the number of correct/incorrect
+     * answered questions and the grade
+     *
+     * */
+    String[] gradeExam(Exam exam) throws ServiceException;
+
+    /**
+     * topicGrade
+     * grades the given exam based on the related topics
+     * @param exam the given exam that will be graded
+     * @throws ServiceException
+     * @return returns a Map containing the topic and a String-Array with the length 3 containing
+     * the number of correct/incorrect answered questions and the grade
+     *
+     * */
+    Map<Topic, String[]> topicGrade(Exam exam) throws ServiceException;
 }

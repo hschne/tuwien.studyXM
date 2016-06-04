@@ -4,9 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,4 +84,5 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
             throw new DaoException("Exam [" + exam + "] is invalid: " + e);
         }
     }
+
 }

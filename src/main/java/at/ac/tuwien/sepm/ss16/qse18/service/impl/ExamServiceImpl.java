@@ -5,9 +5,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExamGenParams;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 /**
  * Class ExamServiceImpl
@@ -30,15 +32,22 @@ import java.util.Map;
     private SubjectQuestionDao subjectQuestionDao;
     private ExamQuestionDao examQuestionDao;
     private QuestionDao questionDao;
+    private SubjectTopicDao subjectTopicDao;
+    private QuestionTopicDao questionTopicDao;
+    private SubjectDao subjectDao;
     private ExamGenParams egp;
 
 
     @Autowired public ExamServiceImpl(ExamDao examDao, SubjectQuestionDao subjectQuestionDao,
-        ExamQuestionDao examQuestionDao, QuestionDao questionDao) {
+        ExamQuestionDao examQuestionDao, QuestionDao questionDao, SubjectTopicDao subjectTopicDao,
+        QuestionTopicDao questionTopicDao, SubjectDao subjectDao) {
         this.examDao = examDao;
         this.subjectQuestionDao = subjectQuestionDao;
         this.examQuestionDao = examQuestionDao;
         this.questionDao = questionDao;
+        this.subjectTopicDao = subjectTopicDao;
+        this.questionTopicDao = questionTopicDao;
+        this.subjectDao = subjectDao;
     }
 
 
@@ -69,9 +78,11 @@ import java.util.Map;
 
     @Override public Exam createExam(Exam exam, Topic topic, int examTime) throws ServiceException {
         logger.debug("entering method createExam with parameters {}", exam);
-        if (!DtoValidator.validate(exam) || examTime <= 0) {
-            logger.error("Service Exception createExam {}", exam);
-            throw new ServiceException("Invalid values, please check your input");
+        tryValidateExam(exam);
+
+        if (examTime <= 0) {
+            logger.error("ExamTime must at least be 1");
+            throw new ServiceException("ExamTime must at least be 1");
         }
 
         try {
@@ -86,10 +97,7 @@ import java.util.Map;
 
     @Override public Exam deleteExam(Exam exam) throws ServiceException {
         logger.debug("entering method deleteExam with parameters {}", exam);
-        if (!DtoValidator.validate(exam)) {
-            logger.error("Service Exception deleteExam {}", exam);
-            throw new ServiceException("Invalid values, please check your input");
-        }
+        tryValidateExam(exam);
 
         try {
             return this.examDao.delete(exam);
@@ -175,6 +183,7 @@ import java.util.Map;
     }
 
     public void splitQuestions(){
+        logger.debug("entering splitQuestions()");
         List<Question> temp = new ArrayList<>();
         int counter = 0;
 
@@ -200,12 +209,14 @@ import java.util.Map;
     }
 
     public void selectQuestions(List<Question> questionList, int examTime){
+        logger.debug("entering selectQuestions with parameters {}", questionList, examTime);
         while(!questionList.isEmpty()){
             questionList.remove(chooseQuestions(questionList, examTime));
         }
     }
 
     public int chooseQuestions(List<Question> questionList, int examTime){
+        logger.debug("entering chooseQuestions with parameters {}", questionList, examTime);
         int random = (int) (Math.random() * questionList.size());
         if ((this.egp.getQuestionTime() + questionList.get(random).getQuestionTime())
             <= examTime) { // if time of questions are still smaller or the same as examTime
@@ -216,17 +227,24 @@ import java.util.Map;
         return random;
     }
 
+    private void tryValidateExam(Exam exam) throws ServiceException {
+        try {
+            validate(exam);
+        } catch (DtoValidatorException e) {
+            logger.error("Exam [" + exam + "] is invalid", e);
+            throw new ServiceException("Exam [" + exam + "] is invalid: " + e);
+        }
+    }
 
-    public String[] gradeExam(Exam exam) throws ServiceException{
+
+
+    @Override public String[] gradeExam(Exam exam) throws ServiceException{
         logger.debug("entering gradeExam with parameters {}",exam);
         List <Integer> questionIDList = new ArrayList<>();
         Map<Integer, Boolean> questionBooleans = new HashMap<>();
         String[] result = new String[3];
 
-        if(!DtoValidator.validate(exam)){
-            logger.error("Service Exception gradeExam {}", exam);
-            throw new ServiceException("Invalid values, please check your input");
-        }
+        tryValidateExam(exam);
 
         try{
 
@@ -246,6 +264,7 @@ import java.util.Map;
     }
 
     public String[] calculateResult(Map<Integer, Boolean> questionBooleans){
+        logger.debug("entering calculateResult with parameters {}", questionBooleans);
         double incorrect = 0;
         double correct = 0;
         String[] result = new String[3];
@@ -268,6 +287,7 @@ import java.util.Map;
     }
 
     public String getGrade(double correct, double incorrect){
+        logger.debug("entering getGrade with parameters {}", correct, incorrect);
         double per = correct/((correct+incorrect)/100);
 
         if(per >= 96){
@@ -285,5 +305,46 @@ import java.util.Map;
         }else{
             return "F";
         }
+    }
+
+    @Override public Map<Topic, String[]> topicGrade(Exam exam) throws ServiceException{
+        logger.debug("entering topicGrade with parameter {}", exam);
+        List<Topic> topicList = new ArrayList<>();
+        Map<Topic, List<Integer>> temp = new HashMap<>();
+        Map<Topic, String[]> gradeMap = new HashMap<>();
+
+        tryValidateExam(exam);
+
+        try {
+            topicList = this.subjectTopicDao.getTopicToSubject(this.subjectDao.getSubject(exam.getSubjectID()));
+
+            for(Topic t: topicList){
+                temp.put(t, turnToQuestionID(this.questionTopicDao.getQuestionToTopic(t)));
+            }
+
+            for(Map.Entry<Topic, List<Integer>> m: temp.entrySet()){
+                gradeMap.put(m.getKey(),
+                    calculateResult(this.examQuestionDao.getAllQuestionBooleans(m.getValue())));
+
+            }
+
+
+        }catch (DaoException e){
+            logger.error("Dao Exception topicGrade with parameters {}", exam, e);
+            throw new ServiceException(e.getMessage());
+        }
+
+        return gradeMap;
+
+    }
+
+    public List<Integer> turnToQuestionID(List<Question> questionList){
+        logger.debug("entering turnToQuestionID with parameters {}", questionList);
+        List<Integer> questionIDList = new ArrayList<>();
+        for(Question q: questionList){
+            questionIDList.add(q.getQuestionId());
+        }
+
+        return questionIDList;
     }
 }

@@ -2,14 +2,8 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExamDaoJdbc;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExamQuestionDaoJdbc;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.QuestionDaoJdbc;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.SubjectQuestionDaoJdbc;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.dao.impl.*;
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
 import org.junit.After;
@@ -42,6 +36,9 @@ import static org.mockito.Mockito.*;
     @Mock private ExamQuestionDaoJdbc mockExamQuestionDaoJdbc;
     @Mock private SubjectQuestionDaoJdbc mockSubjectQuestionDaoJdbc;
     @Mock private QuestionDaoJdbc mockQuestionDaoJdbc;
+    @Mock private SubjectTopicDaoJdbc mockSubjectTopicDaoJdbc;
+    @Mock private QuestionTopicDaoJdbc mockQuestionTopicDaoJdbc;
+    @Mock private SubjectDaoJdbc mockSubjectDaoJdbc;
     @Mock private ConnectionH2 mockConnectionH2;
     @Mock private Connection mockConnection;
     @Mock private Statement mockStatement;
@@ -62,7 +59,8 @@ import static org.mockito.Mockito.*;
 
         this.examService =
             new ExamServiceImpl(this.mockExamDaoJdbc, this.mockSubjectQuestionDaoJdbc,
-                this.mockExamQuestionDaoJdbc, this.mockQuestionDaoJdbc);
+                this.mockExamQuestionDaoJdbc, this.mockQuestionDaoJdbc, this.mockSubjectTopicDaoJdbc,
+                this.mockQuestionTopicDaoJdbc, this.mockSubjectDaoJdbc);
 
         ArrayList<Question> al = new ArrayList<Question>() {
         };
@@ -417,6 +415,98 @@ import static org.mockito.Mockito.*;
         this.examService.gradeExam(this.exam);
     }
 
+    //----------------------------------------------------------------------------------------------
+
+    //Testing topicGrade(Exam)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_gradeExamCallsRightMethodsInDao_should_persist()throws Exception{
+        List<Topic> topicList = new ArrayList<>();
+        topicList.add(new Topic(1, "topic1"));
+        topicList.add(new Topic(2, "topic2"));
+
+        List<Question> questionList1 = new ArrayList<>();
+        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6));
+
+        List<Question> questionList2 = new ArrayList<>();
+        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5));
+
+        Subject subject = createDummySubject("subject1", 1);
+
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        questionBooleans.put(1, false);
+        questionBooleans.put(2, true);
+
+        Map<Integer, Boolean> questionBooleans2 = new HashMap<>();
+        questionBooleans.put(1, false);
+        questionBooleans.put(2, true);
+
+        when(this.mockSubjectDaoJdbc.getSubject(this.exam.getSubjectID())).thenReturn(subject);
+        when(this.mockSubjectTopicDaoJdbc.getTopicToSubject(subject)).thenReturn(topicList);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0))).thenReturn(questionList1);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1))).thenReturn(questionList2);
+        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(anyList())).thenReturn(questionBooleans).
+        thenReturn(questionBooleans2);
+
+        this.examService.topicGrade(this.exam);
+        verify(mockSubjectDaoJdbc).getSubject(this.exam.getSubjectID());
+        verify(mockSubjectTopicDaoJdbc).getTopicToSubject(subject);
+        verify(mockQuestionTopicDaoJdbc).getQuestionToTopic(topicList.get(0));
+        verify(mockQuestionTopicDaoJdbc).getQuestionToTopic(topicList.get(1));
+        verify(mockExamQuestionDaoJdbc, times(2)).getAllQuestionBooleans(anyList());
+    }
+
+    @Test public void test_gradeExamWith3Topics_should_persist() throws Exception{
+        Map<Topic, String[]> test = new HashMap<>();
+        List<Topic> topicList = new ArrayList<>();
+        topicList.add(new Topic(1, "topic1"));
+        topicList.add(new Topic(2, "topic2"));
+        topicList.add(new Topic(3, "topic3"));
+
+        List<Question> questionList1 = new ArrayList<>();
+        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6));
+
+        List<Question> questionList2 = new ArrayList<>();
+        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5));
+
+        List<Question> questionList3 = new ArrayList<>();
+        questionList3.add(new Question(3, "question3", QuestionType.valueOf(1), 4));
+
+        Subject subject = createDummySubject("subject1", 1);
+
+
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        questionBooleans.put(1, false);
+        questionBooleans.put(2, true);
+
+        Map<Integer, Boolean> questionBooleans2 = new HashMap<>();
+        questionBooleans.put(3, false);
+        questionBooleans.put(4, false);
+
+
+        Map<Integer, Boolean> questionBooleans3 = new HashMap<>();
+        questionBooleans.put(5, true);
+        questionBooleans.put(6, true);
+
+
+        when(this.mockSubjectDaoJdbc.getSubject(this.exam.getSubjectID())).thenReturn(subject);
+        when(this.mockSubjectTopicDaoJdbc.getTopicToSubject(subject)).thenReturn(topicList);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0))).thenReturn(questionList1);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1))).thenReturn(questionList2);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(2))).thenReturn(questionList3);
+        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(anyList())).thenReturn(questionBooleans).
+        thenReturn(questionBooleans2).thenReturn(questionBooleans3);
+
+        test = this.examService.topicGrade(this.exam);
+        assertTrue("Map should have size 3", test.size() == 3);
+        assertTrue("Map should contain topic1", test.containsKey(topicList.get(0)));
+        assertTrue("Map should contain topic2", test.containsKey(topicList.get(1)));
+        assertTrue("Map should contain topic3", test.containsKey(topicList.get(2)));
+
+    }
+
+    @Test(expected = ServiceException.class) public void test_topicGradeWithNull_should_fail()throws Exception{
+        this.examService.topicGrade(null);
+    }
 
     //----------------------------------------------------------------------------------------------
 
@@ -443,6 +533,17 @@ import static org.mockito.Mockito.*;
         q.setQuestionTime(500);
 
         return q;
+    }
+
+    private Subject createDummySubject(String name, int subjectID) {
+        Subject subject = new Subject();
+        subject.setName(name);
+        subject.setEcts(6);
+        subject.setAuthor("Author");
+        subject.setSemester("SS16");
+        subject.setSubjectId(subjectID);
+        subject.setTimeSpent(800);
+        return subject;
     }
 
 }
