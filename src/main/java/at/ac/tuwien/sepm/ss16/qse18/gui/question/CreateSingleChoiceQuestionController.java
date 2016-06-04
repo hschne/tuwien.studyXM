@@ -41,8 +41,8 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
      *                        persistently.
      */
     @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, fxmlLoader);
+        ResourceQuestionService resourceQuestionService) {
+        super(questionService, resourceQuestionService);
 
     }
 

@@ -51,8 +51,8 @@ public class CreateImageQuestionController extends QuestionController {
     private File out;
 
     @Autowired public CreateImageQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, fxmlLoader);
+        ResourceQuestionService resourceQuestionService) {
+        super(questionService, resourceQuestionService);
 
     }
 

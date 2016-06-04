@@ -28,8 +28,8 @@ import java.util.List;
     @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
     @Autowired public CreateOpenQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, fxmlLoader);
+        ResourceQuestionService resourceQuestionService) {
+        super(questionService, resourceQuestionService);
     }
 
     /**
