@@ -80,7 +80,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         this.radioButtonAnswerThree.setSelected(inputs != null && (boolean) inputs.get(7));
         this.radioButtonAnswerFour.setSelected(inputs != null && (boolean) inputs.get(8));
 
-        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(9));
+        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(9));
 
         this.resource = (inputs == null ? null : (ObservableResource) inputs.get(10));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());

@@ -189,7 +189,7 @@ public class CreateImageQuestionController extends QuestionController {
         this.checkBoxAnswerThree.setSelected(inputs != null && (boolean) inputs.get(8));
         this.checkBoxAnswerFour.setSelected(inputs != null && (boolean) inputs.get(9));
 
-        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(10));
+        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(10));
 
         this.resource = (inputs == null ? null : (ObservableResource) inputs.get(11));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());

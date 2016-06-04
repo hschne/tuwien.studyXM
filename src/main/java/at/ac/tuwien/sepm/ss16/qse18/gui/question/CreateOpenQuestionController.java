@@ -68,7 +68,7 @@ import java.util.List;
 
         fillAnswerFields(1);
 
-        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(5));
+        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(5));
 
         this.resource = (inputs == null ? null : (ObservableResource) inputs.get(6));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
