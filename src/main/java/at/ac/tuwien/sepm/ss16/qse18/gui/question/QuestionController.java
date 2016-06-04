@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
@@ -14,6 +15,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -43,6 +46,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     @FXML protected TextField textFieldAnswerFour;
     @FXML protected CheckBox checkBoxContinue;
     @FXML protected Label resourceLabel;
+    @FXML protected ImageView imageViewFile;
     List inputs;
 
     @Autowired public QuestionController(QuestionService questionService,
@@ -57,9 +61,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
      * This is especially useful when the user gets redirected to the resource mask
      * when selecting a resource.
      *
-     * @return  a list of all inputs from the user (textfields/checkboxes/radiobuttons)
-     *          Note:   if a textfield is empty this method saves null instead of nothing to
-     *                  have a consistent list structure
+     * @return a list of all inputs from the user (textfields/checkboxes/radiobuttons)
+     * Note:   if a textfield is empty this method saves null instead of nothing to
+     * have a consistent list structure
      */
     protected List getUserInput() {
         List tmpInputs = new ArrayList<>();
@@ -75,7 +79,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     /**
      * This abstract method fills every textfield, checkbox and radiobutton. The content of these
      * are given via the global "inputs" list.
-     *
+     * <p>
      * The method is abstract because not every question type has checkboxes
      * and therefore it can not be unified.
      */
@@ -171,6 +175,26 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     public void setInput(List inputs) {
         this.inputs = inputs;
         fillFieldsAndCheckboxes();
+        setFileIcon();
+    }
+
+    private void setFileIcon() {
+        if (inputs != null) {
+            if (inputs.get(inputs.size() - 1) instanceof ObservableResource) {
+                Resource tmp = ((ObservableResource) inputs.get(inputs.size() - 1)).getResource();
+
+                switch (tmp.getType()) {
+                    case PDF:
+                        imageViewFile.setImage(new Image("/icons/highrespdf.png"));
+                        break;
+                    default:
+                        imageViewFile.setImage(new Image("/icons/file_icon.png"));
+                        break;
+                }
+            }
+        } else {
+            imageViewFile.setImage(new Image("/icons/cross.png"));
+        }
     }
 
     void createQuestionAndAnswers() throws DtoValidatorException, ServiceException {

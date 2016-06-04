@@ -170,9 +170,9 @@
                               <Font name="System Bold" size="13.0" />
                            </font>
                         </Label>
-                        <ImageView fx:id="imageViewPdf" fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <ImageView fx:id="imageViewFile" fitHeight="43.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <image>
-                              <Image url="/icons/highrespdf.png" />
+                              <Image url="/icons/file_icon.png" />
                            </image>
                         </ImageView>
                         <GridPane GridPane.rowIndex="4">

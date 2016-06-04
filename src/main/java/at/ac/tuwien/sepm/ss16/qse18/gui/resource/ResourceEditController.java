@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import java.util.*;
 
     @FXML TextField resourceName;
     @FXML TextField filePath;
+    @FXML public CheckBox checkBoxContinue;
 
     @Autowired ResourceOverviewController overviewController;
 
@@ -40,6 +42,12 @@ import java.util.*;
     private List inputs;
 
     private QuestionType questionTypeOfResource;
+
+    @FXML public void initialize() {
+        if (inputs == null) {
+            checkBoxContinue.setVisible(true);
+        }
+    }
 
     @FXML public void handleSelectFile() {
         FileChooser fileChooser = new FileChooser();
@@ -86,7 +94,7 @@ import java.util.*;
         if (inputs != null) {
             if (resource != null) {
                 // Replace resource with newly created one
-                inputs.remove(inputs.size()-1);
+                inputs.remove(inputs.size() - 1);
                 inputs.add(resource);
             }
 
@@ -105,13 +113,21 @@ import java.util.*;
                     break;
             }
         } else {
-            mainFrameController.handleResources();
+            if (checkBoxContinue.isSelected()) {
+                mainFrameController.handleCreateResource(null, null);
+            } else {
+                mainFrameController.handleResources();
+            }
         }
     }
 
     public void setInput(List inputs, QuestionType questionType) {
         this.inputs = inputs;
         this.questionTypeOfResource = questionType;
+
+        if (inputs != null) {
+            checkBoxContinue.setVisible(false);
+        }
     }
 
     private void copyFile(File sourceFile, File destFile) throws IOException {
