@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -53,6 +54,14 @@ import java.util.Optional;
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(this::closeWithConfirmation);
+
+        try {
+            Image icon = new Image("/icons/icon.png");
+            primaryStage.getIcons().add(icon);
+        } catch(Exception e) {
+            logger.warn("Could not fetch icon, continuing anyways.", e);
+        }
+
         primaryStage.show();
 
         try {
