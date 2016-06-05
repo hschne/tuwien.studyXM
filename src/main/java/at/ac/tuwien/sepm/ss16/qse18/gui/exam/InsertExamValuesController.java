@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Component public class InsertExamValuesController extends BaseController{
     private ObservableList<ObservableSubject> subjectList;
     private ObservableList<ObservableTopic> topicList;
-    private ExamService examService;
+    private ExerciseExamService exerciseExamService;
     private SubjectService subjectService;
     private TopicService topicService;
     private QuestionService questionService;
@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
     @FXML public TextField fieldTime;
 
     @Autowired
-    public InsertExamValuesController(ExamService examService, SubjectService subjectService,
+    public InsertExamValuesController(ExerciseExamService exerciseExamService, SubjectService subjectService,
         TopicService topicService, QuestionService questionService) {
-        this.examService = examService;
+        this.exerciseExamService = exerciseExamService;
         this.subjectService = subjectService;
         this.topicService = topicService;
         this.questionService = questionService;
@@ -136,7 +136,7 @@ import java.util.stream.Collectors;
                 exerciseExam.setExamQuestions(questionService.getQuestionsFromTopic(
                     topicListView.getSelectionModel().getSelectedItem().getT()));
 
-                examService
+                exerciseExamService
                     .createExam(exerciseExam, topicListView.getSelectionModel().getSelectedItem().getT(),
                         examTime);
                 showSuccess("ExerciseExam was created");

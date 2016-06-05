@@ -30,13 +30,13 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Class ExerciseExamServiceImplTest
- * Tests for the service layer in ExamServiceImpl. In order to be isolated while testing, this
+ * Class ExerciseExerciseExamServiceImplTest
+ * Tests for the service layer in ExerciseExamServiceImpl. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *
  * @author Zhang Haixiang
  */
-@RunWith(MockitoJUnitRunner.class) public class ExerciseExamServiceImplTest {
+@RunWith(MockitoJUnitRunner.class) public class ExerciseExerciseExamServiceImplTest {
     @Mock private ExerciseExamDaoJdbc mockExamDaoJdbc;
     @Mock private ExerciseExamQuestionDaoJdbc mockExamQuestionDaoJdbc;
     @Mock private SubjectQuestionDaoJdbc mockSubjectQuestionDaoJdbc;
@@ -46,8 +46,8 @@ import static org.mockito.Mockito.*;
     @Mock private Statement mockStatement;
     @Mock private PreparedStatement mockPreparedStatement;
     @Mock private ResultSet mockResultSet;
-    @Mock private ExamServiceImpl mockExam;
-    private ExamServiceImpl examService;
+    @Mock private ExerciseExamServiceImpl mockExam;
+    private ExerciseExamServiceImpl examService;
     private ExerciseExam exerciseExam;
     private Topic topic;
 
@@ -60,7 +60,7 @@ import static org.mockito.Mockito.*;
         when(mockConnection.createStatement()).thenReturn(mockStatement);
 
         this.examService =
-            new ExamServiceImpl(this.mockExamDaoJdbc, this.mockSubjectQuestionDaoJdbc,
+            new ExerciseExamServiceImpl(this.mockExamDaoJdbc, this.mockSubjectQuestionDaoJdbc,
                 this.mockExamQuestionDaoJdbc, this.mockQuestionDaoJdbc);
 
         ArrayList<Question> al = new ArrayList<Question>() {

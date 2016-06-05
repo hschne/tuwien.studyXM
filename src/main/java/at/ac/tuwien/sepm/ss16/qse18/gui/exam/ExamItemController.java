@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
-import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -23,10 +23,10 @@ import java.util.List;
     @FXML private ProgressBar examProgress;
     @FXML private Button buttonStudy;
     private ObservableExerciseExam exam;
-    @Autowired ExamService examService;
+    @Autowired ExerciseExamService exerciseExamService;
 
-    @Autowired ExamItemController(ExamService examService) {
-        this.examService = examService;
+    @Autowired ExamItemController(ExerciseExamService exerciseExamService) {
+        this.exerciseExamService = exerciseExamService;
     }
 
     @FXML public void handleStudy() {
@@ -42,9 +42,9 @@ import java.util.List;
         List<Integer> allQuestionList, answeredQuestions;
         double percentageAnswered = 0d;
         try {
-            allQuestionList = examService.getAllQuestionsOfExam(
+            allQuestionList = exerciseExamService.getAllQuestionsOfExam(
                 this.exam.getExamid());
-            answeredQuestions = examService.getAnsweredQuestionsOfExam(
+            answeredQuestions = exerciseExamService.getAnsweredQuestionsOfExam(
                 this.exam.getExamid());
         } catch(ServiceException e) {
             logger.error("Could not fetch questions of exam", e);

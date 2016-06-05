@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
-import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
     @FXML private Button buttonNewExam;
     @Autowired ApplicationContext applicationContext;
     private ObservableList<ObservableExerciseExam> exams;
-    private ExamService examService;
+    private ExerciseExamService exerciseExamService;
 
-    @Autowired public ShowExamsController(ExamService examService) {
-        this.examService = examService;
+    @Autowired public ShowExamsController(ExerciseExamService exerciseExamService) {
+        this.exerciseExamService = exerciseExamService;
     }
 
     @FXML public void initialize() {
@@ -49,7 +49,7 @@ import java.util.stream.Collectors;
 
     private void initializeListView() throws ServiceException {
         List<ObservableExerciseExam> observableExerciseExams =
-            examService.getExams().stream().map(ObservableExerciseExam::new).collect(Collectors.toList());
+            exerciseExamService.getExams().stream().map(ObservableExerciseExam::new).collect(Collectors.toList());
         exams = FXCollections.observableArrayList(observableExerciseExams);
         examListView.setItems(exams);
         examListView.setCellFactory(listView -> applicationContext.getBean(ExamCell.class));
