@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,24 +19,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller for managing creation of multiple choice questions
- * <p>
- * Created by Julian on 15.05.2016.
+ * Controller for managing creation of multiple choice questions <p> Created by Julian on
+ * 15.05.2016.
  */
-@Component public class CreateMultipleChoiceQuestionController extends QuestionController {
-    @FXML private TextArea textAreaQuestion;
-    @FXML private CheckBox checkBoxAnswerOne;
-    @FXML private CheckBox checkBoxAnswerTwo;
-    @FXML private CheckBox checkBoxAnswerThree;
-    @FXML private CheckBox checkBoxAnswerFour;
-    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
+@Component
+public class CreateMultipleChoiceQuestionController extends QuestionController {
+    @FXML
+    private TextArea textAreaQuestion;
+    @FXML
+    private CheckBox checkBoxAnswerOne;
+    @FXML
+    private CheckBox checkBoxAnswerTwo;
+    @FXML
+    private CheckBox checkBoxAnswerThree;
+    @FXML
+    private CheckBox checkBoxAnswerFour;
+    @FXML
+    private ChoiceBox<String> choiceBoxQuestionTime;
 
-    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService) {
+    @Autowired
+    public CreateMultipleChoiceQuestionController(QuestionService questionService,
+                                                  ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
     }
 
-    @FXML public void handleCreateQuestion() {
+    @FXML
+    public void handleCreateQuestion() {
         if (createQuestion()) {
             return;
         }
@@ -47,7 +56,8 @@ import java.util.List;
         showSuccess("Inserted new question into database.");
     }
 
-    @Override protected void fillFieldsAndCheckboxes() {
+    @Override
+    protected void fillFieldsAndCheckboxes() {
         this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
         fillAnswerFields(1);
@@ -59,11 +69,16 @@ import java.util.List;
 
         this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(9));
 
-        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(10));
+        if (inputs != null) {
+            this.choiceBoxQuestionTime.setValue(inputs.get(10).toString());
+        }
+
+        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(11));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
-    @Override protected void saveQuestionInput(List inputs) {
+    @Override
+    protected void saveQuestionInput(List inputs) {
         if (textAreaQuestion != null) {
             inputs.add(textAreaQuestion.getText());
         } else {
@@ -71,12 +86,19 @@ import java.util.List;
         }
     }
 
-    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+    @Override
+    protected void saveCheckboxesAndRadiobuttons(List inputs) {
         inputs.addAll(createCheckBoxResults());
         inputs.add(checkBoxContinue.isSelected());
     }
 
-    @Override protected QuestionType getQuestionType() {
+    @Override
+    protected void saveChoiceBoxQuestionTime(List inputs) {
+        inputs.add(choiceBoxQuestionTime.getValue());
+    }
+
+    @Override
+    protected QuestionType getQuestionType() {
         return QuestionType.MULTIPLECHOICE;
     }
 
@@ -91,9 +113,8 @@ import java.util.List;
         return false;
     }
 
-
     @Override
-    protected List<Boolean> createCheckBoxResults(){
+    protected List<Boolean> createCheckBoxResults() {
         List<Boolean> result = new ArrayList<>();
         result.add(checkBoxAnswerOne.isSelected());
         result.add(checkBoxAnswerTwo.isSelected());
@@ -102,9 +123,10 @@ import java.util.List;
         return result;
     }
 
-    @Override protected Question newQuestionFromFields() {
+    @Override
+    protected Question newQuestionFromFields() {
         logger.debug("Collecting question from field.");
         return new Question(textAreaQuestion.getText(), getQuestionType()
-                ,Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
+                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)));
     }
 }

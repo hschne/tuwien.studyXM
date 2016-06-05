@@ -13,10 +13,12 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -33,44 +35,54 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
  * @author Hans-Joerg Schroedl
  */
 
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public abstract class QuestionController
-    extends BaseController {
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+public abstract class QuestionController
+        extends BaseController {
 
     private final QuestionService questionService;
     private final ResourceQuestionService resourceQuestionService;
     protected ObservableTopic topic;
     protected ObservableResource resource;
-    @FXML protected TextField textFieldAnswerOne;
-    @FXML protected TextField textFieldAnswerTwo;
-    @FXML protected TextField textFieldAnswerThree;
-    @FXML protected TextField textFieldAnswerFour;
-    @FXML protected CheckBox checkBoxContinue;
-    @FXML protected Label resourceLabel;
-    @FXML protected ImageView imageViewFile;
+    @FXML
+    protected TextField textFieldAnswerOne;
+    @FXML
+    protected TextField textFieldAnswerTwo;
+    @FXML
+    protected TextField textFieldAnswerThree;
+    @FXML
+    protected TextField textFieldAnswerFour;
+    @FXML
+    protected CheckBox checkBoxContinue;
+    @FXML
+    protected Label resourceLabel;
+    @FXML
+    protected ImageView imageViewFile;
+    @FXML
+    protected ChoiceBox choiceBoxQuestionTime;
     List inputs;
 
-    @Autowired public QuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService) {
+    @Autowired
+    public QuestionController(QuestionService questionService,
+                              ResourceQuestionService resourceQuestionService) {
         this.questionService = questionService;
         this.resourceQuestionService = resourceQuestionService;
     }
 
     /**
-     * Saves all textfields and checkboxes/radiobuttons and the resource the user typed in
-     * or selected so the current state can be restored after exiting the view.
-     * This is especially useful when the user gets redirected to the resource mask
-     * when selecting a resource.
+     * Saves all textfields and checkboxes/radiobuttons and the resource the user typed in or
+     * selected so the current state can be restored after exiting the view. This is especially
+     * useful when the user gets redirected to the resource mask when selecting a resource.
      *
-     * @return a list of all inputs from the user (textfields/checkboxes/radiobuttons)
-     * Note:   if a textfield is empty this method saves null instead of nothing to
-     * have a consistent list structure
+     * @return a list of all inputs from the user (textfields/checkboxes/radiobuttons) Note:   if a
+     * textfield is empty this method saves null instead of nothing to have a consistent list
+     * structure
      */
     protected List getUserInput() {
         List tmpInputs = new ArrayList<>();
 
         saveAnswerFields(tmpInputs);
         saveCheckboxesAndRadiobuttons(tmpInputs);
-
+        saveChoiceBoxQuestionTime(tmpInputs);
         tmpInputs.add(resource);
 
         return tmpInputs;
@@ -78,16 +90,14 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     /**
      * This abstract method fills every textfield, checkbox and radiobutton. The content of these
-     * are given via the global "inputs" list.
-     * <p>
-     * The method is abstract because not every question type has checkboxes
-     * and therefore it can not be unified.
+     * are given via the global "inputs" list. <p> The method is abstract because not every question
+     * type has checkboxes and therefore it can not be unified.
      */
     protected abstract void fillFieldsAndCheckboxes();
 
     /**
-     * Saves the question input. This method has to be abstract because the openquestion type
-     * has an image AND an filepath to save.
+     * Saves the question input. This method has to be abstract because the openquestion type has an
+     * image AND an filepath to save.
      *
      * @param inputs The list to save the input
      */
@@ -102,12 +112,20 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     protected abstract void saveCheckboxesAndRadiobuttons(List inputs);
 
     /**
+     * Saves the state of the ChoiceBoxQuestionTime
+     *
+     * @param inputs The list to save the input
+     */
+    protected void saveChoiceBoxQuestionTime(List inputs) {
+        inputs.add(choiceBoxQuestionTime.getValue());
+    }
+
+    /**
      * Fills all answerfields if the previous input from the user is saved.
      *
-     * @param startWith Because the input-list has a consistent structure
-     *                  (question, answerfields, checkboxes/radiobuttons,
-     *                  continue-chechbox, resource) the method needs the index where the
-     *                  answerfields should start
+     * @param startWith Because the input-list has a consistent structure (question, answerfields,
+     *                  checkboxes/radiobuttons, continue-chechbox, resource) the method needs the
+     *                  index where the answerfields should start
      */
     protected void fillAnswerFields(int startWith) {
         int counter = startWith;
@@ -151,7 +169,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         }
     }
 
-    @FXML public void handleAddResource() {
+    @FXML
+    public void handleAddResource() {
         // saving input from user to be able to recover later
         inputs = getUserInput();
         mainFrameController.handleChooseResource(inputs, resourceLabel, getQuestionType());
@@ -215,8 +234,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     protected abstract Question newQuestionFromFields();
 
     /**
-     * Returns a list of answers generated by the user input.
-     * List size can be [0,4] depending on the modified text fields.
+     * Returns a list of answers generated by the user input. List size can be [0,4] depending on
+     * the modified text fields.
      *
      * @param checkBoxResults List containing the values of the available 4 checkboxes
      * @return list of answers
@@ -226,19 +245,19 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         QuestionType questionType = getQuestionType();
         if (!textFieldAnswerOne.getText().isEmpty()) {
             answers.add(
-                new Answer(questionType, textFieldAnswerOne.getText(), checkBoxResults.get(0)));
+                    new Answer(questionType, textFieldAnswerOne.getText(), checkBoxResults.get(0)));
         }
         if (!textFieldAnswerTwo.getText().isEmpty()) {
             answers.add(
-                new Answer(questionType, textFieldAnswerTwo.getText(), checkBoxResults.get(1)));
+                    new Answer(questionType, textFieldAnswerTwo.getText(), checkBoxResults.get(1)));
         }
         if (!textFieldAnswerThree.getText().isEmpty()) {
             answers.add(
-                new Answer(questionType, textFieldAnswerThree.getText(), checkBoxResults.get(2)));
+                    new Answer(questionType, textFieldAnswerThree.getText(), checkBoxResults.get(2)));
         }
         if (!textFieldAnswerFour.getText().isEmpty()) {
             answers.add(
-                new Answer(questionType, textFieldAnswerFour.getText(), checkBoxResults.get(3)));
+                    new Answer(questionType, textFieldAnswerFour.getText(), checkBoxResults.get(3)));
         }
         return answers;
     }
