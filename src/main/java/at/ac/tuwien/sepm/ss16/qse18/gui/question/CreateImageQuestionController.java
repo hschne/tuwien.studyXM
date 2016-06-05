@@ -12,6 +12,7 @@ import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,12 +46,13 @@ public class CreateImageQuestionController extends QuestionController {
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
     private File out;
 
     @Autowired public CreateImageQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, fxmlLoader);
+        ResourceQuestionService resourceQuestionService) {
+        super(questionService, resourceQuestionService);
 
     }
 
@@ -187,7 +189,7 @@ public class CreateImageQuestionController extends QuestionController {
         this.checkBoxAnswerThree.setSelected(inputs != null && (boolean) inputs.get(8));
         this.checkBoxAnswerFour.setSelected(inputs != null && (boolean) inputs.get(9));
 
-        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(10));
+        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(10));
 
         this.resource = (inputs == null ? null : (ObservableResource) inputs.get(11));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
@@ -219,7 +221,8 @@ public class CreateImageQuestionController extends QuestionController {
      */
     @Override protected Question newQuestionFromFields() {
         logger.debug("Creating new question");
-        return new Question(textFieldImagePath.getText(), getQuestionType(), 1);
+        return new Question(textFieldImagePath.getText(), getQuestionType()
+                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {

@@ -3,28 +3,24 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
-import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceChooserController;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,15 +46,13 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     @FXML protected TextField textFieldAnswerFour;
     @FXML protected CheckBox checkBoxContinue;
     @FXML protected Label resourceLabel;
+    @FXML protected ImageView imageViewFile;
     List inputs;
-    private SpringFXMLLoader fxmlLoader;
 
     @Autowired public QuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
+        ResourceQuestionService resourceQuestionService) {
         this.questionService = questionService;
         this.resourceQuestionService = resourceQuestionService;
-
-        this.fxmlLoader = fxmlLoader;
     }
 
     /**
@@ -67,9 +61,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
      * This is especially useful when the user gets redirected to the resource mask
      * when selecting a resource.
      *
-     * @return  a list of all inputs from the user (textfields/checkboxes/radiobuttons)
-     *          Note:   if a textfield is empty this method saves null instead of nothing to
-     *                  have a consistent list structure
+     * @return a list of all inputs from the user (textfields/checkboxes/radiobuttons)
+     * Note:   if a textfield is empty this method saves null instead of nothing to
+     * have a consistent list structure
      */
     protected List getUserInput() {
         List tmpInputs = new ArrayList<>();
@@ -85,7 +79,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     /**
      * This abstract method fills every textfield, checkbox and radiobutton. The content of these
      * are given via the global "inputs" list.
-     *
+     * <p>
      * The method is abstract because not every question type has checkboxes
      * and therefore it can not be unified.
      */
@@ -160,37 +154,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     @FXML public void handleAddResource() {
         // saving input from user to be able to recover later
         inputs = getUserInput();
-
-        /*
-        Stage stage = new Stage();
-        SpringFXMLLoader.FXMLWrapper<Object, ResourceChooserController> resourceChooserWrapper =
-            null;
-
-        try {
-            resourceChooserWrapper = fxmlLoader.loadAndWrap("/fxml/resource/resourceChooser.fxml",
-                ResourceChooserController.class);
-        } catch (IOException e) {
-            logger.error("Could not load resourceChooser.fxml", e);
-        }
-
-        ResourceChooserController childController;
-
-        if (resourceChooserWrapper != null) {
-            childController = resourceChooserWrapper.getController();
-            childController.setStage(stage);
-            childController.saveUserInput(inputs, getQuestionType());
-            childController.setResourceLabel(resourceLabel);
-
-            stage.setTitle("Add resource");
-            stage.setScene(new Scene((Parent) resourceChooserWrapper.getLoadedObject(), 500, 400));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            stage.setResizable(false);
-            stage.showAndWait();
-        }
-        */
-
         mainFrameController.handleChooseResource(inputs, resourceLabel, getQuestionType());
-
         // Save the chosen or newly created resource
         resource = (ObservableResource) inputs.get(inputs.size() - 1);
     }
@@ -211,6 +175,26 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     public void setInput(List inputs) {
         this.inputs = inputs;
         fillFieldsAndCheckboxes();
+        setFileIcon();
+    }
+
+    private void setFileIcon() {
+        if (inputs != null) {
+            if (inputs.get(inputs.size() - 1) instanceof ObservableResource) {
+                Resource tmp = ((ObservableResource) inputs.get(inputs.size() - 1)).getResource();
+
+                switch (tmp.getType()) {
+                    case PDF:
+                        imageViewFile.setImage(new Image("/icons/highrespdf.png"));
+                        break;
+                    default:
+                        imageViewFile.setImage(new Image("/icons/file_icon.png"));
+                        break;
+                }
+            }
+        } else {
+            imageViewFile.setImage(new Image("/icons/cross.png"));
+        }
     }
 
     void createQuestionAndAnswers() throws DtoValidatorException, ServiceException {
@@ -234,6 +218,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
      * Returns a list of answers generated by the user input.
      * List size can be [0,4] depending on the modified text fields.
      *
+     * @param checkBoxResults List containing the values of the available 4 checkboxes
      * @return list of answers
      */
     private List<Answer> newAnswersFromFields(List<Boolean> checkBoxResults) {

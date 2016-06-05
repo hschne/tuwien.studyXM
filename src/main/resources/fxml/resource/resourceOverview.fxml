@@ -23,7 +23,7 @@
                 <RowConstraints maxHeight="233.0" minHeight="0.0" prefHeight="60.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <ListView fx:id="resourceListView" onMouseClicked="#selectedItem" styleClass="custom-list-view" GridPane.rowIndex="1">
+                <ListView fx:id="resourceListView" styleClass="custom-list-view" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </GridPane.margin></ListView>

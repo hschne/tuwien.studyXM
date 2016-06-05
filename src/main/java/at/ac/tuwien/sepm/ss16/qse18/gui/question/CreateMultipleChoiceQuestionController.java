@@ -7,9 +7,9 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.CheckBox;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -28,11 +28,11 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerTwo;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService,
-        SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, fxmlLoader);
+        ResourceQuestionService resourceQuestionService) {
+        super(questionService, resourceQuestionService);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -47,7 +47,7 @@ import java.util.List;
         showSuccess("Inserted new question into database.");
     }
 
-    protected void fillFieldsAndCheckboxes() {
+    @Override protected void fillFieldsAndCheckboxes() {
         this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
         fillAnswerFields(1);
@@ -57,7 +57,7 @@ import java.util.List;
         this.checkBoxAnswerThree.setSelected(inputs != null && (boolean) inputs.get(7));
         this.checkBoxAnswerFour.setSelected(inputs != null && (boolean) inputs.get(8));
 
-        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(9));
+        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(9));
 
         this.resource = (inputs == null ? null : (ObservableResource) inputs.get(10));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
@@ -104,6 +104,7 @@ import java.util.List;
 
     @Override protected Question newQuestionFromFields() {
         logger.debug("Collecting question from field.");
-        return new Question(textAreaQuestion.getText(), getQuestionType(), 1L);
+        return new Question(textAreaQuestion.getText(), getQuestionType()
+                ,Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
     }
 }
