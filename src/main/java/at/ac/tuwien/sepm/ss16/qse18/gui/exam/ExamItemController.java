@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
@@ -24,7 +22,7 @@ import java.util.List;
     @FXML private Label examIdentifier;
     @FXML private ProgressBar examProgress;
     @FXML private Button buttonStudy;
-    private ObservableExam exam;
+    private ObservableExerciseExam exam;
     @Autowired ExamService examService;
 
     @Autowired ExamItemController(ExamService examService) {
@@ -35,7 +33,7 @@ import java.util.List;
         mainFrameController.handleStudy();
     }
 
-    public void setExam(ObservableExam exam) {
+    public void setExam(ObservableExerciseExam exam) {
         this.exam = exam;
     }
 

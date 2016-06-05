@@ -1,34 +1,33 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import javafx.beans.property.*;
 
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 /**
  * @author Zhang Haixiang  on 20.05.2016.
  */
-public class ObservableExam {
+public class ObservableExerciseExam {
     private IntegerProperty examid;
     private StringProperty created;
     private BooleanProperty passed;
     private StringProperty author;
     private IntegerProperty subjectID;
-    private Exam exam;
+    private ExerciseExam exerciseExam;
 
-    public ObservableExam(Exam exam) {
-        this.exam = exam;
-        this.examid = new SimpleIntegerProperty(exam.getExamid());
-        this.passed = new SimpleBooleanProperty(exam.getPassed());
-        this.author = new SimpleStringProperty(exam.getAuthor());
-        this.subjectID = new SimpleIntegerProperty(exam.getSubjectID());
+    public ObservableExerciseExam(ExerciseExam exerciseExam) {
+        this.exerciseExam = exerciseExam;
+        this.examid = new SimpleIntegerProperty(exerciseExam.getExamid());
+        this.passed = new SimpleBooleanProperty(exerciseExam.getPassed());
+        this.author = new SimpleStringProperty(exerciseExam.getAuthor());
+        this.subjectID = new SimpleIntegerProperty(exerciseExam.getSubjectID());
         this.created = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")
-            .format(exam.getCreated()));
+            .format(exerciseExam.getCreated()));
     }
 
-    public Exam getExamInstance(){
-        return this.exam;
+    public ExerciseExam getExamInstance(){
+        return this.exerciseExam;
     }
 
     public IntegerProperty examIDProperty(){
@@ -52,7 +51,7 @@ public class ObservableExam {
     }
 
     public void setExamid(int examid){
-        this.exam.setExamid(examid);
+        this.exerciseExam.setExamid(examid);
         this.examid.set(examid);
     }
 
@@ -61,7 +60,7 @@ public class ObservableExam {
     }
 
     public void setSubjectID(int subjectID) {
-        this.exam.setSubjectID(subjectID);
+        this.exerciseExam.setSubjectID(subjectID);
         this.subjectID.set(subjectID);
     }
 
@@ -71,7 +70,7 @@ public class ObservableExam {
     }
 
     public void setPassed(boolean passed){
-        this.exam.setPassed(passed);
+        this.exerciseExam.setPassed(passed);
         this.passed.set(passed);
     }
 
@@ -80,7 +79,7 @@ public class ObservableExam {
     }
 
     public void setAuthor(String author){
-        this.exam.setAuthor(author);
+        this.exerciseExam.setAuthor(author);
         this.author.set(author);
     }
 
@@ -89,7 +88,7 @@ public class ObservableExam {
     }
 
     public String getCreated(String format) {
-        return new SimpleDateFormat(format).format(this.exam.getCreated());
+        return new SimpleDateFormat(format).format(this.exerciseExam.getCreated());
     }
 
     public void setCreated() {}

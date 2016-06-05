@@ -1,11 +1,10 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.*;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -121,35 +120,35 @@ import java.util.stream.Collectors;
             logger.warn("No topic selected");
             showError("No topic selected. You have to select the topic you want to create an exam to.");
         } else {
-            Exam exam = new Exam();
-            exam.setAuthor(fieldAuthor.getText());
-            exam.setCreated(new Timestamp(new Date().getTime()));
-            exam.setPassed(false);
+            ExerciseExam exerciseExam = new ExerciseExam();
+            exerciseExam.setAuthor(fieldAuthor.getText());
+            exerciseExam.setCreated(new Timestamp(new Date().getTime()));
+            exerciseExam.setPassed(false);
 
             int examTime = 0;
 
-            exam.setSubjectID(
+            exerciseExam.setSubjectID(
                 subjectListView.getSelectionModel().getSelectedItem().getSubject().getSubjectId());
 
             try {
                 examTime = Integer.parseInt(fieldTime.getText());
 
-                exam.setExamQuestions(questionService.getQuestionsFromTopic(
+                exerciseExam.setExamQuestions(questionService.getQuestionsFromTopic(
                     topicListView.getSelectionModel().getSelectedItem().getT()));
 
                 examService
-                    .createExam(exam, topicListView.getSelectionModel().getSelectedItem().getT(),
+                    .createExam(exerciseExam, topicListView.getSelectionModel().getSelectedItem().getT(),
                         examTime);
-                showSuccess("Exam was created");
+                showSuccess("ExerciseExam was created");
                 mainFrameController.handleExams();
             } catch (ServiceException e) {
-                logger.error("Could not create exam: ", e);
+                logger.error("Could not create exerciseExam: ", e);
                 showError("Check if the choosen topic has already questions to answer."
                         + "\nCheck if the length of the author do not exceed 80 characters."
-                        + "\nCheck if there are enough questions in this topic to cover the exam time.");
+                        + "\nCheck if there are enough questions in this topic to cover the exerciseExam time.");
             } catch (NumberFormatException e) {
-                logger.error("Could not create exam: ", e);
-                showError("Could not parse exam time. " +
+                logger.error("Could not create exerciseExam: ", e);
+                showError("Could not parse exerciseExam time. " +
                     "Make sure it only contains numbers and is lower than " + Integer.MAX_VALUE
                         + ".");
             }

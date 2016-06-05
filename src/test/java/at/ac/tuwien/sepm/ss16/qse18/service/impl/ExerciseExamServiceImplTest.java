@@ -2,16 +2,15 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExamDaoJdbc;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExamQuestionDaoJdbc;
+import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExerciseExamDaoJdbc;
+import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExerciseExamQuestionDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.QuestionDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.SubjectQuestionDaoJdbc;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,15 +30,15 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Class ExamServiceImplTest
+ * Class ExerciseExamServiceImplTest
  * Tests for the service layer in ExamServiceImpl. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *
  * @author Zhang Haixiang
  */
-@RunWith(MockitoJUnitRunner.class) public class ExamServiceImplTest {
-    @Mock private ExamDaoJdbc mockExamDaoJdbc;
-    @Mock private ExamQuestionDaoJdbc mockExamQuestionDaoJdbc;
+@RunWith(MockitoJUnitRunner.class) public class ExerciseExamServiceImplTest {
+    @Mock private ExerciseExamDaoJdbc mockExamDaoJdbc;
+    @Mock private ExerciseExamQuestionDaoJdbc mockExamQuestionDaoJdbc;
     @Mock private SubjectQuestionDaoJdbc mockSubjectQuestionDaoJdbc;
     @Mock private QuestionDaoJdbc mockQuestionDaoJdbc;
     @Mock private ConnectionH2 mockConnectionH2;
@@ -49,7 +48,7 @@ import static org.mockito.Mockito.*;
     @Mock private ResultSet mockResultSet;
     @Mock private ExamServiceImpl mockExam;
     private ExamServiceImpl examService;
-    private Exam exam;
+    private ExerciseExam exerciseExam;
     private Topic topic;
 
 
@@ -72,9 +71,9 @@ import static org.mockito.Mockito.*;
         question.setType(QuestionType.valueOf(1));
         al.add(question);
 
-        this.exam = createDummyExam(1, "auhtor");
-        exam.setExamQuestions(al);
-        exam.setExamTime(1);
+        this.exerciseExam = createDummyExam(1, "auhtor");
+        exerciseExam.setExamQuestions(al);
+        exerciseExam.setExamTime(1);
 
         this.topic = new Topic();
         topic.setTopic("Topic1");
@@ -97,7 +96,7 @@ import static org.mockito.Mockito.*;
     }
     //----------------------------------------------------------------------------------------------
 
-    //Testing createExam(Exam, int, int)
+    //Testing createExam(ExerciseExam, int, int)
     //----------------------------------------------------------------------------------------------
     @Test public void testIf_createExam_callsRightMethodInDao() throws Exception {
         List<Integer> questionIDList = new ArrayList<>();
@@ -110,39 +109,39 @@ import static org.mockito.Mockito.*;
         questionIDList.add(1);
         questionIDList.add(2);
 
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
             .thenReturn(questionBooleans);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
 
-        this.examService.createExam(this.exam, topic, 1000);
-        verify(this.mockExamDaoJdbc).create(this.exam, this.exam.getExamQuestions());
+        this.examService.createExam(this.exerciseExam, topic, 1000);
+        verify(this.mockExamDaoJdbc).create(this.exerciseExam, this.exerciseExam.getExamQuestions());
     }
 
     @Test(expected = ServiceException.class)
     public void test_createExam_invalidAuthorThrowsException() throws Exception {
-        Exam fail = createDummyExam(2, "");
+        ExerciseExam fail = createDummyExam(2, "");
 
         this.examService.createExam(fail, topic, 1000);
     }
 
     @Test(expected = ServiceException.class) public void test_createExam_ExamIDThrowsException()
         throws Exception {
-        Exam fail = createDummyExam(-2, "Author2");
+        ExerciseExam fail = createDummyExam(-2, "Author2");
         this.examService.createExam(fail, topic, 1000);
     }
     //----------------------------------------------------------------------------------------------
 
-    //Testing deleteExam(Exam)
+    //Testing deleteExam(ExerciseExam)
     //----------------------------------------------------------------------------------------------
     @Test public void testIf_deleteExam_callsRightMethodInDao() throws Exception {
-        this.examService.deleteExam(this.exam);
-        verify(this.mockExamDaoJdbc).delete(this.exam);
+        this.examService.deleteExam(this.exerciseExam);
+        verify(this.mockExamDaoJdbc).delete(this.exerciseExam);
     }
     //----------------------------------------------------------------------------------------------
 
-    //Testing getRightQuestions(exam, int, int)
+    //Testing getRightQuestions(exerciseExam, int, int)
     //----------------------------------------------------------------------------------------------
 
     @Test public void test_getRightQuestionsCallsRightMethodsInTheDaos() throws Exception {
@@ -156,16 +155,16 @@ import static org.mockito.Mockito.*;
         questionIDList.add(1);
         questionIDList.add(2);
 
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
             .thenReturn(questionBooleans);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
 
 
-        this.examService.getRightQuestions(this.exam, 1, 1000);
-        verify(this.mockSubjectQuestionDaoJdbc).getAllQuestionsOfSubject(this.exam, 1);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
+        this.examService.getRightQuestions(this.exerciseExam, 1, 1000);
+        verify(this.mockSubjectQuestionDaoJdbc).getAllQuestionsOfSubject(this.exerciseExam, 1);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         verify(this.mockExamQuestionDaoJdbc).getAllQuestionBooleans(questionIDList);
         this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         verify(this.mockQuestionDaoJdbc).getQuestion(questionIDList.get(0));
@@ -192,15 +191,15 @@ import static org.mockito.Mockito.*;
         questions.add(q3);
         List<Question> test;
 
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
             .thenReturn(questionBooleans);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3);
 
-        test = this.examService.getRightQuestions(this.exam, 1, 1500);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
+        test = this.examService.getRightQuestions(this.exerciseExam, 1, 1500);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
@@ -242,15 +241,15 @@ import static org.mockito.Mockito.*;
         questions.add(q3);
         List<Question> test;
 
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
             .thenReturn(questionBooleans);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3);
 
-        test = this.examService.getRightQuestions(this.exam, 1, 1000);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
+        test = this.examService.getRightQuestions(this.exerciseExam, 1, 1000);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
@@ -283,15 +282,15 @@ import static org.mockito.Mockito.*;
 
         List<Question> test;
 
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
             .thenReturn(questionBooleans);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3).thenReturn(q4);
 
-        test = this.examService.getRightQuestions(this.exam, 1, 1000);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
+        test = this.examService.getRightQuestions(this.exerciseExam, 1, 1000);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
@@ -308,7 +307,7 @@ import static org.mockito.Mockito.*;
 
     @Test(expected = ServiceException.class)
     public void test_getRightQuestionsWithEmptyExamQuestionList_should_fail() throws Exception {
-        this.examService.getRightQuestions(this.exam, 1, 2);
+        this.examService.getRightQuestions(this.exerciseExam, 1, 2);
     }
 
     @Test(expected = ServiceException.class)
@@ -322,19 +321,19 @@ import static org.mockito.Mockito.*;
 
         List<Question> test;
 
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1);
 
-        this.examService.getRightQuestions(this.exam, 1, 700);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
+        this.examService.getRightQuestions(this.exerciseExam, 1, 700);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
     }
 
     @Test(expected = ServiceException.class)
     public void test_getRightQuestionsWithoutDatabaseConnection_should_fail() throws Exception {
         when(this.mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        this.examService.getRightQuestions(this.exam, 1, 1500);
+        this.examService.getRightQuestions(this.exerciseExam, 1, 1500);
         PowerMockito.verifyStatic();
         this.mockConnectionH2.getConnection();
     }
@@ -356,7 +355,7 @@ import static org.mockito.Mockito.*;
     public void test_getAllQuestionsWithoutDatabaseConnection_should_fail() throws Exception {
         when(mockExamQuestionDaoJdbc.getAllQuestionsOfExam(anyInt())).thenThrow(DaoException.class);
 
-        examService.getAllQuestionsOfExam(exam.getExamid());
+        examService.getAllQuestionsOfExam(exerciseExam.getExamid());
 
         PowerMockito.verifyStatic();
         mockConnectionH2.getConnection();
@@ -367,15 +366,15 @@ import static org.mockito.Mockito.*;
         //nothing to tear down
     }
 
-    private Exam createDummyExam(int examID, String author) {
-        Exam exam = new Exam();
-        exam.setExamid(1);
-        exam.setCreated(new Timestamp(10));
-        exam.setPassed(false);
-        exam.setAuthor("author1");
-        exam.setSubjectID(1);
+    private ExerciseExam createDummyExam(int examID, String author) {
+        ExerciseExam exerciseExam = new ExerciseExam();
+        exerciseExam.setExamid(1);
+        exerciseExam.setCreated(new Timestamp(10));
+        exerciseExam.setPassed(false);
+        exerciseExam.setAuthor("author1");
+        exerciseExam.setSubjectID(1);
 
-        return exam;
+        return exerciseExam;
     }
 
     private Question createDummyQuestion(int questionID, String question) {

@@ -1,95 +1,92 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class Exam
- * represents the entity exam
- * @parameter examid primary key of exam
- * @parameter created indicates the date in which the exam was created
- * @parameter passed indicates whether exam has been passed or not
- * @parameter author name of the user who created the exam
- * @parameter subjectID id of the subject which the exam belongs to
- * @parameter examQuestions List containing the questions of an exam
- *
- * @author Zhang Haixiang
+ * Created by Felix on 05.06.2016.
  */
 public class Exam {
     private int examid;
+    private Timestamp dueDate;
     private Timestamp created;
-    private boolean passed;
-    private String author;
-    private int subjectID;
-    private List<Question> examQuestions = new ArrayList<>();
-    private long examTime;
+    private String name;
+    private Subject subject;
+    private List<ExerciseExam> exercises;
 
-    public int getExamid(){
-        return this.examid;
+    public Exam(String name, Timestamp dueDate, Subject subject, List<ExerciseExam> exercises) {
+        this.examid = -1;
+        this.dueDate = dueDate;
+        this.created = new Timestamp(System.currentTimeMillis());
+        this.subject = subject;
+        this.exercises = exercises;
     }
 
-    public void setExamid(int examid){
+    public Exam(int examid, Timestamp dueDate, Timestamp created,
+        Subject subject, List<ExerciseExam> exercises) {
+        this.examid = examid;
+        this.dueDate = dueDate;
+        this.created = created;
+        this.subject = subject;
+        this.exercises = exercises;
+    }
+
+    public int getExamid() {
+        return examid;
+    }
+
+    public void setExamid(int examid) {
         this.examid = examid;
     }
 
-    public Timestamp getCreated(){
-        return this.created;
+    public Timestamp getDueDate() {
+        return dueDate;
     }
 
-    public int getSubjectID() {
-        return subjectID;
+    public void setDueDate(Timestamp dueDate) {
+        this.dueDate = dueDate;
     }
 
-    public void setSubjectID(int subjectID) {
-        this.subjectID = subjectID;
+    public Timestamp getCreated() {
+        return created;
     }
 
-    public void setCreated(Timestamp created){
+    public void setCreated(Timestamp created) {
         this.created = created;
     }
 
-    public boolean getPassed(){
-        return this.passed;
+    public String getName() {
+        return name;
     }
 
-    public void setPassed(boolean passed){
-        this.passed = passed;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getAuthor(){
-        return this.author;
+    public Subject getSubject() {
+        return subject;
     }
 
-    public void setAuthor(String author){
-        this.author = author;
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
-    public List<Question> getExamQuestions() {
-        return examQuestions;
+    public List<ExerciseExam> getExercises() {
+        return exercises;
     }
 
-    public void setExamQuestions(List<Question> examQuestions) {
-        this.examQuestions = examQuestions;
+    public void setExercises(List<ExerciseExam> exercises) {
+        this.exercises = exercises;
     }
 
-    public long getExamTime() {
-        return examTime;
-    }
-
-    public void setExamTime(long examTime) {
-        this.examTime = examTime;
-    }
-
-    @Override public String toString(){
-        String ret =  "Exam{" + "examID=" + this.examid + ", created=" + this.getCreated() + ", passed="
-            + this.getPassed() + ", author= \"" + this.getAuthor() + "\", subjectID="+ this.getSubjectID()
-            + "}";
-
-        for(Question q: examQuestions){
-            ret += q.toString();
-        }
-
-        return ret;
+    @Override public String toString() {
+        return "Exam{" +
+            "examid=" + examid +
+            ", dueDate=" + dueDate +
+            ", created=" + created +
+            ", name='" + name + '\'' +
+            ", subject=" + subject +
+            ", exercises=" + exercises +
+            '}';
     }
 }

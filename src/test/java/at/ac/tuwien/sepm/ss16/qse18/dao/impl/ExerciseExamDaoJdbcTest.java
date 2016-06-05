@@ -2,8 +2,8 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamQuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.junit.After;
@@ -26,22 +26,22 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Class ExamDaoJdbcTest
- * Tests for the JDBC implementation in ExamDaoJdbc. In order to be isolated while testing, this
+ * Class ExerciseExamDaoJdbcTest
+ * Tests for the JDBC implementation in ExerciseExamDaoJdbc. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *
  * @author Zhang Haixiang
  */
-public class ExamDaoJdbcTest extends DaoBaseTest {
+public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
 
-    private ExamDaoJdbc examDaoJdbc;
-    @Mock private ExamQuestionDao mockExamQuestionDao;
+    private ExerciseExamDaoJdbc examDaoJdbc;
+    @Mock private ExerciseExamQuestionDao mockExerciseExamQuestionDao;
 
-    private Exam testExam;
+    private ExerciseExam testExerciseExam;
 
     @Before public void setUp() throws Exception {
         super.setUp();
-        this.examDaoJdbc = new ExamDaoJdbc(this.mockConnectionH2, this.mockExamQuestionDao);
+        this.examDaoJdbc = new ExerciseExamDaoJdbc(this.mockConnectionH2, this.mockExerciseExamQuestionDao);
 
         ArrayList<Question> al = new ArrayList<Question>() {
         };
@@ -52,35 +52,35 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
         al.add(question);
 
 
-        testExam = new Exam();
-        testExam.setExamid(1);
-        testExam.setCreated(new Timestamp(798));
-        testExam.setPassed(false);
-        testExam.setAuthor("Test1");
-        testExam.setSubjectID(1);
-        testExam.setExamQuestions(al);
-        testExam.setExamTime(1);
+        testExerciseExam = new ExerciseExam();
+        testExerciseExam.setExamid(1);
+        testExerciseExam.setCreated(new Timestamp(798));
+        testExerciseExam.setPassed(false);
+        testExerciseExam.setAuthor("Test1");
+        testExerciseExam.setSubjectID(1);
+        testExerciseExam.setExamQuestions(al);
+        testExerciseExam.setExamTime(1);
     }
 
-    // Testing create(Exam)
+    // Testing create(ExerciseExam)
     //----------------------------------------------------------------------------------------------
     @Test public void test_createWith_validParameters_should_persist() throws Exception {
         when(mockConnectionH2.getConnection().prepareStatement(anyString(), anyInt()))
             .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
-        Exam exam;
+        ExerciseExam exerciseExam;
 
-        exam = this.examDaoJdbc.create(this.testExam, this.testExam.getExamQuestions());
+        exerciseExam = this.examDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions());
         verify(mockPreparedStatement).executeUpdate();
-        verify(mockExamQuestionDao).create(this.testExam, this.testExam.getExamQuestions().get(0));
-        assertSame("Exam Objects should be the same", exam, this.testExam);
+        verify(mockExerciseExamQuestionDao).create(this.testExerciseExam, this.testExerciseExam.getExamQuestions().get(0));
+        assertSame("ExerciseExam Objects should be the same", exerciseExam, this.testExerciseExam);
     }
 
     @Test(expected = DaoException.class)
     public void test_createWithoutDatabaseConnection_should_fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        this.examDaoJdbc.create(this.testExam, this.testExam.getExamQuestions());
+        this.examDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions());
 
         PowerMockito.verifyStatic();
         mockConnectionH2.getConnection();
@@ -97,27 +97,27 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
             .thenReturn(mockPreparedStatement);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
-        Exam temp;
+        ExerciseExam temp;
 
-        temp = this.examDaoJdbc.create(this.testExam, this.testExam.getExamQuestions());
+        temp = this.examDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions());
         verify(mockPreparedStatement).executeUpdate();
-        assertSame("Exam Objects should be the same", this.testExam, temp);
+        assertSame("ExerciseExam Objects should be the same", this.testExerciseExam, temp);
 
         when(mockPreparedStatement.executeUpdate()).thenThrow(DaoException.class);
         this.examDaoJdbc.create(temp, temp.getExamQuestions());
     }
     //----------------------------------------------------------------------------------------------
 
-    // Testing delete(Exam)
+    // Testing delete(ExerciseExam)
     //----------------------------------------------------------------------------------------------
     @Test public void test_deleteWithValidExam_should_persist() throws Exception {
-        Exam exam;
+        ExerciseExam exerciseExam;
 
-        exam = this.examDaoJdbc.delete(this.testExam);
+        exerciseExam = this.examDaoJdbc.delete(this.testExerciseExam);
 
         verify(this.mockPreparedStatement).executeUpdate();
-        verify(this.mockExamQuestionDao).delete(this.testExam.getExamid());
-        assertSame("Exam Objects should be the same", exam, testExam);
+        verify(this.mockExerciseExamQuestionDao).delete(this.testExerciseExam.getExamid());
+        assertSame("ExerciseExam Objects should be the same", exerciseExam, testExerciseExam);
     }
 
     @Test(expected = DaoException.class) public void test_deleteWithNull_should_fail()
@@ -129,7 +129,7 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
         throws Exception {
 
         when(this.mockPreparedStatement.executeUpdate()).thenThrow(DaoException.class);
-        this.examDaoJdbc.delete(this.testExam);
+        this.examDaoJdbc.delete(this.testExerciseExam);
     }
 
     @Test(expected = DaoException.class)
@@ -137,7 +137,7 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
 
         when(this.mockConnectionH2.getConnection()).thenThrow(DaoException.class);
 
-        this.examDaoJdbc.delete(this.testExam);
+        this.examDaoJdbc.delete(this.testExerciseExam);
 
         PowerMockito.verifyStatic();
         this.mockConnectionH2.getConnection();
@@ -154,15 +154,15 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
         when(this.mockResultSet.getString(anyString())).thenReturn("Test1");
 
 
-        Exam exam = this.examDaoJdbc.getExam(1);
+        ExerciseExam exerciseExam = this.examDaoJdbc.getExam(1);
 
-        assertTrue("There should be exactly one element found", exam != null);
-        assertEquals("Found exam should have the ID 1", exam.getExamid(), 1);
-        assertTrue("Found exam should have Timestamp 798",
-            exam.getCreated().equals(new Timestamp(798)));
-        assertTrue("Found exam shouldn't been passsd yet", exam.getPassed() == false);
-        assertEquals("Found exam should have author test1", exam.getAuthor(), "Test1");
-        assertEquals("Found exam should have subject ID 1", exam.getSubjectID(), 1);
+        assertTrue("There should be exactly one element found", exerciseExam != null);
+        assertEquals("Found exerciseExam should have the ID 1", exerciseExam.getExamid(), 1);
+        assertTrue("Found exerciseExam should have Timestamp 798",
+            exerciseExam.getCreated().equals(new Timestamp(798)));
+        assertTrue("Found exerciseExam shouldn't been passsd yet", exerciseExam.getPassed() == false);
+        assertEquals("Found exerciseExam should have author test1", exerciseExam.getAuthor(), "Test1");
+        assertEquals("Found exerciseExam should have subject ID 1", exerciseExam.getSubjectID(), 1);
 
     }
 
@@ -175,21 +175,21 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
         when(this.mockResultSet.getBoolean(anyString())).thenReturn(false).thenReturn(true);
         when(this.mockResultSet.getString(anyString())).thenReturn("Test2").thenReturn("Test3");
 
-        Exam exam = this.examDaoJdbc.getExam(1);
-        Exam exam2 = this.examDaoJdbc.getExam(2);
+        ExerciseExam exerciseExam = this.examDaoJdbc.getExam(1);
+        ExerciseExam exerciseExam2 = this.examDaoJdbc.getExam(2);
 
-        assertFalse("These two exams should not be the same", exam == exam2);
+        assertFalse("These two exams should not be the same", exerciseExam == exerciseExam2);
         assertFalse("These two exams should not have the same ID's",
-            exam.getExamid() == exam2.getExamid());
+            exerciseExam.getExamid() == exerciseExam2.getExamid());
         assertFalse("These two exams should not have the same Timestamps",
-            exam.getCreated().equals(exam2.getCreated()));
+            exerciseExam.getCreated().equals(exerciseExam2.getCreated()));
         assertFalse("These two exams should not have the same passed status",
-            exam.getPassed() == exam2.getPassed());
-        assertNotEquals("These two exams should not have the same Author", exam.getAuthor(),
-            exam2.getAuthor());
+            exerciseExam.getPassed() == exerciseExam2.getPassed());
+        assertNotEquals("These two exams should not have the same Author", exerciseExam.getAuthor(),
+            exerciseExam2.getAuthor());
 
         assertFalse("These two exams should not have the same subject ID",
-            exam.getSubjectID() == exam2.getSubjectID());
+            exerciseExam.getSubjectID() == exerciseExam2.getSubjectID());
     }
 
     @Test(expected = DaoException.class)
@@ -202,7 +202,7 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
     }
 
     @Test public void test_getExamWithTooBigInt_should_fail() throws Exception {
-        Exam e = this.examDaoJdbc.getExam(Integer.MAX_VALUE);
+        ExerciseExam e = this.examDaoJdbc.getExam(Integer.MAX_VALUE);
         assertTrue("There should be no Subject with ID 2147483647 (= max int value)", e == null);
     }
 
@@ -223,8 +223,8 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
             }
         });
 
-        List<Exam> examList = this.examDaoJdbc.getExams();
-        assertSame("The List should contain 10 Exams", examList.size(), 10);
+        List<ExerciseExam> exerciseExamList = this.examDaoJdbc.getExams();
+        assertSame("The List should contain 10 Exams", exerciseExamList.size(), 10);
     }
 
     @Test public void test_getExamWith2ElementsInTheDatabase_should_persist() throws Exception {
@@ -236,27 +236,27 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
         when(this.mockResultSet.getBoolean(anyString())).thenReturn(true).thenReturn(false);
         when(this.mockResultSet.getString(anyString())).thenReturn("Author1").thenReturn("Author2");
 
-        List<Exam> examList = this.examDaoJdbc.getExams();
+        List<ExerciseExam> exerciseExamList = this.examDaoJdbc.getExams();
 
-        assertTrue("List contains 2 Exams", examList.size() == 2);
-        Exam exam1 = examList.get(0);
-        Exam exam2 = examList.get(1);
-
-
-        assertFalse("Both elements should diffeer", exam1 == exam2);
+        assertTrue("List contains 2 Exams", exerciseExamList.size() == 2);
+        ExerciseExam exerciseExam1 = exerciseExamList.get(0);
+        ExerciseExam exerciseExam2 = exerciseExamList.get(1);
 
 
-        assertEquals("Exam1 should have the ID 1", exam1.getExamid(), 1);
-        assertTrue("Exam1 should have Timestamp 10", exam1.getCreated().equals(new Timestamp(10)));
-        assertTrue("Exam1 should have been passsd already", exam1.getPassed() == true);
-        assertEquals("Exam1 should have author Author1", exam1.getAuthor(), "Author1");
-        assertEquals("Exam1 should have subject ID 1", exam1.getSubjectID(), 1);
+        assertFalse("Both elements should diffeer", exerciseExam1 == exerciseExam2);
 
-        assertEquals("Exam2 should have the ID 2", exam2.getExamid(), 2);
-        assertTrue("Exam2 should have Timestamp 20", exam2.getCreated().equals(new Timestamp(20)));
-        assertTrue("Exam2 shouldn't been passsd yet", exam2.getPassed() == false);
-        assertEquals("Exam2 should have author Author2", exam2.getAuthor(), "Author2");
-        assertEquals("Exam2 should have subject ID 2", exam2.getSubjectID(), 2);
+
+        assertEquals("Exam1 should have the ID 1", exerciseExam1.getExamid(), 1);
+        assertTrue("Exam1 should have Timestamp 10", exerciseExam1.getCreated().equals(new Timestamp(10)));
+        assertTrue("Exam1 should have been passsd already", exerciseExam1.getPassed() == true);
+        assertEquals("Exam1 should have author Author1", exerciseExam1.getAuthor(), "Author1");
+        assertEquals("Exam1 should have subject ID 1", exerciseExam1.getSubjectID(), 1);
+
+        assertEquals("Exam2 should have the ID 2", exerciseExam2.getExamid(), 2);
+        assertTrue("Exam2 should have Timestamp 20", exerciseExam2.getCreated().equals(new Timestamp(20)));
+        assertTrue("Exam2 shouldn't been passsd yet", exerciseExam2.getPassed() == false);
+        assertEquals("Exam2 should have author Author2", exerciseExam2.getAuthor(), "Author2");
+        assertEquals("Exam2 should have subject ID 2", exerciseExam2.getSubjectID(), 2);
     }
 
     @Test(expected = DaoException.class)
@@ -270,8 +270,8 @@ public class ExamDaoJdbcTest extends DaoBaseTest {
     @Test public void test_getExamWithoutAnyElementsInTheDatabase_should_fail() throws Exception {
         when(this.mockResultSet.next()).thenReturn(false);
 
-        List<Exam> examList = this.examDaoJdbc.getExams();
-        assertTrue("List should be emtpy", examList.isEmpty());
+        List<ExerciseExam> exerciseExamList = this.examDaoJdbc.getExams();
+        assertTrue("List should be emtpy", exerciseExamList.isEmpty());
     }
 
     //----------------------------------------------------------------------------------------------

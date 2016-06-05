@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
 import org.apache.logging.log4j.LogManager;
@@ -16,12 +16,12 @@ import java.io.IOException;
  * Created by Felix on 01.06.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ExamCell
-    extends ListCell<ObservableExam> {
+    extends ListCell<ObservableExerciseExam> {
 
     @Autowired SpringFXMLLoader springFXMLLoader;
     private static Logger logger = LogManager.getLogger(ExamCell.class);
 
-    @Override public void updateItem(ObservableExam exam, boolean empty) {
+    @Override public void updateItem(ObservableExerciseExam exam, boolean empty) {
         super.updateItem(exam, empty);
         if(exam != null) {
             ExamItemController examController = getController();
@@ -29,7 +29,7 @@ import java.io.IOException;
         }
     }
 
-    private void setControllerProperties(ObservableExam exam, ExamItemController examController) {
+    private void setControllerProperties(ObservableExerciseExam exam, ExamItemController examController) {
         examController.setExam(exam);
         examController.loadFields();
         setGraphic(examController.getRoot());
