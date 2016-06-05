@@ -18,7 +18,7 @@ CREATE TABLE rel_resource_question(resourceid INTEGER REFERENCES entity_resource
 
 CREATE TABLE entity_note(noteid INTEGER AUTO_INCREMENT PRIMARY KEY, note VARCHAR(2000) NOT NULL,author VARCHAR(80) NOT NULL, created TIMESTAMP, resource INTEGER REFERENCES entity_resource(resourceid), reference VARCHAR(500));
 
-CREATE TABLE entity_exam(examid INTEGER AUTO_INCREMENT PRIMARY KEY, created TIMESTAMP NOT NULL, due_date TIMESTAMP NOT NULL, name VARCHAR(80));
+CREATE TABLE entity_exam(examid INTEGER AUTO_INCREMENT PRIMARY KEY, subject INTEGER REFERENCES entity_subject(subjectid), created TIMESTAMP NOT NULL, due_date TIMESTAMP NOT NULL, name VARCHAR(80));
 
 CREATE TABLE entity_exercise_exam(examid INTEGER AUTO_INCREMENT PRIMARY KEY, exam INTEGER REFERENCES entity_exam(examid), created TIMESTAMP NOT NULL, passed BOOLEAN NOT NULL, author VARCHAR(80) NOT NULL, subject INTEGER REFERENCES entity_subject(subjectid), examTime BIGINT NOT NULL);
 
