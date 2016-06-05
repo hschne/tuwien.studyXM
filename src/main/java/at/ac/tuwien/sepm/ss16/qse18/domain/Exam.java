@@ -11,10 +11,14 @@ public class Exam {
     private Timestamp dueDate;
     private Timestamp created;
     private String name;
-    private Subject subject;
+    private int subject;
     private List<ExerciseExam> exercises;
 
-    public Exam(String name, Timestamp dueDate, Subject subject, List<ExerciseExam> exercises) {
+    public Exam() {
+
+    }
+
+    public Exam(String name, Timestamp dueDate, int subject, List<ExerciseExam> exercises) {
         this.examid = -1;
         this.dueDate = dueDate;
         this.created = new Timestamp(System.currentTimeMillis());
@@ -23,7 +27,7 @@ public class Exam {
     }
 
     public Exam(int examid, Timestamp dueDate, Timestamp created,
-        Subject subject, List<ExerciseExam> exercises) {
+        int subject, List<ExerciseExam> exercises) {
         this.examid = examid;
         this.dueDate = dueDate;
         this.created = created;
@@ -63,11 +67,11 @@ public class Exam {
         this.name = name;
     }
 
-    public Subject getSubject() {
+    public int getSubject() {
         return subject;
     }
 
-    public void setSubject(Subject subject) {
+    public void setSubject(int subject) {
         this.subject = subject;
     }
 
