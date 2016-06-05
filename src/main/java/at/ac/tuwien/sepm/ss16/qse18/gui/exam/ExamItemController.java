@@ -39,6 +39,7 @@ import java.util.List;
     }
 
     public void loadFields() {
+        logger.debug("Now showing exam: " + exam.getExamInstance());
         examIdentifier.setText(this.exam.getName() + " " + this.exam.getDueDate("dd-MM-YYYY"));
         List<Integer> allQuestionList, answeredQuestions;
         double percentageAnswered = 0d;

@@ -13,4 +13,5 @@ public interface ExamService {
     List<Exam> getExams() throws ServiceException;
     Exam createExam(Exam exam, Subject subject) throws ServiceException;
     Exam deleteExam(Exam exam) throws ServiceException;
+    Exam validate(String name, String dueDate, Subject subject) throws ServiceException;
 }

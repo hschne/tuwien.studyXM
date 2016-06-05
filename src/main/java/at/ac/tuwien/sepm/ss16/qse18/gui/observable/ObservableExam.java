@@ -19,6 +19,37 @@ public class ObservableExam {
     private IntegerProperty subject;
     private Exam exam;
 
+    public void setName(String name) {
+        this.name.set(name);
+        this.exam.setName(name);
+    }
+
+    public String getCreated() {
+        return created.get();
+    }
+
+
+    public String getDueDate() {
+        return dueDate.get();
+    }
+
+
+    public int getSubject() {
+        return subject.get();
+    }
+
+    public void setSubject(int subject) {
+        this.subject.set(subject);
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
+    }
+
     public ObservableExam(Exam exam) {
         this.exam = exam;
         this.examid = new SimpleIntegerProperty(exam.getExamid());

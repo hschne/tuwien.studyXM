@@ -14,7 +14,11 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 @Service public class ExamServiceImpl implements ExamService {
     private static final Logger logger = LogManager.getLogger(ExamServiceImpl.class);
@@ -75,5 +79,31 @@ import java.util.List;
     @Override public Exam deleteExam(Exam exam) throws ServiceException {
         //TODO
         return null;
+    }
+
+    @Override public Exam validate(String name, String dueDate, Subject subject)
+        throws ServiceException {
+
+        logger.debug("Validating exam");
+        Exam exam = null;
+
+        if(name.isEmpty()) {
+            throw new ServiceException("Name of an exam must not be empty");
+        }
+
+        if(dueDate.isEmpty()) {
+            throw new ServiceException("Due Date must not be empty");
+        }
+
+        try {
+            exam = new Exam();
+            exam.setDueDate(new Timestamp(new SimpleDateFormat("dd-MM-YYYY").parse(dueDate).getTime()));
+            exam.setCreated(new Timestamp(System.currentTimeMillis()));
+            exam.setSubject(subject.getSubjectId());
+        } catch(ParseException | NullPointerException e) {
+            logger.warn("Could not validate user input");
+            throw new ServiceException("Invalid input");
+        }
+        return exam;
     }
 }
