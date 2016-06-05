@@ -67,6 +67,15 @@ import java.util.List;
         }
     }
 
+    public void handleNewExam() {
+        logger.debug("Loading new exam view");
+        try {
+            setSubView("/fxml/exam/newExam.fxml", NewExamController.class);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
     @FXML public void handleResources() {
         logger.debug("Loading resource view");
         handleChooseResource(null, null, null);

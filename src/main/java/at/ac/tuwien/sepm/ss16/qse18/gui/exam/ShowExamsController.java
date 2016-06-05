@@ -46,7 +46,7 @@ import java.util.stream.Collectors;
     }
 
     @FXML public void newExam() {
-        mainFrameController.handleCreateExam();
+        mainFrameController.handleNewExam();
     }
 
     private void initializeListView() throws ServiceException {
