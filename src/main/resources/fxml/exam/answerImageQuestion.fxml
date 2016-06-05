@@ -20,9 +20,9 @@
       <RowConstraints maxHeight="221.0" minHeight="10.0" prefHeight="35.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Line endX="250.0" startX="-250.0" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
+      <Line endX="500.0" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
          <GridPane.margin>
-            <Insets right="250.0" />
+            <Insets />
          </GridPane.margin>
       </Line>
       <RadioButton fx:id="answer1Button" mnemonicParsing="false" text="Answer 1" GridPane.rowIndex="1">

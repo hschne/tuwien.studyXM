@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -17,17 +18,18 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AnswerQuestionController extends BaseController {
-    @FXML private RadioButton answer1Button;
-    @FXML private RadioButton answer2Button;
-    @FXML private RadioButton answer3Button;
-    @FXML private RadioButton answer4Button;
+    @FXML protected Label questionLabel;
+    @FXML protected RadioButton answer1Button;
+    @FXML protected RadioButton answer2Button;
+    @FXML protected RadioButton answer3Button;
+    @FXML protected RadioButton answer4Button;
 
     private Exam exam;
     private Question question;
-    private Answer answer1;
-    private Answer answer2;
-    private Answer answer3;
-    private Answer answer4;
+    protected Answer answer1;
+    protected Answer answer2;
+    protected Answer answer3;
+    protected Answer answer4;
 
     @FXML public void initialize(Exam exam, Question question, Answer answer1, Answer answer2,
         Answer answer3, Answer answer4){
@@ -92,5 +94,10 @@ public class AnswerQuestionController extends BaseController {
             }
         }
         return isCorrect;
+    }
+
+    public boolean noButtonSelected(){
+        return !answer1Button.isSelected() && !answer2Button.isSelected() && !answer3Button.isSelected()
+            && !answer4Button.isSelected();
     }
 }

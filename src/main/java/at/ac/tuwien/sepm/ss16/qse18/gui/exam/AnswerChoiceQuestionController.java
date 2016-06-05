@@ -21,9 +21,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class AnswerChoiceQuestionController extends AnswerQuestionController {
-    @FXML private Label questionLabel;
-
-
 
     @Override
     @FXML public void initialize(Exam exam, Question question, Answer answer1, Answer answer2,

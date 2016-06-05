@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.QuestionServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
-import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
@@ -46,7 +45,8 @@ import java.util.List;
     @FXML private AnchorPane subPane;
     @FXML private Timeline timeline;
     @FXML private Button nextQuestionButton;
-    @FXML private Button finishExamButton;
+    @FXML private Button skipQuesitonButton;
+    @FXML private Button showResultsButton;
 
     @Autowired SpringFXMLLoader springFXMLLoader;
     @Autowired SubjectServiceImpl subjectService;
@@ -97,6 +97,10 @@ import java.util.List;
     }
 
     public void handleNextQuestionButton(){
+        if(controller.noButtonSelected()){
+            showInformation("If you don't want to answer the question right away click on skip question");
+            return;
+        }
         try {
             examService.update(exam.getExamid(), questions.get(currentQuestionNumber).getQuestionId(),
                 controller.isCorrect(), true);
@@ -112,12 +116,19 @@ import java.util.List;
         }
         else{
             nextQuestionButton.setVisible(false);
-            finishExamButton.setVisible(true);
+            skipQuesitonButton.setVisible(false);
+            showResultsButton.setVisible(true);
             loadExamFinished();
         }
     }
 
-    public void handleShowResults(){
+    public void handleSkipQuestionButton(){
+        questions.add(questions.remove(currentQuestionNumber));
+        loadCorrectSubScreen(questions.get(currentQuestionNumber).getType());
+
+    }
+
+    public void handleShowResultsButton(){
         //TODO implement
     }
 
@@ -187,6 +198,20 @@ import java.util.List;
         }
     }
 
+    private void loadOpenQuestion(){
+        try{
+            controller = setSubView("/fxml/exam/answerOpenQuestion.fxml",
+                AnswerOpenQuestionController.class);
+            setAnswers(currentQuestionNumber);
+            controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
+                answer3,answer4);
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            showError(e);
+        }
+    }
+
     private void countDown(){
         if (timeline != null) {
             timeline.stop();
@@ -219,6 +244,9 @@ import java.util.List;
         }
         else if(type == QuestionType.NOTECARD){
             loadNoteCard();
+        }
+        else if(type == QuestionType.OPENQUESTION){
+            loadOpenQuestion();
         }
     }
 

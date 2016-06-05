@@ -55,10 +55,10 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Line endX="400.0" startX="-400.0" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+            <Line endX="450.0" startX="-450.0" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
             <Label text="Create Topic" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>
-                  <Font size="14.0" />
+                  <Font name="System Bold" size="24.0" />
                </font>
             </Label>
          </children>

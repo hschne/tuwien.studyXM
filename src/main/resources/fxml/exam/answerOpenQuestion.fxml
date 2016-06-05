@@ -3,22 +3,20 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.AnswerChoiceQuestionController">
+<GridPane alignment="CENTER" prefHeight="400.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.AnswerOpenQuestionController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints maxHeight="131.0" minHeight="10.0" prefHeight="118.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="95.0" minHeight="0.0" prefHeight="75.0" vgrow="SOMETIMES" />
-    <RowConstraints maxHeight="153.0" minHeight="0.0" prefHeight="75.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="180.0" minHeight="0.0" prefHeight="75.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="221.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="105.0" minHeight="10.0" prefHeight="105.0" vgrow="SOMETIMES" />
+    <RowConstraints maxHeight="301.0" minHeight="0.0" prefHeight="227.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <Line endX="500.0" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
@@ -30,25 +28,30 @@
          <font>
             <Font name="System Bold" size="16.0" />
          </font></Label>
-      <RadioButton fx:id="answer1Button" mnemonicParsing="false" text="Answer 1" GridPane.rowIndex="1">
+      <RadioButton fx:id="answer1Button" mnemonicParsing="false" text="Answer 1" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
-      <RadioButton fx:id="answer2Button" mnemonicParsing="false" text="Answer 2" GridPane.rowIndex="2">
+      <RadioButton fx:id="answer2Button" mnemonicParsing="false" text="Answer 2" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
-      <RadioButton fx:id="answer3Button" mnemonicParsing="false" text="Answer 3" GridPane.rowIndex="3">
+      <RadioButton fx:id="answer3Button" mnemonicParsing="false" text="Answer 3" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
-      <RadioButton fx:id="answer4Button" mnemonicParsing="false" text="Answer 4" GridPane.rowIndex="4">
+      <RadioButton fx:id="answer4Button" mnemonicParsing="false" text="Answer 4" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
+      <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+         </GridPane.margin>
+      </TextArea>
    </children>
 </GridPane>
