@@ -30,13 +30,13 @@ import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
 /**
- * Class ExerciseExerciseExamServiceImplTest
+ * Class ExerciseExamServiceImplTest
  * Tests for the service layer in ExerciseExamServiceImpl. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *
  * @author Zhang Haixiang
  */
-@RunWith(MockitoJUnitRunner.class) public class ExerciseExerciseExamServiceImplTest {
+@RunWith(MockitoJUnitRunner.class) public class ExerciseExamServiceImplTest {
     @Mock private ExerciseExamDaoJdbc mockExamDaoJdbc;
     @Mock private ExerciseExamQuestionDaoJdbc mockExamQuestionDaoJdbc;
     @Mock private SubjectQuestionDaoJdbc mockSubjectQuestionDaoJdbc;

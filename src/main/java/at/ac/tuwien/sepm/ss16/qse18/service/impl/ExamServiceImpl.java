@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,6 +19,10 @@ import java.util.List;
 @Service public class ExamServiceImpl implements ExamService {
     private static final Logger logger = LogManager.getLogger(ExamServiceImpl.class);
     private ExamDao examDao;
+
+    @Autowired public ExamServiceImpl(ExamDao examDao) {
+        this.examDao = examDao;
+    }
 
     @Override public Exam getExam(int examID) throws ServiceException {
         logger.debug("entering method getExam with parameter {}", examID);
@@ -40,7 +45,7 @@ import java.util.List;
 
         try {
             return this.examDao.getExams();
-        } catch(DaoException e) {
+        } catch(NullPointerException | DaoException e) {
             logger.error("Could not fetch list of exams from database", e);
             throw new ServiceException("Could not fetch list of exams from database", e);
         }

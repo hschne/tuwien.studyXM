@@ -20,6 +20,7 @@ public class ObservableExam {
     private Exam exam;
 
     public ObservableExam(Exam exam) {
+        this.exam = exam;
         this.examid = new SimpleIntegerProperty(exam.getExamid());
         this.name = new SimpleStringProperty(exam.getName());
         this.created = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")

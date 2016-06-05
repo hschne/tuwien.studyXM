@@ -1,7 +1,9 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.collections.FXCollections;
@@ -23,14 +25,14 @@ import java.util.stream.Collectors;
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class ShowExamsController
     extends BaseController {
-    @FXML private ListView<ObservableExerciseExam> examListView;
+    @FXML private ListView<ObservableExam> examListView;
     @FXML private Button buttonNewExam;
     @Autowired ApplicationContext applicationContext;
-    private ObservableList<ObservableExerciseExam> exams;
-    private ExerciseExamService exerciseExamService;
+    private ObservableList<ObservableExam> exams;
+    private ExamService examService;
 
-    @Autowired public ShowExamsController(ExerciseExamService exerciseExamService) {
-        this.exerciseExamService = exerciseExamService;
+    @Autowired public ShowExamsController(ExamService examService) {
+        this.examService = examService;
     }
 
     @FXML public void initialize() {
@@ -48,9 +50,10 @@ import java.util.stream.Collectors;
     }
 
     private void initializeListView() throws ServiceException {
-        List<ObservableExerciseExam> observableExerciseExams =
-            exerciseExamService.getExams().stream().map(ObservableExerciseExam::new).collect(Collectors.toList());
-        exams = FXCollections.observableArrayList(observableExerciseExams);
+        List<ObservableExam> observableExams =
+            examService.getExams().stream().map(ObservableExam::new).collect(Collectors.toList());
+        exams = FXCollections.observableArrayList(observableExams);
+        logger.debug(exams.size() + " exam list size");
         examListView.setItems(exams);
         examListView.setCellFactory(listView -> applicationContext.getBean(ExamCell.class));
     }

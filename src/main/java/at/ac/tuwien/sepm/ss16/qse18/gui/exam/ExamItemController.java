@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -22,7 +23,7 @@ import java.util.List;
     @FXML private Label examIdentifier;
     @FXML private ProgressBar examProgress;
     @FXML private Button buttonStudy;
-    private ObservableExerciseExam exam;
+    private ObservableExam exam;
     @Autowired ExerciseExamService exerciseExamService;
 
     @Autowired ExamItemController(ExerciseExamService exerciseExamService) {
@@ -33,12 +34,12 @@ import java.util.List;
         mainFrameController.handleStudy();
     }
 
-    public void setExam(ObservableExerciseExam exam) {
+    public void setExam(ObservableExam exam) {
         this.exam = exam;
     }
 
     public void loadFields() {
-        examIdentifier.setText(this.exam.getAuthor() + " " + this.exam.getCreated("dd-MM-YYYY"));
+        examIdentifier.setText(this.exam.getName() + " " + this.exam.getDueDate("dd-MM-YYYY"));
         List<Integer> allQuestionList, answeredQuestions;
         double percentageAnswered = 0d;
         try {

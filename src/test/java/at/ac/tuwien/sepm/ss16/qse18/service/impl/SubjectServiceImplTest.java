@@ -13,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static org.mockito.Mockito.verify;
 
 /**
- * Class ExerciseExerciseExamServiceImplTest
+ * Class ExerciseExamServiceImplTest
  * Tests for the sercvice layer in ExerciseExamServiceImpl. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *
