@@ -161,9 +161,9 @@
                               <Font name="System Bold" size="13.0" />
                            </font>
                         </Label>
-                        <ImageView fx:id="imageViewPdf" fitHeight="31.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
+                        <ImageView fx:id="imageViewFile" fitHeight="31.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.rowIndex="1">
                            <image>
-                              <Image url="/icons/highrespdf.png" />
+                              <Image url="/icons/cross.png" />
                            </image>
                         </ImageView>
                         <GridPane GridPane.rowIndex="5">
