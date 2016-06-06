@@ -2,7 +2,10 @@ package at.ac.tuwien.sepm.ss16.qse18.service;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
+import org.springframework.cglib.core.Local;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -11,7 +14,9 @@ import java.util.List;
 public interface ExamService {
     Exam getExam(int examID) throws ServiceException;
     List<Exam> getExams() throws ServiceException;
-    Exam createExam(Exam exam, Subject subject) throws ServiceException;
+    Exam createExam(Exam exam) throws ServiceException;
     Exam deleteExam(Exam exam) throws ServiceException;
-    Exam validate(String name, String dueDate, Subject subject) throws ServiceException;
+    void validate(Exam exam) throws DtoValidatorException;
+
+
 }

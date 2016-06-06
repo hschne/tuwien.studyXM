@@ -18,21 +18,12 @@ public class Exam {
 
     }
 
-    public Exam(String name, Timestamp dueDate, int subject, List<ExerciseExam> exercises) {
+    public Exam(String name, Timestamp dueDate, int subject) {
         this.examid = -1;
+        this.name = name;
         this.dueDate = dueDate;
         this.created = new Timestamp(System.currentTimeMillis());
         this.subject = subject;
-        this.exercises = exercises;
-    }
-
-    public Exam(int examid, Timestamp dueDate, Timestamp created,
-        int subject, List<ExerciseExam> exercises) {
-        this.examid = examid;
-        this.dueDate = dueDate;
-        this.created = created;
-        this.subject = subject;
-        this.exercises = exercises;
     }
 
     public int getExamid() {
