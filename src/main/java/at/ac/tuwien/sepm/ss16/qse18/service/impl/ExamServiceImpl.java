@@ -33,14 +33,14 @@ import java.util.List;
 
         if (examID <= 0) {
             logger.error("Service Exception getExam {}", examID);
-            throw new ServiceException("Invalid Exam ID, please check your input");
+            throw new ServiceException("Invalid Exam ID, please check your input.");
         }
 
         try {
             return this.examDao.getExam(examID);
         } catch (DaoException e) {
             logger.error("Could not get Exam from database", e);
-            throw new ServiceException("Could not get Exam from database", e);
+            throw new ServiceException("Could not get Exam from database.", e);
         }
     }
 
@@ -49,9 +49,9 @@ import java.util.List;
 
         try {
             return this.examDao.getExams();
-        } catch (NullPointerException | DaoException e) {
+        } catch (DaoException e) {
             logger.error("Could not fetch list of exams from database", e);
-            throw new ServiceException("Could not fetch list of exams from database", e);
+            throw new ServiceException("Could not fetch list of exams from database.", e);
         }
     }
 

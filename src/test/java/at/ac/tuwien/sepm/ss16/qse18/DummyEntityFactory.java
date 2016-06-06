@@ -37,10 +37,21 @@ public class DummyEntityFactory {
     }
 
 
-    public static List<ExerciseExam> createDummyExams() {
+    public static List<ExerciseExam> createDummyExcerciseExams() {
         List<ExerciseExam> exerciseExams = new ArrayList<>();
         exerciseExams.add(new ExerciseExam());
         return exerciseExams;
+    }
+
+    public static Exam createDummyExam(){
+        Exam exam = new Exam();
+        return exam;
+    }
+
+    public static List<Exam> createDummyExams(){
+        List<Exam> exams = new ArrayList<>();
+        exams.add(createDummyExam());
+        return exams;
     }
 
     public static Resource createDummyResource() {
