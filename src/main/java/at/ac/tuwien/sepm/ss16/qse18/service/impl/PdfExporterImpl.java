@@ -46,6 +46,9 @@ public class PdfExporterImpl {
     private String outPath;
     private Exam exam;
 
+    public PdfExporterImpl(){
+        
+    }
     /**
      * Creates a new PdfExporter
      *
