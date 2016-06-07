@@ -81,7 +81,7 @@ import java.util.List;
             List<ExerciseExam> exerciseExams = this.exerciseExamDao.getExams();
             for(ExerciseExam e : exerciseExams) {
                 if(e.getExam() == exam.getExamid()) {
-                    exerciseExamList.add(e.getExam());
+                    exerciseExamList.add(e.getExamid());
                 }
             }
         } catch(DaoException e) {
