@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
     private TopicService topicService;
     private QuestionService questionService;
     private Subject subject;
+    private ObservableExam exam;
 
     @Autowired public NewExerciseExamController(ExerciseExamService exerciseExamService,
         SubjectService subjectService, TopicService topicService, QuestionService questionService) {
@@ -70,6 +71,8 @@ import java.util.stream.Collectors;
 
             try {
                 examTime = Integer.parseInt(fieldTime.getText());
+                exerciseExam.setExamTime((long)examTime);
+                exerciseExam.setExam(this.exam.getExamid());
 
                 exerciseExam.setExamQuestions(questionService.getQuestionsFromTopic(
                     topicListView.getSelectionModel().getSelectedItem().getT()));
@@ -99,6 +102,7 @@ import java.util.stream.Collectors;
     public void setExam(ObservableExam exam) throws ServiceException {
         this.subject = subjectService.getSubject(exam.getSubject());
         initializeTopicList();
+        this.exam = exam;
     }
 
     private void initializeTopicList() {
