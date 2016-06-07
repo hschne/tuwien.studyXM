@@ -8,8 +8,11 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.Image;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.codec.Base64;
+import com.itextpdf.tool.xml.Pipeline;
 import com.itextpdf.tool.xml.XMLWorker;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
+import com.itextpdf.tool.xml.css.CssFile;
+import com.itextpdf.tool.xml.css.StyleAttrCSSResolver;
 import com.itextpdf.tool.xml.html.Tags;
 import com.itextpdf.tool.xml.parser.XMLParser;
 import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
@@ -31,7 +34,7 @@ import java.io.*;
 @Service public class PdfExporterImpl {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final String tmp = "/temporary/tmp.html";
+    private static final String tmp = "src/main/resources/temporary/tmp.html";
     private String outPath;
     private ExerciseExam exam;
 
@@ -83,22 +86,23 @@ import java.io.*;
         htmlContext.setImageProvider(new Base64ImageProvider());
 
         //CSS
-        CSSResolver cssResolver = XMLWorkerHelper.getInstance().getDefaultCssResolver(true);
-
-        // Pipelines
-        PdfWriterPipeline pdf = new PdfWriterPipeline(document, pdfWriter);
-        HtmlPipeline html = new HtmlPipeline(htmlContext, pdf);
-        CssResolverPipeline css = new CssResolverPipeline(cssResolver, html);
+        CSSResolver cssResolver = new StyleAttrCSSResolver();
+        InputStream csspathtest = Thread.currentThread().getContextClassLoader().getResourceAsStream("src/main/resources/export.css");
+        CssFile cssfiletest = XMLWorkerHelper.getCSS(csspathtest);
+        cssResolver.addCss(cssfiletest);
+        Pipeline<?> pipeline = new CssResolverPipeline(cssResolver, new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, pdfWriter)));
 
         // XML Worker
-        XMLWorker worker = new XMLWorker(css, true);
+        XMLWorker worker = new XMLWorker(pipeline, true);
         XMLParser p = new XMLParser(worker);
 
         //TODO: Generate the exam - this code is just to showcase the exporter
+        /*
         p.parse(new ByteArrayInputStream(
             ("<p>" + "author: " + exam.getAuthor() + " id: " + exam.getExamid() + " date: " + exam
                 .getCreated() + "</p>").getBytes()));
-        p.parse(new ByteArrayInputStream(imageToBase64("/images/graph.png", 200, 200).getBytes()));
+        */
+        p.parse(new ByteArrayInputStream(imageToBase64("src/main/resources/images/graph.png", 200, 200).getBytes()));
         p.parse(new ByteArrayInputStream(("<p>This is a question.</p>").getBytes()));
         p.parse(new ByteArrayInputStream(("<p>answer 1.</p>").getBytes()));
         p.parse(new ByteArrayInputStream(("<p>answer 2.</p>").getBytes()));
