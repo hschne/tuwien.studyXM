@@ -44,10 +44,11 @@ import java.util.Optional;
     @Override public void start(Stage primaryStage) throws IOException {
         logger.info("Starting Application");
         applicationContext = new AnnotationConfigApplicationContext(MainApplication.class);
+        primaryStage.setTitle("Study XM");
         SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
         SpringFXMLLoader.FXMLWrapper<Object, MainFrameController> mfWrapper =
             springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);
-        primaryStage.setTitle("Study XM");
+        MainFrameController controller = mfWrapper.getController();
         Scene scene = new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
         String css = this.getClass().getResource("/style.css").toExternalForm();
         scene.getStylesheets().add(css);
@@ -61,8 +62,9 @@ import java.util.Optional;
         } catch(Exception e) {
             logger.warn("Could not fetch icon, continuing anyways.", e);
         }
-
         primaryStage.show();
+        //We cant use intialize before stage is not initialized, so we use this workaround
+        controller.handleHome();
 
         try {
             new ConnectionH2().getConnection();

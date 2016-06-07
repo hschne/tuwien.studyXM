@@ -216,6 +216,7 @@ public class DtoValidatorTest {
         ExerciseExam e = new ExerciseExam();
         e.setAuthor("Julian");
         e.setCreated(new Timestamp(1));
+        e.setExamTime(10);
         dtoValidator.validate(e);
     }
 
