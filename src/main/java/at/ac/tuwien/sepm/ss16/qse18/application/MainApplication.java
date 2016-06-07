@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.image.Image;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.slf4j.Logger;
@@ -43,17 +44,27 @@ import java.util.Optional;
     @Override public void start(Stage primaryStage) throws IOException {
         logger.info("Starting Application");
         applicationContext = new AnnotationConfigApplicationContext(MainApplication.class);
+        primaryStage.setTitle("Study XM");
         SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
         SpringFXMLLoader.FXMLWrapper<Object, MainFrameController> mfWrapper =
             springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);
-        primaryStage.setTitle("Study XM");
+        MainFrameController controller = mfWrapper.getController();
         Scene scene = new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
         String css = this.getClass().getResource("/style.css").toExternalForm();
         scene.getStylesheets().add(css);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setOnCloseRequest(this::closeWithConfirmation);
+
+        try {
+            Image icon = new Image("/icons/icon.png");
+            primaryStage.getIcons().add(icon);
+        } catch(Exception e) {
+            logger.warn("Could not fetch icon, continuing anyways.", e);
+        }
         primaryStage.show();
+        //We cant use intialize before stage is not initialized, so we use this workaround
+        controller.handleHome();
 
         try {
             new ConnectionH2().getConnection();

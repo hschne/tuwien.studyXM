@@ -39,7 +39,7 @@ import static org.mockito.Mockito.*;
     @Mock private ResultSet mockResultSet;
     @Mock private SubjectTopicDaoJdbc mockSubjectTopicDaoJdbc;
     @Mock private TopicDaoJdbc mockTopicDaoJdbc;
-    @Mock private ExamDaoJdbc examDaoJdbc;
+    @Mock private ExerciseExamDaoJdbc exerciseExamDaoJdbc;
 
 
     @Before public void setUp() throws Exception {
@@ -53,7 +53,7 @@ import static org.mockito.Mockito.*;
         sdao = new SubjectDaoJdbc(mockConnectionH2);
         sdao.setSubjectTopicDaoJdbc(mockSubjectTopicDaoJdbc);
         sdao.setTopicDaoJdbc(mockTopicDaoJdbc);
-        sdao.setExamDaoJdbc(examDaoJdbc);
+        sdao.setExerciseExamDaoJdbc(exerciseExamDaoJdbc);
     }
 
     // Testing getSubject(int) method

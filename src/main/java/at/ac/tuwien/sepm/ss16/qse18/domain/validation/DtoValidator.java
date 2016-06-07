@@ -1,9 +1,10 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain.validation;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 
 import java.io.File;
 import java.util.List;
@@ -44,30 +45,34 @@ public class DtoValidator {
     }
 
     /**
-     * Checks if an exam is valid. This means the exam is not null, the author is not empty and shorter than 80 chars.
+     * Checks if an exerciseExam is valid. This means the exerciseExam is not null, the author is not empty and shorter than 80 chars.
      *
-     * @param exam exam that is validated
+     * @param exerciseExam exerciseExam that is validated
      */
-    public static void validate(Exam exam) throws DtoValidatorException {
-        if (exam == null) {
-            throw new DtoValidatorException("Exam must not be null");
+    public static void validate(ExerciseExam exerciseExam) throws DtoValidatorException {
+        if (exerciseExam == null) {
+            throw new DtoValidatorException("ExerciseExam must not be null.");
         }
-        validateAuthor(exam);
-        if (exam.getCreated() == null) {
-            throw new DtoValidatorException("Exam timestamp must not be null");
+        validateAuthor(exerciseExam);
+        if (exerciseExam.getCreated() == null) {
+            throw new DtoValidatorException("ExerciseExam timestamp must not be null.");
+        }
+        long examTime = exerciseExam.getExamTime();
+        if (examTime <= 0) {
+            throw new DtoValidatorException("ExamTime must at least be 1.");
         }
     }
 
-    private static void validateAuthor(Exam exam) throws DtoValidatorException {
-        if (exam.getAuthor() == null) {
-            throw new DtoValidatorException("Exam author must not be null");
+    private static void validateAuthor(ExerciseExam exerciseExam) throws DtoValidatorException {
+        if (exerciseExam.getAuthor() == null) {
+            throw new DtoValidatorException("ExerciseExam author must not be null");
         }
-        if (exam.getAuthor().isEmpty() || exam.getAuthor().trim().isEmpty()) {
+        if (exerciseExam.getAuthor().isEmpty() || exerciseExam.getAuthor().trim().isEmpty()) {
             throw new DtoValidatorException(
-                "Exam author must not be empty (leading or trailing whitespaces are ignored)");
+                "ExerciseExam author must not be empty (leading or trailing whitespaces are ignored)");
         }
-        if (exam.getAuthor().length() > 80) {
-            throw new DtoValidatorException("Exam author must not be longer than 80 characters");
+        if (exerciseExam.getAuthor().length() > 80) {
+            throw new DtoValidatorException("ExerciseExam author must not be longer than 80 characters");
         }
     }
 

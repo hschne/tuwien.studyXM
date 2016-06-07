@@ -1,274 +1,99 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.*;
+/**
+ * Implementation of {@link at.ac.tuwien.sepm.ss16.qse18.service.ExamService}
+ * <p>
+ * Created by Felix on 05.06.2016.
+ */
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExamDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.ExamGenParams;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
-
-/**
- * Class ExamServiceImpl
- * concrete implementatioin of ExamService
- *
- * @author Zhang Haixiang
- */
 @Service public class ExamServiceImpl implements ExamService {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger logger = LogManager.getLogger(ExamServiceImpl.class);
     private ExamDao examDao;
-    private SubjectQuestionDao subjectQuestionDao;
-    private ExamQuestionDao examQuestionDao;
-    private QuestionDao questionDao;
-    private ExamGenParams egp;
 
-
-    @Autowired public ExamServiceImpl(ExamDao examDao, SubjectQuestionDao subjectQuestionDao,
-        ExamQuestionDao examQuestionDao, QuestionDao questionDao) {
+    @Autowired public ExamServiceImpl(ExamDao examDao) {
         this.examDao = examDao;
-        this.subjectQuestionDao = subjectQuestionDao;
-        this.examQuestionDao = examQuestionDao;
-        this.questionDao = questionDao;
     }
 
-
     @Override public Exam getExam(int examID) throws ServiceException {
-        logger.debug("entering method getExam with parameters {}", examID);
+        logger.debug("entering method getExam with parameter {}", examID);
+
         if (examID <= 0) {
             logger.error("Service Exception getExam {}", examID);
-            throw new ServiceException("Invalid Exam ID, please check your input");
+            throw new ServiceException("Invalid Exam ID, please check your input.");
         }
 
         try {
             return this.examDao.getExam(examID);
         } catch (DaoException e) {
-            logger.error(e);
-            throw new ServiceException(e);
+            logger.error("Could not get Exam from database", e);
+            throw new ServiceException("Could not get Exam from database.", e);
         }
     }
 
     @Override public List<Exam> getExams() throws ServiceException {
-        logger.debug("entering method getExams()");
+        logger.debug("entering method getExams");
+
         try {
             return this.examDao.getExams();
         } catch (DaoException e) {
-            logger.error(e);
-            throw new ServiceException(e);
+            logger.error("Could not fetch list of exams from database", e);
+            throw new ServiceException("Could not fetch list of exams from database.", e);
         }
     }
 
-    @Override public Exam createExam(Exam exam, Topic topic, int examTime) throws ServiceException {
-        logger.debug("entering method createExam with parameters {}", exam);
-
-        tryValidateExam(exam);
-
-        if (examTime <= 0) {
-            logger.error("ExamTime must at least be 1");
-            throw new ServiceException("ExamTime must at least be 1");
-        }
-
+    @Override public Exam createExam(Exam exam) throws ServiceException {
+        logger.debug("entering createExam with parameters {}", exam);
         try {
-            exam.setExamTime(examTime);
-            exam.setExamQuestions(getRightQuestions(exam, topic.getTopicId(), examTime));
-            return this.examDao.create(exam, exam.getExamQuestions());
+            return this.examDao.create(exam);
         } catch (DaoException e) {
-            logger.error("Service Exception createExam {}", exam, e);
-            throw new ServiceException(e.getMessage());
+            logger.error("Could not create new exam", e);
+            throw new ServiceException("Could not create new exam", e);
         }
     }
 
     @Override public Exam deleteExam(Exam exam) throws ServiceException {
-        logger.debug("entering method deleteExam with parameters {}", exam);
-
-        tryValidateExam(exam);
-
-        try {
-            return this.examDao.delete(exam);
-        } catch (DaoException e) {
-            logger.error("Service Exception deleteExam {}", exam, e);
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-
-    /**
-     * getRightQuestions
-     * chooses the right questions for the exam and saves it into a list
-     * @param exam exam for which the questions are chosen
-     * @param topicID topic from which the questions are chosen
-     * @param examTime duration of the exam
-     * @return returns a List that contains the questions of the given exam
-     * @throws ServiceException
-     *
-     * */
-    public List<Question> getRightQuestions(Exam exam, int topicID, int examTime)
-        throws ServiceException {
-        logger
-            .debug("entering method getRigthQuestions with parameters {}", exam, topicID, examTime);
-        if (exam == null || topicID <= 0 || examTime <= 0) {
-            logger.error("Service Exception getRightQuestions {}", exam, topicID, examTime);
-            throw new ServiceException("Invalid values, please check your input");
-        }
-
-        this.egp = new ExamGenParams();
-
-        try {
-            this.egp.setNotAnsweredQuestionID(this.subjectQuestionDao.getAllQuestionsOfSubject(exam, topicID));
-            egp.setQuestionBooleans(this.examQuestionDao.getAllQuestionBooleans(egp.getNotAnsweredQuestionID()));
-
-            for (int e : egp.getNotAnsweredQuestionID()) {
-                egp.getNotAnsweredQuestions().add(this.questionDao.getQuestion(e));
-            }
-
-            splitQuestions();
-
-            selectQuestions(egp.getNotAnsweredQuestions(), examTime);
-            selectQuestions(egp.getWrongAnsweredQuestions(), examTime);
-            selectQuestions(egp.getRightAnsweredQuestions(), examTime);
-
-        } catch (DaoException e) {
-            logger.error("Service Exception getRightQuestions with parameters{}", exam, topicID,
-                examTime, e);
-            throw new ServiceException(e.getMessage());
-        }
-
-        if (egp.getExamQuestions().isEmpty()) {
-            logger.error("Service Exception getRightQuestions with parameters{}", exam);
-            throw new ServiceException(
-                "Could not get Questions with subjectId " + exam.getSubjectID() + " and topicID "
-                    + topicID + " or examTime " + examTime + " is too small");
-        }
-
-        if (egp.getQuestionTime() < examTime * 0.8) {
-            logger.error("Service Exception getRightQuestions with parameters{}", exam);
-            throw new ServiceException(
-                "There aren't enough questions to cover the exam time " + examTime
-                    + " ,please reduce the exam time");
-        }
-
-        return egp.getExamQuestions();
-    }
-
-    @Override public List<Integer> getAllQuestionsOfExam(int examID) throws ServiceException {
-        logger.debug("entering getAllQuestionsOfExam with parameters {}", examID);
-
-        if (examID <= 0) {
-            logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID);
-            throw new ServiceException("Invalid examID, please check your input");
-        }
-
-        try {
-            return this.examQuestionDao.getAllQuestionsOfExam(examID);
-        } catch (DaoException e) {
-            logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID, e);
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-    public void splitQuestions(){
-        List<Question> temp = new ArrayList<>();
-        int counter = 0;
-
-        for(Question q: egp.getNotAnsweredQuestions()){
-            temp.add(q);
-        }
-
-        for (Map.Entry<Integer, Boolean> e : egp.getQuestionBooleans().entrySet()) {
-            for (int i = 0; i < temp.size(); i++) {
-                if (e.getKey() == temp.get(i).getQuestionId()) { // checks if the question has been answered already
-                    if (e.getValue() == true) { // if the question has already been answered correctly
-                        egp.getRightAnsweredQuestions().add(temp.get(counter));
-                        egp.getNotAnsweredQuestions().remove(temp.get(counter));
-                    } else { // if the question has already been answered incorrectly
-                        egp.getWrongAnsweredQuestions().add(temp.get(counter));
-                        egp.getNotAnsweredQuestions().remove(temp.get(counter));
-                    }
-                }
-                counter++;
-            }
-            counter = 0;
-        }
-    }
-
-    public void selectQuestions(List<Question> questionList, int examTime){
-        while(!questionList.isEmpty()){
-            questionList.remove(chooseQuestions(questionList, examTime));
-        }
-    }
-
-    public int chooseQuestions(List<Question> questionList, int examTime){
-        int random = (int) (Math.random() * questionList.size());
-        if ((this.egp.getQuestionTime() + questionList.get(random).getQuestionTime())
-            <= examTime) { // if time of questions are still smaller or the same as examTime
-            egp.getExamQuestions().add(questionList.get(random));
-            egp.setQuestionTime(egp.getQuestionTime() + questionList.get(random).getQuestionTime());
-        }
-
-        return random;
-    }
-
-    private void tryValidateExam(Exam exam) throws ServiceException {
-        try {
-            validate(exam);
-        } catch (DtoValidatorException e) {
-            logger.error("Exam [" + exam + "] is invalid", e);
-            throw new ServiceException("Exam [" + exam + "] is invalid: " + e);
-        }
-    }
-
-    /*
-    public List<Integer> gradeExam(Exam exam) throws ServiceException{
-        logger.debug("entering gradeExam with parameters {}",exam);
-        List <Integer> questionIDList = new ArrayList<>();
-        List <Question> questionList = new ArrayList<>();
-
-        if(!DtoValidator.validate(exam)){
-            logger.error("Service Exception gradeExam {}", exam);
-            throw new ServiceException("Invalid values, please check your input");
-        }
-
-        try{
-
-            questionIDList = getAllQuestionsOfExam(exam.getExamid());
-            for(int i = 0; i < questionIDList.size(); i++){
-                questionList.add(this.questionDao.getQuestion(questionIDList.get(i)));
-            }
-
-
-        }catch (DaoException e){
-            logger.error("Dao Exception gradeExam with parameters {}", exam, e);
-            throw new ServiceException(e.getMessage());
-        }
-
-
+        //TODO
         return null;
     }
 
-    public List<Integer> calculateResult(List<Question> questionList){
-        int incorrect = 0;
-        int correct = 0;
-        List<Integer> result = new ArrayList<>();
+    @Override public void validate(Exam exam) throws DtoValidatorException {
 
-        if(questionList != null && questionList.size() > 0){
-            for(int i = 0; i < questionList.size(); i++){
+        logger.debug("Validating exam");
+        String name = exam.getName();
 
-            }
+        if(name == null) {
+            throw new DtoValidatorException("Name must not be empty");
         }
 
-        return null;
-    }
-    */
+        if (name.trim().isEmpty()) {
+            throw new DtoValidatorException("Name of an exam must not be empty.");
+        }
+        int subjectId = exam.getSubject();
+        if (subjectId <= 0) {
+            throw new DtoValidatorException("Invalid subject id. Pleas select another subject");
+        }
+        Timestamp dueDate = exam.getDueDate();
+        if (dueDate == null) {
+            throw new DtoValidatorException("Due Date must not be empty.");
+        }
+        LocalDate date = dueDate.toLocalDateTime().toLocalDate();
+        if (date.isBefore(LocalDate.now())) {
+            throw new DtoValidatorException("Due date can not be in the past.");
+        }
 
+    }
 }

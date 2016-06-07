@@ -2,10 +2,9 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamQuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
@@ -24,25 +23,25 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class ExamQuestionDaoJdbc
- * concrete implementation of Interface ExamQuestionDao
+ * Class ExerciseExamQuestionDaoJdbc
+ * concrete implementation of Interface ExerciseExamQuestionDao
  * This class has access to the h2 database that is defined in the ConnectionH2 class.
  *
  * @author Zhang Haixiang
  */
 @Service
-public class ExamQuestionDaoJdbc implements ExamQuestionDao {
+public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
     private ConnectionH2 database;
     private static final Logger logger = LogManager.getLogger();
 
-    @Autowired public ExamQuestionDaoJdbc(ConnectionH2 database) {
+    @Autowired public ExerciseExamQuestionDaoJdbc(ConnectionH2 database) {
         this.database = database;
     }
 
-    @Override public void create(Exam exam, Question question) throws DaoException {
-        logger.debug("entering method create with parameters {}", exam, question);
+    @Override public void create(ExerciseExam exerciseExam, Question question) throws DaoException {
+        logger.debug("entering method create with parameters {}", exerciseExam, question);
 
-        tryValidateExam(exam);
+        tryValidateExam(exerciseExam);
         tryValidateQuestion(question);
 
         PreparedStatement pstmt = null;
@@ -50,16 +49,16 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
         try {
             pstmt = this.database.getConnection()
                 .prepareStatement("INSERT INTO REL_EXAM_QUESTION VALUES(?, ?, ?, ?)");
-            pstmt.setInt(1, exam.getExamid());
+            pstmt.setInt(1, exerciseExam.getExamid());
             pstmt.setInt(2, question.getQuestionId());
             pstmt.setBoolean(3, false);
             pstmt.setBoolean(4, false);
             pstmt.executeUpdate();
 
         } catch (SQLException e) {
-            logger.error("SQL Exception in create with parameters {}", exam, question, e);
+            logger.error("SQL Exception in create with parameters {}", exerciseExam, question, e);
             throw new DaoException(
-                "Could not create ExamQuestion with values(" + exam.getExamid() + ", "
+                "Could not create ExamQuestion with values(" + exerciseExam.getExamid() + ", "
                     + question.getQuestionId() + ")");
         } finally {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{});
@@ -135,7 +134,7 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
 
         if(examID <= 0) {
             logger.error("Dao Exception in getAllQuestionsofExam with parameters", examID);
-            throw new DaoException("Invalid Exam ID, please check your input");
+            throw new DaoException("Invalid ExerciseExam ID, please check your input");
         }
 
         PreparedStatement pstmt = null;
@@ -154,19 +153,19 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
 
         } catch(SQLException e) {
             logger.error("SQL Exception in delete with parameters {}", examID, e);
-            throw new DaoException("Could not get List with all Questions for Exam ID " + examID);
+            throw new DaoException("Could not get List with all Questions for ExerciseExam ID " + examID);
         } finally {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
         return questionIDList;
     }
 
-    private void tryValidateExam(Exam exam) throws DaoException {
+    private void tryValidateExam(ExerciseExam exerciseExam) throws DaoException {
         try {
-            validate(exam);
+            validate(exerciseExam);
         } catch (DtoValidatorException e) {
-            logger.error("Exam [" + exam + "] is invalid", e);
-            throw new DaoException("Exam [" + exam + "] is invalid: " + e);
+            logger.error("ExerciseExam [" + exerciseExam + "] is invalid", e);
+            throw new DaoException("ExerciseExam [" + exerciseExam + "] is invalid: " + e);
         }
     }
 
@@ -177,5 +176,39 @@ public class ExamQuestionDaoJdbc implements ExamQuestionDao {
             logger.error("Question [" + question + "] is invalid", e);
             throw new DaoException("Question [" + question + "] is invalid: " + e);
         }
+    }
+    
+    
+    @Override public List<Integer> getAnsweredQuestionsPerExam(int examID) throws DaoException {
+        logger.debug("entering method getALlQuestionsOfExam with parameters {}", examID);
+        ArrayList<Integer> questionIDList = new ArrayList<>();
+
+        if(examID <= 0) {
+            logger.error("Dao Exception in getAnsweredQuestionsPerExam with parameters", examID);
+            throw new DaoException("Invalid ExerciseExam ID, please check your input");
+        }
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            pstmt = this.database.getConnection()
+                .prepareStatement("SELECT * FROM REL_EXAM_QUESTION WHERE EXAMID = ? "
+                    + "AND ALREADY_ANSWERED = TRUE");
+
+            pstmt.setInt(1, examID);
+            rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                questionIDList.add(rs.getInt("questionid"));
+            }
+
+        } catch(SQLException e) {
+            logger.error("SQL Exception in getAnsweredQuestionsPerExam with parameters {}", examID, e);
+            throw new DaoException("Could not get List with all Questions for ExerciseExam ID " + examID);
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
+        }
+        return questionIDList;
     }
 }
