@@ -1,31 +1,15 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.pdf.PdfWriter;
-import com.itextpdf.tool.xml.XMLWorkerHelper;
-
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.springframework.stereotype.Service;
-
-import javax.xml.bind.DatatypeConverter;
-
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-
-import java.io.ByteArrayInputStream;
-
-import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.codec.Base64;
 import com.itextpdf.tool.xml.XMLWorker;
+import com.itextpdf.tool.xml.XMLWorkerHelper;
 import com.itextpdf.tool.xml.html.Tags;
 import com.itextpdf.tool.xml.parser.XMLParser;
 import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
@@ -34,21 +18,27 @@ import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.AbstractImageProvider;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Service;
+
+import javax.xml.bind.DatatypeConverter;
+import java.io.*;
 
 /**
  * @author Julian on 07.06.2016. This class handles the export of PDF-files.
  */
-@Service
-public class PdfExporterImpl {
+@Service public class PdfExporterImpl {
 
     private static final Logger logger = LogManager.getLogger();
     private static final String tmp = "/temporary/tmp.html";
     private String outPath;
-    private Exam exam;
+    private ExerciseExam exam;
 
-    public PdfExporterImpl(){
-        
+    public PdfExporterImpl() {
+
     }
+
     /**
      * Creates a new PdfExporter
      *
@@ -56,7 +46,7 @@ public class PdfExporterImpl {
      * @param exam    exam which will be converted to a PDF-file.
      * @throws ServiceException won't be thrown,
      */
-    public PdfExporterImpl(String outPath, Exam exam) throws ServiceException {
+    public PdfExporterImpl(String outPath, ExerciseExam exam) throws ServiceException {
         logger.debug("Creating new PdfExporter");
         this.outPath = outPath;
         this.exam = exam;
@@ -105,9 +95,10 @@ public class PdfExporterImpl {
         XMLParser p = new XMLParser(worker);
 
         //TODO: Generate the exam - this code is just to showcase the exporter
-        p.parse(new ByteArrayInputStream(("<p>" + "author: " + exam.getAuthor()
-                + " id: " + exam.getExamid() + " date: " + exam.getCreated() + "</p>").getBytes()));
-        p.parse(new ByteArrayInputStream(imageToBase64("/images/graph.png",200,200).getBytes()));
+        p.parse(new ByteArrayInputStream(
+            ("<p>" + "author: " + exam.getAuthor() + " id: " + exam.getExamid() + " date: " + exam
+                .getCreated() + "</p>").getBytes()));
+        p.parse(new ByteArrayInputStream(imageToBase64("/images/graph.png", 200, 200).getBytes()));
         p.parse(new ByteArrayInputStream(("<p>This is a question.</p>").getBytes()));
         p.parse(new ByteArrayInputStream(("<p>answer 1.</p>").getBytes()));
         p.parse(new ByteArrayInputStream(("<p>answer 2.</p>").getBytes()));
@@ -131,8 +122,7 @@ public class PdfExporterImpl {
         InputStream bis = new BufferedInputStream(inputStream);
 
         byte[] imageBytes = new byte[0];
-        for (byte[] ba = new byte[bis.available()];
-             bis.read(ba) != -1; ) {
+        for (byte[] ba = new byte[bis.available()]; bis.read(ba) != -1; ) {
             byte[] baTmp = new byte[imageBytes.length + ba.length];
             System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
             System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
@@ -140,16 +130,15 @@ public class PdfExporterImpl {
         }
         inputStream.close();
         return "<img src=\"data:image/png;base64," +
-                DatatypeConverter.printBase64Binary(imageBytes) +
-                "\" width=\"" + width + "\" height=\"" + height + "\"/>";
+            DatatypeConverter.printBase64Binary(imageBytes) +
+            "\" width=\"" + width + "\" height=\"" + height + "\"/>";
     }
 
     /**
      * This class is needed to decode base64 images with iText
      */
     static class Base64ImageProvider extends AbstractImageProvider {
-        @Override
-        public Image retrieve(String src) {
+        @Override public Image retrieve(String src) {
             int pos = src.indexOf("base64,");
             try {
                 if (src.startsWith("data") && pos > 0) {
@@ -165,8 +154,7 @@ public class PdfExporterImpl {
             }
         }
 
-        @Override
-        public String getImageRootPath() {
+        @Override public String getImageRootPath() {
             return null;
         }
     }
