@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedWriter;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -13,6 +11,8 @@ import com.itextpdf.text.DocumentException;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.tool.xml.XMLWorkerHelper;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
@@ -20,21 +20,31 @@ import javax.xml.bind.DatatypeConverter;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 
+import java.io.ByteArrayInputStream;
+
+import com.itextpdf.text.BadElementException;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.pdf.codec.Base64;
+import com.itextpdf.tool.xml.XMLWorker;
+import com.itextpdf.tool.xml.html.Tags;
+import com.itextpdf.tool.xml.parser.XMLParser;
+import com.itextpdf.tool.xml.pipeline.css.CSSResolver;
+import com.itextpdf.tool.xml.pipeline.css.CssResolverPipeline;
+import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
+import com.itextpdf.tool.xml.pipeline.html.AbstractImageProvider;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
+import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
+
 /**
  * @author Julian on 07.06.2016. This class handles the export of PDF-files.
  */
 @Service
 public class PdfExporterImpl {
 
+    private static final Logger logger = LogManager.getLogger();
     private static final String tmp = "/temporary/tmp.html";
-
     private String outPath;
     private Exam exam;
-
-    private static FileWriter fileWriter;
-    private static BufferedWriter bufferedWriter;
-    private static Document document;
-    private static PdfWriter pdfWriter;
 
     /**
      * Creates a new PdfExporter
@@ -44,73 +54,76 @@ public class PdfExporterImpl {
      * @throws ServiceException won't be thrown,
      */
     public PdfExporterImpl(String outPath, Exam exam) throws ServiceException {
+        logger.debug("Creating new PdfExporter");
         this.outPath = outPath;
         this.exam = exam;
-        try {
-            fileWriter = new FileWriter(tmp);
-        } catch (IOException e) {
-            throw new ServiceException(e.getMessage());
-        }
-        bufferedWriter = new BufferedWriter(fileWriter);
     }
 
     /**
      * Exports the exam as PDF-file to the specified output path.
      */
     public void exportPdf() throws ServiceException {
+        logger.debug("Exporting PDF-File");
         try {
-            generateHtmlFile();
             generatePdf();
         } catch (DocumentException e) {
+            logger.error("Unable to create PDF file.  " + e.getMessage());
             throw new ServiceException("Unable to create PDF file. " + e.getMessage());
         } catch (IOException e) {
+            logger.error("Unable to write to PDF file.  " + e.getMessage());
             throw new ServiceException("Unable to write to PDF file. " + e.getMessage());
         }
     }
 
-
-    private void generateHtmlFile() throws IOException {
-
-        //TODO: take the exam and extract answers and questions
-        //TODO: write to HTML-File by calling writeToHtmlFile(...)
-        //NOTE: the questions of Image Questions have to be written by calling writeImageToHtml(...)
-        //NOTE: currently the pdf-reader won't display images, however the html file is correct.
-        //NOTE: you can check it by using a browser.
-        //NOTE: CSS should be used
-        bufferedWriter.close();
-    }
-
     /**
-     * Writes a given string to the temporary HTML-file.
-     *
-     * @param s string to be written in the HTML-file.
-     */
-    private static void writeToHtmlFile(String s) throws IOException {
-        bufferedWriter.write("<p>" + s + "</p>");
-        bufferedWriter.newLine();
-    }
-
-    /**
-     * Transforms the temporary HTML-File into a PDF-File and saves it to the output location;
+     * Exports the exam as PDF-File to the location given by the outPath.
      */
     private void generatePdf() throws DocumentException, IOException {
 
-        document = new Document();
-        pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(outPath));
-
+        Document document = new Document();
+        PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(outPath));
         document.open();
+
+        // HTML
+        HtmlPipelineContext htmlContext = new HtmlPipelineContext(null);
+        htmlContext.setTagFactory(Tags.getHtmlTagProcessorFactory());
+        htmlContext.setImageProvider(new Base64ImageProvider());
+
+        //CSS
+        CSSResolver cssResolver = XMLWorkerHelper.getInstance().getDefaultCssResolver(true);
+
+        // Pipelines
+        PdfWriterPipeline pdf = new PdfWriterPipeline(document, pdfWriter);
+        HtmlPipeline html = new HtmlPipeline(htmlContext, pdf);
+        CssResolverPipeline css = new CssResolverPipeline(cssResolver, html);
+
+        // XML Worker
+        XMLWorker worker = new XMLWorker(css, true);
+        XMLParser p = new XMLParser(worker);
+
+        //TODO: Generate the exam - this code is just to showcase the exporter
+        p.parse(new ByteArrayInputStream(("<p>" + "author: " + exam.getAuthor()
+                + " id: " + exam.getExamid() + " date: " + exam.getCreated() + "</p>").getBytes()));
+        p.parse(new ByteArrayInputStream(imageToBase64("/images/graph.png",200,200).getBytes()));
+        p.parse(new ByteArrayInputStream(("<p>This is a question.</p>").getBytes()));
+        p.parse(new ByteArrayInputStream(("<p>answer 1.</p>").getBytes()));
+        p.parse(new ByteArrayInputStream(("<p>answer 2.</p>").getBytes()));
+        p.parse(new ByteArrayInputStream(("<p>answer 3.</p>").getBytes()));
+        p.parse(new ByteArrayInputStream(("<p>answer 4.</p>").getBytes()));
+
         XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document, new FileInputStream(tmp));
         document.close();
     }
 
     /**
-     * Writes an image converted to a base64 string in the temporary HTML-file.
+     * Converts an image to base64 string in HTML-Format.
      *
-     * @param width  with of the image
-     * @param height height of the image
+     * @param imgPath image location
+     * @param width   with of the image
+     * @param height  height of the image
      */
-    private void writeImageToHtmlFile(String imgPath, int width, int height) throws IOException {
-
+    private String imageToBase64(String imgPath, int width, int height) throws IOException {
+        logger.debug("Generating base64 code.");
         FileInputStream inputStream = new FileInputStream(imgPath);
         InputStream bis = new BufferedInputStream(inputStream);
 
@@ -123,17 +136,35 @@ public class PdfExporterImpl {
             imageBytes = baTmp;
         }
         inputStream.close();
-        bufferedWriter.write("<img src=\"data:image/png;base64," +
+        return "<img src=\"data:image/png;base64," +
                 DatatypeConverter.printBase64Binary(imageBytes) +
-                "\" width=\"" + width + "\" height=\"" + height + "\"/>");
-        bufferedWriter.newLine();
+                "\" width=\"" + width + "\" height=\"" + height + "\"/>";
     }
 
-    public void setOutPath(String outPath) {
-        this.outPath = outPath;
-    }
+    /**
+     * This class is needed to decode base64 images with iText
+     */
+    static class Base64ImageProvider extends AbstractImageProvider {
+        @Override
+        public Image retrieve(String src) {
+            int pos = src.indexOf("base64,");
+            try {
+                if (src.startsWith("data") && pos > 0) {
+                    byte[] img = Base64.decode(src.substring(pos + 7));
+                    return Image.getInstance(img);
+                } else {
+                    return Image.getInstance(src);
+                }
+            } catch (BadElementException ex) {
+                return null;
+            } catch (IOException ex) {
+                return null;
+            }
+        }
 
-    public void setExam(Exam exam) {
-        this.exam = exam;
+        @Override
+        public String getImageRootPath() {
+            return null;
+        }
     }
 }
