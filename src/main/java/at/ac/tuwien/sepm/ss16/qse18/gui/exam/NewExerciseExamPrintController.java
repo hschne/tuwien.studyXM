@@ -48,7 +48,7 @@ import java.io.File;
         File defaultDirectory = new File(defaultPath);
         fileChooser.setInitialDirectory(defaultDirectory);
         fileChooser.getExtensionFilters()
-            .addAll(new FileChooser.ExtensionFilter("TXT files (*.txt)", "*.txt"));
+            .addAll(new FileChooser.ExtensionFilter("PDF FILES (.pdf)", "*.pdf"));
         fileChooser.setTitle("Add image");
         Stage mainStage = mainApplication.getPrimaryStage();
         return fileChooser.showSaveDialog(mainStage);
