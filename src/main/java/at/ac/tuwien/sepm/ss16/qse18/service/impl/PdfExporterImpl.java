@@ -23,6 +23,7 @@ import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
@@ -35,33 +36,22 @@ import java.io.*;
 
     private static final Logger logger = LogManager.getLogger();
     private static final String tmp = "src/main/resources/temporary/tmp.html";
-    private String outPath;
-    private ExerciseExam exam;
+    private QuestionServiceImpl questionService;
 
-    public PdfExporterImpl() {
-
-    }
-
-    /**
-     * Creates a new PdfExporter
-     *
-     * @param outPath the output path  for the PDF-file.
-     * @param exam    exam which will be converted to a PDF-file.
-     * @throws ServiceException won't be thrown,
-     */
-    public PdfExporterImpl(String outPath, ExerciseExam exam) throws ServiceException {
-        logger.debug("Creating new PdfExporter");
-        this.outPath = outPath;
-        this.exam = exam;
+    @Autowired
+    public PdfExporterImpl(QuestionServiceImpl questionService){
+        this.questionService = questionService;
     }
 
     /**
      * Exports the exam as PDF-file to the specified output path.
      */
-    public void exportPdf() throws ServiceException {
+    public void exportPdf(String outPath, ExerciseExam exam) throws ServiceException {
+        //Nur zum testen, bitte löschen
+        questionService.getQuestion();
         logger.debug("Exporting PDF-File");
         try {
-            generatePdf();
+            generatePdf(outPath, exam);
         } catch (DocumentException e) {
             logger.error("Unable to create PDF file.  " + e.getMessage());
             throw new ServiceException("Unable to create PDF file. " + e.getMessage());
@@ -74,7 +64,7 @@ import java.io.*;
     /**
      * Exports the exam as PDF-File to the location given by the outPath.
      */
-    private void generatePdf() throws DocumentException, IOException {
+    private void generatePdf(String outPath, ExerciseExam exam) throws DocumentException, IOException {
 
         Document document = new Document();
         PdfWriter pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(outPath));

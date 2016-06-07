@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.application.MainApplication;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.*;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.QuestionServiceImpl;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -21,6 +22,8 @@ import java.io.File;
 
     @Autowired private MainApplication mainApplication;
 
+    @Autowired private PdfExporterImpl pdfExporter;
+
     @Autowired public NewExerciseExamPrintController(ExerciseExamService exerciseExamService,
         SubjectService subjectService, TopicService topicService, QuestionService questionService) {
         super(exerciseExamService, subjectService, topicService, questionService);
@@ -37,9 +40,9 @@ import java.io.File;
         File file = selectFile();
         if (file != null) {
             tryPrint(exam, file);
+            showSuccess("ExerciseExam was saved as "+file.getName());
+            mainFrameController.handleExams();
         }
-        showSuccess("ExerciseExam was created");
-        mainFrameController.handleExams();
     }
 
     private File selectFile() {
@@ -56,8 +59,7 @@ import java.io.File;
 
     private void tryPrint(ExerciseExam exam, File file) {
         try {
-            PdfExporterImpl pdfExporter = new PdfExporterImpl(file.getPath(), exam);
-            pdfExporter.exportPdf();
+            pdfExporter.exportPdf(file.getPath(),exam);
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
