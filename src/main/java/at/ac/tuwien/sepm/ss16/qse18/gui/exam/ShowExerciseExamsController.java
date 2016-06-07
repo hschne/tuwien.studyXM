@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,9 +35,14 @@ import java.util.stream.Collectors;
 
     public void setExam(ObservableExam exam) {
         this.exam = exam;
+        initialize();
     }
 
     @FXML public void initialize() {
+        if(this.exam == null) {
+            return;
+        }
+
         try {
             logger.debug("Initializing exercise exam table");
             initializeListView();
@@ -46,11 +52,24 @@ import java.util.stream.Collectors;
         }
     }
 
-    private void initializeListView() throws ServiceException{
+    private void initializeListView() throws ServiceException {
         List<ObservableExerciseExam> examList =
             exerciseExamService.getExams().stream().map(ObservableExerciseExam::new).collect(
                 Collectors.toList());
-        observableExerciseExams = FXCollections.observableArrayList(examList);
+
+        List<ObservableExerciseExam> exerciseExamListOfExam = new ArrayList<>();
+
+        int samplesize = examList.size();
+        int counter = 0;
+        for(ObservableExerciseExam e : examList) {
+            if(e.getExamInstance().getExam() == this.exam.getExamid()) {
+                exerciseExamListOfExam.add(e);
+                counter++;
+            }
+        }
+        logger.debug("Showing " + counter + "/" + samplesize + "entries of exercise exam");
+
+        observableExerciseExams = FXCollections.observableArrayList(exerciseExamListOfExam);
         examListView.setItems(observableExerciseExams);
         examListView.setCellFactory(listView -> applicationContext.getBean(ExerciseExamCell.class));
     }

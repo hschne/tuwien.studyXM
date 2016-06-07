@@ -59,14 +59,17 @@ import java.util.List;
             buttonStartExam.setText("resume exam");
         }
 
+        //TODO: restart exercise exam
+        buttonRestart.setDisable(true);
+
     }
 
     @FXML public void handleStartExam() {
-
+        //TODO: integrate exam application
     }
 
     @FXML public void restartExam() {
-
+        //TODO
     }
 
     public void setExam(ObservableExerciseExam exam) {

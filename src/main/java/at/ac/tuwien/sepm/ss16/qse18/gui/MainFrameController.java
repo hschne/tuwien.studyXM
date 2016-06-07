@@ -231,6 +231,7 @@ import java.util.List;
             ShowExerciseExamsController controller = setSubView("/fxml/exam/exerciseExamOverview.fxml",
                 ShowExerciseExamsController.class);
             controller.setExam(exam);
+
         } catch(Exception e) {
             handleException(e);
         }
