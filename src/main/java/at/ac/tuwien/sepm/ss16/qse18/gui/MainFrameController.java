@@ -226,15 +226,7 @@ import java.util.List;
         }
     }
 
-    public void handleCreateExam(ObservableExam exam) {
-        logger.debug("Loading create exam screen");
-        try {
-            NewExerciseExamController controller = setSubView("/fxml/exam/newExerciseExam.fxml", NewExerciseExamController.class);
-            controller.setExam(exam);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
+
 
     public void handleCreateQuestion(ObservableTopic topic) {
         logger.debug("Loading create question screen");
@@ -271,6 +263,26 @@ import java.util.List;
             StudyNowController controller = setSubView("/fxml/exam/studyNowOrExportExam.fxml", StudyNowController.class);
             controller.setExam(exam);
         } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateExerciseExam(ObservableExam exam) {
+        logger.debug("Loading create exam screen");
+        try {
+            NewExerciseExamController controller = setSubView("/fxml/exam/newExerciseExam.fxml", NewExerciseExamController.class);
+            controller.setExam(exam);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateExerciseExamPrint(ObservableExam exam) {
+        logger.debug("Loading create exam screen");
+        try {
+            NewExerciseExamPrintController controller = setSubView("/fxml/exam/newExerciseExamPrint.fxml", NewExerciseExamPrintController.class);
+            controller.setExam(exam);
+        } catch (Exception e) {
             handleException(e);
         }
     }

@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
@@ -54,7 +53,7 @@ import java.util.List;
 
     @FXML public void createExerciseExam(ObservableExam exam) {
         logger.debug("Entering createExerciseExam()");
-        mainFrameController.handleCreateExam(exam);
+        mainFrameController.handleCreateExerciseExam(exam);
     }
 
     @FXML public void showQuestions() {
