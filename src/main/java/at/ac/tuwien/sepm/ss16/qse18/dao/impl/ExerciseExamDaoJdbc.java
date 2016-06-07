@@ -223,6 +223,7 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
             exerciseExam = new ExerciseExam();
 
             exerciseExam.setExamid(rs.getInt("examid"));
+            exerciseExam.setExam(rs.getInt("exam"));
             exerciseExam.setCreated(rs.getTimestamp("created"));
             exerciseExam.setAuthor(rs.getString("author"));
             exerciseExam.setPassed(rs.getBoolean("passed"));

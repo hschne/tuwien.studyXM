@@ -17,6 +17,6 @@ public interface ExamService {
     Exam createExam(Exam exam) throws ServiceException;
     Exam deleteExam(Exam exam) throws ServiceException;
     void validate(Exam exam) throws DtoValidatorException;
-
+    List<Integer> getAllExerciseExamsOfExam(Exam exam) throws ServiceException;
 
 }

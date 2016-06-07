@@ -7,7 +7,9 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
  */
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -18,11 +20,13 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service public class ExamServiceImpl implements ExamService {
     private static final Logger logger = LogManager.getLogger(ExamServiceImpl.class);
     private ExamDao examDao;
+    @Autowired ExerciseExamDao exerciseExamDao;
 
     @Autowired public ExamServiceImpl(ExamDao examDao) {
         this.examDao = examDao;
@@ -70,6 +74,23 @@ import java.util.List;
         return null;
     }
 
+    public List<Integer> getAllExerciseExamsOfExam(Exam exam) throws ServiceException {
+        logger.debug("entering getAllExerciseExamsOfExam with parameters {}", exam);
+        List<Integer> exerciseExamList = new ArrayList<>();
+        try {
+            List<ExerciseExam> exerciseExams = this.exerciseExamDao.getExams();
+            for(ExerciseExam e : exerciseExams) {
+                if(e.getExam() == exam.getExamid()) {
+                    exerciseExamList.add(e.getExam());
+                }
+            }
+        } catch(DaoException e) {
+            logger.error("Could not fetch all exercise exams of exam {}", exam, e);
+            throw new ServiceException("Could not fetch exercise exams", e);
+        }
+        return exerciseExamList;
+    }
+
     @Override public void validate(Exam exam) throws DtoValidatorException {
 
         logger.debug("Validating exam");
@@ -94,6 +115,5 @@ import java.util.List;
         if (date.isBefore(LocalDate.now())) {
             throw new DtoValidatorException("Due date can not be in the past.");
         }
-
     }
 }

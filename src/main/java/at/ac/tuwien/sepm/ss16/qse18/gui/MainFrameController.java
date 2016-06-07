@@ -226,6 +226,16 @@ import java.util.List;
         }
     }
 
+    public void handleShowExerciseExams(ObservableExam exam) {
+        try {
+            ShowExerciseExamsController controller = setSubView("/fxml/exam/showExerciseExams.fxml",
+                ShowExerciseExamsController.class);
+            controller.setExam(exam);
+        } catch(Exception e) {
+            handleException(e);
+        }
+    }
+
     public void handleCreateExam(ObservableExam exam) {
         logger.debug("Loading create exam screen");
         try {
