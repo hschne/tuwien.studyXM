@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 
 import java.io.File;
 import java.util.List;
@@ -50,11 +51,15 @@ public class DtoValidator {
      */
     public static void validate(ExerciseExam exerciseExam) throws DtoValidatorException {
         if (exerciseExam == null) {
-            throw new DtoValidatorException("ExerciseExam must not be null");
+            throw new DtoValidatorException("ExerciseExam must not be null.");
         }
         validateAuthor(exerciseExam);
         if (exerciseExam.getCreated() == null) {
-            throw new DtoValidatorException("ExerciseExam timestamp must not be null");
+            throw new DtoValidatorException("ExerciseExam timestamp must not be null.");
+        }
+        long examTime = exerciseExam.getExamTime();
+        if (examTime <= 0) {
+            throw new DtoValidatorException("ExamTime must at least be 1.");
         }
     }
 

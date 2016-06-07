@@ -103,6 +103,6 @@ public class ObservableExam {
     }
 
     public String getDueDate(String format) {
-        return new SimpleDateFormat(format).format(this.exam.getCreated());
+        return new SimpleDateFormat(format).format(this.exam.getDueDate());
     }
 }
