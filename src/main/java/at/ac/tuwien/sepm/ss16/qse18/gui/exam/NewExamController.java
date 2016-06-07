@@ -67,10 +67,24 @@ import java.util.stream.Collectors;
         }
     }
 
-    private Exam createExamFromFields(){
+    private Exam createExamFromFields() throws DtoValidatorException {
         String name = fieldName.getText();
-        Timestamp date = Timestamp.valueOf(dueDate.getValue().atStartOfDay());
-        int subjectId = subjects.getSelectionModel().getSelectedItem().getSubject().getSubjectId();
+        Timestamp date = null;
+        int subjectId = -1;
+        try {
+            date = Timestamp.valueOf(dueDate.getValue().atStartOfDay());
+        } catch(NullPointerException e) {
+            logger.warn("No due date selected", e);
+            throw new DtoValidatorException("Please select a due date.");
+        }
+
+        try {
+            subjectId = subjects.getSelectionModel().getSelectedItem().getSubject().getSubjectId();
+        } catch(NullPointerException e) {
+            logger.warn("No subject selected", e);
+            throw new DtoValidatorException("Please select a subject.");
+        }
+
         return new Exam(name, date, subjectId);
     }
 

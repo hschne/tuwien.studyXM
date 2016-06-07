@@ -74,6 +74,11 @@ import java.util.List;
 
         logger.debug("Validating exam");
         String name = exam.getName();
+
+        if(name == null) {
+            throw new DtoValidatorException("Name must not be empty");
+        }
+
         if (name.trim().isEmpty()) {
             throw new DtoValidatorException("Name of an exam must not be empty.");
         }
