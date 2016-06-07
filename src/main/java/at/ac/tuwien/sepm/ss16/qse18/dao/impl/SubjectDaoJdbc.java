@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
@@ -31,7 +32,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     private static final Logger logger = LogManager.getLogger();
 
-    private ConnectionH2 database;
+    private DataBaseConnection database;
 
     private TopicDaoJdbc topicDaoJdbc;
 
@@ -39,7 +40,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     private ExamDaoJdbc examDaoJdbc;
 
-    @Autowired public SubjectDaoJdbc(ConnectionH2 database) {
+    @Autowired public SubjectDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 
