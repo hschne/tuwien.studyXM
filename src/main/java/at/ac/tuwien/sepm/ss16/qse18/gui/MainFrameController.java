@@ -228,7 +228,7 @@ import java.util.List;
 
     public void handleShowExerciseExams(ObservableExam exam) {
         try {
-            ShowExerciseExamsController controller = setSubView("/fxml/exam/showExerciseExams.fxml",
+            ShowExerciseExamsController controller = setSubView("/fxml/exam/exerciseExamOverview.fxml",
                 ShowExerciseExamsController.class);
             controller.setExam(exam);
         } catch(Exception e) {
