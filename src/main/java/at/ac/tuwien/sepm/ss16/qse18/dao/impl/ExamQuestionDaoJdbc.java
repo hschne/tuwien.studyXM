@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
@@ -32,10 +33,10 @@ import java.util.Map;
  */
 @Service
 public class ExamQuestionDaoJdbc implements ExamQuestionDao {
-    private ConnectionH2 database;
+    private DataBaseConnection database;
     private static final Logger logger = LogManager.getLogger();
 
-    @Autowired public ExamQuestionDaoJdbc(ConnectionH2 database) {
+    @Autowired public ExamQuestionDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 
