@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * Implementors are controllers for views for creating exercise exams
+ *
  * @author Hans-Joerg Schroedl
  */
 abstract class NewExerciseExamBase extends BaseController {
@@ -31,6 +33,7 @@ abstract class NewExerciseExamBase extends BaseController {
     private TopicService topicService;
     protected QuestionService questionService;
     protected Subject subject;
+    private ObservableExam exam;
 
     NewExerciseExamBase(ExerciseExamService exerciseExamService, SubjectService subjectService,
         TopicService topicService, QuestionService questionService) {
@@ -48,6 +51,7 @@ abstract class NewExerciseExamBase extends BaseController {
     }
 
     public void setExam(ObservableExam exam) throws ServiceException {
+        this.exam = exam;
         this.subject = subjectService.getSubject(exam.getSubject());
         initializeTopicList();
     }
@@ -82,6 +86,7 @@ abstract class NewExerciseExamBase extends BaseController {
 
     ExerciseExam createExam() {
         ExerciseExam exerciseExam = new ExerciseExam();
+        exerciseExam.setExam(exam.getExamid());
         exerciseExam.setAuthor(fieldAuthor.getText());
         exerciseExam.setCreated(new Timestamp(new Date().getTime()));
         exerciseExam.setPassed(false);
@@ -92,7 +97,7 @@ abstract class NewExerciseExamBase extends BaseController {
 
         try {
             examTime = Integer.parseInt(fieldTime.getText());
-
+            exerciseExam.setExamTime(examTime);
             exerciseExam.setExamQuestions(questionService
                 .getQuestionsFromTopic(topicListView.getSelectionModel().getSelectedItem().getT()));
 
