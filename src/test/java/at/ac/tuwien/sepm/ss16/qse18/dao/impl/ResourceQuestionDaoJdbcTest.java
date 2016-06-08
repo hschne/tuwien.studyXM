@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
@@ -27,24 +28,15 @@ import static org.mockito.Mockito.when;
  * @author Bicer Cem
  */
 @RunWith(PowerMockRunner.class) @PowerMockIgnore("javax.management.*")
-public class ResourceQuestionDaoJdbcTest {
+public class ResourceQuestionDaoJdbcTest extends DaoBaseTest {
 
     private ResourceQuestionDaoJdbc resourceQuestionDaoJdbc;
-    @Mock private ConnectionH2 mockConnectionH2;
-    @Mock private Connection mockConnection;
-    @Mock private Statement mockStatement;
-    @Mock private PreparedStatement mockPreparedStatement;
-    @Mock private ResultSet mockResultSet;
 
     private Resource dummyResource;
     private Question dummyQuestion;
 
     @Before public void setUp() throws Exception {
-        when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
-        when(mockConnection.createStatement()).thenReturn(mockStatement);
+        super.setUp();
         resourceQuestionDaoJdbc = new ResourceQuestionDaoJdbc(mockConnectionH2);
 
         dummyResource = DummyEntityFactory.createDummyResource();
