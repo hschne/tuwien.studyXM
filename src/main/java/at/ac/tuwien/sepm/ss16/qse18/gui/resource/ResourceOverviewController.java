@@ -53,31 +53,6 @@ import java.util.stream.Collectors;
         }
     }
 
-    @FXML public void selectedItem() {
-        if (inputs == null) {
-            return;
-        }
-
-        // Replace resource with newly created one
-        inputs.remove(inputs.size()-1);
-        inputs.add(resourceListView.getSelectionModel().getSelectedItem());
-
-        switch (questionTypeOfResource) {
-            case MULTIPLECHOICE:
-                mainFrameController.handleMultipleChoiceQuestion(null, inputs);
-                break;
-            case SINGLECHOICE:
-                mainFrameController.handleSingleChoiceQuestion(null, inputs);
-                break;
-            case OPENQUESTION:
-                mainFrameController.handleOpenQuestion(null, inputs);
-                break;
-            case NOTECARD:
-                mainFrameController.handleImageQuestion(null, inputs);
-                break;
-        }
-    }
-
     @FXML public void handleNew() {
         logger.debug("Creating new resource");
         mainFrameController.handleCreateResource(inputs, questionTypeOfResource);
@@ -105,6 +80,28 @@ import java.util.stream.Collectors;
         if (inputs != null) {
             chooseText.setText(
                 "Choose a resource by selecting it or add a new resource by clicking the button below!");
+
+            resourceListView.getSelectionModel().selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
+                    // Replace resource with newly created one
+                    inputs.remove(inputs.size() - 1);
+                    inputs.add(newValue);
+
+                    switch (questionTypeOfResource) {
+                        case MULTIPLECHOICE:
+                            mainFrameController.handleMultipleChoiceQuestion(null, inputs);
+                            break;
+                        case SINGLECHOICE:
+                            mainFrameController.handleSingleChoiceQuestion(null, inputs);
+                            break;
+                        case OPENQUESTION:
+                            mainFrameController.handleOpenQuestion(null, inputs);
+                            break;
+                        case NOTECARD:
+                            mainFrameController.handleImageQuestion(null, inputs);
+                            break;
+                    }
+                });
         }
     }
 }

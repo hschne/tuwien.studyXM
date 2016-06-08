@@ -3,12 +3,16 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
 
 /**
  * A controller for the subject detail view, in order to edit details or
@@ -19,19 +23,21 @@ import org.springframework.stereotype.Component;
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController
     extends BaseController {
 
-    @FXML public TextField name;
-    @FXML public TextField semester;
-    @FXML public TextField ects;
-    @FXML public TextField author;
+    @FXML private TextField name;
+    @FXML private TextField semester;
+    @FXML private TextField ects;
+    @FXML private TextField author;
+    @FXML private CheckBox createAndContinue;
     private ObservableSubject subject;
     private boolean isNew;
     private SubjectOverviewController subjectOverviewController;
+
+    @Autowired private SubjectService subjectService;
 
     @Autowired
     public void setSubjectOverviewController(SubjectOverviewController subjectOverviewController) {
         this.subjectOverviewController = subjectOverviewController;
     }
-
 
     public void setSubject(ObservableSubject subject) {
         if (subject != null) {
@@ -44,23 +50,75 @@ import org.springframework.stereotype.Component;
         }
     }
 
+    /**
+     * Invoked when pressing ok, creates or updates exam then returns to overview
+     */
     @FXML public void handleOk() {
-        Subject newSubject = newSubjectFromFields();
-        if (isNew) {
-            subjectOverviewController.addSubject(new ObservableSubject(newSubject));
-        } else {
-            newSubject.setSubjectId(subject.getSubject().getSubjectId());
-            subjectOverviewController.updateSubject(subject, newSubject);
+        Subject newSubject;
+        try {
+            newSubject = newSubjectFromFields();
+        } catch (ServiceException e) {
+            showError(e);
+            return;
         }
-        mainFrameController.handleSubjects();
+        if (createOrUpdateSubject(newSubject))
+            return;
+        changeView();
     }
 
+    /**
+     * Invoked when pressing cancel, returns to subject overview
+     */
     @FXML public void handleCancel() {
         mainFrameController.handleSubjects();
     }
 
+    private boolean createOrUpdateSubject(Subject newSubject) {
+        if (isNew) {
+            if (tryCreateSubject(newSubject))
+                return true;
+        } else {
+            if (tryUpdateSubject(newSubject))
+                return true;
+        }
+        return false;
+    }
 
-    private Subject newSubjectFromFields() {
+    private boolean tryUpdateSubject(Subject newSubject) {
+        try {
+            newSubject.setSubjectId(subject.getSubject().getSubjectId());
+            subjectService.updateSubject(newSubject);
+            subjectOverviewController.updateSubject(subject, newSubject);
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
+            return true;
+        }
+        return false;
+    }
+
+    private boolean tryCreateSubject(Subject newsubject) {
+        try {
+            Subject subjectWithId = subjectService.createSubject(newsubject);
+            subjectOverviewController.addSubject(new ObservableSubject(subjectWithId));
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
+            return true;
+        }
+        return false;
+    }
+
+    private void changeView() {
+        if (!createAndContinue.isSelected()) {
+            mainFrameController.handleSubjects();
+        } else {
+            mainFrameController.handleCreateSubject(null);
+            createAndContinue.setSelected(true);
+        }
+    }
+
+    private Subject newSubjectFromFields() throws ServiceException {
         Subject newSubject = new Subject();
         newSubject.setName(name.getText());
         newSubject.setEcts(parseDouble());
@@ -69,12 +127,12 @@ import org.springframework.stereotype.Component;
         return newSubject;
     }
 
-    private float parseDouble() {
+    private float parseDouble() throws ServiceException {
         try {
             return Float.parseFloat(ects.getText());
 
         } catch (NumberFormatException e) {
-            return 0.0f;
+            throw new ServiceException("Error when parsing ects. Ects must be a number.");
         }
     }
 

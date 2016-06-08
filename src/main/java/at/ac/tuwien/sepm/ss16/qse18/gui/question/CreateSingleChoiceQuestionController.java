@@ -9,8 +9,10 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -20,17 +22,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Controller for managing creation of single choice questions
- * <p>
- * Created by Felix on 19.05.2016.
+ * Controller for managing creation of single choice questions <p> Created by Felix on 19.05.2016.
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CreateSingleChoiceQuestionController extends QuestionController {
-    @FXML private TextArea textAreaQuestion;
-    @FXML private RadioButton radioButtonAnswerOne;
-    @FXML private RadioButton radioButtonAnswerTwo;
-    @FXML private RadioButton radioButtonAnswerThree;
-    @FXML private RadioButton radioButtonAnswerFour;
+    @FXML
+    private TextArea textAreaQuestion;
+    @FXML
+    private RadioButton radioButtonAnswerOne;
+    @FXML
+    private RadioButton radioButtonAnswerTwo;
+    @FXML
+    private RadioButton radioButtonAnswerThree;
+    @FXML
+    private RadioButton radioButtonAnswerFour;
+    @FXML
+    private ChoiceBox<String> choiceBoxQuestionTime;
 
     /**
      * Creates a controller for the single choice question creation.
@@ -38,13 +46,15 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
      * @param questionService The question service which saves a given question and answers
      *                        persistently.
      */
-    @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
-        ResourceQuestionService resourceQuestionService, SpringFXMLLoader fxmlLoader) {
-        super(questionService, resourceQuestionService, fxmlLoader);
+    @Autowired
+    public CreateSingleChoiceQuestionController(QuestionService questionService,
+                                                ResourceQuestionService resourceQuestionService) {
+        super(questionService, resourceQuestionService);
 
     }
 
-    @FXML public void handleCreateQuestion() {
+    @FXML
+    public void handleCreateQuestion() {
         if (createQuestion()) {
             return;
         }
@@ -68,7 +78,8 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         return false;
     }
 
-    @Override protected void fillFieldsAndCheckboxes() {
+    @Override
+    protected void fillFieldsAndCheckboxes() {
         this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
         fillAnswerFields(1);
@@ -78,13 +89,18 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         this.radioButtonAnswerThree.setSelected(inputs != null && (boolean) inputs.get(7));
         this.radioButtonAnswerFour.setSelected(inputs != null && (boolean) inputs.get(8));
 
-        this.checkBoxContinue.setSelected(inputs == null || (boolean) inputs.get(9));
+        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(9));
 
-        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(10));
+        if (inputs != null) {
+            this.choiceBoxQuestionTime.setValue(inputs.get(10).toString());
+        }
+
+        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(11));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
-    @Override protected void saveQuestionInput(List inputs) {
+    @Override
+    protected void saveQuestionInput(List inputs) {
         if (textAreaQuestion != null) {
             inputs.add(textAreaQuestion.getText());
         } else {
@@ -92,21 +108,31 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
         }
     }
 
-    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+    @Override
+    protected void saveChoiceBoxQuestionTime(List inputs) {
+        inputs.add(choiceBoxQuestionTime.getValue());
+    }
+
+    @Override
+    protected void saveCheckboxesAndRadiobuttons(List inputs) {
         inputs.addAll(createCheckBoxResults());
         inputs.add(checkBoxContinue.isSelected());
     }
 
-    @Override protected QuestionType getQuestionType() {
+    @Override
+    protected QuestionType getQuestionType() {
         return QuestionType.SINGLECHOICE;
     }
 
-    @Override protected Question newQuestionFromFields() {
+    @Override
+    protected Question newQuestionFromFields() {
         logger.info("Collecting question from field.");
-        return new Question(textAreaQuestion.getText(), getQuestionType(), 1L);
+        return new Question(textAreaQuestion.getText(), getQuestionType()
+                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)));
     }
 
-    @Override protected List<Boolean> createCheckBoxResults() {
+    @Override
+    protected List<Boolean> createCheckBoxResults() {
         List<Boolean> result = new ArrayList<>();
         result.add(radioButtonAnswerOne.isSelected());
         result.add(radioButtonAnswerTwo.isSelected());

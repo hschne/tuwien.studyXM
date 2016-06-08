@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -22,20 +23,20 @@ import java.util.List;
  *
  * @author Philipp Ganiu, Hans-Jörg Schrödl
  */
-@Service public class TopicDaoJdbc implements TopicDao {
+@Repository public class TopicDaoJdbc implements TopicDao {
     private static final Logger logger = LogManager.getLogger(TopicDaoJdbc.class);
     private static final String GETTOPIC_SQL = "SELECT * FROM ENTITY_TOPIC WHERE TOPICID = ?;";
     private static final String GETOPICS_SQL = "SELECT * FROM ENTITY_TOPIC;";
     private static final String CREATE_SQL = "INSERT INTO ENTITY_TOPIC (TOPIC) VALUES(?);";
     private static final String DELETE_SQL = "DELETE FROM ENTITY_TOPIC WHERE TOPICID = ?;";
     private static final String UPDATE_SQL = "UPDATE ENTITY_TOPIC SET TOPIC = ? WHERE TOPICID = ?;";
-    private ConnectionH2 database;
+    private DataBaseConnection database;
     private SubjectTopicDao subjectTopicDaoJdbc;
     private QuestionTopicDaoJdbc questionTopicDao;
     private ResourceTopicDaoJdbc resourceTopicDao;
 
 
-    @Autowired public TopicDaoJdbc(ConnectionH2 database) {
+    @Autowired public TopicDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 

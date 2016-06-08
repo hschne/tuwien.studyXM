@@ -2,8 +2,8 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.ExamQuestionDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamQuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.junit.After;
@@ -25,21 +25,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * Class ExamQuestionDaoJdbcTest
- * Tests for the JDBC implementation in ExamQuestionDaoJdbc. In order to be isolated while testing, this
+ * Class ExerciseExamQuestionDaoJdbcTest
+ * Tests for the JDBC implementation in ExerciseExamQuestionDaoJdbc. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *
  * @author Zhang Haixiang
  */
-public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
-    private ExamQuestionDaoJdbc examQuestionDaoJdbc;
-    @Mock private ExamQuestionDao mockExamQuestionDao;
+public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
+    private ExerciseExamQuestionDaoJdbc examQuestionDaoJdbc;
+    @Mock private ExerciseExamQuestionDao mockExerciseExamQuestionDao;
 
-    private Exam testExam;
+    private ExerciseExam testExerciseExam;
 
     @Before public void setUp() throws Exception {
         super.setUp();
-        this.examQuestionDaoJdbc = new ExamQuestionDaoJdbc(mockConnectionH2);
+        this.examQuestionDaoJdbc = new ExerciseExamQuestionDaoJdbc(mockConnectionH2);
 
         ArrayList<Question> al = new ArrayList<Question>() {
         };
@@ -51,30 +51,30 @@ public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
         al.add(question);
 
 
-        testExam = new Exam();
-        testExam.setExamid(1);
-        testExam.setCreated(new Timestamp(798));
-        testExam.setPassed(false);
-        testExam.setAuthor("Test1");
-        testExam.setSubjectID(1);
-        testExam.setExamQuestions(al);
-        testExam.setExamTime(1);
+        testExerciseExam = new ExerciseExam();
+        testExerciseExam.setExamid(1);
+        testExerciseExam.setCreated(new Timestamp(798));
+        testExerciseExam.setPassed(false);
+        testExerciseExam.setAuthor("Test1");
+        testExerciseExam.setSubjectID(1);
+        testExerciseExam.setExamQuestions(al);
+        testExerciseExam.setExamTime(1);
     }
 
-    //Testing create(Exam, Question)
+    //Testing create(ExerciseExam, Question)
     //----------------------------------------------------------------------------------------------
     @Test public void test_createWith_validParameters_should_persist() throws Exception {
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
 
-        this.examQuestionDaoJdbc.create(this.testExam, this.testExam.getExamQuestions().get(0));
+        this.examQuestionDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions().get(0));
         verify(mockPreparedStatement).executeUpdate();
     }
 
     @Test(expected = DaoException.class)
     public void test_createWithoutDatabaseConnection_should_fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        this.examQuestionDaoJdbc.create(this.testExam, this.testExam.getExamQuestions().get(0));
+        this.examQuestionDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions().get(0));
 
         PowerMockito.verifyStatic();
         mockConnectionH2.getConnection();
@@ -88,18 +88,18 @@ public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
     @Test(expected = DaoException.class)
     public void test_createExamWithAlreadyExistingID_should_fail() throws Exception {
 
-        this.examQuestionDaoJdbc.create(this.testExam, this.testExam.getExamQuestions().get(0));
+        this.examQuestionDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions().get(0));
         verify(mockPreparedStatement).executeUpdate();
 
         when(mockPreparedStatement.executeUpdate()).thenThrow(DaoException.class);
-        this.examQuestionDaoJdbc.create(this.testExam, this.testExam.getExamQuestions().get(0));
+        this.examQuestionDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions().get(0));
     }
     //----------------------------------------------------------------------------------------------
 
     //Testing delete(int)
     //----------------------------------------------------------------------------------------------
     @Test public void test_deleteWithValidExam_should_persist() throws Exception {
-        this.examQuestionDaoJdbc.delete(this.testExam.getExamid());
+        this.examQuestionDaoJdbc.delete(this.testExerciseExam.getExamid());
         verify(this.mockPreparedStatement).executeUpdate();
     }
 
@@ -112,7 +112,7 @@ public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
         throws Exception {
 
         when(this.mockPreparedStatement.executeUpdate()).thenThrow(DaoException.class);
-        this.examQuestionDaoJdbc.delete(this.testExam.getExamid());
+        this.examQuestionDaoJdbc.delete(this.testExerciseExam.getExamid());
     }
 
     @Test(expected = DaoException.class)
@@ -120,7 +120,7 @@ public class ExamQuestionDaoJdbcTest extends DaoBaseTest {
 
         when(this.mockConnectionH2.getConnection()).thenThrow(DaoException.class);
 
-        this.examQuestionDaoJdbc.delete(this.testExam.getExamid());
+        this.examQuestionDaoJdbc.delete(this.testExerciseExam.getExamid());
 
         PowerMockito.verifyStatic();
         this.mockConnectionH2.getConnection();

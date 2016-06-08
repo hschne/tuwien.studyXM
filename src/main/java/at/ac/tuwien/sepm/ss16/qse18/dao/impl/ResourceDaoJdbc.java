@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
@@ -10,6 +11,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,13 +25,13 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 /**
  * @author Hans-Joerg Schroedl
  */
-@Component public class ResourceDaoJdbc implements ResourceDao {
+@Repository public class ResourceDaoJdbc implements ResourceDao {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private ConnectionH2 database;
+    private DataBaseConnection database;
 
-    @Autowired public ResourceDaoJdbc(ConnectionH2 database) {
+    @Autowired public ResourceDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 

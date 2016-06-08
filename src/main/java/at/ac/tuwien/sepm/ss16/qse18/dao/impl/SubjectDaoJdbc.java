@@ -2,13 +2,15 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -27,19 +29,19 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
  *
  * @author Cem Bicer
  */
-@Service public class SubjectDaoJdbc implements SubjectDao {
+@Repository public class SubjectDaoJdbc implements SubjectDao {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private ConnectionH2 database;
+    private DataBaseConnection database;
 
     private TopicDaoJdbc topicDaoJdbc;
 
     private SubjectTopicDaoJdbc subjectTopicDaoJdbc;
 
-    private ExamDaoJdbc examDaoJdbc;
+    private ExerciseExamDaoJdbc examDaoJdbc;
 
-    @Autowired public SubjectDaoJdbc(ConnectionH2 database) {
+    @Autowired public SubjectDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 
@@ -51,8 +53,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         this.subjectTopicDaoJdbc = subjectTopicDaoJdbc;
     }
 
-    @Autowired public void setExamDaoJdbc(ExamDaoJdbc examDaoJdbc) {
-        this.examDaoJdbc = examDaoJdbc;
+    @Autowired public void setExerciseExamDaoJdbc(ExerciseExamDaoJdbc exerciseExamDaoJdbc) {
+        this.examDaoJdbc = exerciseExamDaoJdbc;
     }
 
     @Override public Subject getSubject(int id) throws DaoException {
@@ -208,9 +210,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     private void deleteExams(Subject subject) throws DaoException {
-        List<Exam> exams = examDaoJdbc.getAllExamsOfSubject(subject);
-        for (Exam exam : exams) {
-            examDaoJdbc.delete(exam);
+        List<ExerciseExam> exerciseExams = examDaoJdbc.getAllExamsOfSubject(subject);
+        for (ExerciseExam exerciseExam : exerciseExams) {
+            examDaoJdbc.delete(exerciseExam);
         }
     }
 

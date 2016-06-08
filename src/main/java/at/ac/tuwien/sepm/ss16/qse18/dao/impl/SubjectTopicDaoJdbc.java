@@ -2,12 +2,14 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -27,16 +29,16 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
  *
  * @author Philipp Ganiu, Bicer Cem
  */
-@Service public class SubjectTopicDaoJdbc implements SubjectTopicDao {
+@Repository public class SubjectTopicDaoJdbc implements SubjectTopicDao {
 
     private static final Logger logger = LogManager.getLogger();
-    private ConnectionH2 database;
+    private DataBaseConnection database;
     private static final String CREATE_SQL = "INSERT INTO REL_SUBJECT_TOPIC VALUES(?,?);";
     private static final String DELETE_SQL = "DELETE FROM REL_SUBJECT_TOPIC WHERE TOPICID =?;";
     private static final String TOPICTOSUBJECT_SQL = "SELECT T.TOPICID,T.TOPIC "
         + "FROM ENTITY_TOPIC T NATURAL JOIN REL_SUBJECT_TOPIC R WHERE R.SUBJECTID = ?;";
 
-    @Autowired public SubjectTopicDaoJdbc(ConnectionH2 database) {
+    @Autowired public SubjectTopicDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 
@@ -117,8 +119,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
         try {
             ps = database.getConnection().prepareStatement(
-                "SELECT s.* FROM rel_subject_topic NATURAL JOIN entity_subject s "
-                    + "WHERE topicid = ? ORDER BY subjectid ASC");
+                "SELECT s.* FROM entity_subject s NATURAL JOIN rel_subject_topic "
+                    + "WHERE topicid = ? ORDER BY s.subjectid ASC");
             ps.setInt(1, topic.getTopicId());
 
             rs = ps.executeQuery();

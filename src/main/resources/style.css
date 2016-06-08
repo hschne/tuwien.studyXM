@@ -1,32 +1,39 @@
 .button {
-    -fx-background-color: #22374A;
+    -fx-background-color: #192836;
+    -fx-background-image : url("icons/fiber.png") no-repeat scroll 0 0 transparent;
     -fx-text-fill: white;
 }
 
 .menu-button {
-    -fx-background-color: #22374A;
+    -fx-background-color: #192836;
     -fx-text-fill: white;
 }
 
 .split-menu-button .label {
-    -fx-background-color: #22374A;
+    -fx-background-color: #192836;
     -fx-text-fill: white;
 }
 
+
+.choice-box .context-menu .label {
+    -fx-text-fill: white;
+
+}
+
 .split-menu-button .arrow-button {
-    -fx-background-color: #22374A;
+    -fx-background-color: #192836;
     -fx-text-fill: white;
     -fx-mark-color: white;
 }
 
 .split-menu-item {
-    -fx-background-color: #22374A;
+    -fx-background-color: #192836;
     -fx-text-fill: white; ;
 }
 
 .context-menu {
     -fx-skin: "com.sun.javafx.scene.control.skin.ContextMenuSkin";
-    -fx-background-color: #22374A;
+    -fx-background-color: #192836;
     -fx-background-radius: 0 2 2 2, 0 2 2 2, 0 2 2 2;
 }
 
@@ -57,13 +64,11 @@
 .custom-list-view .scroll-bar:horizontal,
 .custom-list-view .scroll-bar:vertical {
     -fx-background-color: transparent;
-
 }
 
 /* The increment and decrement button CSS class of scrollbar */
 .custom-list-view .increment-button, .custom-list-view .decrement-button {
     -fx-background-color: transparent;
-
 }
 
 /* The main scrollbar **track** CSS class  */
@@ -99,5 +104,7 @@
 /* The main scrollbar **thumb** CSS class on event of "hover" and "pressed" */
 .custom-list-view .scroll-bar .thumb:hover,
 .custom-list-view .scroll-bar .thumb:pressed {
-    -fx-background-color: #22374A;
+    -fx-background-color: #192836;
 }
+
+

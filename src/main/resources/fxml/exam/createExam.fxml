@@ -39,7 +39,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button fx:id="buttonNewExam" mnemonicParsing="false" onAction="#insertExamValues" style="-fx-background-color: #22374A;" text="New Exam" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <Button fx:id="buttonNewExam" mnemonicParsing="false" onAction="#createExerciseExam" style="-fx-background-color: #22374A;" text="New Exam" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="50.0" />
                </GridPane.margin>
@@ -55,7 +55,10 @@
                   <Font name="Arial" size="14.0" />
                </font>
             </Button>
-            <Button fx:id="buttonTest" mnemonicParsing="false" onAction="#showResults" text="test" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
+            <Button fx:id="startExamButton" mnemonicParsing="false" onAction="#startExamButtonClicked" text="Start exam" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+               <font>
+                  <Font name="Arial" size="14.0" />
+               </font></Button>
          </children>
       </GridPane>
    </children>

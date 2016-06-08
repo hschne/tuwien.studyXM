@@ -1,9 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain.validation;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 
 import java.io.File;
 import java.util.List;
@@ -13,6 +11,27 @@ import java.util.stream.Collectors;
  * @author Philipp Ganiu
  */
 public class DtoValidator {
+
+    /**
+     * Checks whether the subject is valid or not.
+     * @param subject the subject that should be validated
+     * @throws ServiceException
+     *
+     * */
+    public static void validateSubject(Subject subject) throws DtoValidatorException{
+        if(subject.getName().trim().isEmpty()) {
+            throw new DtoValidatorException("Subject name must not be empty.");
+        }
+        if(subject.getSemester().trim().isEmpty()){
+            throw new DtoValidatorException("Subject semester must not be empty.");
+        }
+        if(subject.getAuthor().trim().isEmpty()){
+            throw new DtoValidatorException("Author name must not be empty.");
+        }
+        if(subject.getEcts() <= 0) {
+            throw new DtoValidatorException("ECTS must be greater than 0.");
+        }
+    }
 
     /**
      * Checks if a question is valid. This means the question is not empty or null and shorter than 2000 chars.
@@ -44,30 +63,34 @@ public class DtoValidator {
     }
 
     /**
-     * Checks if an exam is valid. This means the exam is not null, the author is not empty and shorter than 80 chars.
+     * Checks if an exerciseExam is valid. This means the exerciseExam is not null, the author is not empty and shorter than 80 chars.
      *
-     * @param exam exam that is validated
+     * @param exerciseExam exerciseExam that is validated
      */
-    public static void validate(Exam exam) throws DtoValidatorException {
-        if (exam == null) {
-            throw new DtoValidatorException("Exam must not be null");
+    public static void validate(ExerciseExam exerciseExam) throws DtoValidatorException {
+        if (exerciseExam == null) {
+            throw new DtoValidatorException("ExerciseExam must not be null.");
         }
-        validateAuthor(exam);
-        if (exam.getCreated() == null) {
-            throw new DtoValidatorException("Exam timestamp must not be null");
+        validateAuthor(exerciseExam);
+        if (exerciseExam.getCreated() == null) {
+            throw new DtoValidatorException("ExerciseExam timestamp must not be null.");
+        }
+        long examTime = exerciseExam.getExamTime();
+        if (examTime <= 0) {
+            throw new DtoValidatorException("ExamTime must at least be 1.");
         }
     }
 
-    private static void validateAuthor(Exam exam) throws DtoValidatorException {
-        if (exam.getAuthor() == null) {
-            throw new DtoValidatorException("Exam author must not be null");
+    private static void validateAuthor(ExerciseExam exerciseExam) throws DtoValidatorException {
+        if (exerciseExam.getAuthor() == null) {
+            throw new DtoValidatorException("ExerciseExam author must not be null");
         }
-        if (exam.getAuthor().isEmpty() || exam.getAuthor().trim().isEmpty()) {
+        if (exerciseExam.getAuthor().isEmpty() || exerciseExam.getAuthor().trim().isEmpty()) {
             throw new DtoValidatorException(
-                "Exam author must not be empty (leading or trailing whitespaces are ignored)");
+                "ExerciseExam author must not be empty (leading or trailing whitespaces are ignored)");
         }
-        if (exam.getAuthor().length() > 80) {
-            throw new DtoValidatorException("Exam author must not be longer than 80 characters");
+        if (exerciseExam.getAuthor().length() > 80) {
+            throw new DtoValidatorException("ExerciseExam author must not be longer than 80 characters");
         }
     }
 
@@ -95,16 +118,16 @@ public class DtoValidator {
     }
 
     private static void validateFields(Resource resource) throws DtoValidatorException {
-        if (resource.getName().isEmpty()) {
+        if (resource.getName().isEmpty()|| resource.getName().trim().isEmpty()) {
             throw new DtoValidatorException(
-                "Resource name must not be empty. Please enter a resource name.");
+                "Resource name must not be empty. (leading or trailing whitespaces are ignored)");
         }
         if (resource.getReference().isEmpty()) {
             throw new DtoValidatorException(
                 "Resource reference must not be empty. Select a file to reference.");
         }
         File file = new File(resource.getReference());
-        if (!(file.exists() || file.isDirectory())) {
+        if (!file.exists() || file.isDirectory()) {
             throw new DtoValidatorException(
                 "File referenced by resource does not exist. Make sure that the file selected is available.");
         }

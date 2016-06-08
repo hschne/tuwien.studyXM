@@ -1,549 +1,110 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.*;
-import at.ac.tuwien.sepm.ss16.qse18.domain.*;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExamDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.powermock.api.mockito.PowerMockito;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Map;
 
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyExam;
+import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyExams;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
- * Class ExamServiceImplTest
- * Tests for the service layer in ExamServiceImpl. In order to be isolated while testing, this
- * test class uses mocks primarily to bypass the database connection procedure.
- *
- * @author Zhang Haixiang
+ * @author Hans-Joerg Schroedl
  */
 @RunWith(MockitoJUnitRunner.class) public class ExamServiceImplTest {
-    @Mock private ExamDaoJdbc mockExamDaoJdbc;
-    @Mock private ExamQuestionDaoJdbc mockExamQuestionDaoJdbc;
-    @Mock private SubjectQuestionDaoJdbc mockSubjectQuestionDaoJdbc;
-    @Mock private QuestionDaoJdbc mockQuestionDaoJdbc;
-    @Mock private SubjectTopicDaoJdbc mockSubjectTopicDaoJdbc;
-    @Mock private QuestionTopicDaoJdbc mockQuestionTopicDaoJdbc;
-    @Mock private SubjectDaoJdbc mockSubjectDaoJdbc;
-    @Mock private ConnectionH2 mockConnectionH2;
-    @Mock private Connection mockConnection;
-    @Mock private Statement mockStatement;
-    @Mock private PreparedStatement mockPreparedStatement;
-    @Mock private ResultSet mockResultSet;
-    @Mock private ExamServiceImpl mockExam;
-    private ExamServiceImpl examService;
-    private Exam exam;
-    private Topic topic;
 
+    private ExamService examService;
+    @Mock private ExamDao mockExamDao;
 
     @Before public void setUp() throws Exception {
-        when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
-        when(mockConnection.createStatement()).thenReturn(mockStatement);
-
-        this.examService =
-            new ExamServiceImpl(this.mockExamDaoJdbc, this.mockSubjectQuestionDaoJdbc,
-                this.mockExamQuestionDaoJdbc, this.mockQuestionDaoJdbc, this.mockSubjectTopicDaoJdbc,
-                this.mockQuestionTopicDaoJdbc, this.mockSubjectDaoJdbc);
-
-        ArrayList<Question> al = new ArrayList<Question>() {
-        };
-        Question question = new Question();
-        question.setQuestion("TestQuestion");
-        question.setQuestionId(1);
-        question.setType(QuestionType.valueOf(1));
-        al.add(question);
-
-        this.exam = createDummyExam(1, "auhtor");
-        exam.setExamQuestions(al);
-        exam.setExamTime(1);
-
-        this.topic = new Topic();
-        topic.setTopic("Topic1");
-        topic.setTopicId(1);
+        examService = new ExamServiceImpl(mockExamDao);
     }
 
-    //Testing getExam(int)
-    //----------------------------------------------------------------------------------------------
-    @Test public void testIf_getExam_callsRightMethodInDao() throws Exception {
-        this.examService.getExam(1);
-        verify(this.mockExamDaoJdbc).getExam(1);
-    }
-    //----------------------------------------------------------------------------------------------
+    @Test public void getExam_withValidId_examReturned() throws Exception {
+        Exam expectedResult = createDummyExam();
+        when(mockExamDao.getExam(anyInt())).thenReturn(expectedResult);
 
-    //Testing getExams()
-    //----------------------------------------------------------------------------------------------
-    @Test public void testIf_getExams_callsRightMethodInDao() throws Exception {
-        this.examService.getExams();
-        verify(this.mockExamDaoJdbc).getExams();
-    }
-    //----------------------------------------------------------------------------------------------
+        Exam result = examService.getExam(1);
 
-    //Testing createExam(Exam, int, int)
-    //----------------------------------------------------------------------------------------------
-    @Test public void testIf_createExam_callsRightMethodInDao() throws Exception {
-        List<Integer> questionIDList = new ArrayList<>();
-        Question q1 = createDummyQuestion(1, "question1");
-        Question q2 = createDummyQuestion(2, "question2");
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, false);
-        questionBooleans.put(2, false);
-
-        questionIDList.add(1);
-        questionIDList.add(2);
-
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
-            .thenReturn(questionIDList);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
-            .thenReturn(questionBooleans);
-        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
-
-        this.examService.createExam(this.exam, topic, 1000);
-        verify(this.mockExamDaoJdbc).create(this.exam, this.exam.getExamQuestions());
+        assertEquals(expectedResult, result);
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_createExam_invalidAuthorThrowsException() throws Exception {
-        Exam fail = createDummyExam(2, "");
-
-        this.examService.createExam(fail, topic, 1000);
-    }
-
-    @Test(expected = ServiceException.class) public void test_createExam_ExamIDThrowsException()
+    @Test(expected = ServiceException.class) public void getExam_invalidId_serviceExceptionThrown()
         throws Exception {
-        Exam fail = createDummyExam(-2, "Author2");
-        this.examService.createExam(fail, topic, 1000);
-    }
-    //----------------------------------------------------------------------------------------------
-
-    //Testing deleteExam(Exam)
-    //----------------------------------------------------------------------------------------------
-    @Test public void testIf_deleteExam_callsRightMethodInDao() throws Exception {
-        this.examService.deleteExam(this.exam);
-        verify(this.mockExamDaoJdbc).delete(this.exam);
-    }
-    //----------------------------------------------------------------------------------------------
-
-    //Testing getRightQuestions(exam, int, int)
-    //----------------------------------------------------------------------------------------------
-
-    @Test public void test_getRightQuestionsCallsRightMethodsInTheDaos() throws Exception {
-        List<Integer> questionIDList = new ArrayList<>();
-        Question q1 = createDummyQuestion(1, "question1");
-        Question q2 = createDummyQuestion(2, "question2");
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, false);
-        questionBooleans.put(2, false);
-
-        questionIDList.add(1);
-        questionIDList.add(2);
-
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
-            .thenReturn(questionIDList);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
-            .thenReturn(questionBooleans);
-        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
-
-
-        this.examService.getRightQuestions(this.exam, 1, 1000);
-        verify(this.mockSubjectQuestionDaoJdbc).getAllQuestionsOfSubject(this.exam, 1);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
-        verify(this.mockExamQuestionDaoJdbc).getAllQuestionBooleans(questionIDList);
-        this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
-        verify(this.mockQuestionDaoJdbc).getQuestion(questionIDList.get(0));
-        verify(this.mockQuestionDaoJdbc).getQuestion(questionIDList.get(1));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
-    }
-
-    @Test public void test_getRightQuestionsWith3Questions_should_persist() throws Exception {
-        Question q1 = createDummyQuestion(1, "Question1");
-        Question q2 = createDummyQuestion(2, "Question2");
-        Question q3 = createDummyQuestion(3, "Question3");
-        List<Integer> questionIDList = new ArrayList<>();
-        questionIDList.add(q1.getQuestionId());
-        questionIDList.add(q2.getQuestionId());
-        questionIDList.add(q3.getQuestionId());
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, false);
-        questionBooleans.put(2, false);
-        questionBooleans.put(3, false);
-        List<Question> questions = new ArrayList<>();
-        questions.add(q1);
-        questions.add(q2);
-        questions.add(q3);
-        List<Question> test;
-
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
-            .thenReturn(questionIDList);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
-            .thenReturn(questionBooleans);
-        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
-            .thenReturn(q3);
-
-        test = this.examService.getRightQuestions(this.exam, 1, 1500);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
-        this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(2));
-
-        assertSame("Should be the same size", test.size(), questions.size());
-        assertTrue("Questions should have the same values",
-            test.get(0).equals(questions.get(0)) || test.get(0).equals(questions.get(1)) || test
-                .get(0).equals(questions.get(2)));
-        assertTrue("Questions should have the same values",
-            test.get(1).equals(questions.get(0)) || test.get(1).equals(questions.get(1)) || test
-                .get(1).equals(questions.get(2)));
-        assertTrue("Questions should have the same values",
-            test.get(2).equals(questions.get(0)) || test.get(2).equals(questions.get(1)) || test
-                .get(2).equals(questions.get(2)));
-
+        examService.getExam(-1);
 
     }
 
-    @Test public void test_getRightQuesionsShouldOnlyHaveOneQuestion_should_persist()
-        throws Exception {
-        List<Integer> questionIDList = new ArrayList<>();
-        Question q1 = createDummyQuestion(1, "question1");
-        Question q2 = createDummyQuestion(2, "question2");
-        Question q3 = createDummyQuestion(3, "question3");
-        q3.setQuestionTime(1000);
+    @Test public void getExams_examsReturned() throws Exception {
+        List<Exam> expectedResult = createDummyExams();
+        when(mockExamDao.getExams()).thenReturn(expectedResult);
 
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, false);
-        questionBooleans.put(2, false);
+        List<Exam> result = examService.getExams();
 
-        questionIDList.add(1);
-        questionIDList.add(2);
-        questionIDList.add(3);
-
-        List<Question> questions = new ArrayList<>();
-        questions.add(q1);
-        questions.add(q2);
-        questions.add(q3);
-        List<Question> test;
-
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
-            .thenReturn(questionIDList);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
-            .thenReturn(questionBooleans);
-        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
-            .thenReturn(q3);
-
-        test = this.examService.getRightQuestions(this.exam, 1, 1000);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
-        this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(2));
-
-        assertTrue("Should only contain one Element", test.size() == 1);
+        assertEquals(expectedResult, result);
     }
 
-    @Test public void test_getRightQuestionsOnlyTheFirst2OutOf4QuestionsShouldBeInTheList()throws Exception{
-        List<Integer> questionIDList = new ArrayList<>();
-        Question q1 = createDummyQuestion(1, "question1");
-        Question q2 = createDummyQuestion(2, "question2");
-        Question q3 = createDummyQuestion(3, "question3");
-        Question q4 = createDummyQuestion(4, "question4");
+    @Test(expected = ServiceException.class) public void getExams_notSuccessfull_serviceExceptionThrown() throws Exception {
+        when(mockExamDao.getExams()).thenThrow(new DaoException("Error"));
 
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(3, false);
-        questionBooleans.put(4, true);
-
-        questionIDList.add(1);
-        questionIDList.add(2);
-        questionIDList.add(3);
-        questionIDList.add(4);
-
-        List<Question> questions = new ArrayList<>();
-        questions.add(q1);
-        questions.add(q2);
-        questions.add(q3);
-        questions.add(q4);
-
-        List<Question> test;
-
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
-            .thenReturn(questionIDList);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList))
-            .thenReturn(questionBooleans);
-        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
-            .thenReturn(q3).thenReturn(q4);
-
-        test = this.examService.getRightQuestions(this.exam, 1, 1000);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
-        this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(1));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(2));
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(3));
-
-        assertTrue("List should only contain 2 Elements", test.size() == 2);
-        assertTrue("First Element should be in the List", test.get(0).equals(q1) || test.get(0).equals(q2));
-        assertTrue("Second Question should be in the List", test.get(1).equals(q2)|| test.get(1).equals(q1));
-
+        examService.getExams();
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_getRightQuestionsWithEmptyExamQuestionList_should_fail() throws Exception {
-        this.examService.getRightQuestions(this.exam, 1, 2);
+    @Test public void createExam_newExam_successFull() throws Exception {
+        Exam exam = createDummyExam();
+        examService.createExam(exam);
+
+        verify(mockExamDao).create(exam);
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_getRightQuestionsWithTooSmallExamTime_should_fail() throws Exception{
-        List<Integer> questionIDList = new ArrayList<>();
-        Question q1 = createDummyQuestion(1, "question1");
-        questionIDList.add(1);
+    @Test (expected = DtoValidatorException.class) public void validate_invalidName_exceptionThrown() throws Exception {
+        Exam exam = createDummyExam();
+        exam.setName("");
 
-        List<Question> questions = new ArrayList<>();
-        questions.add(q1);
-
-        List<Question> test;
-
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1))
-            .thenReturn(questionIDList);
-        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1);
-
-        this.examService.getRightQuestions(this.exam, 1, 700);
-        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exam, 1);
-        this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
+        examService.validate(exam);
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_getRightQuestionsWithoutDatabaseConnection_should_fail() throws Exception {
-        when(this.mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        this.examService.getRightQuestions(this.exam, 1, 1500);
-        PowerMockito.verifyStatic();
-        this.mockConnectionH2.getConnection();
-    }
-    //----------------------------------------------------------------------------------------------
+    @Test (expected = DtoValidatorException.class) public void validate_invalidSubject_exceptionThrown() throws Exception {
+        Exam exam = createDummyExam();
+        exam.setName("Testing");
+        exam.setSubject(-1);
 
-    //Testing getAllQuestionsOfExam(int)
-    //----------------------------------------------------------------------------------------------
-    @Test public void test_getAllQuestionsCallsRightMethodInDao() throws Exception {
-        this.examService.getAllQuestionsOfExam(1);
-        verify(this.mockExamQuestionDaoJdbc).getAllQuestionsOfExam(1);
+        examService.validate(exam);
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_getAllQuestionsWithInvalidExamID_should_fail() throws Exception {
-        this.examService.getAllQuestionsOfExam(-1);
+    @Test (expected = DtoValidatorException.class) public void validate_invalidDate_exceptionThrown() throws Exception {
+        Exam exam = createDummyExam();
+        exam.setName("Testing");
+        exam.setSubject(1);
+        LocalDate yesterday = LocalDate.now().minusDays(1);
+        exam.setDueDate(Timestamp.valueOf(yesterday.atStartOfDay()));
+
+        examService.validate(exam);
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_getAllQuestionsWithoutDatabaseConnection_should_fail() throws Exception {
-        when(mockExamQuestionDaoJdbc.getAllQuestionsOfExam(anyInt())).thenThrow(DaoException.class);
-
-        examService.getAllQuestionsOfExam(exam.getExamid());
-
-        PowerMockito.verifyStatic();
-        mockConnectionH2.getConnection();
-    }
-    //----------------------------------------------------------------------------------------------
-
-    //Testing gradeExam(Exam)
-    //----------------------------------------------------------------------------------------------
-    @Test public void test_gradeExamCallsRightMethodInDao_should_persist()throws Exception{
-        List<Integer> questionID = new ArrayList<>();
-        questionID.add(1);
-        questionID.add(2);
-
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, true);
-        questionBooleans.put(2, false);
-
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionsOfExam(this.exam.getExamid())).thenReturn(questionID);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionID)).thenReturn(questionBooleans);
-
-        this.examService.gradeExam(this.exam);
-        verify(mockExamQuestionDaoJdbc).getAllQuestionsOfExam(this.exam.getExamid());
-        verify(mockExamQuestionDaoJdbc).getAllQuestionBooleans(questionID);
-    }
-
-    @Test public void test_gradeExamWith3CorrectAnd2IncorrectQuestions_should_persist() throws Exception{
-        String[] test;
-        List<Integer> questionID = new ArrayList<>();
-        questionID.add(1);
-        questionID.add(2);
-        questionID.add(3);
-        questionID.add(4);
-        questionID.add(5);
-
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, true);
-        questionBooleans.put(2, true);
-        questionBooleans.put(3, true);
-        questionBooleans.put(4, false);
-        questionBooleans.put(5, false);
-
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionsOfExam(this.exam.getExamid())).thenReturn(questionID);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(questionID)).thenReturn(questionBooleans);
-
-        test = this.examService.gradeExam(this.exam);
-
-        assertTrue("3 should be correct", Double.parseDouble(test[0]) == 3);
-        assertTrue("2 should be incorrect", Double.parseDouble(test[1]) == 2);
-        assertTrue("Grade should be D", test[2].equals("D"));
-    }
-
-    @Test(expected = ServiceException.class)
-    public void test_gradeExamWithNull_should_fail() throws Exception{
-        this.examService.gradeExam(null);
-    }
-
-    @Test(expected = ServiceException.class)
-    public void test_gradeExamWithInvalidExamID_should_fail()throws Exception{
-        this.exam.setExamid(0);
-        this.examService.gradeExam(this.exam);
-    }
-
-    //----------------------------------------------------------------------------------------------
-
-    //Testing topicGrade(Exam)
-    //----------------------------------------------------------------------------------------------
-    @Test public void test_gradeExamCallsRightMethodsInDao_should_persist()throws Exception{
-        List<Topic> topicList = new ArrayList<>();
-        topicList.add(new Topic(1, "topic1"));
-        topicList.add(new Topic(2, "topic2"));
-
-        List<Question> questionList1 = new ArrayList<>();
-        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6));
-
-        List<Question> questionList2 = new ArrayList<>();
-        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5));
-
-        Subject subject = createDummySubject("subject1", 1);
-
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, false);
-        questionBooleans.put(2, true);
-
-        Map<Integer, Boolean> questionBooleans2 = new HashMap<>();
-        questionBooleans.put(1, false);
-        questionBooleans.put(2, true);
-
-        when(this.mockSubjectDaoJdbc.getSubject(this.exam.getSubjectID())).thenReturn(subject);
-        when(this.mockSubjectTopicDaoJdbc.getTopicToSubject(subject)).thenReturn(topicList);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0))).thenReturn(questionList1);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1))).thenReturn(questionList2);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(anyList())).thenReturn(questionBooleans).
-        thenReturn(questionBooleans2);
-
-        this.examService.topicGrade(this.exam);
-        verify(mockSubjectDaoJdbc).getSubject(this.exam.getSubjectID());
-        verify(mockSubjectTopicDaoJdbc).getTopicToSubject(subject);
-        verify(mockQuestionTopicDaoJdbc).getQuestionToTopic(topicList.get(0));
-        verify(mockQuestionTopicDaoJdbc).getQuestionToTopic(topicList.get(1));
-        verify(mockExamQuestionDaoJdbc, times(2)).getAllQuestionBooleans(anyList());
-    }
-
-    @Test public void test_gradeExamWith3Topics_should_persist() throws Exception{
-        Map<Topic, String[]> test = new HashMap<>();
-        List<Topic> topicList = new ArrayList<>();
-        topicList.add(new Topic(1, "topic1"));
-        topicList.add(new Topic(2, "topic2"));
-        topicList.add(new Topic(3, "topic3"));
-
-        List<Question> questionList1 = new ArrayList<>();
-        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6));
-
-        List<Question> questionList2 = new ArrayList<>();
-        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5));
-
-        List<Question> questionList3 = new ArrayList<>();
-        questionList3.add(new Question(3, "question3", QuestionType.valueOf(1), 4));
-
-        Subject subject = createDummySubject("subject1", 1);
 
 
-        Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        questionBooleans.put(1, false);
-        questionBooleans.put(2, true);
-
-        Map<Integer, Boolean> questionBooleans2 = new HashMap<>();
-        questionBooleans.put(3, false);
-        questionBooleans.put(4, false);
 
 
-        Map<Integer, Boolean> questionBooleans3 = new HashMap<>();
-        questionBooleans.put(5, true);
-        questionBooleans.put(6, true);
 
 
-        when(this.mockSubjectDaoJdbc.getSubject(this.exam.getSubjectID())).thenReturn(subject);
-        when(this.mockSubjectTopicDaoJdbc.getTopicToSubject(subject)).thenReturn(topicList);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0))).thenReturn(questionList1);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1))).thenReturn(questionList2);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(2))).thenReturn(questionList3);
-        when(this.mockExamQuestionDaoJdbc.getAllQuestionBooleans(anyList())).thenReturn(questionBooleans).
-        thenReturn(questionBooleans2).thenReturn(questionBooleans3);
 
-        test = this.examService.topicGrade(this.exam);
-        assertTrue("Map should have size 3", test.size() == 3);
-        assertTrue("Map should contain topic1", test.containsKey(topicList.get(0)));
-        assertTrue("Map should contain topic2", test.containsKey(topicList.get(1)));
-        assertTrue("Map should contain topic3", test.containsKey(topicList.get(2)));
-
-    }
-
-    @Test(expected = ServiceException.class) public void test_topicGradeWithNull_should_fail()throws Exception{
-        this.examService.topicGrade(null);
-    }
-
-    //----------------------------------------------------------------------------------------------
-
-    @After public void tearDown() throws Exception {
-        //nothing to tear down
-    }
-
-    private Exam createDummyExam(int examID, String author) {
-        Exam exam = new Exam();
-        exam.setExamid(1);
-        exam.setCreated(new Timestamp(10));
-        exam.setPassed(false);
-        exam.setAuthor("author1");
-        exam.setSubjectID(1);
-
-        return exam;
-    }
-
-    private Question createDummyQuestion(int questionID, String question) {
-        Question q = new Question();
-        q.setQuestionId(questionID);
-        q.setQuestion(question);
-        q.setType(QuestionType.valueOf(1));
-        q.setQuestionTime(500);
-
-        return q;
-    }
-
-    private Subject createDummySubject(String name, int subjectID) {
-        Subject subject = new Subject();
-        subject.setName(name);
-        subject.setEcts(6);
-        subject.setAuthor("Author");
-        subject.setSemester("SS16");
-        subject.setSubjectId(subjectID);
-        subject.setTimeSpent(800);
-        return subject;
-    }
 
 }
