@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import javafx.fxml.FXML;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -23,6 +24,7 @@ import org.springframework.stereotype.Component;
     @FXML public TextField semester;
     @FXML public TextField ects;
     @FXML public TextField author;
+    @FXML public CheckBox createAndContinue;
     private ObservableSubject subject;
     private boolean isNew;
     private SubjectOverviewController subjectOverviewController;
@@ -31,7 +33,6 @@ import org.springframework.stereotype.Component;
     public void setSubjectOverviewController(SubjectOverviewController subjectOverviewController) {
         this.subjectOverviewController = subjectOverviewController;
     }
-
 
     public void setSubject(ObservableSubject subject) {
         if (subject != null) {
@@ -52,7 +53,12 @@ import org.springframework.stereotype.Component;
             newSubject.setSubjectId(subject.getSubject().getSubjectId());
             subjectOverviewController.updateSubject(subject, newSubject);
         }
-        mainFrameController.handleSubjects();
+        if (!createAndContinue.isSelected()) {
+            mainFrameController.handleSubjects();
+        } else {
+            mainFrameController.handleCreateSubject(null);
+            createAndContinue.setSelected(true);
+        }
     }
 
     @FXML public void handleCancel() {
