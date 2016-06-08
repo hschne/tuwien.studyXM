@@ -75,6 +75,33 @@ public class ResourceQuestionDaoJdbcTest {
         verify(mockPreparedStatement).executeUpdate();
     }
 
+    @Test(expected = DaoException.class)
+    public void test_getResourceFromQuestion_withNoDatabaseConnection_Fail() throws Exception {
+        when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
+
+        resourceQuestionDaoJdbc.getResourceOfQuestion(dummyQuestion);
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_getResourceFromQuestion_withInvalidQuestion_Fail() throws Exception {
+        resourceQuestionDaoJdbc.getResourceOfQuestion(null);
+    }
+
+    @Test public void test_getResourceFromQuestion_qithValidQuestion() throws Exception {
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt(anyInt())).thenReturn(1);
+        when(mockResultSet.getString(anyInt())).thenReturn("PDF").thenReturn("TestResource")
+            .thenReturn("/src/resource/test");
+
+        Resource tmp = resourceQuestionDaoJdbc.getResourceOfQuestion(dummyQuestion);
+
+        assertEquals("The ID should be 1", tmp.getResourceId(), 1);
+        assertEquals("The name should be \"TestResource\"", tmp.getName(), "TestResource");
+        assertEquals("The reference should be \"/src/resource/test\"", tmp.getReference(),
+            "/src/resource/test");
+        assertEquals("The type should be ResourceType.PDF", tmp.getType(), ResourceType.PDF);
+    }
+
     @After public void tearDown() throws Exception {
         // nothing to tear down
     }

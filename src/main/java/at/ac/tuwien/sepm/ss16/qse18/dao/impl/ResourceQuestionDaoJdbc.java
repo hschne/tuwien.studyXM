@@ -3,8 +3,10 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceQuestionDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
@@ -52,6 +56,36 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
                 "Could not create entry in rel_resource_question with values (" + resource
                     .getResourceId() + "," + question.getQuestionId() + ")", e);
         }
+    }
+
+    @Override public Resource getResourceOfQuestion(Question question) throws DaoException {
+        logger.debug("Entering getResourceOfQuestion with question {}", question);
+
+        tryValidateQuestion(question);
+
+        Resource res = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        try {
+            ps = database.getConnection().prepareStatement(
+                "SELECT t.* FROM entity_topic t NATURAL JOIN rel_resource_question"
+                    + " WHERE questionId = ?");
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                res = new Resource(rs.getInt(1), ResourceType.valueOf(rs.getString(2)),
+                    rs.getString(3), rs.getString(4));
+            }
+        } catch (SQLException e) {
+            logger.error("Could not get the resource of question {}", question, e);
+            throw new DaoException("Could not get resource of question " + question + ": " + e);
+        } finally {
+            StatementResultsetCloser
+                .closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
+        }
+        return res;
     }
 
     private void tryValidateResource(Resource resource) throws DaoException {
