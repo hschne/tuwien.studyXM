@@ -124,6 +124,7 @@ import java.util.List;
         else{
             nextQuestionButton.setVisible(false);
             showResultsButton.setVisible(true);
+            skipQuesitonButton.setVisible(false);
             timeline.stop();
             mainFrameController.handleExamFinished(subPane);
         }
