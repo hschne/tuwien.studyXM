@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
@@ -26,7 +27,7 @@ import java.util.*;
  *
  * @author Zhang Haixiang
  */
-@Service
+@Repository
 public class ExerciseExamDaoJdbc implements ExerciseExamDao {
     private ConnectionH2 database;
     private final ExerciseExamQuestionDao exerciseExamQuestionDao;

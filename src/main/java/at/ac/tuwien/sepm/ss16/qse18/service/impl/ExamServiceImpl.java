@@ -30,7 +30,6 @@ import java.util.Map;
     private static final Logger logger = LogManager.getLogger(ExamServiceImpl.class);
     private ExamDao examDao;
     @Autowired ExerciseExamDao exerciseExamDao;
-    @Autowired ExerciseExamQuestionDao examQuestionDao;
 
     @Autowired public ExamServiceImpl(ExamDao examDao) {
         this.examDao = examDao;
@@ -63,14 +62,7 @@ import java.util.Map;
         }
     }
 
-    @Override public List<Integer> getAllQuestionsOfExam(int examID) throws ServiceException {
-        try {
-            return this.examQuestionDao.getAllQuestionsOfExam(examID);
-        } catch (DaoException e) {
-            logger.error("Service Exception getAllQuestionsOfExam with parameters {}", examID, e);
-            throw new ServiceException(e.getMessage());
-        }
-    }
+
 
     @Override public Exam createExam(Exam exam) throws ServiceException {
         logger.debug("entering createExam with parameters {}", exam);
@@ -91,56 +83,20 @@ import java.util.Map;
         logger.debug("entering getAllExerciseExamsOfExam with parameters {}", exam);
         List<Integer> exerciseExamList = new ArrayList<>();
         try {
-            return this.examQuestionDao.getAllQuestionsOfExam(exam.getExamid());
+            List<ExerciseExam> exerciseExams = this.exerciseExamDao.getExams();
+            for(ExerciseExam e: exerciseExams){
+                if(e.getExam() == exam.getExamid()){
+                    exerciseExamList.add(e.getExamid());
+                }
+            }
         } catch (DaoException e) {
             logger.error("Service Exception getAllQuestionsOfExam with parameters {}", exam.getExamid(), e);
             throw new ServiceException(e.getMessage());
         }
-    }
-
-    @Override public void update(int examid, int questionid, boolean questionPassed,
-        boolean alreadyAnswered) throws ServiceException {
-        logger.debug("Entering method update with parameters {}",examid,questionid,questionPassed,alreadyAnswered);
-        try{
-            this.examQuestionDao.update(examid,questionid,questionPassed,alreadyAnswered);
-        }
-        catch (DaoException e){
-            logger.error(e.getMessage(),e);
-            throw new ServiceException(e.getMessage(),e);
-        }
-    }
-/*
-    public void splitQuestions(){
-        List<Question> temp = new ArrayList<>();
-        int counter = 0;
-
-        for(Question q: egp.getNotAnsweredQuestions()){
-            temp.add(q);
-        }
-
-        for (Map.Entry<Integer, Boolean> e : egp.getQuestionBooleans().entrySet()) {
-            for (int i = 0; i < temp.size(); i++) {
-                if (e.getKey() == temp.get(i).getQuestionId()) { // checks if the question has been answered already
-                    if (e.getValue() == true) { // if the question has already been answered correctly
-                        egp.getRightAnsweredQuestions().add(temp.get(counter));
-                        egp.getNotAnsweredQuestions().remove(temp.get(counter));
-                    } else { // if the question has already been answered incorrectly
-                        egp.getWrongAnsweredQuestions().add(temp.get(counter));
-                        egp.getNotAnsweredQuestions().remove(temp.get(counter));
-                    }
-            List<ExerciseExam> exerciseExams = this.exerciseExamDao.getExams();
-            for(ExerciseExam e : exerciseExams) {
-                if(e.getExam() == exam.getExamid()) {
-                    exerciseExamList.add(e.getExamid());
-                }
-            }
-        } catch(DaoException e) {
-            logger.error("Could not fetch all exercise exams of exam {}", exam, e);
-            throw new ServiceException("Could not fetch exercise exams", e);
-        }
         return exerciseExamList;
     }
-    */
+
+
 
     @Override public void validate(Exam exam) throws DtoValidatorException {
 

@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -19,7 +20,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 /**
  * @author Bicer Cem
  */
-@Service public class ResourceQuestionDaoJdbc implements ResourceQuestionDao {
+@Repository public class ResourceQuestionDaoJdbc implements ResourceQuestionDao {
 
     private static final Logger logger = LogManager.getLogger();
     private DataBaseConnection database;

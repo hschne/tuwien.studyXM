@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.*;
@@ -18,7 +19,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 /**
  * Created by Felix on 05.06.2016.
  */
-@Service public class ExamDaoJdbc implements ExamDao {
+@Repository public class ExamDaoJdbc implements ExamDao {
     private static final Logger logger = LogManager.getLogger(ExamDaoJdbc.class);
     private ConnectionH2 database;
 

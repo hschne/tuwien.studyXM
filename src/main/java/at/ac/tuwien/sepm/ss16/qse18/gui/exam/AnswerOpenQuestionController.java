@@ -23,8 +23,7 @@ public class AnswerOpenQuestionController extends AnswerQuestionController {
 
     @Override public boolean isCorrect() {
         String text = textArea.getText().trim();
-        return text.contains(answer1.getAnswer()) && text.contains(answer2.getAnswer())
-            && text.contains(answer3.getAnswer()) && text.contains(answer4.getAnswer());
+        return answerService.checkIfOpenAnswersAreCorrect(text,new Answer[]{answer1,answer2,answer3,answer4});
     }
 
     @Override public boolean noButtonSelected(){

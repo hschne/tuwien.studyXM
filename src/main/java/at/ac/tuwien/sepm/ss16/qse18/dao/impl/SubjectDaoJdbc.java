@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -28,7 +29,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
  *
  * @author Cem Bicer
  */
-@Service public class SubjectDaoJdbc implements SubjectDao {
+@Repository public class SubjectDaoJdbc implements SubjectDao {
 
     private static final Logger logger = LogManager.getLogger();
 

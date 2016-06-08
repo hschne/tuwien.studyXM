@@ -16,9 +16,6 @@ public interface ExamService {
     Exam getExam(int examID) throws ServiceException;
 
     List<Exam> getExams()throws ServiceException;
-    //Exam createExam(Exam exam, Topic topic, int examTime)throws ServiceException;
-    List<Integer> getAllQuestionsOfExam(int examID)throws ServiceException;
-    void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered) throws ServiceException;
     Exam createExam(Exam exam) throws ServiceException;
     Exam deleteExam(Exam exam) throws ServiceException;
     void validate(Exam exam) throws DtoValidatorException;

@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -23,7 +24,7 @@ import java.util.List;
  *
  * @author Felix Almer on 06.05.2016.
  */
-@Service
+@Repository
 public class AnswerDaoJdbc implements AnswerDao {
     private DataBaseConnection con;
     private static final Logger logger = LogManager.getLogger(AnswerDaoJdbc.class);

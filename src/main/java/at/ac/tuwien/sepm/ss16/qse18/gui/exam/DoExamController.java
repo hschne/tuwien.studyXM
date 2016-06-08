@@ -3,8 +3,10 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExerciseExamServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.QuestionServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -50,8 +52,9 @@ import java.util.List;
 
     @Autowired SpringFXMLLoader springFXMLLoader;
     @Autowired SubjectServiceImpl subjectService;
-    @Autowired ExamServiceImpl examService;
+    @Autowired ExerciseExamServiceImpl examService;
     @Autowired QuestionServiceImpl questionService;
+    @Autowired MainFrameController mainFrameController;
 
     private static final Logger logger = LogManager.getLogger(DoExamController.class);
     private int starttime;
@@ -112,14 +115,17 @@ import java.util.List;
 
         progress.setValue(progress.intValue() + 1);
         currentQuestionNumber++;
+        if(currentQuestionNumber == questions.size() - 1){
+            skipQuesitonButton.setVisible(false);
+        }
         if(currentQuestionNumber < questions.size()) {
             loadCorrectSubScreen(questions.get(currentQuestionNumber).getType());
         }
         else{
             nextQuestionButton.setVisible(false);
-            skipQuesitonButton.setVisible(false);
             showResultsButton.setVisible(true);
-            loadExamFinished();
+            timeline.stop();
+            mainFrameController.handleExamFinished(subPane);
         }
     }
 
@@ -160,95 +166,34 @@ import java.util.List;
         }
     }
 
-    private void loadMultipleChoice(){
-        try {
-            controller =
-                setSubView("/fxml/exam/answerChoiceQuestion.fxml",
-                    AnswerChoiceQuestionController.class);
-            setAnswers(currentQuestionNumber);
-            controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
-                answer3,answer4);
-        }
-        catch (IOException e){
-            logger.error(e.getMessage());
-            showError(e);
-        }
-    }
-
-    private void loadExamFinished(){
-        try{
-            setSubView("/fxml/exam/examFinished.fxml",ExamFinishedController.class);
-        }
-        catch (IOException e){
-            logger.error(e.getMessage());
-            showError(e);
-        }
-    }
-
-    private void loadNoteCard(){
-        try{
-            controller = setSubView("/fxml/exam/answerImageQuestion.fxml",
-                AnswerImageQuestionController.class);
-            setAnswers(currentQuestionNumber);
-            controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
-                answer3,answer4);
-        }
-        catch (IOException e){
-            logger.error(e.getMessage());
-            showError(e);
-        }
-    }
-
-    private void loadOpenQuestion(){
-        try{
-            controller = setSubView("/fxml/exam/answerOpenQuestion.fxml",
-                AnswerOpenQuestionController.class);
-            setAnswers(currentQuestionNumber);
-            controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
-                answer3,answer4);
-        }
-        catch (IOException e){
-            logger.error(e.getMessage());
-            showError(e);
-        }
-    }
-
     private void countDown(){
         if (timeline != null) {
             timeline.stop();
         }
         timeline = new Timeline();
-        timeline.getKeyFrames().add(new KeyFrame(Duration.minutes(starttime+1),
-                                                                            new KeyValue(time, 0)));
-        timeline.playFromStart();
-        timeline.setOnFinished(e -> {showInformation("Unfortunatly you are out of time :(");});
-    }
+        timeline.setOnFinished(e -> {
+            showInformation("Unfortunatly you are out of time :(");
 
-    private <T extends GuiController> T setSubView(String fxmlPath, Class T) throws IOException {
-        logger.debug("Loading view from " + fxmlPath);
-        SpringFXMLLoader.FXMLWrapper<Object, T> wrapper = springFXMLLoader.loadAndWrap(fxmlPath, T);
-        this.subPane.getChildren().clear();
-        Pane newPane = (Pane) wrapper.getLoadedObject();
-        newPane.setPrefWidth(this.subPane.getWidth());
-        newPane.setPrefHeight(this.subPane.getHeight());
-        AnchorPane.setTopAnchor(newPane, 0.0);
-        AnchorPane.setRightAnchor(newPane, 0.0);
-        AnchorPane.setLeftAnchor(newPane, 0.0);
-        AnchorPane.setBottomAnchor(newPane, 0.0);
-        this.subPane.getChildren().add(newPane);
-        return wrapper.getController();
+        });
+        timeline.getKeyFrames().add(new KeyFrame(Duration.minutes(starttime + 1), new KeyValue(time,0)));
+        timeline.playFromStart();
+
     }
 
     private void loadCorrectSubScreen(QuestionType type){
         if(type == QuestionType.MULTIPLECHOICE || type == QuestionType.SINGLECHOICE){
-            loadMultipleChoice();
+            controller = mainFrameController.handleMultipleChoice(subPane);
         }
         else if(type == QuestionType.NOTECARD){
-            loadNoteCard();
+            controller = mainFrameController.handleNoteCard(subPane);
         }
         else if(type == QuestionType.OPENQUESTION){
-            loadOpenQuestion();
+            controller = mainFrameController.handleOpenQuestion(subPane);
         }
+        setAnswers(currentQuestionNumber);
+        controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
+            answer3,answer4);
     }
+
 
 }

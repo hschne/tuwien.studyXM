@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 /**
  * Interface AnswerService
@@ -58,4 +60,7 @@ public interface AnswerService {
      * @return The corresponding question.
      */
     public Question getCorrespondingQuestion(Answer a) throws ServiceException;
+
+    boolean checkIfAnswersAreCorrect(Map<Answer,Boolean> answers);
+    boolean checkIfOpenAnswersAreCorrect(String text, Answer[] answers);
 }

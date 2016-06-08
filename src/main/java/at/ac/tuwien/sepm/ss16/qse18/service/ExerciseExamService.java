@@ -19,6 +19,9 @@ public interface ExerciseExamService {
     ExerciseExam createExam(ExerciseExam exerciseExam, Topic topic, int examTime)throws ServiceException;
     ExerciseExam deleteExam(ExerciseExam exerciseExam)throws ServiceException;
     List<Question> getRightQuestions(ExerciseExam exerciseExam, int topicID, int examTime) throws ServiceException;
-    List<Integer> getAllQuestionsOfExam(int examID) throws ServiceException;
     List<Integer> getAnsweredQuestionsOfExam(int examID) throws ServiceException;
+    List<Integer> getAllQuestionsOfExam(int examID) throws ServiceException;
+    void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered)
+        throws ServiceException;
+
 }

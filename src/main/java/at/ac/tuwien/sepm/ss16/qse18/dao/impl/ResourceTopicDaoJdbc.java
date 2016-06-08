@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
  *
  * @author Hans-Joerg Schroedl
  */
-@Service public class ResourceTopicDaoJdbc implements ResourceTopicDao {
+@Repository public class ResourceTopicDaoJdbc implements ResourceTopicDao {
 
     private DataBaseConnection database;
 

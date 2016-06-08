@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 
@@ -49,7 +48,7 @@ import java.util.List;
     @FXML public void handleHome() {
         logger.debug("Loading home view");
         try {
-            setSubView("/fxml/exam/examOverview.fxml", ShowExamsController.class);
+            setSubView("/fxml/exam/examOverview.fxml", ShowExamsController.class,paneContent);
         } catch (IOException e) {
             handleException(e);
         }
@@ -58,7 +57,7 @@ import java.util.List;
     @FXML public void handleSubjects() {
         logger.debug("Loading subject view");
         try {
-            setSubView("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class);
+            setSubView("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class,paneContent);
         } catch (IOException e) {
             handleException(e);
         }
@@ -68,7 +67,7 @@ import java.util.List;
         logger.debug("Loading create subject view");
         try {
             SubjectEditController controller =
-                setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class);
+                setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class,paneContent);
             controller.setSubject(subject);
         } catch (IOException e) {
             handleException(e);
@@ -80,7 +79,7 @@ import java.util.List;
         logger.debug("Loading create topic view");
         try {
             TopicEditController controller =
-                setSubView("/fxml/topic/topicEditView.fxml", TopicEditController.class);
+                setSubView("/fxml/topic/topicEditView.fxml", TopicEditController.class,paneContent);
             //controller.setStage(stage);
             controller.setSubject(subject.getSubject());
             controller.setTopicList(topicList);
@@ -92,7 +91,7 @@ import java.util.List;
     public void handleNewExam() {
         logger.debug("Loading new exam view");
         try {
-            setSubView("/fxml/exam/newExam.fxml", NewExamController.class);
+            setSubView("/fxml/exam/newExam.fxml", NewExamController.class,paneContent);
         } catch (Exception e) {
             handleException(e);
         }
@@ -108,7 +107,7 @@ import java.util.List;
         try {
             ResourceOverviewController resourceOverviewController =
                 setSubView("/fxml/resource/resourceOverview.fxml",
-                    ResourceOverviewController.class);
+                    ResourceOverviewController.class,paneContent);
             resourceOverviewController.setInput(inputs, resourceLabel, questionType);
         } catch (IOException e) {
             handleException(e);
@@ -119,7 +118,7 @@ import java.util.List;
         logger.debug("Loading create resource with input list");
         try {
             ResourceEditController resourceEditController =
-                setSubView("/fxml/resource/resourceEditView.fxml", ResourceEditController.class);
+                setSubView("/fxml/resource/resourceEditView.fxml", ResourceEditController.class,paneContent);
             resourceEditController.setInput(inputs, questionType);
         } catch (IOException e) {
             handleException(e);
@@ -133,7 +132,7 @@ import java.util.List;
     public void handleQuestionOverview(ObservableSubject subject) {
         logger.debug("Loading question overview for " + subject.getName());
         try {
-            setSubView("/fxml/question/questionOverview.fxml", QuestionOverviewController.class);
+            setSubView("/fxml/question/questionOverview.fxml", QuestionOverviewController.class,paneContent);
         } catch (Exception e) {
             handleException(e);
         }
@@ -155,7 +154,7 @@ import java.util.List;
         try {
             CreateMultipleChoiceQuestionController multipleChoiceQuestionController =
                 setSubView("/fxml/question/createMultipleChoiceQuestion.fxml",
-                    CreateMultipleChoiceQuestionController.class);
+                    CreateMultipleChoiceQuestionController.class,paneContent);
 
             if (topic != null) {
                 multipleChoiceQuestionController.setTopic(topic);
@@ -183,7 +182,7 @@ import java.util.List;
         try {
             CreateSingleChoiceQuestionController singleChoiceQuestionController =
                 setSubView("/fxml/question/createSingleChoiceQuestion.fxml",
-                    CreateSingleChoiceQuestionController.class);
+                    CreateSingleChoiceQuestionController.class,paneContent);
 
             if (topic != null) {
                 singleChoiceQuestionController.setTopic(topic);
@@ -211,7 +210,7 @@ import java.util.List;
         try {
             CreateOpenQuestionController openQuestionController =
                 setSubView("/fxml/question/createOpenQuestion.fxml",
-                    CreateMultipleChoiceQuestionController.class);
+                    CreateMultipleChoiceQuestionController.class,paneContent);
 
             if (topic != null) {
                 openQuestionController.setTopic(topic);
@@ -239,7 +238,7 @@ import java.util.List;
         try {
             CreateImageQuestionController imageQuestionController =
                 setSubView("/fxml/question/createImageQuestion.fxml",
-                    CreateImageQuestionController.class);
+                    CreateImageQuestionController.class,paneContent);
             imageQuestionController.setTopic(topic);
             imageQuestionController.setInput(inputs);
         } catch (Exception e) {
@@ -250,7 +249,7 @@ import java.util.List;
     public void handleShowExerciseExams(ObservableExam exam) {
         try {
             ShowExerciseExamsController controller = setSubView("/fxml/exam/exerciseExamOverview.fxml",
-                ShowExerciseExamsController.class);
+                ShowExerciseExamsController.class,paneContent);
             controller.setExam(exam);
 
         } catch(Exception e) {
@@ -261,7 +260,8 @@ import java.util.List;
     public void handleCreateExam(ObservableExam exam) {
         logger.debug("Loading create exam screen");
         try {
-            NewExerciseExamController controller = setSubView("/fxml/exam/newExerciseExam.fxml", NewExerciseExamController.class);
+            NewExerciseExamController controller = setSubView("/fxml/exam/newExerciseExam.fxml",
+                NewExerciseExamController.class,paneContent);
             controller.setExam(exam);
         } catch (Exception e) {
             handleException(e);
@@ -272,7 +272,7 @@ import java.util.List;
         logger.debug("Loading create question screen");
         try {
             WhichQuestionController whichQuestionController =
-                setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class);
+                setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class,paneContent);
             whichQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
@@ -282,7 +282,7 @@ import java.util.List;
     public void handleExams() {
         logger.debug("Loading exam view");
         try {
-            setSubView("/fxml/exam/examOverview.fxml", ShowExamsController.class);
+            setSubView("/fxml/exam/examOverview.fxml", ShowExamsController.class,paneContent);
         } catch (IOException e) {
             handleException(e);
         }
@@ -291,7 +291,7 @@ import java.util.List;
     public void handleStartExam(ExerciseExam exam){
         logger.debug("Loading doExam screen");
         try{
-            DoExamController controller = setSubView("/fxml/exam/doExam.fxml", DoExamController.class);
+            DoExamController controller = setSubView("/fxml/exam/doExam.fxml", DoExamController.class,paneContent);
             controller.initialize(exam);
         }
         catch (IOException e){
@@ -302,7 +302,7 @@ import java.util.List;
     public void handleShowQuestions() {
         logger.debug("Loading ShowQuestions screen");
         try {
-            setSubView("/fxml/exam/showQuestions.fxml", ShowQuestionsController.class);
+            setSubView("/fxml/exam/showQuestions.fxml", ShowQuestionsController.class,paneContent);
         } catch (IOException e) {
             handleException(e);
         }
@@ -311,23 +311,74 @@ import java.util.List;
     public void handleStudy(ObservableExam exam) {
         logger.debug("Loading study screen");
         try {
-            StudyNowController controller = setSubView("/fxml/exam/studyNowOrExportExam.fxml", StudyNowController.class);
+            StudyNowController controller = setSubView("/fxml/exam/studyNowOrExportExam.fxml", StudyNowController.class,paneContent);
             controller.setExam(exam);
         } catch (IOException e) {
             handleException(e);
         }
     }
 
-    private <T extends GuiController> T setSubView(String fxmlPath, Class T) throws IOException {
+    public <T extends GuiController> T handleMultipleChoice(AnchorPane subPane){
+        T controller = null;
+        try {
+            controller =
+                setSubView("/fxml/exam/answerChoiceQuestion.fxml",
+                    AnswerChoiceQuestionController.class,subPane);
+
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            handleException(e);
+        }
+        return controller;
+    }
+
+    public  void handleExamFinished(AnchorPane subPane){
+        try{
+            setSubView("/fxml/exam/examFinished.fxml",ExamFinishedController.class,subPane);
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            handleException(e);
+        }
+    }
+
+    public  <T extends GuiController> T handleNoteCard(AnchorPane subPane){
+        T controller = null;
+        try{
+            controller = setSubView("/fxml/exam/answerImageQuestion.fxml",
+                AnswerImageQuestionController.class,subPane);
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            handleException(e);
+        }
+        return controller;
+    }
+
+    public  <T extends GuiController> T handleOpenQuestion(AnchorPane subPane){
+        T controller = null;
+        try{
+            controller = setSubView("/fxml/exam/answerOpenQuestion.fxml",
+                AnswerOpenQuestionController.class,subPane);
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            handleException(e);
+        }
+        return controller;
+    }
+
+    private <T extends GuiController> T setSubView(String fxmlPath, Class T, Pane paneContent) throws IOException {
         logger.debug("Loading view from " + fxmlPath);
         SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
         T controller = mfWrapper.getController();
-        configureSubPane(mfWrapper);
+        configureSubPane(mfWrapper,paneContent);
         return controller;
     }
 
     private <T extends GuiController> void configureSubPane(
-        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper) {
+        SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper,  Pane paneContent) {
         paneContent.getChildren().clear();
         Pane pane = (Pane) mfWrapper.getLoadedObject();
         pane.setPrefWidth(paneContent.getWidth());

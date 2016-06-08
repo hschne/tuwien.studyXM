@@ -5,12 +5,19 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import org.apache.commons.collections.map.HashedMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * This is a controller for answering questions that have multiple or single choice answers
@@ -24,6 +31,8 @@ public class AnswerQuestionController extends BaseController {
     @FXML protected RadioButton answer2Button;
     @FXML protected RadioButton answer3Button;
     @FXML protected RadioButton answer4Button;
+
+    @Autowired protected AnswerService answerService;
 
     private ExerciseExam exam;
     private Question question;
@@ -67,7 +76,8 @@ public class AnswerQuestionController extends BaseController {
         }
     }
 
-    public boolean isCorrect(){
+    public boolean isCorrect() {
+        /*
         boolean isCorrect = true;
 
         if((answer1Button.isSelected() && !answer1.isCorrect()) || (!answer1Button.isSelected() &&
@@ -94,8 +104,16 @@ public class AnswerQuestionController extends BaseController {
                 isCorrect = false;
             }
         }
-        return isCorrect;
+        */
+        Map<Answer, Boolean> answerBooleanMap = new HashMap<>();
+        answerBooleanMap.put(answer1, answer1Button.isSelected());
+        answerBooleanMap.put(answer2, answer2Button.isSelected());
+        answerBooleanMap.put(answer3, answer3Button.isSelected());
+        answerBooleanMap.put(answer4, answer4Button.isSelected());
+        return answerService.checkIfAnswersAreCorrect(answerBooleanMap);
+
     }
+
 
     public boolean noButtonSelected(){
         return !answer1Button.isSelected() && !answer2Button.isSelected() && !answer3Button.isSelected()

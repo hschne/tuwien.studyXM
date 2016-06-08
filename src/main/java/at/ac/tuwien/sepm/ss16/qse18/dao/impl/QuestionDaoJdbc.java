@@ -11,6 +11,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
@@ -28,7 +29,7 @@ import java.util.List;
  *
  * @author Philipp Ganiu, Felix Almer
  */
-@Service
+@Repository
 public class QuestionDaoJdbc implements QuestionDao {
     private DataBaseConnection con;
     private static final Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
