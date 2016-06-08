@@ -118,8 +118,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
         try {
             ps = database.getConnection().prepareStatement(
-                "SELECT s.* FROM rel_subject_topic NATURAL JOIN entity_subject s "
-                    + "WHERE topicid = ? ORDER BY subjectid ASC");
+                "SELECT s.* FROM entity_subject s NATURAL JOIN rel_subject_topic "
+                    + "WHERE topicid = ? ORDER BY s.subjectid ASC");
             ps.setInt(1, topic.getTopicId());
 
             rs = ps.executeQuery();
