@@ -16,4 +16,13 @@ public interface ResourceQuestionService {
      * @throws ServiceException
      */
     void createReference(Resource resource, Question question) throws ServiceException;
+
+    /**
+     * Gets the resource a {@param question} is referring to if there is any.
+     *
+     * @param question The question that refers to the resource
+     * @return The resource that is being referred to or null if there is none
+     * @throws ServiceException
+     */
+    Resource getResourceFromQuestion(Question question) throws ServiceException;
 }

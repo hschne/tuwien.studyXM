@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
@@ -27,24 +28,15 @@ import static org.mockito.Mockito.when;
  * @author Bicer Cem
  */
 @RunWith(PowerMockRunner.class) @PowerMockIgnore("javax.management.*")
-public class ResourceQuestionDaoJdbcTest {
+public class ResourceQuestionDaoJdbcTest extends DaoBaseTest {
 
     private ResourceQuestionDaoJdbc resourceQuestionDaoJdbc;
-    @Mock private ConnectionH2 mockConnectionH2;
-    @Mock private Connection mockConnection;
-    @Mock private Statement mockStatement;
-    @Mock private PreparedStatement mockPreparedStatement;
-    @Mock private ResultSet mockResultSet;
 
     private Resource dummyResource;
     private Question dummyQuestion;
 
     @Before public void setUp() throws Exception {
-        when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
-        when(mockConnection.createStatement()).thenReturn(mockStatement);
+        super.setUp();
         resourceQuestionDaoJdbc = new ResourceQuestionDaoJdbc(mockConnectionH2);
 
         dummyResource = DummyEntityFactory.createDummyResource();
@@ -73,6 +65,33 @@ public class ResourceQuestionDaoJdbcTest {
         resourceQuestionDaoJdbc.createResourceQuestion(dummyResource, dummyQuestion);
 
         verify(mockPreparedStatement).executeUpdate();
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_getResourceFromQuestion_withNoDatabaseConnection_Fail() throws Exception {
+        when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
+
+        resourceQuestionDaoJdbc.getResourceOfQuestion(dummyQuestion);
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_getResourceFromQuestion_withInvalidQuestion_Fail() throws Exception {
+        resourceQuestionDaoJdbc.getResourceOfQuestion(null);
+    }
+
+    @Test public void test_getResourceFromQuestion_qithValidQuestion() throws Exception {
+        when(mockResultSet.next()).thenReturn(true);
+        when(mockResultSet.getInt(anyInt())).thenReturn(1);
+        when(mockResultSet.getString(anyInt())).thenReturn("PDF").thenReturn("TestResource")
+            .thenReturn("/src/resource/test");
+
+        Resource tmp = resourceQuestionDaoJdbc.getResourceOfQuestion(dummyQuestion);
+
+        assertEquals("The ID should be 1", tmp.getResourceId(), 1);
+        assertEquals("The name should be \"TestResource\"", tmp.getName(), "TestResource");
+        assertEquals("The reference should be \"/src/resource/test\"", tmp.getReference(),
+            "/src/resource/test");
+        assertEquals("The type should be ResourceType.PDF", tmp.getType(), ResourceType.PDF);
     }
 
     @After public void tearDown() throws Exception {

@@ -14,18 +14,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Bicer Cem
  */
-@RunWith(PowerMockRunner.class) public class ResourceQuestionServiceImplTest {
+@RunWith(PowerMockRunner.class) @PrepareForTest(ResourceQuestionDaoJdbc.class)
+public class ResourceQuestionServiceImplTest {
 
     @Mock private ResourceQuestionDao mockResourceQuestionDao;
     private ResourceQuestionService resourceQuestionService;
@@ -42,17 +41,41 @@ import static org.mockito.Mockito.when;
     }
 
     @Test(expected = ServiceException.class)
-    public void test_createReference_withInvalidInput_Fail() throws Exception {
+    public void test_createReference_withDaoException_Fail() throws Exception {
         doThrow(DaoException.class).when(mockResourceQuestionDao)
             .createResourceQuestion(any(), any());
 
         resourceQuestionService.createReference(dummyResource, dummyQuestion);
     }
 
+    @Test(expected = ServiceException.class)
+    public void test_createReference_withInvalidInput_Fail() throws Exception {
+        resourceQuestionService.createReference(dummyResource, null);
+    }
+
     @Test public void test_createReference_withValidInput() throws Exception {
         resourceQuestionService.createReference(dummyResource, dummyQuestion);
 
         verify(mockResourceQuestionDao).createResourceQuestion(dummyResource, dummyQuestion);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_getResourceFromQuestion_withInvalidQuestion_Fail() throws Exception {
+        resourceQuestionService.getResourceFromQuestion(null);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_getResourceFromQuestion_withDaoException_Fail() throws Exception {
+        when(mockResourceQuestionDao.getResourceOfQuestion(any(Question.class)))
+            .thenThrow(DaoException.class);
+
+        resourceQuestionService.getResourceFromQuestion(dummyQuestion);
+    }
+
+    @Test public void test_getResourceFromQuestion_withValidQuestion() throws Exception {
+        resourceQuestionService.getResourceFromQuestion(dummyQuestion);
+
+        verify(mockResourceQuestionDao).getResourceOfQuestion(dummyQuestion);
     }
 
     @After public void tearDown() throws Exception {

@@ -17,4 +17,13 @@ public interface ResourceQuestionDao {
      */
     void createResourceQuestion(Resource resource, Question question) throws DaoException;
 
+    /**
+     * Returns the resource the {@param question} is referring to if there is any.
+     *
+     * @param question The question we want the resource to
+     * @return  The resource that is being referred.
+     * @throws DaoException
+     */
+    Resource getResourceOfQuestion(Question question) throws DaoException;
+
 }
