@@ -63,11 +63,12 @@ import java.util.Optional;
             logger.warn("Could not fetch icon, continuing anyways.", e);
         }
         primaryStage.show();
-        //We cant use intialize before stage is not initialized, so we use this workaround
-        controller.handleHome();
 
         try {
             new ConnectionH2().getConnection();
+
+            //We cant use intialize before stage is not initialized, so we use this workaround
+            controller.handleHome();
         } catch (SQLException e) {
             logger.error("Unable to connect to database. ", e);
             primaryStage.close();
