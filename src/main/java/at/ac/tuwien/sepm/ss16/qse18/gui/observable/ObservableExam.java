@@ -1,84 +1,108 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import javafx.beans.property.*;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 
-import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 /**
- * @author Zhang Haixiang  on 20.05.2016.
+ * Created by Felix on 05.06.2016.
  */
 public class ObservableExam {
     private IntegerProperty examid;
-    private Timestamp created;
-    private BooleanProperty passed;
-    private StringProperty author;
-    private IntegerProperty subjectID;
+    private StringProperty name;
+    private StringProperty created;
+    private StringProperty dueDate;
+    private IntegerProperty subject;
     private Exam exam;
 
-    public ObservableExam(Exam exam){
-        this.exam = exam;
-        this.examid = new SimpleIntegerProperty(exam.getExamid());
-        this.passed = new SimpleBooleanProperty(exam.getPassed());
-        this.author = new SimpleStringProperty(exam.getAuthor());
-        this.subjectID = new SimpleIntegerProperty(exam.getSubjectID());
+    public void setName(String name) {
+        this.name.set(name);
+        this.exam.setName(name);
     }
 
-    public Exam getExamInstance(){
+    public String getCreated() {
+        return created.get();
+    }
+
+
+    public String getDueDate() {
+        return dueDate.get();
+    }
+
+
+    public int getSubject() {
+        return subject.get();
+    }
+
+    public void setSubject(int subject) {
+        this.subject.set(subject);
+    }
+
+    public Exam getExam() {
+        return exam;
+    }
+
+    public void setExam(Exam exam) {
+        this.exam = exam;
+    }
+
+    public ObservableExam(Exam exam) {
+        this.exam = exam;
+        this.examid = new SimpleIntegerProperty(exam.getExamid());
+        this.name = new SimpleStringProperty(exam.getName());
+        this.created = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")
+            .format(exam.getCreated()));
+        this.dueDate = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")
+            .format(exam.getDueDate()));
+        this.subject = new SimpleIntegerProperty(exam.getSubject());
+    }
+
+    public Exam getExamInstance() {
         return this.exam;
     }
 
-    public IntegerProperty examIDProperty(){
+    public IntegerProperty examidProperty() {
         return this.examid;
     }
 
-    public BooleanProperty passedProperty(){
-        return this.passed;
+    public StringProperty nameProperty() {
+        return this.name;
     }
 
-    public StringProperty authorProperty(){
-        return this.author;
+    public StringProperty createdProperty() {
+        return this.created;
     }
 
-    public IntegerProperty subjectIDProperty(){
-        return this.subjectID;
+    public StringProperty dueDateProperty() {
+        return this.dueDate;
     }
 
-    public int getExamid(){
-        return this.examid.get();
+    public IntegerProperty subjectProperty() {
+        return this.subject;
     }
 
-    public void setExamid(int examid){
+    public void setExamid(int examid) {
         this.exam.setExamid(examid);
         this.examid.set(examid);
     }
 
-
-    public int getSubjectID() {
-        return subjectID.get();
+    public int getExamid() {
+        return this.examid.get();
     }
 
-    public void setSubjectID(int subjectID) {
-        this.exam.setSubjectID(subjectID);
-        this.subjectID.set(subjectID);
+    public String getName() {
+        return this.name.get();
     }
 
-
-    public boolean getPassed(){
-        return this.passed.get();
+    public String getCreated(String format) {
+        return new SimpleDateFormat(format).format(this.exam.getCreated());
     }
 
-    public void setPassed(boolean passed){
-        this.exam.setPassed(passed);
-        this.passed.set(passed);
-    }
-
-    public String getAuthor(){
-        return this.author.get();
-    }
-
-    public void setAuthor(String author){
-        this.exam.setAuthor(author);
-        this.author.set(author);
+    public String getDueDate(String format) {
+        return new SimpleDateFormat(format).format(this.exam.getDueDate());
     }
 }

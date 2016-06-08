@@ -56,7 +56,7 @@ import java.util.List;
     private static final Logger logger = LogManager.getLogger(DoExamController.class);
     private int starttime;
     private IntegerProperty time;
-    private Exam exam;
+    private ExerciseExam exam;
     private List<Question> questions = new ArrayList<>();
     private List<Answer> answers = new ArrayList<>();
     private Answer answer1;
@@ -68,7 +68,7 @@ import java.util.List;
     private IntegerProperty progress = new SimpleIntegerProperty(0);
 
 
-    @FXML public void initialize(Exam exam){
+    @FXML public void initialize(ExerciseExam exam){
         this.exam = exam;
         starttime = (int)exam.getExamTime();
         time = new SimpleIntegerProperty(starttime);
@@ -83,7 +83,8 @@ import java.util.List;
             }
             List<Integer> questionIds = examService.getAllQuestionsOfExam(exam.getExamid());
             progressLabel.textProperty().bind(new SimpleStringProperty("Progress ")
-                .concat(progress.asString()).concat("/").concat(questionIds.size()));
+               .concat(progress.asString()).concat("/").concat(questionIds.size()));
+
 
             for (Integer i : questionIds) {
                     questions.add(questionService.getQuestion(i));

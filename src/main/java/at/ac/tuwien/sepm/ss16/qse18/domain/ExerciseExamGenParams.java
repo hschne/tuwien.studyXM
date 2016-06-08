@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author  Zhang Haixiang on 01.06.2016.
  */
-public class ExamGenParams {
+public class ExerciseExamGenParams {
     private List<Question> examQuestions = new ArrayList<>();
     private List<Integer> notAnsweredQuestionID = new ArrayList<>(); // conatins all questionID's
     private List<Question> wrongAnsweredQuestions = new ArrayList<>(); // contains the quesitions which have been answered incorrectly

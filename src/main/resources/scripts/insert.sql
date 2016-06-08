@@ -14,18 +14,21 @@ DELETE FROM entity_question;
 DELETE FROM entity_note;
 DELETE FROM entity_resource;
 ALTER TABLE entity_subject ALTER COLUMN subjectid RESTART WITH 1;
-ALTER TABLE entity_exam ALTER COLUMN examid RESTART WITH 1;
+ALTER TABLE entity_exercise_exam ALTER COLUMN examid RESTART WITH 1;
 ALTER TABLE entity_topic ALTER COLUMN topicid RESTART WITH 1;
 ALTER TABLE entity_question ALTER COLUMN questionid RESTART WITH 1;
 ALTER TABLE entity_answer ALTER COLUMN answerid RESTART WITH 1;
 ALTER TABLE entity_resource ALTER COLUMN resourceid RESTART WITH 1;
 ALTER TABLE entity_note ALTER COLUMN noteid RESTART WITH 1;
+ALTER TABLE entity_exam ALTER COLUMN examid RESTART WITH 1;
 COMMIT;
 
 --Inserts for subject
 INSERT INTO entity_subject VALUES(DEFAULT,'SEPM',6.0,'ss16',25000,'Max'),(DEFAULT,'OOP',3.0,'ws15/16',4000,'Franz'),(DEFAULT,'PP',5.9,'ws14/15',3000,'Jakob'),(DEFAULT,'OOM',3.0,'ss14',3000000,'Phil'),(DEFAULT,'Statistik',3.0,'ws15/16',5000,'Max'),(DEFAULT,'Analysis',4.0,'ss18',5222000,'Franz');
 --Inserts for exam
-INSERT INTO entity_exam VALUES(DEFAULT, CURRENT_TIMESTAMP, TRUE, 'Max', 1, 60),(DEFAULT, CURRENT_TIMESTAMP, FALSE, 'Phil', 1, 40),(DEFAULT, CURRENT_TIMESTAMP, TRUE, 'Josef', 4, 50),(DEFAULT, CURRENT_TIMESTAMP, FALSE, 'Moritz', 65),(DEFAULT, CURRENT_TIMESTAMP, TRUE, 'Johann', 6, 70),(DEFAULT, CURRENT_TIMESTAMP, TRUE, 'Sherlock', 2, 60);
+INSERT INTO entity_exam VALUES(DEFAULT, 1,  CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'SEPM Vorlesungsprüfung'), (DEFAULT, 6, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'Analysis Vorlesungsprüfung');
+--Inserts for exercise_exam
+INSERT INTO entity_exercise_exam VALUES(DEFAULT, 1,  CURRENT_TIMESTAMP, TRUE, 'Max', 1, 60),(DEFAULT, 1, CURRENT_TIMESTAMP, FALSE, 'Phil', 1, 40),(DEFAULT, 2, CURRENT_TIMESTAMP, TRUE, 'Josef', 4, 50),(DEFAULT, NULL, CURRENT_TIMESTAMP, FALSE, 'Moritz', 1, 65),(DEFAULT, NULL, CURRENT_TIMESTAMP, TRUE, 'Johann', 6, 70),(DEFAULT, NULL, CURRENT_TIMESTAMP, TRUE, 'Sherlock', 2, 60);
 --Insert for topic
 INSERT INTO entity_topic VALUES(DEFAULT,'topic1'),(DEFAULT,'topic2'),(DEFAULT,'topic3'),(DEFAULT,'topic4'),(DEFAULT,'topic5'),(DEFAULT,'topic6');
 --Insert for subject_topic

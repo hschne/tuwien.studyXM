@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import javafx.fxml.FXML;
@@ -24,14 +25,14 @@ public class AnswerQuestionController extends BaseController {
     @FXML protected RadioButton answer3Button;
     @FXML protected RadioButton answer4Button;
 
-    private Exam exam;
+    private ExerciseExam exam;
     private Question question;
     protected Answer answer1;
     protected Answer answer2;
     protected Answer answer3;
     protected Answer answer4;
 
-    @FXML public void initialize(Exam exam, Question question, Answer answer1, Answer answer2,
+    @FXML public void initialize(ExerciseExam exam, Question question, Answer answer1, Answer answer2,
         Answer answer3, Answer answer4){
         this.exam = exam;
         this.question = question;

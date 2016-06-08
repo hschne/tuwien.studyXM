@@ -1,11 +1,11 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
@@ -14,12 +14,6 @@ import java.sql.Timestamp;
 import java.util.LinkedList;
 import java.util.List;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
-import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 
@@ -123,53 +117,53 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(Exam) with null.
+     * This Test calls validate(ExerciseExam) with null.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
     @Test(expected = DtoValidatorException.class)
     public void test_validate_withNullExamShouldThrowException() throws Exception {
-        Exam e = null;
+        ExerciseExam e = null;
         dtoValidator.validate(e);
     }
 
     /**
-     * This Test calls validate(Exam) with an invalid timestamp.
+     * This Test calls validate(ExerciseExam) with an invalid timestamp.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
     @Test(expected = DtoValidatorException.class)
     public void test_validateAuthor_withInvalidTimeExamShouldThrowException() throws Exception {
 
-        Exam e = new Exam();
+        ExerciseExam e = new ExerciseExam();
         e.setCreated(null);
         e.setAuthor("Julian");
         dtoValidator.validate(e);
     }
 
     /**
-     * This Test calls validate(Exam) with an exam which has no author.
+     * This Test calls validate(ExerciseExam) with an exam which has no author.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
     @Test(expected = DtoValidatorException.class)
     public void test_validateAuthor_withNullAuthorExamShouldThrowException() throws Exception {
 
-        Exam e = new Exam();
+        ExerciseExam e = new ExerciseExam();
         e.setCreated(new Timestamp(1));
         e.setAuthor(null);
         dtoValidator.validate(e);
     }
 
     /**
-     * This Test calls validate(Exam) with an exam which has an empty author string.
+     * This Test calls validate(ExerciseExam) with an exam which has an empty author string.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
     @Test(expected = DtoValidatorException.class)
     public void test_validateAuthor_withEmptyAuthorExamShouldThrowException() throws Exception {
 
-        Exam e = new Exam();
+        ExerciseExam e = new ExerciseExam();
         e.setCreated(new Timestamp(1));
         e.setAuthor("");
         assertTrue("The author should be empty.",e.getAuthor().isEmpty());
@@ -177,14 +171,14 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(Exam) with an exam which has an invalid author string.
+     * This Test calls validate(ExerciseExam) with an exam which has an invalid author string.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
     @Test(expected = DtoValidatorException.class)
     public void test_validateAuthor_withInvalidAuthorExamShouldThrowException() throws Exception {
 
-        Exam e = new Exam();
+        ExerciseExam e = new ExerciseExam();
         e.setCreated(new Timestamp(1));
         e.setAuthor(" ");
         assertFalse("The author shouldn't be empty.",e.getAuthor().isEmpty());
@@ -192,14 +186,14 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(Exam) with an author name longer than 80 characters.
+     * This Test calls validate(ExerciseExam) with an author name longer than 80 characters.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
     @Test(expected = DtoValidatorException.class)
     public void test_validateAuthor_withAuthorToLongExamShouldThrowException() throws Exception {
 
-        Exam e = new Exam();
+        ExerciseExam e = new ExerciseExam();
         e.setCreated(new Timestamp(1));
         String authorText = "";
         for(int i = 0;i<14;i++)
@@ -212,16 +206,17 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(Exam)with an valid exam;
+     * This Test calls validate(ExerciseExam)with an valid exam;
      * This shouldn't throw an Exception.
      * @throws Exception
      */
     @Test
     public void test_validateAuthor_withValidExam() throws Exception {
 
-        Exam e = new Exam();
+        ExerciseExam e = new ExerciseExam();
         e.setAuthor("Julian");
         e.setCreated(new Timestamp(1));
+        e.setExamTime(10);
         dtoValidator.validate(e);
     }
 

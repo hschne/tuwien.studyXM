@@ -1,29 +1,29 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 
 import java.util.List;
 import java.util.Map;
 
 /**
- * Interface ExamQuestionDao
+ * Interface ExerciseExamQuestionDao
  * Data Access Object interface for the relation between exams and questions.
  * Retrieves, saves, and deletes exams with the related questions from the persistency
  *
  * @author Zhang Haixiang
  */
-public interface ExamQuestionDao {
+public interface ExerciseExamQuestionDao {
 
     /**
      * create
-     * The given exam and question is put into the database
-     * @param exam The exam, which shall be saved
+     * The given exerciseExam and question is put into the database
+     * @param exerciseExam The exerciseExam, which shall be saved
      * @param question The questions that belongs to the question
      * @throws DaoException
      *
      * */
-    void create(Exam exam, Question question) throws DaoException;
+    void create(ExerciseExam exerciseExam, Question question) throws DaoException;
 
     /**
      * delete
@@ -55,6 +55,7 @@ public interface ExamQuestionDao {
      * */
     List<Integer> getAllQuestionsOfExam(int examID) throws DaoException;
 
+
     /***
      * update
      * updates the values question_passed and already_answered for the specified exam and question
@@ -66,4 +67,8 @@ public interface ExamQuestionDao {
      * @throws DaoException if an error occurs with the resource
      * */
     void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered) throws DaoException;
+
+    List<Integer> getAnsweredQuestionsPerExam(int examID) throws DaoException;
+
+
 }

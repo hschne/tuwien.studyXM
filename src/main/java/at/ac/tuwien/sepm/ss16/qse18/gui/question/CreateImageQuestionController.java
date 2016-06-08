@@ -191,7 +191,10 @@ public class CreateImageQuestionController extends QuestionController {
 
         this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(10));
 
-        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(11));
+        if (inputs != null) {
+            this.choiceBoxQuestionTime.setValue(inputs.get(11).toString());
+        }
+        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(12));
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
@@ -203,6 +206,11 @@ public class CreateImageQuestionController extends QuestionController {
         } else {
             inputs.add(null);
         }
+    }
+
+    @Override
+    protected void saveChoiceBoxQuestionTime(List inputs) {
+        inputs.add(choiceBoxQuestionTime.getValue());
     }
 
     @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {

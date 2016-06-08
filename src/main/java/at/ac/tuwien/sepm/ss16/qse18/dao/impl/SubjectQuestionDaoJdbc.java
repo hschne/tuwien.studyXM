@@ -2,11 +2,10 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectQuestionDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,19 +29,19 @@ import java.util.List;
  */
 @Service
 public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
-    private ConnectionH2 database;
+    private DataBaseConnection database;
     private static final Logger logger = LogManager.getLogger();
 
-    @Autowired public SubjectQuestionDaoJdbc(ConnectionH2 database){
+    @Autowired public SubjectQuestionDaoJdbc(DataBaseConnection database){
         this.database = database;
     }
 
-    @Override public List<Integer> getAllQuestionsOfSubject(Exam exam, int topicID)
+    @Override public List<Integer> getAllQuestionsOfSubject(ExerciseExam exerciseExam, int topicID)
         throws DaoException {
-        logger.debug("entering method getAllQuestionsOfSubject with parameters {}", exam);
+        logger.debug("entering method getAllQuestionsOfSubject with parameters {}", exerciseExam);
         ArrayList<Integer> questionIDList = new ArrayList<>();
 
-        tryValidateExam(exam);
+        tryValidateExam(exerciseExam);
 
         if(topicID <= 0) {
             logger.error("topicId must be greater than 0");
@@ -58,7 +57,7 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
                 + "WHERE tc.topicid = ? AND SUBJECTID = ? ORDER BY questionid ASC");
 
             pstmt.setInt(1, topicID);
-            pstmt.setInt(2, exam.getSubjectID());
+            pstmt.setInt(2, exerciseExam.getSubjectID());
             rs = pstmt.executeQuery();
 
             while(rs.next()) {
@@ -67,10 +66,10 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
 
         } catch(SQLException e){
             logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}",
-                exam, topicID, e);
-            throw new DaoException("Could not get List with all Questions for Exam with values("
-                + exam.getExamid() + ", " + exam.getCreated() + ", " + exam.getPassed()
-                + ", " + exam.getAuthor() + " and topicID " + topicID + ")");
+                exerciseExam, topicID, e);
+            throw new DaoException("Could not get List with all Questions for ExerciseExam with values("
+                + exerciseExam.getExamid() + ", " + exerciseExam.getCreated() + ", " + exerciseExam.getPassed()
+                + ", " + exerciseExam.getAuthor() + " and topicID " + topicID + ")");
         } finally {
             closeStatementsAndResultSets(new Statement[] {pstmt}, new ResultSet[] {rs});
         }
@@ -78,12 +77,12 @@ public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
         return questionIDList;
     }
 
-    private void tryValidateExam(Exam exam) throws DaoException {
+    private void tryValidateExam(ExerciseExam exerciseExam) throws DaoException {
         try {
-            validate(exam);
+            validate(exerciseExam);
         } catch (DtoValidatorException e) {
-            logger.error("Exam [" + exam + "] is invalid", e);
-            throw new DaoException("Exam [" + exam + "] is invalid: " + e);
+            logger.error("ExerciseExam [" + exerciseExam + "] is invalid", e);
+            throw new DaoException("ExerciseExam [" + exerciseExam + "] is invalid: " + e);
         }
     }
 }

@@ -39,7 +39,7 @@
                   <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                </columnResizePolicy>
             </TableView>
-            <Button fx:id="buttonNewExam" mnemonicParsing="false" onAction="#insertExamValues" style="-fx-background-color: #22374A;" text="New Exam" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2">
+            <Button fx:id="buttonNewExam" mnemonicParsing="false" onAction="#createExerciseExam" style="-fx-background-color: #22374A;" text="New Exam" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="50.0" />
                </GridPane.margin>

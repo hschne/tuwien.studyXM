@@ -10,3 +10,4 @@ DROP TABLE entity_resource;
 DROP TABLE rel_resource_topic;
 DROP TABLE rel_resource_question;
 DROP TABLE entity_note;
+DROP TABLE entity_exercise_exam;
