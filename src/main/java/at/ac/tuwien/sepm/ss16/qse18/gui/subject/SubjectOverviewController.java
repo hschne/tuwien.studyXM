@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
  */
 @Component public class SubjectOverviewController extends BaseController {
 
-    @FXML public ListView<ObservableSubject> subjectListView;
-    @FXML public Button editButton;
-    @FXML public Button deleteButton;
+    @FXML private ListView<ObservableSubject> subjectListView;
+    @FXML private Button editButton;
+    @FXML private Button deleteButton;
     @Autowired ApplicationContext applicationContext;
     private ObservableList<ObservableSubject> subjectList;
     private SubjectService subjectService;
@@ -95,14 +95,8 @@ import java.util.stream.Collectors;
      *
      * @param subject The subject to be added
      */
-    public void addSubject(ObservableSubject subject) {
-        try {
-            Subject s = subjectService.createSubject(subject.getSubject());
-            subjectList.add(new ObservableSubject(s));
-        } catch (ServiceException e) {
-            logger.error(e);
-            showError(e);
-        }
+    void addSubject(ObservableSubject subject) {
+        subjectList.add(subject);
     }
 
     /**
@@ -111,14 +105,8 @@ import java.util.stream.Collectors;
      * @param observableSubject The current subject in the list
      * @param subject           The new subject, containing new values
      */
-    public void updateSubject(ObservableSubject observableSubject, Subject subject) {
-        try {
-            subjectService.updateSubject(subject);
+    void updateSubject(ObservableSubject observableSubject, Subject subject) {
             updateEntry(observableSubject, subject);
-        } catch (ServiceException e) {
-            logger.error(e);
-            showError(e);
-        }
     }
 
     private void initializeListView() throws ServiceException {

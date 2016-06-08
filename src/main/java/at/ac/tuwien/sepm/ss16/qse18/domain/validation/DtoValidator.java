@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain.validation;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
-import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 
 import java.io.File;
@@ -14,6 +11,27 @@ import java.util.stream.Collectors;
  * @author Philipp Ganiu
  */
 public class DtoValidator {
+
+    /**
+     * Checks whether the subject is valid or not.
+     * @param subject the subject that should be validated
+     * @throws ServiceException
+     *
+     * */
+    public static void validateSubject(Subject subject) throws DtoValidatorException{
+        if(subject.getName().trim().isEmpty()) {
+            throw new DtoValidatorException("Subject name must not be empty.");
+        }
+        if(subject.getSemester().trim().isEmpty()){
+            throw new DtoValidatorException("Subject semester must not be empty.");
+        }
+        if(subject.getAuthor().trim().isEmpty()){
+            throw new DtoValidatorException("Author name must not be empty.");
+        }
+        if(subject.getEcts() <= 0) {
+            throw new DtoValidatorException("ECTS must be greater than 0.");
+        }
+    }
 
     /**
      * Checks if a question is valid. This means the question is not empty or null and shorter than 2000 chars.
