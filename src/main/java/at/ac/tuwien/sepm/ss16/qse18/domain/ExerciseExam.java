@@ -97,7 +97,8 @@ public class ExerciseExam {
     @Override public String toString(){
         String ret =  "ExerciseExam{exam=" + exam + "examID=" + this.examid + ", created="
             + this.getCreated() + ", passed=" + this.getPassed() + ", author= \""
-            + this.getAuthor() + "\", subjectID="+ this.getSubjectID() + "}";
+            + this.getAuthor() + "\", subjectID="+ this.getSubjectID() + ", examTime="
+            + this.examTime + "}";
 
         for(Question q: examQuestions){
             ret += q.toString();

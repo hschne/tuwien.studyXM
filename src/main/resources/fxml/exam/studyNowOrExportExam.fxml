@@ -32,7 +32,7 @@
          <children>
             <Label styleClass="subview-header" text="feeling motivated?" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
             </Label>
-            <Button fx:id="buttonResumeExam" disable="true" minWidth="200.0" mnemonicParsing="false" onAction="#resumeExam" text="resume an exam" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Button fx:id="buttonResumeExam" minWidth="200.0" mnemonicParsing="false" onAction="#resumeExam" style="-fx-background-color: #22374A;" text="resume an exam" textFill="WHITE" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets />
                </GridPane.margin>

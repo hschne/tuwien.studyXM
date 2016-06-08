@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
@@ -29,10 +30,12 @@ import java.util.Map;
  *
  * @author Zhang Haixiang
  */
-@Service
+@Repository
 public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
     private ConnectionH2 database;
     private static final Logger logger = LogManager.getLogger();
+    private static final String UPDATE_SQL = "UPDATE REL_EXAM_QUESTION SET QUESTION_PASSED = ?, "
+        + "ALREADY_ANSWERED = ? WHERE EXAMID = ? AND QUESTIONID = ?;";
 
     @Autowired public ExerciseExamQuestionDaoJdbc(ConnectionH2 database) {
         this.database = database;
@@ -159,6 +162,33 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
         }
         return questionIDList;
     }
+
+
+    @Override public void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered)
+        throws DaoException {
+        logger.debug("Entering method update with parameters {}",examid,questionid,questionPassed,alreadyAnswered);
+
+        PreparedStatement pstmt = null;
+
+        try{
+            pstmt = database.getConnection().prepareStatement(UPDATE_SQL);
+            pstmt.setBoolean(1,questionPassed);
+            pstmt.setBoolean(2,alreadyAnswered);
+            pstmt.setInt(3,examid);
+            pstmt.setInt(4,questionid);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e){
+            logger.error("Could not update relation exam question for exam with id " + examid +
+                "and question with id " + questionid,e);
+            throw new DaoException("Could not update relation exam question for exam with id " + examid +
+                "and question with id " + questionid,e);
+        }
+        finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt},null);
+        }
+    }
+
 
     private void tryValidateExam(ExerciseExam exerciseExam) throws DaoException {
         try {

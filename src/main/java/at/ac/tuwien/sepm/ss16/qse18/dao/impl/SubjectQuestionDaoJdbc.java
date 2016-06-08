@@ -2,12 +2,14 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
@@ -26,12 +28,11 @@ import java.util.List;
  *
  * @author Zhang Haixiang
  */
-@Service
-public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
-    private ConnectionH2 database;
+@Repository public class SubjectQuestionDaoJdbc implements SubjectQuestionDao {
+    private DataBaseConnection database;
     private static final Logger logger = LogManager.getLogger();
 
-    @Autowired public SubjectQuestionDaoJdbc(ConnectionH2 database){
+    @Autowired public SubjectQuestionDaoJdbc(DataBaseConnection database){
         this.database = database;
     }
 

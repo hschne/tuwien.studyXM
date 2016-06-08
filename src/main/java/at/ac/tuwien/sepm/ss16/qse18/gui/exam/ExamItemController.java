@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,13 +24,15 @@ import java.util.List;
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ExamItemController extends BaseController {
     @FXML public Node root;
     @Autowired ExerciseExamService exerciseExamService;
+    @Autowired ExamService examService;
     @FXML private Label examIdentifier;
     @FXML private ProgressBar examProgress;
     @FXML private Button buttonStudy;
     private ObservableExam exam;
 
-    @Autowired ExamItemController(ExerciseExamService exerciseExamService) {
+    @Autowired ExamItemController(ExerciseExamService exerciseExamService, ExamService examService) {
         this.exerciseExamService = exerciseExamService;
+        this.examService = examService;
     }
 
     @FXML public void handleStudy() {
@@ -42,12 +46,19 @@ import java.util.List;
     public void loadFields() {
         logger.debug("Now showing exam: " + exam.getExamInstance());
         examIdentifier.setText(this.exam.getName() + " " + this.exam.getDueDate("dd-MM-YYYY"));
-        List<Integer> allQuestionList, answeredQuestions;
+        List<Integer> allQuestionList = new ArrayList<>();
+        List<Integer> answeredQuestions = new ArrayList<>();
+        List<Integer> exerciseExamList;
         double percentageAnswered = 0d;
         try {
-            allQuestionList = exerciseExamService.getAllQuestionsOfExam(this.exam.getExamid());
-            answeredQuestions =
-                exerciseExamService.getAnsweredQuestionsOfExam(this.exam.getExamid());
+            exerciseExamList = examService.getAllExerciseExamsOfExam(exam.getExamInstance());
+            logger.debug("Got list of exercise exams of size " + exerciseExamList.size());
+            for(Integer i : exerciseExamList) {
+                allQuestionList.addAll(exerciseExamService.getAllQuestionsOfExam(i));
+                answeredQuestions.addAll(exerciseExamService.getAnsweredQuestionsOfExam(i));
+            }
+            logger.debug("List of all relevant questions is of size " + allQuestionList.size());
+            logger.debug("List of all answered questions is of size " + answeredQuestions.size());
         } catch (ServiceException e) {
             logger.error("Could not fetch questions of exam", e);
             return;

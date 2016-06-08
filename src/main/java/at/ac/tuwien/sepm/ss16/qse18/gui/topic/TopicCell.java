@@ -6,11 +6,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 
 /**
  * @author Philipp Ganiu
  */
-public class TopicCell extends ListCell<ObservableTopic> {
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class TopicCell extends ListCell<ObservableTopic> {
     private HBox box = new HBox(10);
     private Label topicLable = new Label();
     private Button button = new Button();

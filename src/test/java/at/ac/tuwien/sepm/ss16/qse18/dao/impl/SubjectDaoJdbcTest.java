@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import org.junit.After;
@@ -29,27 +30,17 @@ import static org.mockito.Mockito.*;
  * @author Cem Bicer
  */
 @RunWith(PowerMockRunner.class) @PrepareForTest(ConnectionH2.class)
-@PowerMockIgnore("javax.management.*") public class SubjectDaoJdbcTest {
+@PowerMockIgnore("javax.management.*") public class SubjectDaoJdbcTest extends DaoBaseTest {
 
     private SubjectDaoJdbc sdao;
-    @Mock private ConnectionH2 mockConnectionH2;
-    @Mock private Connection mockConnection;
-    @Mock private Statement mockStatement;
-    @Mock private PreparedStatement mockPreparedStatement;
-    @Mock private ResultSet mockResultSet;
     @Mock private SubjectTopicDaoJdbc mockSubjectTopicDaoJdbc;
     @Mock private TopicDaoJdbc mockTopicDaoJdbc;
     @Mock private ExerciseExamDaoJdbc exerciseExamDaoJdbc;
 
 
     @Before public void setUp() throws Exception {
+        super.setUp();
 
-        when(mockConnectionH2.getConnection()).thenReturn(mockConnection);
-
-        when(mockPreparedStatement.executeQuery()).thenReturn(mockResultSet);
-        when(mockConnection.prepareStatement(anyString())).thenReturn(mockPreparedStatement);
-        when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
-        when(mockConnection.createStatement()).thenReturn(mockStatement);
         sdao = new SubjectDaoJdbc(mockConnectionH2);
         sdao.setSubjectTopicDaoJdbc(mockSubjectTopicDaoJdbc);
         sdao.setTopicDaoJdbc(mockTopicDaoJdbc);

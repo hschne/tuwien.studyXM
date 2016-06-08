@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExamGenParams;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
@@ -68,7 +69,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         }
     }
 
-    @Override public ExerciseExam createExam(ExerciseExam exerciseExam, Topic topic, int examTime) throws ServiceException {
+    @Override public ExerciseExam createExam(ExerciseExam exerciseExam, Topic topic, int examTime)
+        throws ServiceException {
         logger.debug("entering method createExam with parameters {}", exerciseExam);
 
         tryValidateExam(exerciseExam);
@@ -106,17 +108,17 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     /**
      * getRightQuestions
      * chooses the right questions for the exerciseExam and saves it into a list
+     *
      * @param exerciseExam exerciseExam for which the questions are chosen
-     * @param topicID topic from which the questions are chosen
-     * @param examTime duration of the exerciseExam
+     * @param topicID      topic from which the questions are chosen
+     * @param examTime     duration of the exerciseExam
      * @return returns a List that contains the questions of the given exerciseExam
      * @throws ServiceException
-     *
-     * */
+     */
     public List<Question> getRightQuestions(ExerciseExam exerciseExam, int topicID, int examTime)
         throws ServiceException {
-        logger
-            .debug("entering method getRigthQuestions with parameters {}", exerciseExam, topicID, examTime);
+        logger.debug("entering method getRigthQuestions with parameters {}", exerciseExam, topicID,
+            examTime);
         if (exerciseExam == null || topicID <= 0 || examTime <= 0) {
             logger.error("Service Exception getRightQuestions {}", exerciseExam, topicID, examTime);
             throw new ServiceException("Invalid values, please check your input");
@@ -125,8 +127,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         this.egp = new ExerciseExamGenParams();
 
         try {
-            this.egp.setNotAnsweredQuestionID(this.subjectQuestionDao.getAllQuestionsOfSubject(
-                exerciseExam, topicID));
+            this.egp.setNotAnsweredQuestionID(
+                this.subjectQuestionDao.getAllQuestionsOfSubject(exerciseExam, topicID));
             egp.setQuestionBooleans(this.exerciseExamQuestionDao.getAllQuestionBooleans(egp.getNotAnsweredQuestionID()));
 
             for (int e : egp.getNotAnsweredQuestionID()) {
@@ -140,8 +142,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             selectQuestions(egp.getRightAnsweredQuestions(), examTime);
 
         } catch (DaoException e) {
-            logger.error("Service Exception getRightQuestions with parameters{}", exerciseExam, topicID,
-                examTime, e);
+            logger.error("Service Exception getRightQuestions with parameters{}", exerciseExam,
+                topicID, examTime, e);
             throw new ServiceException(e.getMessage());
         }
 
@@ -178,11 +180,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         }
     }
 
-    public void splitQuestions(){
+    public void splitQuestions() {
         List<Question> temp = new ArrayList<>();
         int counter = 0;
 
-        for(Question q: egp.getNotAnsweredQuestions()){
+        for (Question q : egp.getNotAnsweredQuestions()) {
             temp.add(q);
         }
 
@@ -203,13 +205,13 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         }
     }
 
-    public void selectQuestions(List<Question> questionList, int examTime){
-        while(!questionList.isEmpty()){
+    public void selectQuestions(List<Question> questionList, int examTime) {
+        while (!questionList.isEmpty()) {
             questionList.remove(chooseQuestions(questionList, examTime));
         }
     }
 
-    public int chooseQuestions(List<Question> questionList, int examTime){
+    public int chooseQuestions(List<Question> questionList, int examTime) {
         int random = (int) (Math.random() * questionList.size());
         if ((this.egp.getQuestionTime() + questionList.get(random).getQuestionTime())
             <= examTime) { // if time of questions are still smaller or the same as examTime
@@ -271,11 +273,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         return null;
     }
     */
-    
+
     @Override public List<Integer> getAnsweredQuestionsOfExam(int examID) throws ServiceException {
         logger.debug("entering getAnsweredQuestionsOfExam");
 
-        if(examID <= 0) {
+        if (examID <= 0) {
             logger.error("Service Exception getAnsweredQuestionsOfExam with parameters {}", examID);
             throw new ServiceException("Invalid examID, please check your input");
         }
@@ -291,4 +293,19 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         return answeredQuestions;
     }
 
+
+     @Override public void update(int examid, int questionid, boolean questionPassed,
+        boolean alreadyAnswered) throws ServiceException {
+        logger.debug("Entering method update with parameters {}",examid,questionid,questionPassed,alreadyAnswered);
+        try{
+            this.exerciseExamQuestionDao.update(examid,questionid,questionPassed,alreadyAnswered);
+        }
+        catch (DaoException e){
+            logger.error(e.getMessage(),e);
+            throw new ServiceException(e.getMessage(),e);
+        }
+    }
+
+
 }
+

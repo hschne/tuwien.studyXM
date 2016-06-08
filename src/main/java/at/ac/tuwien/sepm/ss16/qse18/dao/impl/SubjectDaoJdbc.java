@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
@@ -9,6 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.sql.PreparedStatement;
@@ -27,11 +29,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
  *
  * @author Cem Bicer
  */
-@Service public class SubjectDaoJdbc implements SubjectDao {
+@Repository public class SubjectDaoJdbc implements SubjectDao {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private ConnectionH2 database;
+    private DataBaseConnection database;
 
     private TopicDaoJdbc topicDaoJdbc;
 
@@ -39,7 +41,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     private ExerciseExamDaoJdbc examDaoJdbc;
 
-    @Autowired public SubjectDaoJdbc(ConnectionH2 database) {
+    @Autowired public SubjectDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 

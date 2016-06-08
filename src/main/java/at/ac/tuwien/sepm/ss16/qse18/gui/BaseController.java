@@ -1,13 +1,18 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.util.AlertBuilder;
+import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.stage.Modality;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
 
 /**
  * Abstract base class for all controllers that are not the mainframe controlelr.
@@ -21,6 +26,7 @@ import org.springframework.stereotype.Component;
 
     protected MainFrameController mainFrameController;
     private AlertBuilder alertBuilder;
+    @Autowired protected SpringFXMLLoader springFXMLLoader;
 
     @Autowired public void setMainFrameController(MainFrameController mainFrameController) {
         this.mainFrameController = mainFrameController;
@@ -50,6 +56,13 @@ import org.springframework.stereotype.Component;
         showAlert("Error", "An error occurred.", e.getMessage());
     }
 
+    protected void showInformation(String contentMsg){
+        Alert alert =
+            alertBuilder.alertType(Alert.AlertType.INFORMATION).title("INFO").headerText("")
+                .contentText(contentMsg).setResizable(true).build();
+        alert.show();
+    }
+
     protected boolean showConfirmation(String contentMsg) {
         Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
             .setResizable(true).headerText("Are you sure?").contentText(contentMsg)
@@ -58,5 +71,21 @@ import org.springframework.stereotype.Component;
         ButtonType result = alert.getResult();
         return result == ButtonType.OK;
     }
+
+    protected <T extends GuiController> T setSubView(String fxmlPath, Class T, Pane subPane) throws IOException {
+        logger.debug("Loading view from " + fxmlPath);
+        SpringFXMLLoader.FXMLWrapper<Object, T> wrapper = springFXMLLoader.loadAndWrap(fxmlPath, T);
+        subPane.getChildren().clear();
+        Pane newPane = (Pane) wrapper.getLoadedObject();
+        newPane.setPrefWidth(subPane.getWidth());
+        newPane.setPrefHeight(subPane.getHeight());
+        AnchorPane.setTopAnchor(newPane, 0.0);
+        AnchorPane.setRightAnchor(newPane, 0.0);
+        AnchorPane.setLeftAnchor(newPane, 0.0);
+        AnchorPane.setBottomAnchor(newPane, 0.0);
+        subPane.getChildren().add(newPane);
+        return wrapper.getController();
+    }
+
 
 }

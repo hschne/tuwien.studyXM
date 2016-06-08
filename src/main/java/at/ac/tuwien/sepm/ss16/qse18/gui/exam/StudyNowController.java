@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 
 
     @FXML public void resumeExam() {
-
+        mainFrameController.handleShowExerciseExams(exam);
     }
 
     @FXML public void exportAsPDF() {

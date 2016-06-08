@@ -250,7 +250,7 @@ public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
         assertTrue("Exam1 should have Timestamp 10", exerciseExam1.getCreated().equals(new Timestamp(10)));
         assertTrue("Exam1 should have been passsd already", exerciseExam1.getPassed() == true);
         assertEquals("Exam1 should have author Author1", exerciseExam1.getAuthor(), "Author1");
-        assertEquals("Exam1 should have subject ID 1", exerciseExam1.getSubjectID(), 1);
+        assertEquals("Exam1 should have subject ID 2", exerciseExam1.getSubjectID(), 2);
 
         assertEquals("Exam2 should have the ID 2", exerciseExam2.getExamid(), 2);
         assertTrue("Exam2 should have Timestamp 20", exerciseExam2.getCreated().equals(new Timestamp(20)));

@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Class AnswerServiceImpl
@@ -78,5 +79,24 @@ public class AnswerServiceImpl implements AnswerService {
     @Override public Question getCorrespondingQuestion(Answer a) {
         //TODO
         return null;
+    }
+
+    @Override public boolean checkIfAnswersAreCorrect(Map<Answer, Boolean> answers){
+        for(Map.Entry<Answer,Boolean> a : answers.entrySet()){
+            if(a.getKey() != null) {
+                if (a.getKey().isCorrect() && !a.getValue().booleanValue()){
+                    return false; //correct answer not selected
+                }
+                if(!a.getKey().isCorrect() && a.getValue().booleanValue()){
+                    return false; // wrong answer selected
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override public boolean checkIfOpenAnswersAreCorrect(String text, Answer[] answers) {
+        return text.contains(answers[0].getAnswer()) && text.contains(answers[1].getAnswer())
+            && text.contains(answers[2].getAnswer()) && text.contains(answers[3].getAnswer());
     }
 }
