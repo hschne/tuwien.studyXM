@@ -141,6 +141,7 @@ public class PdfExporterImpl {
         XMLParser p = new XMLParser(worker);
 
         //NOTE: Generates Header
+        p.parse(new ByteArrayInputStream(imageToBase64("src/main/resources/icons/logo.png", 55, 30).getBytes()));
         p.parse(new ByteArrayInputStream(("<p><h1>" + "Date: " + exam.getCreated() + "</h1></p>").getBytes()));
         p.parse(new ByteArrayInputStream(("<p><h1>" + "Author: " + exam.getAuthor() + "</h1></p>").getBytes()));
         p.parse(new ByteArrayInputStream(("<p><h1>" + "Exam ID: " + exam.getExamid() + "</h1></p>").getBytes()));
