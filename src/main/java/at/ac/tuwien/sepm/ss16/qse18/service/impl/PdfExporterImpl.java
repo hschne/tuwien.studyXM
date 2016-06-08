@@ -45,7 +45,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl.HtmlCons
 @Service public class PdfExporterImpl {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final String TMP = "src/main/resources/temporary/TMP.html";
+    private static final String TMP = "src/main/resources/temporary/tmp.html";
     private static final String BR = "<BR></BR>";
     private static final String BRHR = "<BR></BR><hr></hr>";
 
@@ -294,7 +294,6 @@ import static at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl.HtmlCons
         static final String H1_START_TAG = "<p><h1>";
         static final String H1_END_TAG = "</h1></p>";
 
-        private HtmlConstant() {
-        }
+
     }
 }
