@@ -318,6 +318,26 @@ import java.util.List;
         }
     }
 
+    public void handleCreateExerciseExam(ObservableExam exam) {
+        logger.debug("Loading create exam screen");
+        try {
+            NewExerciseExamController controller = setSubView("/fxml/exam/newExerciseExam.fxml", NewExerciseExamController.class, paneContent);
+            controller.setExam(exam);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateExerciseExamPrint(ObservableExam exam) {
+        logger.debug("Loading create exam screen");
+        try {
+            NewExerciseExamPrintController controller = setSubView("/fxml/exam/newExerciseExamPrint.fxml", NewExerciseExamPrintController.class, paneContent);
+            controller.setExam(exam);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
     public <T extends GuiController> T handleMultipleChoice(AnchorPane subPane){
         T controller = null;
         try {

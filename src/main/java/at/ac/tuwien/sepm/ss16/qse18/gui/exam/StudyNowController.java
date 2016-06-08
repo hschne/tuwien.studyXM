@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
      * Displays a create new exercise exam view
      */
     @FXML public void newExam() {
-        mainFrameController.handleCreateExam(exam);
+        mainFrameController.handleCreateExerciseExam(exam);
     }
 
 
@@ -31,8 +31,10 @@ import org.springframework.stereotype.Component;
     }
 
     @FXML public void exportAsPDF() {
-
+        mainFrameController.handleCreateExerciseExamPrint(exam);
     }
+
+
 
     public void setExam(ObservableExam exam) {
         this.exam = exam;

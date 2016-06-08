@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -98,12 +99,15 @@ import java.util.List;
     @Override public List<Answer> getCorrespondingAnswers(Question q) throws ServiceException {
         try {
             List<Answer> al = adao.getAnswer();
-            List<Answer> answerList = adao.getAnswer();
-            for (Answer a : answerList) {
+            Iterator<Answer> it = al.listIterator();
+
+            while(it.hasNext()){
+                Answer a = it.next();
                 if (!a.getQuestion().equals(q)) {
-                    al.remove(a);
+                    it.remove();
                 }
             }
+
             return al;
         } catch(DaoException e) {
             logger.error("Could not get corresponding answers: ", e);

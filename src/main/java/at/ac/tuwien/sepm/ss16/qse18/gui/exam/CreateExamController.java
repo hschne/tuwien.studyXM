@@ -61,7 +61,7 @@ import java.util.List;
 
     @FXML public void createExerciseExam(ObservableExam exam) {
         logger.debug("Entering createExerciseExam()");
-        mainFrameController.handleCreateExam(exam);
+        mainFrameController.handleCreateExerciseExam(exam);
     }
 
     @FXML public void startExamButtonClicked(){

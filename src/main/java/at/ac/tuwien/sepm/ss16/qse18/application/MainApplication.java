@@ -36,9 +36,15 @@ import java.util.Optional;
     private AlertBuilder alertBuilder = new AlertBuilder();
     private AnnotationConfigApplicationContext applicationContext = null;
 
+    private Stage primaryStage;
+
     public static void main(String[] args) {
 
         Application.launch(args);
+    }
+
+    public Stage getPrimaryStage(){
+        return this.primaryStage;
     }
 
     @Override public void start(Stage primaryStage) throws IOException {
@@ -62,6 +68,7 @@ import java.util.Optional;
         } catch(Exception e) {
             logger.warn("Could not fetch icon, continuing anyways.", e);
         }
+        this.primaryStage = primaryStage;
         primaryStage.show();
 
         try {
