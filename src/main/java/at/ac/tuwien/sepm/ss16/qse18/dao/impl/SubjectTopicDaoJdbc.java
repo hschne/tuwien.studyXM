@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
@@ -30,13 +31,13 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 @Service public class SubjectTopicDaoJdbc implements SubjectTopicDao {
 
     private static final Logger logger = LogManager.getLogger();
-    private ConnectionH2 database;
+    private DataBaseConnection database;
     private static final String CREATE_SQL = "INSERT INTO REL_SUBJECT_TOPIC VALUES(?,?);";
     private static final String DELETE_SQL = "DELETE FROM REL_SUBJECT_TOPIC WHERE TOPICID =?;";
     private static final String TOPICTOSUBJECT_SQL = "SELECT T.TOPICID,T.TOPIC "
         + "FROM ENTITY_TOPIC T NATURAL JOIN REL_SUBJECT_TOPIC R WHERE R.SUBJECTID = ?;";
 
-    @Autowired public SubjectTopicDaoJdbc(ConnectionH2 database) {
+    @Autowired public SubjectTopicDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 

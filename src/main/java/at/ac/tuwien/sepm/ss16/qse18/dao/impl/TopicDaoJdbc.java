@@ -29,13 +29,13 @@ import java.util.List;
     private static final String CREATE_SQL = "INSERT INTO ENTITY_TOPIC (TOPIC) VALUES(?);";
     private static final String DELETE_SQL = "DELETE FROM ENTITY_TOPIC WHERE TOPICID = ?;";
     private static final String UPDATE_SQL = "UPDATE ENTITY_TOPIC SET TOPIC = ? WHERE TOPICID = ?;";
-    private ConnectionH2 database;
+    private DataBaseConnection database;
     private SubjectTopicDao subjectTopicDaoJdbc;
     private QuestionTopicDaoJdbc questionTopicDao;
     private ResourceTopicDaoJdbc resourceTopicDao;
 
 
-    @Autowired public TopicDaoJdbc(ConnectionH2 database) {
+    @Autowired public TopicDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 

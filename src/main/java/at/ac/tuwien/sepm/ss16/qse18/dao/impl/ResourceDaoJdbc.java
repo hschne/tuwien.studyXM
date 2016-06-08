@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
@@ -27,9 +28,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     private static final Logger logger = LogManager.getLogger();
 
-    private ConnectionH2 database;
+    private DataBaseConnection database;
 
-    @Autowired public ResourceDaoJdbc(ConnectionH2 database) {
+    @Autowired public ResourceDaoJdbc(DataBaseConnection database) {
         this.database = database;
     }
 
