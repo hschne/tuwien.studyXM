@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-
 import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -25,31 +24,31 @@ import com.itextpdf.tool.xml.pipeline.end.PdfWriterPipeline;
 import com.itextpdf.tool.xml.pipeline.html.AbstractImageProvider;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipeline;
 import com.itextpdf.tool.xml.pipeline.html.HtmlPipelineContext;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.xml.bind.DatatypeConverter;
-
 import java.io.*;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl.HtmlConstant.H1_END_TAG;
+import static at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl.HtmlConstant.H1_START_TAG;
+
 /**
  * @author Julian on 07.06.2016. This class handles the export of PDF-files.
  */
-@Service
-public class PdfExporterImpl {
+@Service public class PdfExporterImpl {
 
     private static final Logger logger = LogManager.getLogger();
-    private static final String tmp = "src/main/resources/temporary/tmp.html";
-    private static final String br = "<br></br>";
-    private static final String brhr = "<br></br><hr></hr>";
+    private static final String TMP = "src/main/resources/temporary/TMP.html";
+    private static final String BR = "<BR></BR>";
+    private static final String BRHR = "<BR></BR><hr></hr>";
+
 
     private QuestionServiceImpl questionService;
     private String outPath;
@@ -57,8 +56,7 @@ public class PdfExporterImpl {
     private List<Question> questions;
     private Map<Integer, List<Answer>> answers;
 
-    @Autowired
-    public PdfExporterImpl(QuestionServiceImpl questionService) {
+    @Autowired public PdfExporterImpl(QuestionServiceImpl questionService) {
         logger.debug("Creating new PDfExporter");
         this.questionService = questionService;
     }
@@ -81,13 +79,14 @@ public class PdfExporterImpl {
             extractQuestionsAndAnswersFromExam();
             generatePdf();
         } catch (ServiceException e) {
-            logger.error("Unable to extract Information from exam. " + e.getMessage());
-            throw new ServiceException("Unable to extract Information from exam. " + e.getMessage());
+            logger.error(e);
+            throw new ServiceException(
+                "Unable to extract Information from exam. " + e.getMessage());
         } catch (DocumentException e) {
-            logger.error("Unable to create PDF file.  " + e.getMessage());
+            logger.error(e);
             throw new ServiceException("Unable to create PDF file. " + e.getMessage());
         } catch (IOException e) {
-            logger.error("Unable to write to PDF file.  " + e.getMessage());
+            logger.error(e);
             throw new ServiceException("Unable to write to PDF file. " + e.getMessage());
         }
     }
@@ -99,14 +98,11 @@ public class PdfExporterImpl {
     private void extractQuestionsAndAnswersFromExam() throws ServiceException {
         logger.debug("Extracting questions and answers from exam.");
 
-        Collections.sort(questions, new Comparator<Question>() {
-            @Override
-            public int compare(Question q1, Question q2) {
-                if (q1.getQuestionId() > q2.getQuestionId()) {
-                    return 1;
-                } else {
-                    return -1;
-                }
+        Collections.sort(questions, (q1, q2) -> {
+            if (q1.getQuestionId() > q2.getQuestionId()) {
+                return 1;
+            } else {
+                return -1;
             }
         });
         for (Question q : questions) {
@@ -130,73 +126,117 @@ public class PdfExporterImpl {
         htmlContext.setImageProvider(new Base64ImageProvider());
 
         //CSS
-        CSSResolver cssResolver = new StyleAttrCSSResolver();
-        InputStream csspathtest = Thread.currentThread().getContextClassLoader().getResourceAsStream("src/main/resources/export.css");
-        CssFile cssfiletest = XMLWorkerHelper.getCSS(csspathtest);
-        cssResolver.addCss(cssfiletest);
-        Pipeline<?> pipeline = new CssResolverPipeline(cssResolver, new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, pdfWriter)));
+        CSSResolver cssResolver = configureCssResolver();
+        Pipeline<?> pipeline = new CssResolverPipeline(cssResolver,
+            new HtmlPipeline(htmlContext, new PdfWriterPipeline(document, pdfWriter)));
 
         // XML Worker
         XMLWorker worker = new XMLWorker(pipeline, true);
-        XMLParser p = new XMLParser(worker);
+        XMLParser xmlParser = new XMLParser(worker);
 
         //NOTE: Generates Header
-        p.parse(new ByteArrayInputStream(imageToBase64("src/main/resources/icons/logo.png", 55, 30).getBytes()));
-        p.parse(new ByteArrayInputStream(("<p><h1>" + "Date: " + exam.getCreated() + "</h1></p>").getBytes()));
-        p.parse(new ByteArrayInputStream(("<p><h1>" + "Author: " + exam.getAuthor() + "</h1></p>").getBytes()));
-        p.parse(new ByteArrayInputStream(("<p><h1>" + "Exam ID: " + exam.getExamid() + "</h1></p>").getBytes()));
-        p.parse(new ByteArrayInputStream(("<p><h1>" + "Estimated time: " + exam.getExamTime() + " minutes</h1></p>").getBytes()));
-        p.parse(new ByteArrayInputStream(("<p><h1>" + "Points reachable: " + questions.size() + "</h1></p>").getBytes()));
-        p.parse(new ByteArrayInputStream((br).getBytes()));
-        p.parse(new ByteArrayInputStream((br).getBytes()));
+        generateHeader(xmlParser);
 
         //NOTE: Generates Questions
-        for (Question q : questions) {
-            if (q.getType() == QuestionType.MULTIPLECHOICE) {
-                p.parse(new ByteArrayInputStream(("<p><h1>" + "[ID: " + q.getQuestionId() + "] " + q.getQuestion() + "</h1></p>").getBytes()));
-                for (Answer a : answers.get(q.getQuestionId())) {
-                    p.parse(new ByteArrayInputStream(("<p>" + "[ ] " + a.getAnswer() + "</p>").getBytes()));
-                }
-                p.parse(new ByteArrayInputStream((brhr).getBytes()));
-            } else if (q.getType() == QuestionType.SINGLECHOICE) {
-                p.parse(new ByteArrayInputStream(("<p><h1>" + "[ID: " + q.getQuestionId() + "] " + q.getQuestion() + "</h1></p>").getBytes()));
-                for (Answer a : answers.get(q.getQuestionId())) {
-                    p.parse(new ByteArrayInputStream(("<p>" + "O " + a.getAnswer() + "</p>").getBytes()));
-                }
-                p.parse(new ByteArrayInputStream((brhr).getBytes()));
-            } else if (q.getType() == QuestionType.OPENQUESTION) {
-                p.parse(new ByteArrayInputStream(("<p><h1>" + "[ID: " + q.getQuestionId() + "] " + q.getQuestion() + "</h1></p>").getBytes()));
-                p.parse(new ByteArrayInputStream(("<p>answer:_________________</p>").getBytes()));
-                p.parse(new ByteArrayInputStream((brhr).getBytes()));
-            } else {
-                p.parse(new ByteArrayInputStream(("<p><h1>" + "[ID: " + q.getQuestionId() + "]</h1></p>").getBytes()));
-                p.parse(new ByteArrayInputStream(imageToBase64(q.getQuestion(), 200, 200).getBytes()));
-                for (Answer a : answers.get(q.getQuestionId())) {
-                    p.parse(new ByteArrayInputStream(("<p>" + "[ ] " + a.getAnswer() + "</p>").getBytes()));
-                }
-                p.parse(new ByteArrayInputStream((brhr).getBytes()));
-            }
+        for (Question question : questions) {
+            writeQuestion(xmlParser, question);
         }
-        p.parse(new ByteArrayInputStream(("<p style=\"page-break-after:always;\"></p>").getBytes()));
+        xmlParser.parse(
+            new ByteArrayInputStream(("<p style=\"page-break-after:always;\"></p>").getBytes()));
 
         //NOTE: Generates Solution
-        p.parse(new ByteArrayInputStream(("<p>Solution for this exam: </p>").getBytes()));
-        p.parse(new ByteArrayInputStream((br).getBytes()));
+        createSolutions(xmlParser);
+
+        XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document, new FileInputStream(TMP));
+        document.close();
+    }
+
+    private void createSolutions(XMLParser xmlParser) throws IOException {
+        xmlParser.parse(new ByteArrayInputStream(("<p>Solution for this exam: </p>").getBytes()));
+        xmlParser.parse(new ByteArrayInputStream((BR).getBytes()));
+
         for (Question q : questions) {
-            p.parse(new ByteArrayInputStream(("<p><h1>" + "Correct answers for question [ID " + q.getQuestionId() + "]:</h1></p>").getBytes()));
+            xmlParser.parse(new ByteArrayInputStream(
+                (H1_START_TAG + "Correct answers for question [ID " + q.getQuestionId()
+                    + "]:</h1></p>").getBytes()));
             for (Answer a : answers.get(q.getQuestionId())) {
                 if (q.getType() != QuestionType.OPENQUESTION) {
-                    p.parse(new ByteArrayInputStream(("<p>" + a.getAnswer() + " is " + a.isCorrect() + ".</p>").getBytes()));
+                    xmlParser.parse(new ByteArrayInputStream(
+                        ("<p>" + a.getAnswer() + " is " + a.isCorrect() + ".</p>").getBytes()));
                 } else {
-                    p.parse(new ByteArrayInputStream(("<p>" + a.getAnswer() + " is correct Solution.</p>").getBytes()));
+                    xmlParser.parse(new ByteArrayInputStream(
+                        ("<p>" + a.getAnswer() + " is correct Solution.</p>").getBytes()));
                 }
             }
-            p.parse(new ByteArrayInputStream((br).getBytes()));
+            xmlParser.parse(new ByteArrayInputStream((BR).getBytes()));
         }
-        p.parse(new ByteArrayInputStream(("<p><h1>" + "Total points: __/" + questions.size() + "</h1></p>").getBytes()));
+        xmlParser.parse(new ByteArrayInputStream(
+            (H1_START_TAG + "Total points: __/" + questions.size() + H1_END_TAG).getBytes()));
+    }
 
-        XMLWorkerHelper.getInstance().parseXHtml(pdfWriter, document, new FileInputStream(tmp));
-        document.close();
+    private void writeQuestion(XMLParser p, Question q) throws IOException {
+        String id = "[ID: ";
+        if (q.getType() == QuestionType.MULTIPLECHOICE) {
+            p.parse(new ByteArrayInputStream(
+                (H1_START_TAG + id + q.getQuestionId() + "] " + q.getQuestion() + H1_END_TAG)
+                    .getBytes()));
+            for (Answer a : answers.get(q.getQuestionId())) {
+                p.parse(
+                    new ByteArrayInputStream(("<p>" + "[ ] " + a.getAnswer() + "</p>").getBytes()));
+            }
+            p.parse(new ByteArrayInputStream((BRHR).getBytes()));
+        } else if (q.getType() == QuestionType.SINGLECHOICE) {
+            p.parse(new ByteArrayInputStream(
+                (H1_START_TAG + id + q.getQuestionId() + "] " + q.getQuestion() + H1_END_TAG)
+                    .getBytes()));
+            for (Answer a : answers.get(q.getQuestionId())) {
+                p.parse(
+                    new ByteArrayInputStream(("<p>" + "O " + a.getAnswer() + "</p>").getBytes()));
+            }
+            p.parse(new ByteArrayInputStream((BRHR).getBytes()));
+        } else if (q.getType() == QuestionType.OPENQUESTION) {
+            p.parse(new ByteArrayInputStream(
+                (H1_START_TAG + id + q.getQuestionId() + "] " + q.getQuestion() + H1_END_TAG)
+                    .getBytes()));
+            p.parse(new ByteArrayInputStream(("<p>answer:_________________</p>").getBytes()));
+            p.parse(new ByteArrayInputStream((BRHR).getBytes()));
+        } else {
+            p.parse(new ByteArrayInputStream(
+                (H1_START_TAG + id + q.getQuestionId() + "]</h1></p>").getBytes()));
+            p.parse(new ByteArrayInputStream(imageToBase64(q.getQuestion(), 200, 200).getBytes()));
+            for (Answer a : answers.get(q.getQuestionId())) {
+                p.parse(
+                    new ByteArrayInputStream(("<p>" + "[ ] " + a.getAnswer() + "</p>").getBytes()));
+            }
+            p.parse(new ByteArrayInputStream((BRHR).getBytes()));
+        }
+    }
+
+    private CSSResolver configureCssResolver() {
+        CSSResolver cssResolver = new StyleAttrCSSResolver();
+        InputStream csspathtest = Thread.currentThread().getContextClassLoader()
+            .getResourceAsStream("src/main/resources/export.css");
+        CssFile cssfiletest = XMLWorkerHelper.getCSS(csspathtest);
+        cssResolver.addCss(cssfiletest);
+        return cssResolver;
+    }
+
+    private void generateHeader(XMLParser p) throws IOException {
+        p.parse(new ByteArrayInputStream(
+            imageToBase64("src/main/resources/icons/logo.png", 55, 30).getBytes()));
+        p.parse(new ByteArrayInputStream(
+            (H1_START_TAG + "Date: " + exam.getCreated() + H1_END_TAG).getBytes()));
+        p.parse(new ByteArrayInputStream(
+            (H1_START_TAG + "Author: " + exam.getAuthor() + H1_END_TAG).getBytes()));
+        p.parse(new ByteArrayInputStream(
+            (H1_START_TAG + "Exam ID: " + exam.getExamid() + H1_END_TAG).getBytes()));
+        p.parse(new ByteArrayInputStream(
+            (H1_START_TAG + "Estimated time: " + exam.getExamTime() + " minutes" + H1_END_TAG)
+                .getBytes()));
+        p.parse(new ByteArrayInputStream(
+            (H1_START_TAG + "Points reachable: " + questions.size() + H1_END_TAG).getBytes()));
+        p.parse(new ByteArrayInputStream((BR).getBytes()));
+        p.parse(new ByteArrayInputStream((BR).getBytes()));
     }
 
     /**
@@ -220,16 +260,15 @@ public class PdfExporterImpl {
         }
         inputStream.close();
         return "<img src=\"data:image/png;base64," +
-                DatatypeConverter.printBase64Binary(imageBytes) +
-                "\" width=\"" + width + "\" height=\"" + height + "\"/>";
+            DatatypeConverter.printBase64Binary(imageBytes) +
+            "\" width=\"" + width + "\" height=\"" + height + "\"/>";
     }
 
     /**
      * This class is needed to decode base64 images with iText
      */
-    static class Base64ImageProvider extends AbstractImageProvider {
-        @Override
-        public Image retrieve(String src) {
+    private class Base64ImageProvider extends AbstractImageProvider {
+        @Override public Image retrieve(String src) {
             int pos = src.indexOf("base64,");
             try {
                 if (src.startsWith("data") && pos > 0) {
@@ -238,16 +277,24 @@ public class PdfExporterImpl {
                 } else {
                     return Image.getInstance(src);
                 }
-            } catch (BadElementException ex) {
-                return null;
-            } catch (IOException ex) {
+            } catch (BadElementException | IOException ex) {
+                logger.error(ex);
                 return null;
             }
         }
 
-        @Override
-        public String getImageRootPath() {
+        @Override public String getImageRootPath() {
             return null;
+        }
+    }
+
+
+    class HtmlConstant {
+
+        static final String H1_START_TAG = "<p><h1>";
+        static final String H1_END_TAG = "</h1></p>";
+
+        private HtmlConstant() {
         }
     }
 }
