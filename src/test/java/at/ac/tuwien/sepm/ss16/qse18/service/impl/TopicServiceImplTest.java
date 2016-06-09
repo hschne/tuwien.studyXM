@@ -69,10 +69,7 @@ import static org.mockito.Mockito.when;
         topicService.createTopic(new Topic(), new Subject());
     }
 
-    @Test(expected = ServiceException.class) public void test_createTopic_topicNullThrowsException()
-        throws Exception {
-        topicService.createTopic(null, new Subject());
-    }
+
     //----------------------------------------------------------------------------------------------
 
 
@@ -89,10 +86,7 @@ import static org.mockito.Mockito.when;
         topicService.updateTopic(new Topic());
     }
 
-    @Test(expected = ServiceException.class) public void test_updateTopic_topicNullThrowsException()
-        throws Exception {
-        topicService.updateTopic(null);
-    }
+
     //----------------------------------------------------------------------------------------------
 
 
@@ -109,10 +103,7 @@ import static org.mockito.Mockito.when;
         topicService.deleteTopic(new Topic());
     }
 
-    @Test(expected = ServiceException.class) public void test_deleteTopic_topicNullThrowsException()
-        throws Exception {
-        topicService.deleteTopic(null);
-    }
+
     //----------------------------------------------------------------------------------------------
 
 
