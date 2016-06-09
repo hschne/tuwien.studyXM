@@ -40,6 +40,7 @@ import java.util.Map;
     public ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
     @FXML public void initialize(ExerciseExam exerciseExam){
+        logger.debug("entering initialize with parameters {}", exerciseExam);
         pieChart.getData().clear();
         pieChartData.clear();
 
@@ -88,11 +89,13 @@ import java.util.Map;
 
 
         }catch (ServiceException e){
+            logger.error("Service Exception initialize {}", exerciseExam, e);
             showError(e);
         }
     }
 
     public void finish(){
+        logger.debug("entering finish()");
         mainFrameController.handleHome();
     }
 

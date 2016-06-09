@@ -21,20 +21,20 @@
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
   </columnConstraints>
   <rowConstraints>
-    <RowConstraints minHeight="0.0" prefHeight="10.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="0.0" prefHeight="30.0" vgrow="SOMETIMES" />
     <RowConstraints minHeight="10.0" prefHeight="500.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="0.0" prefHeight="5.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="0.0" prefHeight="50.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
       <AnchorPane prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
          <children>
             <PieChart fx:id="pieChart" layoutX="544.0" layoutY="50.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0" />
-            <Label layoutX="456.0" layoutY="20.0" text="grading:">
+            <Label layoutX="456.0" layoutY="20.0" text="grading:" AnchorPane.leftAnchor="456.0" AnchorPane.rightAnchor="456.0">
                <font>
                   <Font size="24.0" />
                </font>
             </Label>
-            <Label fx:id="labelGrade" layoutX="544.0" layoutY="20.0" text="Label">
+            <Label fx:id="labelGrade" layoutX="544.0" layoutY="20.0" text="Label" AnchorPane.leftAnchor="545.0" AnchorPane.rightAnchor="356.0">
                <font>
                   <Font size="24.0" />
                </font>
