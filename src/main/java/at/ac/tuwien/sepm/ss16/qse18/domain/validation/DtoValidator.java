@@ -122,10 +122,14 @@ public class DtoValidator {
             throw new DtoValidatorException(
                 "Resource name must not be empty. (leading or trailing whitespaces are ignored)");
         }
+        if(resource.getName().trim().length() > 200){
+            throw new DtoValidatorException("Resource name must not be greater than 200.");
+        }
         if (resource.getReference().isEmpty()) {
             throw new DtoValidatorException(
                 "Resource reference must not be empty. Select a file to reference.");
         }
+
         File file = new File(resource.getReference());
         if (!file.exists() || file.isDirectory()) {
             throw new DtoValidatorException(

@@ -44,6 +44,8 @@ import java.util.*;
     private QuestionType questionTypeOfResource;
 
     @FXML public void initialize() {
+        in = null;
+        out = null;
         if (inputs == null) {
             checkBoxContinue.setVisible(true);
         }
@@ -133,7 +135,7 @@ import java.util.*;
     private void copyFile(File sourceFile, File destFile) throws IOException {
         if (sourceFile == null || destFile == null) {
             throw new NoSuchFileException(
-                "Can not create a new resource. Please select a file first");
+                "Can not create a new resource. Please select a file first.");
         }
         try (FileInputStream source = new FileInputStream(sourceFile);
             FileOutputStream destination = new FileOutputStream(destFile)) {
