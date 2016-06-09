@@ -55,6 +55,7 @@ import java.util.List;
     @Autowired ExerciseExamServiceImpl examService;
     @Autowired QuestionServiceImpl questionService;
     @Autowired MainFrameController mainFrameController;
+    @Autowired ShowResultController showResultController;
 
     private static final Logger logger = LogManager.getLogger(DoExamController.class);
     private int starttime;
@@ -139,7 +140,8 @@ import java.util.List;
     }
 
     public void handleShowResultsButton(){
-        //TODO implement
+        mainFrameController.handleShowExamResult();
+        showResultController.initialize(this.exam);
     }
 
     private void setAnswers(int currentQuestionNumber){
