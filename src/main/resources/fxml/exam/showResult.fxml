@@ -49,7 +49,7 @@
             </BarChart>
          </children>
       </AnchorPane>
-      <Button fx:id="buttonFinish" mnemonicParsing="false" text="finish" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+      <Button fx:id="buttonFinish" mnemonicParsing="false" onAction="#finish" text="finish" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets right="40.0" />
          </GridPane.margin>
