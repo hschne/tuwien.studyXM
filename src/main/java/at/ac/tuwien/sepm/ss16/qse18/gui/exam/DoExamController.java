@@ -92,6 +92,9 @@ import java.util.List;
             for (Integer i : questionIds) {
                     questions.add(questionService.getQuestion(i));
             }
+            if(questions.size() == 1){
+                skipQuesitonButton.setVisible(false);
+            }
         }
         catch (ServiceException e){
             logger.error("An error occured",e);
@@ -124,7 +127,6 @@ import java.util.List;
         else{
             nextQuestionButton.setVisible(false);
             showResultsButton.setVisible(true);
-            skipQuesitonButton.setVisible(false);
             timeline.stop();
             mainFrameController.handleExamFinished(subPane);
         }
