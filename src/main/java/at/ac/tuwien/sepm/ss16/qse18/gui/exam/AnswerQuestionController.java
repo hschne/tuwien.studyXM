@@ -72,34 +72,6 @@ public class AnswerQuestionController extends BaseController {
     }
 
     public boolean isCorrect() {
-        /*
-        boolean isCorrect = true;
-
-        if((answer1Button.isSelected() && !answer1.isCorrect()) || (!answer1Button.isSelected() &&
-            answer1.isCorrect())){
-            isCorrect = false;
-        }
-        if(answer2 != null) {
-            if ((answer2Button.isSelected() && !answer2.isCorrect()) || (!answer2Button.isSelected()
-                && answer2.isCorrect())) {
-                isCorrect = false;
-            }
-        }
-
-        if(answer3 != null) {
-            if ((answer3Button.isSelected() && !answer3.isCorrect()) || (!answer3Button.isSelected()
-                && answer3.isCorrect())) {
-                isCorrect = false;
-            }
-        }
-
-        if(answer4 != null) {
-            if ((answer4Button.isSelected() && !answer4.isCorrect()) || (!answer4Button.isSelected()
-                && answer4.isCorrect())) {
-                isCorrect = false;
-            }
-        }
-        */
         Map<Answer, Boolean> answerBooleanMap = new HashMap<>();
         answerBooleanMap.put(answer1, answer1Button.isSelected());
         answerBooleanMap.put(answer2, answer2Button.isSelected());

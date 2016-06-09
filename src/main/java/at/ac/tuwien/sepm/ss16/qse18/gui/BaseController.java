@@ -72,20 +72,4 @@ import java.io.IOException;
         return result == ButtonType.OK;
     }
 
-    protected <T extends GuiController> T setSubView(String fxmlPath, Class T, Pane subPane) throws IOException {
-        logger.debug("Loading view from " + fxmlPath);
-        SpringFXMLLoader.FXMLWrapper<Object, T> wrapper = springFXMLLoader.loadAndWrap(fxmlPath, T);
-        subPane.getChildren().clear();
-        Pane newPane = (Pane) wrapper.getLoadedObject();
-        newPane.setPrefWidth(subPane.getWidth());
-        newPane.setPrefHeight(subPane.getHeight());
-        AnchorPane.setTopAnchor(newPane, 0.0);
-        AnchorPane.setRightAnchor(newPane, 0.0);
-        AnchorPane.setLeftAnchor(newPane, 0.0);
-        AnchorPane.setBottomAnchor(newPane, 0.0);
-        subPane.getChildren().add(newPane);
-        return wrapper.getController();
-    }
-
-
 }
