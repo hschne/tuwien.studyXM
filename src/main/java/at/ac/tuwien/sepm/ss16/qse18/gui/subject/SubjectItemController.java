@@ -104,18 +104,6 @@ import org.springframework.stereotype.Component;
     }
 
 
-
-    public void addTopic(ObservableTopic topic,Subject subject,ObservableList<ObservableTopic> topicList){
-        try{
-            Topic t = topicService.createTopic(topic.getT(),subject);
-            topicList.add(new ObservableTopic(t));
-        }
-        catch (ServiceException e){
-            showError(e);
-        }
-    }
-
-
     public ObservableList<ObservableTopic> getTopicList(){
         return this.topicList;
     }

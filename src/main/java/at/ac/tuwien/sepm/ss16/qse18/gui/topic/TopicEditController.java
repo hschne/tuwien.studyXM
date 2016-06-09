@@ -2,10 +2,13 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.topic;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectItemController;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -20,25 +23,28 @@ import java.io.IOException;
 /**
  * @author Philipp Ganiu
  */
-@Component  @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class TopicEditController implements
-    GuiController{
+@Component  @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class TopicEditController extends
+    BaseController{
     @FXML public TextField topic;
 
     private ObservableList<ObservableTopic> topicList;
     private Subject subject;
-    private SubjectItemController overviewController;
-    @Autowired MainFrameController mainFrameController;
 
-    @Autowired public TopicEditController(SubjectItemController controller) {
-        this.overviewController = controller;
-    }
+    @Autowired MainFrameController mainFrameController;
+    @Autowired private TopicService topicService;
 
 
     @FXML
     public void handleOk(){
         Topic newTopic = new Topic(-1,topic.getText());
-        overviewController.addTopic(new ObservableTopic(newTopic),subject,topicList);
-        mainFrameController.handleSubjects();
+        try{
+            Topic t = topicService.createTopic(newTopic,subject);
+            topicList.add(new ObservableTopic(t));
+            mainFrameController.handleSubjects();
+        }
+        catch (ServiceException e){
+            showError(e);
+        }
     }
 
     public void setSubject(Subject subject){

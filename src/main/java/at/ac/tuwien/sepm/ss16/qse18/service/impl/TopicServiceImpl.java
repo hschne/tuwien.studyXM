@@ -61,8 +61,11 @@ import java.util.List;
     }
 
     @Override public Topic createTopic(Topic topic, Subject subject) throws ServiceException {
-        if(!verifyTopic(topic)) {
-            throw new ServiceException("Topic is not valid");
+        try{
+            verifyTopic(topic);
+        }
+        catch (ServiceException e){
+            throw new ServiceException(e.getMessage());
         }
 
         try {
@@ -74,8 +77,11 @@ import java.util.List;
     }
 
     @Override public boolean deleteTopic(Topic topic) throws ServiceException {
-        if(!verifyTopic(topic)) {
-            throw new ServiceException("Topic is not valid");
+        try{
+            verifyTopic(topic);
+        }
+        catch (ServiceException e){
+            throw new ServiceException(e.getMessage());
         }
 
         try {
@@ -87,9 +93,13 @@ import java.util.List;
     }
 
     @Override public Topic updateTopic(Topic topic) throws ServiceException {
-        if(!verifyTopic(topic)) {
-            throw new ServiceException("Topic is not valid");
+        try{
+            verifyTopic(topic);
         }
+        catch (ServiceException e){
+            throw new ServiceException(e.getMessage());
+        }
+
 
         try {
             return topicDao.updateTopic(topic);
@@ -99,11 +109,16 @@ import java.util.List;
         }
     }
 
-    public boolean verifyTopic(Topic t) {
+    private void verifyTopic(Topic t) throws ServiceException {
         if (t == null) {
-            return false;
+            return;
         }
-        return !t.getTopic().trim().isEmpty() && (t.getTopic().length() <= 200);
+        if(t.getTopic().trim().isEmpty()){
+            throw new ServiceException("Topic cannot be empty");
+        }
+        if(t.getTopic().length() > 200){
+            throw new ServiceException("Topic cannot be longer then 200 characters");
+        }
     }
 
     @Override public List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException {
