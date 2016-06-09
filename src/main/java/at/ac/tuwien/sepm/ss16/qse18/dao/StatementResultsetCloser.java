@@ -35,7 +35,9 @@ public class StatementResultsetCloser {
         }
         for (Statement s : statements) {
             try {
-                s.close();
+                if (s != null) {
+                    s.close();
+                }
             } catch (Exception e) {
                 logger.error("Could not close statement.", e);
                 throw new DaoException("Could not close statement: " + e.getMessage());
@@ -48,7 +50,9 @@ public class StatementResultsetCloser {
 
         for (ResultSet rs : resultSets) {
             try {
-                rs.close();
+                if (rs != null) {
+                    rs.close();
+                }
             } catch (Exception e) {
                 logger.error("Could not close resultset.", e);
                 throw new DaoException("Could not close resultset: " + e.getMessage());
