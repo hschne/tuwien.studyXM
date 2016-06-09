@@ -63,6 +63,7 @@ import org.springframework.stereotype.Component;
         }
         if (createOrUpdateSubject(newSubject))
             return;
+        showSuccess("Subject successfully created");
         changeView();
     }
 

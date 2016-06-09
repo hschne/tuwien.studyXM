@@ -22,11 +22,20 @@ public class DtoValidator {
         if(subject.getName().trim().isEmpty()) {
             throw new DtoValidatorException("Subject name must not be empty.");
         }
+        if (subject.getName().length() > 80) {
+            throw new DtoValidatorException("Subject name must not be longer than 80 characters");
+        }
         if(subject.getSemester().trim().isEmpty()){
             throw new DtoValidatorException("Subject semester must not be empty.");
         }
+        if (subject.getSemester().length() > 50) {
+            throw new DtoValidatorException("Subject semester must not be longer than 50 characters");
+        }
         if(subject.getAuthor().trim().isEmpty()){
             throw new DtoValidatorException("Author name must not be empty.");
+        }
+        if (subject.getAuthor().length() > 80) {
+            throw new DtoValidatorException("Subject author must not be longer than 80 characters");
         }
         if(subject.getEcts() <= 0) {
             throw new DtoValidatorException("ECTS must be greater than 0.");
