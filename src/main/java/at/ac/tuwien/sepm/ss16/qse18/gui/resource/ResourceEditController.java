@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.ResourceNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -37,6 +38,8 @@ import java.util.*;
     @Autowired ResourceOverviewController overviewController;
 
     @Autowired ResourceNavigation resourceNavigation;
+
+    @Autowired QuestionNavigation questionNavigation;
 
     private File out;
 
@@ -106,16 +109,16 @@ import java.util.*;
 
             switch (questionTypeOfResource) {
                 case MULTIPLECHOICE:
-                    mainFrameController.handleMultipleChoiceQuestion(null, inputs);
+                    questionNavigation.handleMultipleChoiceQuestion(null, inputs);
                     break;
                 case OPENQUESTION:
-                    mainFrameController.handleOpenQuestion(null, inputs);
+                    questionNavigation.handleOpenQuestion(null, inputs);
                     break;
                 case SINGLECHOICE:
-                    mainFrameController.handleSingleChoiceQuestion(null, inputs);
+                    questionNavigation.handleSingleChoiceQuestion(null, inputs);
                     break;
                 case NOTECARD:
-                    mainFrameController.handleImageQuestion(null, inputs);
+                    questionNavigation.handleImageQuestion(null, inputs);
                     break;
             }
         } else {

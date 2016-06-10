@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
@@ -60,6 +61,12 @@ public abstract class QuestionController
     @FXML
     protected ChoiceBox choiceBoxQuestionTime;
     List inputs;
+
+    @Autowired QuestionNavigation questionNavigation;
+
+    @FXML public void intialize(){
+        questionNavigation.refreshMainPane();
+    }
 
     @Autowired
     public QuestionController(QuestionService questionService,

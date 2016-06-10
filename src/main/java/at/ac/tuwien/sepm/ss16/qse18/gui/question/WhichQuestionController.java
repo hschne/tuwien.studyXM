@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.question;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 
 import javafx.fxml.FXML;
@@ -8,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -30,6 +32,8 @@ import java.io.IOException;
 
     private ObservableTopic topic;
 
+    @Autowired QuestionNavigation questionNavigation;
+
     @FXML public void initialize() {
         logger.debug("Initializing whichQuestion screen");
         ToggleGroup tg = new ToggleGroup();
@@ -38,6 +42,7 @@ import java.io.IOException;
         radioButtonOpenQuestion.setToggleGroup(tg);
         radioButtonNotecard.setToggleGroup(tg);
         radioButtonMultipleChoice.setSelected(true);
+        questionNavigation.refreshMainPane();
 
     }
 
@@ -45,13 +50,13 @@ import java.io.IOException;
         logger.debug("Opening creation screen");
 
         if(radioButtonMultipleChoice.isSelected()) {
-            mainFrameController.handleMultipleChoiceQuestion(this.topic);
+            questionNavigation.handleMultipleChoiceQuestion(this.topic);
         } else if(radioButtonSingleChoice.isSelected()) {
-            mainFrameController.handleSingleChoiceQuestion(this.topic);
+            questionNavigation.handleSingleChoiceQuestion(this.topic);
         } else if(radioButtonOpenQuestion.isSelected()) {
-           mainFrameController.handleOpenQuestion(this.topic);
+            questionNavigation.handleOpenQuestion(this.topic);
         } else {
-            mainFrameController.handleImageQuestion(topic);
+            questionNavigation.handleImageQuestion(topic);
         }
 
     }

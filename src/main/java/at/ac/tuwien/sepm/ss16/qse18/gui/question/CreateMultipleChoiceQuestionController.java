@@ -49,7 +49,7 @@ public class CreateMultipleChoiceQuestionController extends QuestionController {
             return;
         }
         if (checkBoxContinue.isSelected()) {
-            mainFrameController.handleMultipleChoiceQuestion(this.topic);
+            questionNavigation.handleMultipleChoiceQuestion(this.topic);
         } else {
             mainFrameController.handleSubjects();
         }

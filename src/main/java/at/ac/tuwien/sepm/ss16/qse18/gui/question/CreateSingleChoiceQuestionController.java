@@ -59,7 +59,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
             return;
         }
         if (checkBoxContinue.isSelected()) {
-            mainFrameController.handleSingleChoiceQuestion(this.topic);
+            questionNavigation.handleSingleChoiceQuestion(this.topic);
         } else {
             mainFrameController.handleSubjects();
         }

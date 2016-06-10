@@ -44,7 +44,7 @@ public class CreateOpenQuestionController extends QuestionController {
             return;
         }
         if (checkBoxContinue.isSelected()) {
-            mainFrameController.handleOpenQuestion(this.topic);
+            questionNavigation.handleOpenQuestion(this.topic);
         } else {
             mainFrameController.handleSubjects();
         }

@@ -17,8 +17,8 @@ import java.io.IOException;
 public abstract class Navigation {
 
     protected final Logger logger = LogManager.getLogger();
-    Pane pane;
-    private SpringFXMLLoader fxmlLoader;
+    protected Pane pane;
+    protected SpringFXMLLoader fxmlLoader;
     private AlertBuilder alertBuilder;
 
     public Navigation(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder){
@@ -49,7 +49,7 @@ public abstract class Navigation {
     }
 
 
-    void handleException(Exception e) {
+    protected void handleException(Exception e) {
         logger.error("Exception thrown", e);
         Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
             .headerText("Could not load sub view.")

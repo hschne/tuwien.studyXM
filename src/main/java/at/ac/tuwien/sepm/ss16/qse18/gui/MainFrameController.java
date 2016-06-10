@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.DoExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.*;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.Navigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
@@ -40,12 +41,14 @@ import java.util.List;
  *
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class MainFrameController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class MainFrameController extends
+    Navigation {
 
-    private static final Logger logger = LogManager.getLogger();
     @FXML public Pane paneContent;
-    private SpringFXMLLoader fxmlLoader;
-    private AlertBuilder alertBuilder;
+
+    public MainFrameController(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {
+        super(fxmlLoader, alertBuilder);
+    }
 
     @FXML public void handleHome() {
         logger.debug("Loading home view");
@@ -95,114 +98,6 @@ import java.util.List;
         }
     }
 
-    public void handleMultipleChoiceQuestion(ObservableTopic topic) {
-        handleMultipleChoiceQuestion(topic, null);
-    }
-
-    /**
-     * Load Multiple Choice Question screen with saved input
-     *
-     * @param topic  The topic for which the multiplechoice question is created for
-     *               if null then the topic is already set
-     * @param inputs This list contains all inputs of the user
-     */
-    public void handleMultipleChoiceQuestion(ObservableTopic topic, List inputs) {
-        logger.debug("Loading Multiple Choice question screen");
-        try {
-            CreateMultipleChoiceQuestionController multipleChoiceQuestionController =
-                setSubView("/fxml/question/createMultipleChoiceQuestion.fxml",
-                    CreateMultipleChoiceQuestionController.class,paneContent);
-
-            if (topic != null) {
-                multipleChoiceQuestionController.setTopic(topic);
-            }
-
-            multipleChoiceQuestionController.setInput(inputs);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
-    public void handleSingleChoiceQuestion(ObservableTopic topic) {
-        handleSingleChoiceQuestion(topic, null);
-    }
-
-    /**
-     * Load Single Choice Question screen with saved input
-     *
-     * @param topic  The topic for which the singlechoice question is created for
-     *               if null then the topic is already set
-     * @param inputs This list contains all inputs of the user
-     */
-    public void handleSingleChoiceQuestion(ObservableTopic topic, List inputs) {
-        logger.debug("Loading Single Choice question screen ");
-        try {
-            CreateSingleChoiceQuestionController singleChoiceQuestionController =
-                setSubView("/fxml/question/createSingleChoiceQuestion.fxml",
-                    CreateSingleChoiceQuestionController.class,paneContent);
-
-            if (topic != null) {
-                singleChoiceQuestionController.setTopic(topic);
-            }
-
-            singleChoiceQuestionController.setInput(inputs);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
-    public void handleOpenQuestion(ObservableTopic topic) {
-        handleOpenQuestion(topic, null);
-    }
-
-    /**
-     * Load Open Question screen with saved input
-     *
-     * @param topic  The topic for which the open question is created for
-     *               if null then the topic is already set
-     * @param inputs This list contains all inputs of the user
-     */
-    public void handleOpenQuestion(ObservableTopic topic, List inputs) {
-        logger.debug("Loading Open question screen ");
-        try {
-            CreateOpenQuestionController openQuestionController =
-                setSubView("/fxml/question/createOpenQuestion.fxml",
-                    CreateMultipleChoiceQuestionController.class,paneContent);
-
-            if (topic != null) {
-                openQuestionController.setTopic(topic);
-            }
-
-            openQuestionController.setInput(inputs);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
-    public void handleImageQuestion(ObservableTopic topic) {
-        handleImageQuestion(topic, null);
-    }
-
-    /**
-     * Load Image Question screen with saved input
-     *
-     * @param topic  The topic for which the image question is created for
-     *               if null then the topic is already set
-     * @param inputs This list contains all inputs of the user
-     */
-    public void handleImageQuestion(ObservableTopic topic, List inputs) {
-        logger.debug("Loading Image question screen ");
-        try {
-            CreateImageQuestionController imageQuestionController =
-                setSubView("/fxml/question/createImageQuestion.fxml",
-                    CreateImageQuestionController.class,paneContent);
-            imageQuestionController.setTopic(topic);
-            imageQuestionController.setInput(inputs);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
     public void handleShowExerciseExams(ObservableExam exam) {
         try {
             ShowExerciseExamsController controller = setSubView("/fxml/exam/exerciseExamOverview.fxml",
@@ -210,17 +105,6 @@ import java.util.List;
             controller.setExam(exam);
 
         } catch(Exception e) {
-            handleException(e);
-        }
-    }
-
-    public void handleCreateExam(ObservableExam exam) {
-        logger.debug("Loading create exam screen");
-        try {
-            NewExerciseExamController controller = setSubView("/fxml/exam/newExerciseExam.fxml",
-                NewExerciseExamController.class,paneContent);
-            controller.setExam(exam);
-        } catch (Exception e) {
             handleException(e);
         }
     }
@@ -380,23 +264,6 @@ import java.util.List;
         AnchorPane.setBottomAnchor(pane, 0.0);
         paneContent.getChildren().add(pane);
     }
-
-    private void handleException(Exception e) {
-        logger.error("Exception thrown", e);
-        Alert alert = alertBuilder.alertType(Alert.AlertType.ERROR).title("Error")
-            .headerText("Could not load sub view.")
-            .contentText("Unexpected Error. Please view logs for details.").build();
-        alert.showAndWait();
-    }
-
-    @Autowired private void setSpringFXMLLoader(SpringFXMLLoader loader) {
-        this.fxmlLoader = loader;
-    }
-
-    @Autowired private void setAlertBuilder(AlertBuilder alertBuilder) {
-        this.alertBuilder = alertBuilder;
-    }
-
 
 
 }

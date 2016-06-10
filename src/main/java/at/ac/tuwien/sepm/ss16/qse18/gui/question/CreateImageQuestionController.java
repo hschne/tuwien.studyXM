@@ -64,7 +64,7 @@ public class CreateImageQuestionController extends QuestionController {
             return;
         }
         if (checkBoxContinue.isSelected()) {
-            mainFrameController.handleImageQuestion(this.topic);
+            questionNavigation.handleImageQuestion(this.topic);
         } else {
             mainFrameController.handleSubjects();
         }
