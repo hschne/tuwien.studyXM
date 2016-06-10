@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.ResourceNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -34,6 +35,8 @@ import java.util.stream.Collectors;
     private Label resourceLabel;
     private QuestionType questionTypeOfResource;
 
+    @Autowired ResourceNavigation resourceNavigation;
+
 
     @Autowired public ResourceOverviewController(ResourceService resourceService) {
         this.resourceService = resourceService;
@@ -43,7 +46,7 @@ import java.util.stream.Collectors;
         try {
             logger.debug("Initializing resource table");
             initializeListView();
-
+            resourceNavigation.refreshMainPane();
             if (inputs == null) {
                 chooseText.setText("");
             }
@@ -55,7 +58,7 @@ import java.util.stream.Collectors;
 
     @FXML public void handleNew() {
         logger.debug("Creating new resource");
-        mainFrameController.handleCreateResource(inputs, questionTypeOfResource);
+        resourceNavigation.handleCreateResource(inputs, questionTypeOfResource);
     }
 
     public void addResource(ObservableResource resource) throws ServiceException {

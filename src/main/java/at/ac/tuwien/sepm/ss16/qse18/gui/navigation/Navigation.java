@@ -14,14 +14,14 @@ import java.io.IOException;
 /**
  * @author Hans-Joerg Schroedl
  */
-public abstract class Navigator {
+public abstract class Navigation {
 
     protected final Logger logger = LogManager.getLogger();
     Pane pane;
     private SpringFXMLLoader fxmlLoader;
     private AlertBuilder alertBuilder;
 
-    public Navigator(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder){
+    public Navigation(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder){
         this.fxmlLoader = fxmlLoader;
         this.alertBuilder = alertBuilder;
     }

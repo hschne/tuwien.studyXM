@@ -1,34 +1,24 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigator;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicCell;
-import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicEditController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectTopicQuestionService;
-import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 
-import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javafx.stage.Modality;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -52,7 +42,7 @@ import org.springframework.stereotype.Component;
 
     @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
 
-    @Autowired private SubjectNavigator subjectNavigator;
+    @Autowired private SubjectNavigation subjectNavigator;
 
     @FXML
     public void initialize(ObservableSubject subject){

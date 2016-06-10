@@ -18,10 +18,10 @@ import java.io.IOException;
  * @author Hans-Joerg Schroedl
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class SubjectNavigator extends SubNavigator{
+public class SubjectNavigation extends SubviewNavigation {
 
     @Autowired
-    public SubjectNavigator(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {
+    public SubjectNavigation(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {
         super(fxmlLoader, alertBuilder);
     }
 

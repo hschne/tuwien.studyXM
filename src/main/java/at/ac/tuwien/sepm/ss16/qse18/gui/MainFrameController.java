@@ -65,39 +65,6 @@ import java.util.List;
         }
     }
 
-    public void handleCreateSubject(ObservableSubject subject) {
-        logger.debug("Loading create subject view");
-        try {
-            SubjectEditController controller =
-                setSubView("/fxml/subject/subjectEditView.fxml", SubjectEditController.class,paneContent);
-            controller.setSubject(subject);
-        } catch (IOException e) {
-            handleException(e);
-        }
-    }
-
-
-    public void handleCreateTopic(ObservableSubject subject, ObservableList<ObservableTopic> topicList) {
-        logger.debug("Loading create topic view");
-        try {
-            TopicEditController controller =
-                setSubView("/fxml/topic/topicEditView.fxml", TopicEditController.class,paneContent);
-            controller.setSubject(subject.getSubject());
-            controller.setTopicList(topicList);
-        } catch (IOException e) {
-            handleException(e);
-        }
-    }
-
-    public void handleNewExam() {
-        logger.debug("Loading new exam view");
-        try {
-            setSubView("/fxml/exam/newExam.fxml", NewExamController.class,paneContent);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
-
     @FXML public void handleResources() {
         logger.debug("Loading resource view");
         handleChooseResource(null, null, null);
@@ -110,17 +77,6 @@ import java.util.List;
                 setSubView("/fxml/resource/resourceOverview.fxml",
                     ResourceOverviewController.class,paneContent);
             resourceOverviewController.setInput(inputs, resourceLabel, questionType);
-        } catch (IOException e) {
-            handleException(e);
-        }
-    }
-
-    public void handleCreateResource(List inputs, QuestionType questionType) {
-        logger.debug("Loading create resource with input list");
-        try {
-            ResourceEditController resourceEditController =
-                setSubView("/fxml/resource/resourceEditView.fxml", ResourceEditController.class,paneContent);
-            resourceEditController.setInput(inputs, questionType);
         } catch (IOException e) {
             handleException(e);
         }

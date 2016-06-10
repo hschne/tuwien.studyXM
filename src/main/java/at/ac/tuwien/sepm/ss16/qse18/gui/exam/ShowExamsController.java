@@ -1,10 +1,10 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.ExamNavigation;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubviewNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
-import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -31,6 +31,8 @@ import java.util.stream.Collectors;
     private ObservableList<ObservableExam> exams;
     private ExamService examService;
 
+    @Autowired ExamNavigation examNavigation;
+
     @Autowired public ShowExamsController(ExamService examService) {
         this.examService = examService;
     }
@@ -39,6 +41,7 @@ import java.util.stream.Collectors;
         try {
             logger.debug("Initializing exam table");
             initializeListView();
+            examNavigation.refreshMainPane();
         } catch(ServiceException e) {
             logger.error(e);
             showError(e);
@@ -46,7 +49,7 @@ import java.util.stream.Collectors;
     }
 
     @FXML public void newExam() {
-        mainFrameController.handleNewExam();
+        examNavigation.handleNewExam();
     }
 
     private void initializeListView() throws ServiceException {

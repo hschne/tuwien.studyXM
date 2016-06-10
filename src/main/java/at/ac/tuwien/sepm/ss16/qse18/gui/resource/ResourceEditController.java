@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.ResourceNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
@@ -35,6 +36,8 @@ import java.util.*;
 
     @Autowired ResourceOverviewController overviewController;
 
+    @Autowired ResourceNavigation resourceNavigation;
+
     private File out;
 
     private File in;
@@ -46,6 +49,7 @@ import java.util.*;
     @FXML public void initialize() {
         in = null;
         out = null;
+        resourceNavigation.refreshMainPane();
         if (inputs == null) {
             checkBoxContinue.setVisible(true);
         }
@@ -116,7 +120,7 @@ import java.util.*;
             }
         } else {
             if (checkBoxContinue.isSelected()) {
-                mainFrameController.handleCreateResource(null, null);
+                resourceNavigation.handleCreateResource(null, null);
             } else {
                 mainFrameController.handleResources();
             }

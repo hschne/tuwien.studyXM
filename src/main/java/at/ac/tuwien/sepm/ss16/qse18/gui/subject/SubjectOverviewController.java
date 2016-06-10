@@ -2,7 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigator;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
     @FXML private Button deleteButton;
     private ObservableList<ObservableSubject> subjectList;
     private SubjectService subjectService;
-    @Autowired SubjectNavigator subjectNavigator;
+    @Autowired SubjectNavigation subjectNavigator;
 
     @Autowired ApplicationContext applicationContext;
 

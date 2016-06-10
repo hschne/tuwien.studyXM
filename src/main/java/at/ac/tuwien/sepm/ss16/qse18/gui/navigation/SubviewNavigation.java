@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
 /**
  * @author Hans-Joerg Schroedl
  */
-@Component public abstract class SubNavigator extends Navigator {
+@Component public abstract class SubviewNavigation extends Navigation {
 
     @Autowired private MainFrameController mainFrameController;
 
-    public SubNavigator(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {
+    public SubviewNavigation(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {
         super(fxmlLoader, alertBuilder);
     }
 
