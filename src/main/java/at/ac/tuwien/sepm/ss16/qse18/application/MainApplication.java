@@ -71,9 +71,9 @@ import java.util.Optional;
         this.primaryStage = primaryStage;
         primaryStage.show();
 
+
         try {
             new ConnectionH2().getConnection();
-
             //We cant use intialize before stage is not initialized, so we use this workaround
             controller.handleHome();
         } catch (SQLException e) {

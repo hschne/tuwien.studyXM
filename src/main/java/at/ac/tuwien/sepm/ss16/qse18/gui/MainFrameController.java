@@ -400,6 +400,10 @@ import java.util.List;
         return controller;
     }
 
+    public Pane getPaneContent() {
+        return paneContent;
+    }
+
     private <T extends GuiController> T setSubView(String fxmlPath, Class T, Pane paneContent) throws IOException {
         logger.debug("Loading view from " + fxmlPath);
         SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);

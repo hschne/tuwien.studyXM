@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigator;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicCell;
@@ -51,6 +52,8 @@ import org.springframework.stereotype.Component;
 
     @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
 
+    @Autowired private SubjectNavigator subjectNavigator;
+
     @FXML
     public void initialize(ObservableSubject subject){
         try {
@@ -81,7 +84,7 @@ import org.springframework.stereotype.Component;
 
     public void setAddTopicButtonAction(ObservableSubject subject,ObservableList<ObservableTopic> topicList){
         addTopicButton.setOnAction(event -> {
-            mainFrameController.handleCreateTopic(subject,topicList);
+            subjectNavigator.handleCreateTopic(subject,topicList);
             });
     }
 

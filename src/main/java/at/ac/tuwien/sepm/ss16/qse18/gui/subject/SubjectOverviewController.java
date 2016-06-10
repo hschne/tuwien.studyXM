@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigator;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
@@ -28,9 +29,11 @@ import java.util.stream.Collectors;
     @FXML private ListView<ObservableSubject> subjectListView;
     @FXML private Button editButton;
     @FXML private Button deleteButton;
-    @Autowired ApplicationContext applicationContext;
     private ObservableList<ObservableSubject> subjectList;
     private SubjectService subjectService;
+    @Autowired SubjectNavigator subjectNavigator;
+
+    @Autowired ApplicationContext applicationContext;
 
     @Autowired public SubjectOverviewController(SubjectService subjectService) {
         this.subjectService = subjectService;
@@ -42,6 +45,7 @@ import java.util.stream.Collectors;
             //Lambdas to create a new observable subject for each subject
             initializeButtons();
             initializeListView();
+            subjectNavigator.refreshMainPane();
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
@@ -55,7 +59,7 @@ import java.util.stream.Collectors;
      */
     @FXML public void handleNew() throws IOException {
         logger.debug("Create new subject");
-        mainFrameController.handleCreateSubject(null);
+        subjectNavigator.handleCreateSubject(null);
     }
 
     /**
@@ -87,7 +91,7 @@ import java.util.stream.Collectors;
     @FXML public void handleEdit() throws IOException {
         logger.debug("Editing selected subject");
         ObservableSubject subject = subjectListView.getSelectionModel().getSelectedItem();
-        mainFrameController.handleCreateSubject(subject);
+        subjectNavigator.handleCreateSubject(subject);
     }
 
     /**
