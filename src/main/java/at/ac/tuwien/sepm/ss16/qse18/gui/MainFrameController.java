@@ -3,7 +3,9 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.exam.DoExamController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.DoExamController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
@@ -80,11 +82,10 @@ import java.util.List;
         try {
             TopicEditController controller =
                 setSubView("/fxml/topic/topicEditView.fxml", TopicEditController.class,paneContent);
-            //controller.setStage(stage);
             controller.setSubject(subject.getSubject());
             controller.setTopicList(topicList);
         } catch (IOException e) {
-
+            handleException(e);
         }
     }
 

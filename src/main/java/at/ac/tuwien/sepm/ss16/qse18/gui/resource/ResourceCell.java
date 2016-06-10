@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 
+import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
+ * This class represents a custom list item in the resource list view.
+ *
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ResourceCell
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) class ResourceCell
     extends ListCell<ObservableResource> {
 
     @Autowired SpringFXMLLoader springFXMLLoader;
@@ -45,7 +48,7 @@ import java.io.IOException;
             return editResourceController.getController();
         } catch (IOException e) {
             logger.error(e);
-            throw new RuntimeException("Error loading subject item", e);
+            throw new FxmlLoadException("Error loading subject item", e);
         }
     }
 

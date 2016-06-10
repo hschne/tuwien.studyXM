@@ -65,6 +65,7 @@ import java.util.List;
             verifyTopic(topic);
         }
         catch (ServiceException e){
+            logger.error(e);
             throw new ServiceException(e.getMessage());
         }
 
@@ -72,7 +73,7 @@ import java.util.List;
             return topicDao.createTopic(topic, subject);
         } catch(DaoException e) {
             logger.error("Could not create topic", e);
-            throw new ServiceException(e.getMessage());
+            throw new ServiceException(e.getMessage(),e);
         }
     }
 
@@ -81,7 +82,8 @@ import java.util.List;
             verifyTopic(topic);
         }
         catch (ServiceException e){
-            throw new ServiceException(e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e.getMessage(),e);
         }
 
         try {
@@ -97,7 +99,8 @@ import java.util.List;
             verifyTopic(topic);
         }
         catch (ServiceException e){
-            throw new ServiceException(e.getMessage());
+            logger.error(e);
+            throw new ServiceException(e.getMessage(),e);
         }
 
 

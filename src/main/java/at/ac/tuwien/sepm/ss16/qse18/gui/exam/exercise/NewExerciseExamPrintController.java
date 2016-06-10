@@ -1,10 +1,9 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
+package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.application.MainApplication;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.*;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.QuestionServiceImpl;
 import javafx.fxml.FXML;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -40,7 +39,7 @@ import java.io.File;
         File file = selectFile();
         if (file != null) {
             tryPrint(exam, file);
-            showSuccess("ExerciseExam was saved as "+file.getName());
+            showSuccess("exercise was saved as "+file.getName());
             mainFrameController.handleExams();
         }
     }

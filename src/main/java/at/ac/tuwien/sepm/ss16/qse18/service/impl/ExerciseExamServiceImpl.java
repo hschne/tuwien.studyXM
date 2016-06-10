@@ -56,7 +56,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         logger.debug("entering method getExam with parameters {}", examID);
         if (examID <= 0) {
             logger.error("Service Exception getExam {}", examID);
-            throw new ServiceException("Invalid ExerciseExam ID, please check your input");
+            throw new ServiceException("Invalid exercise ID, please check your input");
         }
 
         try {

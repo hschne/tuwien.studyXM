@@ -137,7 +137,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
         if(examID <= 0) {
             logger.error("Dao Exception in getAllQuestionsofExam with parameters", examID);
-            throw new DaoException("Invalid ExerciseExam ID, please check your input");
+            throw new DaoException("Invalid exercise ID, please check your input");
         }
 
         PreparedStatement pstmt = null;
@@ -156,7 +156,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
         } catch(SQLException e) {
             logger.error("SQL Exception in delete with parameters {}", examID, e);
-            throw new DaoException("Could not get List with all Questions for ExerciseExam ID " + examID);
+            throw new DaoException("Could not get List with all Questions for exercise ID " + examID);
         } finally {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
@@ -194,8 +194,8 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
         try {
             validate(exerciseExam);
         } catch (DtoValidatorException e) {
-            logger.error("ExerciseExam [" + exerciseExam + "] is invalid", e);
-            throw new DaoException("ExerciseExam [" + exerciseExam + "] is invalid: " + e);
+            logger.error("exercise [" + exerciseExam + "] is invalid", e);
+            throw new DaoException("exercise [" + exerciseExam + "] is invalid: " + e);
         }
     }
 
@@ -215,7 +215,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
         if(examID <= 0) {
             logger.error("Dao Exception in getAnsweredQuestionsPerExam with parameters", examID);
-            throw new DaoException("Invalid ExerciseExam ID, please check your input");
+            throw new DaoException("Invalid exercise ID, please check your input");
         }
 
         PreparedStatement pstmt = null;
@@ -235,7 +235,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
         } catch(SQLException e) {
             logger.error("SQL Exception in getAnsweredQuestionsPerExam with parameters {}", examID, e);
-            throw new DaoException("Could not get List with all Questions for ExerciseExam ID " + examID);
+            throw new DaoException("Could not get List with all Questions for exercise ID " + examID);
         } finally {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }

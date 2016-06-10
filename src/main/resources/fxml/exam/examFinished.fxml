@@ -5,7 +5,7 @@
 <?import javafx.scene.text.Font?>
 
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.ExamFinishedController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.ExamFinishedController">
    <children>
       <Label fx:id="mainLabel" layoutX="205.0" layoutY="108.0" prefHeight="139.0" prefWidth="258.0" text="Label" AnchorPane.bottomAnchor="153.0" AnchorPane.leftAnchor="205.0" AnchorPane.rightAnchor="137.0" AnchorPane.topAnchor="108.0">
          <font>

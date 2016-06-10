@@ -68,7 +68,7 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
                exerciseExam.setExamid(generatedKey.getInt(1));
             } else {
                 logger.error("Primary Key for exerciseExam could not be created");
-                throw new DaoException("ExerciseExam could not be inserted into database");
+                throw new DaoException("exercise could not be inserted into database");
             }
 
             for (Question q : exerciseExam.getExamQuestions()) {
@@ -78,7 +78,7 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
         } catch (SQLException e) {
             logger.error("SQL Exception in create with parameters {}: ", exerciseExam, e);
             throw new DaoException(
-                "Could not create ExerciseExam with values(" + exerciseExam.getExamid() + ", " + exerciseExam
+                "Could not create exercise with values(" + exerciseExam.getExamid() + ", " + exerciseExam
                     .getCreated()
                     + ", " + exerciseExam.getPassed() + ", " + exerciseExam.getAuthor() + ")");
 
@@ -113,7 +113,7 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
         } catch(SQLException e){
             logger.error("SQL Exception in delete with parameters {}", exerciseExam, e);
             throw new DaoException(
-                "Could not delete ExerciseExam with values(" + exerciseExam.getExamid() + ", " + exerciseExam
+                "Could not delete exercise with values(" + exerciseExam.getExamid() + ", " + exerciseExam
                     .getCreated()
                     + ", " + exerciseExam.getPassed() + ", " + exerciseExam.getAuthor() + ")");
         } finally {
@@ -160,7 +160,7 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
 
         if(examID <= 0) {
             logger.error("DaoException getExam with parameters {}", examID);
-            throw new DaoException("Invalid ExerciseExam ID, please check your input");
+            throw new DaoException("Invalid exercise ID, please check your input");
         }
 
         PreparedStatement pstmt = null;
@@ -184,7 +184,7 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
 
         } catch (SQLException e) {
             logger.error("SQL Exception in getExam with parameters {}", examID, e);
-            throw new DaoException("Could not get List with of Exams with ExerciseExam ID" + examID);
+            throw new DaoException("Could not get List with of Exams with exercise ID" + examID);
         } finally {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
@@ -241,8 +241,8 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
         try {
             validate(exerciseExam);
         } catch (DtoValidatorException e) {
-            logger.error("ExerciseExam [" + exerciseExam + "] is invalid", e);
-            throw new DaoException("ExerciseExam [" + exerciseExam + "] is invalid: " + e);
+            logger.error("exercise [" + exerciseExam + "] is invalid", e);
+            throw new DaoException("exercise [" + exerciseExam + "] is invalid: " + e);
         }
     }
 

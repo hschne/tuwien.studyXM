@@ -55,7 +55,7 @@ public class SubjectQuestionDaoJdbcTest extends DaoBaseTest {
         this.subjectQuestionDaoJdbc = new SubjectQuestionDaoJdbc(this.mockConnectionH2);
     }
 
-    //Testing getAllQuestionsOfSubject(ExerciseExam, int)
+    //Testing getAllQuestionsOfSubject(exercise, int)
     //----------------------------------------------------------------------------------------------
     @Test public void test_getAllQuestionsOfSubjectWith2Elements_should_persist() throws Exception {
         when(mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(false);

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class ExerciseExam
+ * Class exercise
  * represents the entity exam
  * @parameter examid primary key of exam
  * @parameter created indicates the date in which the exam was created
@@ -95,7 +95,7 @@ public class ExerciseExam {
     }
 
     @Override public String toString(){
-        String ret =  "ExerciseExam{exam=" + exam + "examID=" + this.examid + ", created="
+        String ret =  "exercise{exam=" + exam + "examID=" + this.examid + ", created="
             + this.getCreated() + ", passed=" + this.getPassed() + ", author= \""
             + this.getAuthor() + "\", subjectID="+ this.getSubjectID() + ", examTime="
             + this.examTime + "}";

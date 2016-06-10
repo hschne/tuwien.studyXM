@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
+import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -45,7 +46,7 @@ import java.io.IOException;
             return examItemWrapper.getController();
         } catch(IOException e) {
             logger.error(e);
-            throw new RuntimeException("Critical Error during exam loading process", e);
+            throw new FxmlLoadException("Critical error during exam item loading process.", e);
         }
     }
 }

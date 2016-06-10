@@ -67,7 +67,7 @@ import java.util.List;
         } catch(SQLException e){
             logger.error("SQL Exception in getAllQuestionsOfSubject with parameters {}",
                 exerciseExam, topicID, e);
-            throw new DaoException("Could not get List with all Questions for ExerciseExam with values("
+            throw new DaoException("Could not get List with all Questions for exercise with values("
                 + exerciseExam.getExamid() + ", " + exerciseExam.getCreated() + ", " + exerciseExam.getPassed()
                 + ", " + exerciseExam.getAuthor() + " and topicID " + topicID + ")");
         } finally {
@@ -81,8 +81,8 @@ import java.util.List;
         try {
             validate(exerciseExam);
         } catch (DtoValidatorException e) {
-            logger.error("ExerciseExam [" + exerciseExam + "] is invalid", e);
-            throw new DaoException("ExerciseExam [" + exerciseExam + "] is invalid: " + e);
+            logger.error("exercise [" + exerciseExam + "] is invalid", e);
+            throw new DaoException("exercise [" + exerciseExam + "] is invalid: " + e);
         }
     }
 }

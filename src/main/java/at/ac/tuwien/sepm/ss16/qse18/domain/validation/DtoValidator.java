@@ -78,11 +78,11 @@ public class DtoValidator {
      */
     public static void validate(ExerciseExam exerciseExam) throws DtoValidatorException {
         if (exerciseExam == null) {
-            throw new DtoValidatorException("ExerciseExam must not be null.");
+            throw new DtoValidatorException("exercise must not be null.");
         }
         validateAuthor(exerciseExam);
         if (exerciseExam.getCreated() == null) {
-            throw new DtoValidatorException("ExerciseExam timestamp must not be null.");
+            throw new DtoValidatorException("exercise timestamp must not be null.");
         }
         long examTime = exerciseExam.getExamTime();
         if (examTime <= 0) {
@@ -92,14 +92,14 @@ public class DtoValidator {
 
     private static void validateAuthor(ExerciseExam exerciseExam) throws DtoValidatorException {
         if (exerciseExam.getAuthor() == null) {
-            throw new DtoValidatorException("ExerciseExam author must not be null");
+            throw new DtoValidatorException("exercise author must not be null");
         }
         if (exerciseExam.getAuthor().isEmpty() || exerciseExam.getAuthor().trim().isEmpty()) {
             throw new DtoValidatorException(
-                "ExerciseExam author must not be empty (leading or trailing whitespaces are ignored)");
+                "exercise author must not be empty (leading or trailing whitespaces are ignored)");
         }
         if (exerciseExam.getAuthor().length() > 80) {
-            throw new DtoValidatorException("ExerciseExam author must not be longer than 80 characters");
+            throw new DtoValidatorException("exercise author must not be longer than 80 characters");
         }
     }
 

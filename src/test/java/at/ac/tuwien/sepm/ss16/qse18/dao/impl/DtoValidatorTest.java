@@ -117,7 +117,7 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(ExerciseExam) with null.
+     * This Test calls validate(exercise) with null.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
@@ -128,7 +128,7 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(ExerciseExam) with an invalid timestamp.
+     * This Test calls validate(exercise) with an invalid timestamp.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
@@ -142,7 +142,7 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(ExerciseExam) with an exam which has no author.
+     * This Test calls validate(exercise) with an exam which has no author.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
@@ -156,7 +156,7 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(ExerciseExam) with an exam which has an empty author string.
+     * This Test calls validate(exercise) with an exam which has an empty author string.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
@@ -171,7 +171,7 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(ExerciseExam) with an exam which has an invalid author string.
+     * This Test calls validate(exercise) with an exam which has an invalid author string.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
@@ -186,7 +186,7 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(ExerciseExam) with an author name longer than 80 characters.
+     * This Test calls validate(exercise) with an author name longer than 80 characters.
      * This should throw an DtoValidatorException.
      * @throws Exception
      */
@@ -206,7 +206,7 @@ public class DtoValidatorTest {
     }
 
     /**
-     * This Test calls validate(ExerciseExam)with an valid exam;
+     * This Test calls validate(exercise)with an valid exam;
      * This shouldn't throw an Exception.
      * @throws Exception
      */

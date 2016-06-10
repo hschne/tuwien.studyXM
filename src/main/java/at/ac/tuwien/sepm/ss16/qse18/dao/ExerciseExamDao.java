@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * Interface ExerciseExamDao
- * Data Access Object interface for ExerciseExam.
+ * Data Access Object interface for exercise.
  * Retrieves, saves, and deletes exams from the persistency
  *
  * @author Zhang Haixiang
@@ -41,7 +41,7 @@ public interface ExerciseExamDao {
      * getExam
      * Searches for the exam with the given examID in the database
      *
-     * @param examID Primary Key of ExerciseExam
+     * @param examID Primary Key of exercise
      * @return returns the exam with the given examID if its in the Database
      * @throws DaoException
      */

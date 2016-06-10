@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
+package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
@@ -40,7 +40,6 @@ import java.util.List;
     @FXML public TableColumn<ExerciseExam, Boolean> columnPassed;
     @FXML public TableColumn<ExerciseExam, String> columnAuthor;
     @Autowired ExerciseExamServiceImpl examService;
-    //@Autowired ExamServiceImpl examService;
 
     @Autowired QuestionService questionService;
     private ExerciseExam exerciseExam;
@@ -76,8 +75,8 @@ import java.util.List;
             tryShowQuestions();
 
         } else {
-            logger.error("No ExerciseExam was selected");
-            showAlert("Please select an ExerciseExam first");
+            logger.error("No exercise was selected");
+            showAlert("Please select an exercise first");
         }
     }
 

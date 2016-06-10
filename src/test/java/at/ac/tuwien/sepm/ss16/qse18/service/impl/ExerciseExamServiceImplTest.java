@@ -94,7 +94,7 @@ import static org.mockito.Mockito.*;
     }
     //----------------------------------------------------------------------------------------------
 
-    //Testing createExam(ExerciseExam, int, int)
+    //Testing createExam(exercise, int, int)
     //----------------------------------------------------------------------------------------------
     @Test public void testIf_createExam_callsRightMethodInDao() throws Exception {
         List<Integer> questionIDList = new ArrayList<>();
@@ -131,7 +131,7 @@ import static org.mockito.Mockito.*;
     }
     //----------------------------------------------------------------------------------------------
 
-    //Testing deleteExam(ExerciseExam)
+    //Testing deleteExam(exercise)
     //----------------------------------------------------------------------------------------------
     @Test public void testIf_deleteExam_callsRightMethodInDao() throws Exception {
         this.exerciseExamService.deleteExam(this.exerciseExam);

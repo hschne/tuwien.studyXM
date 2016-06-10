@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
@@ -13,9 +14,11 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
+ * This class represents a custom list item in the subject overview list.
+ *
  * @author Hans-Joerg Schroedl,Philipp Ganiu
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectCell
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) class SubjectCell
     extends ListCell<ObservableSubject> {
 
     @Autowired SpringFXMLLoader springFXMLLoader;
@@ -46,7 +49,7 @@ import java.io.IOException;
             return editSubjectWrapper.getController();
         } catch (IOException e) {
             logger.error(e);
-            throw new RuntimeException("Error loading subject item", e);
+            throw new FxmlLoadException("Error loading subject item", e);
         }
     }
 }

@@ -1,8 +1,7 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
+package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -38,14 +37,15 @@ import java.util.List;
     }
 
     public void loadFields() {
-        List<Integer> allQuestionList, answeredQuestions;
+        List<Integer> allQuestionList = new ArrayList<>();
+        List<Integer> answeredQuestions = new ArrayList<>();
         examIdentifier.setText("Exercise exam by " + this.exam.getAuthor());
         try {
             allQuestionList = exerciseExamService.getAllQuestionsOfExam(exam.getExamid());
             answeredQuestions = exerciseExamService.getAnsweredQuestionsOfExam(exam.getExamid());
         } catch(ServiceException e) {
-            logger.error("Could not fetch questions of exercise exam " + exam);
-            return;
+            logger.error(e);
+            showError(e);
         }
 
         boolean allAnswered = (allQuestionList.size() == answeredQuestions.size());
@@ -57,7 +57,7 @@ import java.util.List;
 
         buttonStartExam.setDisable(allAnswered);
 
-        if(answeredQuestions.size() > 0 && !allAnswered) {
+        if(!answeredQuestions.isEmpty() && !allAnswered) {
             buttonStartExam.setText("resume exam");
         }
 

@@ -62,7 +62,7 @@ public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
         testExerciseExam.setExamTime(1);
     }
 
-    // Testing create(ExerciseExam)
+    // Testing create(exercise)
     //----------------------------------------------------------------------------------------------
     @Test public void test_createWith_validParameters_should_persist() throws Exception {
         when(mockConnectionH2.getConnection().prepareStatement(anyString(), anyInt()))
@@ -74,7 +74,7 @@ public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
         exerciseExam = this.examDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions());
         verify(mockPreparedStatement).executeUpdate();
         verify(mockExerciseExamQuestionDao).create(this.testExerciseExam, this.testExerciseExam.getExamQuestions().get(0));
-        assertSame("ExerciseExam Objects should be the same", exerciseExam, this.testExerciseExam);
+        assertSame("exercise Objects should be the same", exerciseExam, this.testExerciseExam);
     }
 
     @Test(expected = DaoException.class)
@@ -101,14 +101,14 @@ public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
 
         temp = this.examDaoJdbc.create(this.testExerciseExam, this.testExerciseExam.getExamQuestions());
         verify(mockPreparedStatement).executeUpdate();
-        assertSame("ExerciseExam Objects should be the same", this.testExerciseExam, temp);
+        assertSame("exercise Objects should be the same", this.testExerciseExam, temp);
 
         when(mockPreparedStatement.executeUpdate()).thenThrow(DaoException.class);
         this.examDaoJdbc.create(temp, temp.getExamQuestions());
     }
     //----------------------------------------------------------------------------------------------
 
-    // Testing delete(ExerciseExam)
+    // Testing delete(exercise)
     //----------------------------------------------------------------------------------------------
     @Test public void test_deleteWithValidExam_should_persist() throws Exception {
         ExerciseExam exerciseExam;
@@ -117,7 +117,7 @@ public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
 
         verify(this.mockPreparedStatement).executeUpdate();
         verify(this.mockExerciseExamQuestionDao).delete(this.testExerciseExam.getExamid());
-        assertSame("ExerciseExam Objects should be the same", exerciseExam, testExerciseExam);
+        assertSame("exercise Objects should be the same", exerciseExam, testExerciseExam);
     }
 
     @Test(expected = DaoException.class) public void test_deleteWithNull_should_fail()

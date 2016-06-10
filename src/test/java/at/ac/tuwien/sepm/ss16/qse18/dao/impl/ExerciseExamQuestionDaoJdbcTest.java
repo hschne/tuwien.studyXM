@@ -61,7 +61,7 @@ public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
         testExerciseExam.setExamTime(1);
     }
 
-    //Testing create(ExerciseExam, Question)
+    //Testing create(exercise, Question)
     //----------------------------------------------------------------------------------------------
     @Test public void test_createWith_validParameters_should_persist() throws Exception {
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);

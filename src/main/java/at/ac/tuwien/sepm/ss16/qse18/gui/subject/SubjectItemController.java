@@ -34,22 +34,22 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
+ * This class represents the controller for a single list item in the subject overview.
+ *
  * @author Hans-Joerg Schroedl,Philipp Ganiu
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectItemController extends
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectItemController extends
     BaseController {
 
-    @FXML public Node root;
-    @FXML Label name;
-    @FXML public ListView<ObservableTopic> topicListView;
-    @FXML public Button addTopicButton;
+    @FXML private Node root;
+    @FXML private Label name;
+    @FXML private ListView<ObservableTopic> topicListView;
+    @FXML private Button addTopicButton;
 
     private ObservableSubject subject;
     private ObservableList<ObservableTopic> topicList;
 
-    @Autowired private SpringFXMLLoader springFXMLLoader;
     @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
-    @Autowired private TopicService topicService;
 
     @FXML
     public void initialize(ObservableSubject subject){
@@ -74,7 +74,6 @@ import org.springframework.stereotype.Component;
     public void loadFields() {
         name.setText(subject.getName());
     }
-
 
     @FXML public void handleExport() {
         System.out.println("Wow, much export!");

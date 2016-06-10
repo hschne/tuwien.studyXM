@@ -1,4 +1,4 @@
-package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
+package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
@@ -25,7 +25,7 @@ import org.springframework.stereotype.Component;
         if (validateFields())
             return;
         createExam();
-        showSuccess("ExerciseExam was created");
+        showSuccess("exercise was created");
         mainFrameController.handleExams();
 
     }
