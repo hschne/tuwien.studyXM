@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
@@ -44,6 +45,8 @@ import org.springframework.stereotype.Component;
 
     @Autowired private SubjectNavigation subjectNavigator;
 
+    @Autowired private QuestionNavigation questionNavigation;
+
     @FXML
     public void initialize(ObservableSubject subject){
         try {
@@ -55,7 +58,7 @@ import org.springframework.stereotype.Component;
             topicListView.setItems(topicList);
             topicListView.setCellFactory(listView  -> {
                 TopicCell topicCell = new TopicCell();
-                topicCell.setMainFrameController(mainFrameController);
+                topicCell.setQuestionNavigation(questionNavigation);
                 return topicCell;
             });
         }

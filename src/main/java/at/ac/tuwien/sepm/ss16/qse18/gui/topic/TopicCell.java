@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.topic;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,15 +19,15 @@ import org.springframework.context.annotation.Scope;
     private Button button = new Button();
     private Label numberOfQuestions = new Label();
 
-    private MainFrameController mainFrameController;
+    private QuestionNavigation questionNavigation;
 
     public TopicCell() {
         super();
         box.getChildren().addAll(topicLable, numberOfQuestions, button);
     }
 
-    public void setMainFrameController(MainFrameController mainFrameController) {
-        this.mainFrameController = mainFrameController;
+    public void setQuestionNavigation(QuestionNavigation questionNavigation) {
+        this.questionNavigation = questionNavigation;
     }
 
 
@@ -38,7 +39,7 @@ import org.springframework.context.annotation.Scope;
             numberOfQuestions.setText(topic.getNumberOfQuestions());
             button.setText("add question");
             button.setOnAction(e -> {
-                mainFrameController.handleCreateQuestion(topic);
+                questionNavigation.handleCreateQuestion(topic);
             });
             setGraphic(box);
         } else {

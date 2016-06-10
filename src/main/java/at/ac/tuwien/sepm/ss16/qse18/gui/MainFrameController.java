@@ -46,6 +46,7 @@ import java.util.List;
 
     @FXML public Pane paneContent;
 
+    @Autowired
     public MainFrameController(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {
         super(fxmlLoader, alertBuilder);
     }
@@ -109,16 +110,6 @@ import java.util.List;
         }
     }
 
-    public void handleCreateQuestion(ObservableTopic topic) {
-        logger.debug("Loading create question screen");
-        try {
-            WhichQuestionController whichQuestionController =
-                setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class,paneContent);
-            whichQuestionController.setTopic(topic);
-        } catch (Exception e) {
-            handleException(e);
-        }
-    }
 
     public void handleExams() {
         logger.debug("Loading exam view");
@@ -264,6 +255,7 @@ import java.util.List;
         AnchorPane.setBottomAnchor(pane, 0.0);
         paneContent.getChildren().add(pane);
     }
+
 
 
 }

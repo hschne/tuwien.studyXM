@@ -1,10 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.navigation;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateOpenQuestionController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateSingleChoiceQuestionController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -127,6 +124,17 @@ import java.util.List;
                     CreateImageQuestionController.class);
             imageQuestionController.setTopic(topic);
             imageQuestionController.setInput(inputs);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+    public void handleCreateQuestion(ObservableTopic topic) {
+        logger.debug("Loading create question screen");
+        try {
+            WhichQuestionController whichQuestionController =
+                setSubView("/fxml/question/whichQuestion.fxml", WhichQuestionController.class);
+            whichQuestionController.setTopic(topic);
         } catch (Exception e) {
             handleException(e);
         }
