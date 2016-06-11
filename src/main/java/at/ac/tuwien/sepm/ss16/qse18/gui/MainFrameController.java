@@ -11,24 +11,16 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.exam.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.Navigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
-import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicEditController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -201,15 +193,6 @@ import java.util.List;
         return controller;
     }
 
-    public  void handleExamFinished(AnchorPane subPane){
-        try{
-            setSubView("/fxml/exam/examFinished.fxml",ExamFinishedController.class,subPane);
-        }
-        catch (IOException e){
-            logger.error(e.getMessage());
-            handleException(e);
-        }
-    }
 
     public  <T extends GuiController> T handleNoteCard(AnchorPane subPane){
         T controller = null;

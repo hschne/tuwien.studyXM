@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigation;
@@ -8,6 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicCell;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectTopicQuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import javafx.scene.control.ListView;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -37,6 +40,7 @@ import org.springframework.stereotype.Component;
     @FXML private Label name;
     @FXML private ListView<ObservableTopic> topicListView;
     @FXML private Button addTopicButton;
+    @FXML private TextField topicTf;
 
     private ObservableSubject subject;
     private ObservableList<ObservableTopic> topicList;
@@ -46,6 +50,7 @@ import org.springframework.stereotype.Component;
     @Autowired private SubjectNavigation subjectNavigator;
 
     @Autowired private QuestionNavigation questionNavigation;
+    @Autowired private TopicService topicService;
 
     @FXML
     public void initialize(ObservableSubject subject){
@@ -77,7 +82,15 @@ import org.springframework.stereotype.Component;
 
     public void setAddTopicButtonAction(ObservableSubject subject,ObservableList<ObservableTopic> topicList){
         addTopicButton.setOnAction(event -> {
-            subjectNavigator.handleCreateTopic(subject,topicList);
+            Topic newTopic = new Topic(-1,topicTf.getText());
+            try{
+                Topic t = topicService.createTopic(newTopic,subject.getSubject());
+                topicList.add(new ObservableTopic(t));
+                //mainFrameController.handleSubjects();
+            }
+            catch (ServiceException e){
+                showError(e);
+            }
             });
     }
 

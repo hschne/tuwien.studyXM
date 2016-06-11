@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Scope;
 
     public TopicCell() {
         super();
-        box.getChildren().addAll(topicLable, numberOfQuestions, button);
+        box.getChildren().addAll(button,topicLable, numberOfQuestions);
     }
 
     public void setQuestionNavigation(QuestionNavigation questionNavigation) {

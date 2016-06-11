@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.navigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicEditController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.ObservableList;
@@ -38,16 +37,5 @@ public class SubjectNavigation extends SubviewNavigation {
     }
 
 
-    public void handleCreateTopic(ObservableSubject subject, ObservableList<ObservableTopic> topicList) {
-        logger.debug("Loading create topic view");
-        try {
-            TopicEditController controller =
-                setSubView("/fxml/topic/topicEditView.fxml", TopicEditController.class);
-            controller.setSubject(subject.getSubject());
-            controller.setTopicList(topicList);
-        } catch (IOException e) {
-            handleException(e);
-        }
-    }
 
 }
