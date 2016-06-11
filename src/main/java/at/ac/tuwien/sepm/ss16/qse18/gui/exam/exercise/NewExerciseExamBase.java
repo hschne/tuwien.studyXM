@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
@@ -9,11 +10,13 @@ import at.ac.tuwien.sepm.ss16.qse18.service.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,19 +24,23 @@ import java.util.stream.Collectors;
 /**
  * Implementors are controllers for views for creating exercise exams
  *
- * @author Hans-Joerg Schroedl
+ * @author Hans-Joerg Schroedl, Zhang Haixiang
  */
 abstract class NewExerciseExamBase extends BaseController {
 
     @FXML protected ListView<ObservableTopic> topicListView;
     @FXML protected TextField fieldAuthor;
     @FXML protected TextField fieldTime;
+    @FXML protected Button buttonAddTopic;
+    @FXML protected Button buttonAddAll;
+
     private ExerciseExamService exerciseExamService;
     private SubjectService subjectService;
     private TopicService topicService;
     protected QuestionService questionService;
     protected Subject subject;
     private ObservableExam exam;
+    private List<Topic> topicList = new ArrayList<>();
 
     NewExerciseExamBase(ExerciseExamService exerciseExamService, SubjectService subjectService,
         TopicService topicService, QuestionService questionService) {
@@ -115,6 +122,27 @@ abstract class NewExerciseExamBase extends BaseController {
                 "Make sure it only contains numbers and is lower than " + Integer.MAX_VALUE + ".");
         }
         return exerciseExam;
+    }
+
+    public void addTopic(){
+        logger.debug("entering addTopic()");
+        if(!topicList.contains(topicListView.getSelectionModel().getSelectedItem().getT())) {
+            this.topicList.add(topicListView.getSelectionModel().getSelectedItem().getT());
+
+        }else{
+            logger.error("Topic has been added already");
+            showError("The selected Topic has been added already");
+        }
+    }
+
+    public void addAll(){
+        try {
+            this.topicList = topicService.getTopicsFromSubject(subject);
+
+        }catch (ServiceException e){
+            logger.error("addAll not successful", e);
+            showError(e);
+        }
     }
 
     boolean validateFields() {
