@@ -55,7 +55,8 @@ import java.util.List;
 
     private static final Logger logger = LogManager.getLogger(DoExamController.class);
     private int starttime;
-    private IntegerProperty time;
+    private int timeInMinutes;
+    private int timeInSeconds;
     private ExerciseExam exam;
     private List<Question> questions = new ArrayList<>();
     private List<Answer> answers = new ArrayList<>();
@@ -71,9 +72,9 @@ import java.util.List;
     @FXML public void initialize(ExerciseExam exam){
         this.exam = exam;
         starttime = (int)exam.getExamTime();
-        time = new SimpleIntegerProperty(starttime);
-        timeLeftLabel.textProperty().bind(Bindings.concat(time.asString())
-                                                    .concat(new SimpleStringProperty(" min left")));
+        timeInMinutes = starttime;
+        timeInSeconds = 0;
+        timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + " min left");
         countDown();
 
         try {
@@ -91,6 +92,8 @@ import java.util.List;
             }
             if(questions.size() == 1){
                 skipQuesitonButton.setVisible(false);
+                nextQuestionButton.setVisible(false);
+                showResultsButton.setVisible(true);
             }
         }
         catch (ServiceException e){
@@ -105,27 +108,19 @@ import java.util.List;
             showInformation("If you don't want to answer the question right away click on skip question");
             return;
         }
-        try {
-            examService.update(exam.getExamid(), questions.get(currentQuestionNumber).getQuestionId(),
-                controller.isCorrect(), true);
-        } catch (ServiceException e) {
-            logger.error(e.getMessage());
-            showError(e);
-        }
-
+        update();
         progress.setValue(progress.intValue() + 1);
         currentQuestionNumber++;
         if(currentQuestionNumber == questions.size() - 1){
             skipQuesitonButton.setVisible(false);
+            nextQuestionButton.setVisible(false);
+            showResultsButton.setVisible(true);
         }
         if(currentQuestionNumber < questions.size()) {
             loadCorrectSubScreen(questions.get(currentQuestionNumber).getType());
         }
         else{
-            nextQuestionButton.setVisible(false);
-            showResultsButton.setVisible(true);
             timeline.stop();
-            mainFrameController.handleExamFinished(subPane);
         }
     }
 
@@ -136,6 +131,12 @@ import java.util.List;
     }
 
     public void handleShowResultsButton(){
+        if(controller.noButtonSelected()){
+            showInformation("You have not selected and answer");
+            return;
+        }
+        update();
+        timeline.stop();
         mainFrameController.handleShowExamResult();
         showResultController.initialize(this.exam);
     }
@@ -172,11 +173,27 @@ import java.util.List;
             timeline.stop();
         }
         timeline = new Timeline();
-        timeline.setOnFinished(e -> {
-            showInformation("Unfortunatly you are out of time :(");
-
-        });
-        timeline.getKeyFrames().add(new KeyFrame(Duration.minutes(starttime + 1), new KeyValue(time,0)));
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e ->{
+            if(timeInSeconds == 0){
+                timeInMinutes--;
+                timeInSeconds = 59;
+                timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
+            }
+            else {
+                timeInSeconds--;
+                if(timeInSeconds < 10){
+                timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + "min left");
+                }
+                else {
+                    timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
+                }
+            }
+            if(timeInMinutes <= 0 && timeInSeconds <= 0){
+                timeline.stop();
+                showInformation("Unfortunatly you are out of time!");
+            }
+        }));
         timeline.playFromStart();
 
     }
@@ -194,6 +211,17 @@ import java.util.List;
         setAnswers(currentQuestionNumber);
         controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
             answer3,answer4);
+    }
+
+    private void update(){
+        try {
+            examService.update(exam.getExamid(), questions.get(currentQuestionNumber).getQuestionId(),
+                controller.isCorrect(), true);
+        } catch (ServiceException e) {
+            logger.error(e.getMessage());
+            showError(e);
+        }
+
     }
 
 
