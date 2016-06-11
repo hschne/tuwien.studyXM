@@ -55,4 +55,12 @@ public interface ResourceService {
      * @throws ServiceException If the resource could not be updated
      */
     Resource updateResource(Resource resource) throws ServiceException;
+
+    /**
+     * Displays a given resource with the standard program selected by the user.
+     * @param resource resource to open
+     * @throws ServiceException
+     */
+    void openResource(Resource resource) throws ServiceException;
+
 }

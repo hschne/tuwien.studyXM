@@ -3,15 +3,23 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.ResourceServiceImpl;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -23,6 +31,7 @@ import java.io.InputStream;
     @FXML public Node root;
     @FXML public Label resourceName;
     @FXML public ImageView resourceIcon;
+    @Autowired ResourceService resourceService;
     private ObservableResource resource;
 
     public Node getRoot() {
@@ -37,7 +46,13 @@ import java.io.InputStream;
 
     @FXML public void handleOpen() {
         logger.debug("Opening resource");
-        //TODO: Implement opening!
+        try {
+            resourceService.openResource(resource.getResource());
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
+        }
+
     }
 
     @FXML public void removeResource() {
