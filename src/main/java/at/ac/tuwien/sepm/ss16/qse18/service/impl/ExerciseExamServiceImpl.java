@@ -385,6 +385,17 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         }
     }
 
+    @Override public void update(int examid, long examTime) throws ServiceException {
+        logger.debug("Entering method update with parameters {}",examid,examTime);
+        try {
+            this.exerciseExamDao.update(examid,examTime);
+        }
+        catch (DaoException e){
+            logger.error(e.getMessage(),e);
+            throw new ServiceException(e.getMessage(),e);
+        }
+    }
+
 
 }
 

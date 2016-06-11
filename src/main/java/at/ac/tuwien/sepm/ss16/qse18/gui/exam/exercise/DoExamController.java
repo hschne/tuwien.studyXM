@@ -45,6 +45,7 @@ import java.util.List;
     @FXML private Button nextQuestionButton;
     @FXML private Button skipQuesitonButton;
     @FXML private Button showResultsButton;
+    @FXML private Button pauseExamButton;
 
     @Autowired SpringFXMLLoader springFXMLLoader;
     @Autowired SubjectServiceImpl subjectService;
@@ -66,18 +67,26 @@ import java.util.List;
     private Answer answer4;
     private int currentQuestionNumber = 0;
     private AnswerQuestionController controller;
-    private IntegerProperty progress = new SimpleIntegerProperty(0);
+    private IntegerProperty progress;
 
 
     @FXML public void initialize(ExerciseExam exam){
+        mainFrameController.getButtonHome().setDisable(true);
+        mainFrameController.getButtonSubjects().setDisable(true);
+        mainFrameController.getButtonResources().setDisable(true);
         this.exam = exam;
         starttime = (int)exam.getExamTime();
         timeInMinutes = starttime;
         timeInSeconds = 0;
         timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + " min left");
+
         countDown();
 
+
         try {
+            int numberOfAnsweredQuestions = examService.getAnsweredQuestionsOfExam(exam.getExamid()).size();
+            progress = new SimpleIntegerProperty(numberOfAnsweredQuestions);
+
             Subject subject = subjectService.getSubject(exam.getSubjectID());
             if(subject != null) {
                 titleLabel.setText("Exam in " + subject.getName());
@@ -136,9 +145,33 @@ import java.util.List;
             return;
         }
         update();
+        mainFrameController.getButtonHome().setDisable(false);
+        mainFrameController.getButtonSubjects().setDisable(false);
+        mainFrameController.getButtonResources().setDisable(false);
         timeline.stop();
         mainFrameController.handleShowExamResult();
         showResultController.initialize(this.exam);
+    }
+
+    public void handlePauseExamButton(){
+        if(showConfirmation("Do you want to pause the exam, you can resume it later")){
+            mainFrameController.handleHome();
+        }
+        else {
+            return;
+        }
+        timeline.stop();
+        mainFrameController.getButtonHome().setDisable(false);
+        mainFrameController.getButtonSubjects().setDisable(false);
+        mainFrameController.getButtonResources().setDisable(false);
+        try {
+            examService.update(exam.getExamid(), timeInSeconds < 30 ? timeInMinutes : timeInMinutes + 1);
+        }
+        catch (ServiceException e){
+            showError(e.getMessage());
+        }
+
+
     }
 
     private void setAnswers(int currentQuestionNumber){

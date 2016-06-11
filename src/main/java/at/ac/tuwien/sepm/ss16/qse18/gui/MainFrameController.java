@@ -23,6 +23,7 @@ import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
@@ -45,6 +46,11 @@ import java.util.List;
     Navigation {
 
     @FXML public Pane paneContent;
+    @FXML private Button buttonHome;
+    @FXML private Button buttonSubjects;
+    @FXML private Button buttonResources;
+
+
 
     @Autowired
     public MainFrameController(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {
@@ -233,6 +239,18 @@ import java.util.List;
 
     public Pane getPaneContent() {
         return paneContent;
+    }
+
+    public Button getButtonHome() {
+        return buttonHome;
+    }
+
+    public Button getButtonSubjects() {
+        return buttonSubjects;
+    }
+
+    public Button getButtonResources() {
+        return buttonResources;
     }
 
     private <T extends GuiController> T setSubView(String fxmlPath, Class T, Pane paneContent) throws IOException {

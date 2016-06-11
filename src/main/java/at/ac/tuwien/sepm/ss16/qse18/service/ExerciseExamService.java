@@ -89,4 +89,6 @@ public interface ExerciseExamService {
     void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered)
         throws ServiceException;
 
+    void update(int examid, long examTime) throws ServiceException;
+
 }

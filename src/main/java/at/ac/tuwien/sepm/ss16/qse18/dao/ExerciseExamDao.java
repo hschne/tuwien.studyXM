@@ -28,6 +28,16 @@ public interface ExerciseExamDao {
     ExerciseExam create(ExerciseExam exerciseExam, List<Question> questions) throws DaoException;
 
     /**
+     * update
+     * The examtime of the exam with the given examid is updated
+     *
+     * @param examId the examid of the exam to be updated
+     * @param examTime      the examtime that is updated
+     * @throws DaoException
+     */
+    void update(int examId, long examTime) throws DaoException;
+
+    /**
      * delete
      * The given exerciseExam is deleted from the database
      *
@@ -65,5 +75,6 @@ public interface ExerciseExamDao {
      * @throws DaoException
      */
     List<ExerciseExam> getAllExamsOfSubject(Subject subject) throws DaoException;
+
 
 }

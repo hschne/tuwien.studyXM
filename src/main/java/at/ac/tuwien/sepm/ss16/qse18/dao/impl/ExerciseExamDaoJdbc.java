@@ -89,6 +89,30 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
         return exerciseExam;
     }
 
+    @Override public void update(int examid, long examTime) throws DaoException {
+        logger.debug("entering method update with parameters {}", examid,examTime);
+
+        PreparedStatement pstmt = null;
+
+        try{
+            pstmt = database.getConnection().prepareStatement("UPDATE ENTITY_EXERCISE_EXAM SET EXAMTIME = ?"
+                + " WHERE EXAMID = ? ");
+            pstmt.setLong(1,examTime);
+            pstmt.setInt(2,examid);
+            pstmt.executeUpdate();
+        }
+        catch (SQLException e){
+            logger.error("Could not update exam with examid " + examid,e);
+            throw new DaoException("Could not update exam with examid " + examid,e);
+
+        }
+        finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt},null);
+        }
+    }
+
+
+
     @Override public ExerciseExam delete(ExerciseExam exerciseExam) throws DaoException {
         logger.debug("entering method delete with parameters {}", exerciseExam);
 
