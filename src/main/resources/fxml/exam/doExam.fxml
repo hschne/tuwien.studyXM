@@ -52,7 +52,7 @@
                            </font></Label>
                         <Label fx:id="progressLabel" text="Label" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
                            <font>
-                              <Font name="System Bold" size="18.0" />
+                              <Font name="System Bold" size="14.0" />
                            </font></Label>
                         <GridPane>
                           <columnConstraints>
@@ -65,7 +65,7 @@
                            <children>
                               <Label fx:id="timeLeftLabel" prefHeight="35.0" prefWidth="147.0" text="Label" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="BOTTOM">
                                  <font>
-                                    <Font name="System Bold" size="18.0" />
+                                    <Font name="System Bold" size="14.0" />
                                  </font></Label>
                               <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                                  <image>
@@ -108,6 +108,9 @@
                </GridPane.margin>
             </Button>
          </children>
+         <padding>
+            <Insets top="20.0" />
+         </padding>
       </GridPane>
    </children>
 </AnchorPane>

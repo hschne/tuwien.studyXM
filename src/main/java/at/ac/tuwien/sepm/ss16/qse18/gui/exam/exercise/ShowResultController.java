@@ -49,7 +49,7 @@ import java.util.Map;
 
         try {
             result = exerciseExamService.gradeExam(exerciseExam);
-            labelGrade.setText(result[2]);
+            labelGrade.setText("Grading: " + result[2]);
             pieChartData.add(new PieChart.Data("correct", Double.parseDouble(result[0])));
             pieChartData.add(new PieChart.Data("false", Double.parseDouble(result[1])));
             pieChart.setTitle("correct/false answers");

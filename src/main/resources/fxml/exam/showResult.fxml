@@ -29,12 +29,7 @@
       <AnchorPane prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
          <children>
             <PieChart fx:id="pieChart" layoutX="544.0" layoutY="50.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="500.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0" />
-            <Label layoutX="456.0" layoutY="20.0" text="grading:" AnchorPane.leftAnchor="456.0" AnchorPane.rightAnchor="456.0">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </Label>
-            <Label fx:id="labelGrade" layoutX="544.0" layoutY="20.0" text="Label" AnchorPane.leftAnchor="545.0" AnchorPane.rightAnchor="356.0">
+            <Label fx:id="labelGrade" layoutX="416.0" layoutY="20.0" prefHeight="35.0" prefWidth="181.0" text="Label" AnchorPane.leftAnchor="416.0" AnchorPane.rightAnchor="416.0">
                <font>
                   <Font size="24.0" />
                </font>
