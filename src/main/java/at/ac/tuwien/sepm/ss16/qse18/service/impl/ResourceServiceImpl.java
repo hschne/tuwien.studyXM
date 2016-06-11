@@ -91,11 +91,17 @@ public class ResourceServiceImpl implements ResourceService {
             try {
                 File file = new File(resource.getReference());
                 Desktop.getDesktop().open(file);
-            } catch (IOException e) {
+            }
+            catch (IllegalArgumentException e) {
+                throw new ServiceException("Unable to open resource. "+
+                        e.getMessage(), e);
+            }
+            catch (IOException e) {
                 throw new ServiceException("Unable to open resource, " +
                         "please select a standard program for this resource type." +
                         e.getMessage(), e);
             }
+
         }
     }
 
