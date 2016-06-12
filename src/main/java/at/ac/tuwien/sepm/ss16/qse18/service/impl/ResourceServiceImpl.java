@@ -86,7 +86,14 @@ public class ResourceServiceImpl implements ResourceService {
      */
     @Override
     public void openResource(Resource resource) throws ServiceException {
+        String operatingSystem = System.getProperty("os.name");
+        if(!operatingSystem.startsWith("Windows")){
+            throw new ServiceException("Opening resources is only available on windows.");
+        }
+        openResourceFile(resource);
+    }
 
+    private void openResourceFile(Resource resource) throws ServiceException {
         if (Desktop.isDesktopSupported()) {
             try {
                 File file = new File(resource.getReference());
