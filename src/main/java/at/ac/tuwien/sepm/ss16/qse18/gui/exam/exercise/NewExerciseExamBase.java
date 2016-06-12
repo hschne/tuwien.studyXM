@@ -41,6 +41,7 @@ abstract class NewExerciseExamBase extends BaseController {
     protected Subject subject;
     private ObservableExam exam;
     private List<Topic> topicList = new ArrayList<>();
+    protected boolean mistake;
 
     NewExerciseExamBase(ExerciseExamService exerciseExamService, SubjectService subjectService,
         TopicService topicService, QuestionService questionService) {
@@ -92,6 +93,7 @@ abstract class NewExerciseExamBase extends BaseController {
     protected abstract void handleCreate();
 
     ExerciseExam createExam() {
+        mistake = false;
         ExerciseExam exerciseExam = new ExerciseExam();
         exerciseExam.setExam(exam.getExamid());
         exerciseExam.setAuthor(fieldAuthor.getText());
@@ -106,17 +108,18 @@ abstract class NewExerciseExamBase extends BaseController {
             examTime = Integer.parseInt(fieldTime.getText());
             exerciseExam.setExamTime(examTime);
             exerciseExam.setExamQuestions(questionService
-                .getQuestionsFromTopic(topicListView.getSelectionModel().getSelectedItem().getT()));
+                .getQuestionsFromTopic(this.topicList.get(0)));
 
-            exerciseExamService.createExam(exerciseExam,
-                topicListView.getSelectionModel().getSelectedItem().getT(), examTime);
+            exerciseExamService.createExam(exerciseExam, this.topicList, examTime);
 
         } catch (ServiceException e) {
+            mistake = true;
             logger.error("Could not create exerciseExam: ", e);
             showError("Check if the choosen topic has already questions to answer."
                 + "\nCheck if the length of the author do not exceed 80 characters."
                 + "\nCheck if there are enough questions in this topic to cover the exerciseExam time.");
         } catch (NumberFormatException e) {
+            mistake = true;
             logger.error("Could not create exerciseExam: ", e);
             showError("Could not parse exerciseExam time. " +
                 "Make sure it only contains numbers and is lower than " + Integer.MAX_VALUE + ".");
@@ -126,7 +129,13 @@ abstract class NewExerciseExamBase extends BaseController {
 
     public void addTopic(){
         logger.debug("entering addTopic()");
-        if(!topicList.contains(topicListView.getSelectionModel().getSelectedItem().getT())) {
+        if (topicListView.getSelectionModel().getSelectedItem() == null) {
+            logger.warn("No topic selected");
+            showError(
+                "No topic selected. You have to select the topic you want to create an exam to.");
+        }
+
+        else if(!topicList.contains(topicListView.getSelectionModel().getSelectedItem().getT())) {
             this.topicList.add(topicListView.getSelectionModel().getSelectedItem().getT());
 
         }else{
@@ -136,6 +145,7 @@ abstract class NewExerciseExamBase extends BaseController {
     }
 
     public void addAll(){
+        logger.debug("entering addAll");
         try {
             this.topicList = topicService.getTopicsFromSubject(subject);
 
@@ -157,10 +167,10 @@ abstract class NewExerciseExamBase extends BaseController {
                 "No valid time has been given. Make sure to fill the Time textfield with only whole numbers.");
             return true;
         }
-        if (topicListView.getSelectionModel().getSelectedItem() == null) {
+        if (this.topicList.isEmpty()) {
             logger.warn("No topic selected");
             showError(
-                "No topic selected. You have to select the topic you want to create an exam to.");
+                "No topic selected. You have to select at least one topic you want to create an exam to.");
             return true;
         }
         return false;

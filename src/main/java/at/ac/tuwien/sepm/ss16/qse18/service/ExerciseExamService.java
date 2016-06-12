@@ -36,12 +36,12 @@ public interface ExerciseExamService {
      * createExam
      * Saves a given exam persistently in the database.
      * @param exerciseExam The exam which shall be saved in the database
-     * @param topic The topic from which the questions should be chosen
+     * @param topicList The topics from which the questions should be chosen
      * @param examTime duration of the exam
      * @throws ServiceException
      * @return Returns a persistently saved exam with a retrieved key as ExamId.
      */
-    ExerciseExam createExam(ExerciseExam exerciseExam, Topic topic, int examTime)throws ServiceException;
+    ExerciseExam createExam(ExerciseExam exerciseExam, List<Topic> topicList, int examTime)throws ServiceException;
 
     /**
      * deleteExam

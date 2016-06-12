@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.Alert;
@@ -66,6 +68,16 @@ import org.springframework.stereotype.Component;
         alert.showAndWait();
         ButtonType result = alert.getResult();
         return result == ButtonType.OK;
+    }
+
+    protected long determineActualExamTime(ExerciseExam exerciseExam){
+        long examTime = 0;
+
+        for(Question q: exerciseExam.getExamQuestions()){
+            examTime += q.getQuestionTime();
+        }
+
+        return examTime;
     }
 
 }

@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
@@ -21,12 +23,19 @@ import org.springframework.stereotype.Component;
     }
 
     @FXML public void handleCreate() {
+        ExerciseExam exerciseExam;
         logger.debug("Create button pressed. Entering create method.");
         if (validateFields())
             return;
-        createExam();
-        showSuccess("exercise was created");
-        mainFrameController.handleExams();
+        exerciseExam = createExam();
 
+        if(!mistake) {
+            showSuccess("exercise was created with an exam time of " + determineActualExamTime(
+                exerciseExam));
+
+            mainFrameController.handleExams();
+        }else {
+            return;
+        }
     }
 }
