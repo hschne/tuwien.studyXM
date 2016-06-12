@@ -428,6 +428,26 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         return answeredQuestions;
     }
 
+    @Override public List<Integer> getNotAnsweredQuestionsOfExam(int examID)
+        throws ServiceException {
+        logger.debug("entering getNotAnsweredQuestionsOfExam with parameters {}",examID);
+
+        if (examID <= 0) {
+            logger.error("Service Exception getAnsweredQuestionsOfExam with parameters {}", examID);
+            throw new ServiceException("Invalid examID, please check your input");
+        }
+
+        List<Integer> notAnsweredQuestions = new ArrayList<>();
+
+        try {
+            notAnsweredQuestions.addAll(this.exerciseExamQuestionDao
+                .getNotAnsweredQuestionsPerExam(examID));
+        } catch (DaoException e) {
+            logger.error("Service Exception getNotAnsweredQuestionsOfExam with parameters", e);
+            throw new ServiceException("Could not get not answered questions of exam", e);
+        }
+        return notAnsweredQuestions;
+    }
 
     @Override public void update(int examid, int questionid, boolean questionPassed,
         boolean alreadyAnswered) throws ServiceException {
