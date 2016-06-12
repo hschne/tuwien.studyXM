@@ -381,13 +381,11 @@ import static org.mockito.Mockito.*;
         List<Question> questions = new ArrayList<>();
         questions.add(q1);
 
-        List<Question> test;
-
         when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1);
 
-        this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 700);
+        this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 400);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
     }
@@ -642,6 +640,42 @@ import static org.mockito.Mockito.*;
         this.exerciseExamService.update(1, 0);
     }
     //----------------------------------------------------------------------------------------------
+
+
+    //Testing getNotAnsweredQuestionsOfExam(int)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_getNotAnsweredQuestionsOfExamCallsRightMethodsInDao_should_persist() throws Exception{
+        List<Integer> notAnsweredQuestions = new ArrayList<>();
+        notAnsweredQuestions.add(1);
+
+        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1)).thenReturn(notAnsweredQuestions);
+        this.exerciseExamService.getNotAnsweredQuestionsOfExam(1);
+        verify(this.mockExerciseExamQuestionDaoJdbc).getNotAnsweredQuestionsPerExam(1);
+    }
+
+    @Test public void test_getNotAnsweredQuestionsOfExamWith3AnsweredQuestions_should_persist() throws Exception{
+        List<Integer> notAnsweredQuestions = new ArrayList<>();
+        notAnsweredQuestions.add(1);
+        notAnsweredQuestions.add(2);
+        notAnsweredQuestions.add(3);
+
+        List<Integer> test;
+
+        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1)).thenReturn(notAnsweredQuestions);
+        test = this.exerciseExamService.getNotAnsweredQuestionsOfExam(1);
+
+        assertTrue("List should contain 3 question ID's", test.size() == 3);
+        assertTrue("First Element should be 1", test.get(0) == 1);
+        assertTrue("Second Element should be 2", test.get(1) == 2);
+        assertTrue("Third Element should be 3", test.get(2) == 3);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_getNotAnsweredQuestionsOfExamWithInvalidExamID_should_fail() throws Exception{
+        this.exerciseExamService.getNotAnsweredQuestionsOfExam(0);
+    }
+    //----------------------------------------------------------------------------------------------
+
 
     @After public void tearDown() throws Exception {
         //nothing to tear down

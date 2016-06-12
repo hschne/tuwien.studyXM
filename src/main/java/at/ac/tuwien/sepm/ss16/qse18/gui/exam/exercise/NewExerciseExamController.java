@@ -30,8 +30,7 @@ import org.springframework.stereotype.Component;
         exerciseExam = createExam();
 
         if(!mistake) {
-            showSuccess("exercise was created with an exam time of " + determineActualExamTime(
-                exerciseExam));
+            showSuccess("exercise was created with an exam time of " + exerciseExam.getExamTime());
 
             mainFrameController.handleExams();
         }else {

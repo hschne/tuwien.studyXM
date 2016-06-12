@@ -41,6 +41,7 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
         logger.debug("entering method create with parameters {}", exerciseExam);
 
         tryValidateExam(exerciseExam);
+        exerciseExam.setExamTime(determineActualExamTime(questions));
 
         PreparedStatement pstmt = null;
         ResultSet generatedKey = null;
@@ -267,6 +268,23 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
             logger.error("exercise [" + exerciseExam + "] is invalid", e);
             throw new DaoException("exercise [" + exerciseExam + "] is invalid: " + e);
         }
+    }
+
+    /**
+     * determineActualExamTime
+     * determines the duration of the exam based on the given list of questions
+     * @param questionList contains the questions to an exam
+     * @return returns the duration of the exam
+     *
+     * */
+    private long determineActualExamTime(List<Question> questionList){
+        long examTime = 0;
+
+        for(Question q: questionList){
+            examTime += q.getQuestionTime();
+        }
+
+        return examTime;
     }
 
 }

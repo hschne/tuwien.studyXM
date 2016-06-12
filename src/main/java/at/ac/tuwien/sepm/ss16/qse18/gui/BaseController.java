@@ -70,14 +70,4 @@ import org.springframework.stereotype.Component;
         return result == ButtonType.OK;
     }
 
-    protected long determineActualExamTime(ExerciseExam exerciseExam){
-        long examTime = 0;
-
-        for(Question q: exerciseExam.getExamQuestions()){
-            examTime += q.getQuestionTime();
-        }
-
-        return examTime;
-    }
-
 }
