@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;

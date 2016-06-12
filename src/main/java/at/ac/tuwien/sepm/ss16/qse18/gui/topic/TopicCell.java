@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.topic;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import javafx.scene.control.Button;

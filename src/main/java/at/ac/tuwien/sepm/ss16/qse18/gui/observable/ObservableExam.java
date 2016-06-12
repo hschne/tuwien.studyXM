@@ -19,6 +19,17 @@ public class ObservableExam {
     private IntegerProperty subject;
     private Exam exam;
 
+    public ObservableExam(Exam exam) {
+        this.exam = exam;
+        this.examid = new SimpleIntegerProperty(exam.getExamid());
+        this.name = new SimpleStringProperty(exam.getName());
+        this.created = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")
+            .format(exam.getCreated()));
+        this.dueDate = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")
+            .format(exam.getDueDate()));
+        this.subject = new SimpleIntegerProperty(exam.getSubject());
+    }
+
     public void setName(String name) {
         this.name.set(name);
         this.exam.setName(name);
@@ -28,11 +39,9 @@ public class ObservableExam {
         return created.get();
     }
 
-
     public String getDueDate() {
         return dueDate.get();
     }
-
 
     public int getSubject() {
         return subject.get();
@@ -50,16 +59,6 @@ public class ObservableExam {
         this.exam = exam;
     }
 
-    public ObservableExam(Exam exam) {
-        this.exam = exam;
-        this.examid = new SimpleIntegerProperty(exam.getExamid());
-        this.name = new SimpleStringProperty(exam.getName());
-        this.created = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")
-            .format(exam.getCreated()));
-        this.dueDate = new SimpleStringProperty(new SimpleDateFormat("dd-MM-YYYY")
-            .format(exam.getDueDate()));
-        this.subject = new SimpleIntegerProperty(exam.getSubject());
-    }
 
     public Exam getExamInstance() {
         return this.exam;

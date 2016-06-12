@@ -39,6 +39,7 @@ import java.util.List;
     @FXML public TableColumn<ExerciseExam, Timestamp> columnCreated;
     @FXML public TableColumn<ExerciseExam, Boolean> columnPassed;
     @FXML public TableColumn<ExerciseExam, String> columnAuthor;
+    @FXML Button buttonTest;
     @Autowired ExerciseExamServiceImpl examService;
 
     @Autowired QuestionService questionService;
@@ -79,8 +80,6 @@ import java.util.List;
             showAlert("Please select an exercise first");
         }
     }
-
-    @FXML Button buttonTest;
 
     /*
     @FXML public void showResults(){

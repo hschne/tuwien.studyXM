@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 /**
  * Interface AnswerService

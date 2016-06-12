@@ -3,7 +3,6 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
-import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicCell;

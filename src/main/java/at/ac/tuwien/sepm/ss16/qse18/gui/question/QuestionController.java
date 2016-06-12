@@ -64,15 +64,15 @@ public abstract class QuestionController
 
     @Autowired QuestionNavigation questionNavigation;
 
-    @FXML public void intialize(){
-        questionNavigation.refreshMainPane();
-    }
-
     @Autowired
     public QuestionController(QuestionService questionService,
-                              ResourceQuestionService resourceQuestionService) {
+        ResourceQuestionService resourceQuestionService) {
         this.questionService = questionService;
         this.resourceQuestionService = resourceQuestionService;
+    }
+
+    @FXML public void intialize() {
+        questionNavigation.refreshMainPane();
     }
 
     /**
