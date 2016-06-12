@@ -86,6 +86,8 @@ public interface ExerciseExamService {
 
     List<Integer> getAnsweredQuestionsOfExam(int examID) throws ServiceException;
 
+    List<Integer> getNotAnsweredQuestionsOfExam(int examID) throws ServiceException;
+
     void update(int examid, int questionid, boolean questionPassed, boolean alreadyAnswered)
         throws ServiceException;
 

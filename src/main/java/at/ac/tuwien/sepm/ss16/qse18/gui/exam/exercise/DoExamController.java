@@ -82,19 +82,10 @@ import java.util.List;
 
         countDown();
 
-
         try {
-            int numberOfAnsweredQuestions = examService.getAnsweredQuestionsOfExam(exam.getExamid()).size();
-            progress = new SimpleIntegerProperty(numberOfAnsweredQuestions);
-
-            Subject subject = subjectService.getSubject(exam.getSubjectID());
-            if(subject != null) {
-                titleLabel.setText("Exam in " + subject.getName());
-            }
-            List<Integer> questionIds = examService.getAllQuestionsOfExam(exam.getExamid());
-            progressLabel.textProperty().bind(new SimpleStringProperty("Progress ")
-               .concat(progress.asString()).concat("/").concat(questionIds.size()));
-
+            setProgressLabel();
+            setTitleLabel();
+            List<Integer> questionIds = examService.getNotAnsweredQuestionsOfExam(exam.getExamid());
 
             for (Integer i : questionIds) {
                     questions.add(questionService.getQuestion(i));
@@ -208,6 +199,11 @@ import java.util.List;
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e ->{
+            if(timeInMinutes <= 0 && timeInSeconds <= 0){
+                timeline.stop();
+                showInformation("Unfortunatly you are out of time!");
+                return;
+            }
             if(timeInSeconds == 0){
                 timeInMinutes--;
                 timeInSeconds = 59;
@@ -222,10 +218,7 @@ import java.util.List;
                     timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
                 }
             }
-            if(timeInMinutes <= 0 && timeInSeconds <= 0){
-                timeline.stop();
-                showInformation("Unfortunatly you are out of time!");
-            }
+
         }));
         timeline.playFromStart();
 
@@ -255,6 +248,22 @@ import java.util.List;
             showError(e);
         }
 
+    }
+
+    private void setProgressLabel() throws ServiceException{
+        int numberOfAnsweredQuestions = examService.getAnsweredQuestionsOfExam(exam.getExamid()).size();
+        progress = new SimpleIntegerProperty(numberOfAnsweredQuestions); //set progress
+
+        int totalNumberOfQuestions = examService.getAllQuestionsOfExam(exam.getExamid()).size();
+        progressLabel.textProperty().bind(new SimpleStringProperty("Progress ")
+            .concat(progress.asString()).concat("/").concat(totalNumberOfQuestions)); //set progressLabel
+    }
+
+    private void setTitleLabel() throws ServiceException{
+        Subject subject = subjectService.getSubject(exam.getSubjectID());
+        if (subject != null) {
+            titleLabel.setText("Exam in " + subject.getName()); //set titelLabel with subject to exam
+        }
     }
 
 
