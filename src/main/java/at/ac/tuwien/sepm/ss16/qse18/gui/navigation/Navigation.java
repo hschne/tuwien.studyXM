@@ -26,7 +26,7 @@ public abstract class Navigation {
         this.alertBuilder = alertBuilder;
     }
 
-    <T extends GuiController> T setSubView(String fxmlPath, Class T)
+    protected <T extends GuiController> T setSubView(String fxmlPath, Class T)
         throws IOException {
         logger.debug("Loading view from " + fxmlPath);
         SpringFXMLLoader.FXMLWrapper<Object, T> mfWrapper = fxmlLoader.loadAndWrap(fxmlPath, T);
