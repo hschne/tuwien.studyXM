@@ -6,7 +6,6 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExamGenParams;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
-import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
@@ -37,7 +36,6 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     private QuestionTopicDao questionTopicDao;
     private SubjectDao subjectDao;
     private ExerciseExamGenParams egp;
-
 
     @Autowired public ExerciseExamServiceImpl(ExerciseExamDao exerciseExamDao, SubjectQuestionDao subjectQuestionDao,
         ExerciseExamQuestionDao exerciseExamQuestionDao, QuestionDao questionDao, SubjectTopicDao subjectTopicDao,
@@ -111,7 +109,6 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             throw new ServiceException(e.getMessage());
         }
     }
-
 
     /**
      * getRightQuestions
@@ -203,7 +200,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         for (Map.Entry<Integer, Boolean> e : egp.getQuestionBooleans().entrySet()) {
             for (int i = 0; i < temp.size(); i++) {
                 if (e.getKey() == temp.get(i).getQuestionId()) { // checks if the question has been answered already
-                    if (e.getValue() == true) { // if the question has already been answered correctly
+                    if (e.getValue()) { // if the question has already been answered correctly
                         egp.getRightAnsweredQuestions().add(temp.get(counter));
                         egp.getNotAnsweredQuestions().remove(temp.get(counter));
                     } else { // if the question has already been answered incorrectly
@@ -297,21 +294,17 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     public String getGrade(double correct, double incorrect) {
         logger.debug("entering getGrade with parameters {}", correct, incorrect);
-        double per = correct/((correct+incorrect)/100);
+        double per = correct / ((correct + incorrect) / 100);
 
-        if(per >= 96){
+        if(per >= 96) {
             return "A";
-
-        }else if( per >= 81){
+        } else if(per >= 81) {
             return "B";
-
-        }else if(per >= 66){
+        } else if(per >= 66) {
             return "C";
-
-        }else if(per >= 51){
+        } else if(per >= 51) {
             return "D";
-
-        }else{
+        } else {
             return "F";
         }
     }
@@ -325,7 +318,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         tryValidateExam(exerciseExam);
 
         try {
-            topicList = this.subjectTopicDao.getTopicToSubject(this.subjectDao.getSubject(exerciseExam.getSubjectID()));
+            topicList = this.subjectTopicDao.getTopicToSubject(this.subjectDao
+                .getSubject(exerciseExam.getSubjectID()));
 
             for(Topic t: topicList){
                 temp.put(t, turnToQuestionID(this.questionTopicDao.getQuestionToTopic(t)));
@@ -333,24 +327,21 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
             for(Map.Entry<Topic, List<Integer>> m: temp.entrySet()){
                 gradeMap.put(m.getKey(),
-                    calculateResult(this.exerciseExamQuestionDao.getAllQuestionBooleans(m.getValue())));
-
+                    calculateResult(this.exerciseExamQuestionDao
+                        .getAllQuestionBooleans(m.getValue())));
             }
-
-
-        }catch (DaoException e){
+        } catch (DaoException e){
             logger.error("Dao Exception topicGrade with parameters {}", exerciseExam, e);
             throw new ServiceException(e.getMessage());
         }
 
         return gradeMap;
-
     }
 
     public List<Integer> turnToQuestionID(List<Question> questionList){
         logger.debug("entering turnToQuestionID with parameters {}", questionList);
         List<Integer> questionIDList = new ArrayList<>();
-        for(Question q: questionList){
+        for(Question q: questionList) {
             questionIDList.add(q.getQuestionId());
         }
 
@@ -388,7 +379,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         List<Integer> notAnsweredQuestions = new ArrayList<>();
 
         try {
-            notAnsweredQuestions.addAll(this.exerciseExamQuestionDao.getNotAnsweredQuestionsPerExam(examID));
+            notAnsweredQuestions.addAll(this.exerciseExamQuestionDao
+                .getNotAnsweredQuestionsPerExam(examID));
         } catch (DaoException e) {
             logger.error("Service Exception getNotAnsweredQuestionsOfExam with parameters", e);
             throw new ServiceException("Could not get not answered questions of exam", e);
@@ -399,9 +391,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     @Override public void update(int examid, int questionid, boolean questionPassed,
         boolean alreadyAnswered) throws ServiceException {
-        logger.debug("Entering method update with parameters {}",examid,questionid,questionPassed,alreadyAnswered);
+        logger.debug("Entering method update with parameters {}", examid, questionid,
+            questionPassed, alreadyAnswered);
         try{
-            this.exerciseExamQuestionDao.update(examid,questionid,questionPassed,alreadyAnswered);
+            this.exerciseExamQuestionDao.update(examid, questionid,
+                questionPassed, alreadyAnswered);
         }
         catch (DaoException e){
             logger.error(e.getMessage(),e);
@@ -410,16 +404,13 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     @Override public void update(int examid, long examTime) throws ServiceException {
-        logger.debug("Entering method update with parameters {}",examid,examTime);
+        logger.debug("Entering method update with parameters {}", examid, examTime);
         try {
-            this.exerciseExamDao.update(examid,examTime);
-        }
-        catch (DaoException e){
-            logger.error(e.getMessage(),e);
-            throw new ServiceException(e.getMessage(),e);
+            this.exerciseExamDao.update(examid, examTime);
+        } catch (DaoException e){
+            logger.error(e.getMessage(), e);
+            throw new ServiceException(e.getMessage() ,e);
         }
     }
-
-
 }
 
