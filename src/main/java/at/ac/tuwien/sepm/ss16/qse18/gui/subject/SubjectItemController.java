@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicCell;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectTopicQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExportServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -47,10 +48,9 @@ import org.springframework.stereotype.Component;
 
     @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
 
-    @Autowired private SubjectNavigation subjectNavigator;
-
     @Autowired private QuestionNavigation questionNavigation;
     @Autowired private TopicService topicService;
+    @Autowired private ExportServiceImpl exportService;
 
     @FXML
     public void initialize(ObservableSubject subject){
@@ -77,7 +77,13 @@ import org.springframework.stereotype.Component;
     }
 
     @FXML public void handleExport() {
-        System.out.println("Wow, much export!");
+        exportService.setSubject(subject.getSubject());
+        try {
+            exportService.export();
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
+        }
     }
 
     public void setAddTopicButtonAction(ObservableSubject subject,ObservableList<ObservableTopic> topicList){

@@ -23,6 +23,7 @@ public class ExamNavigation extends SubviewNavigation {
     }
 
 
+
     public void handleNewExam() {
         logger.debug("Loading new exam view");
         try {
