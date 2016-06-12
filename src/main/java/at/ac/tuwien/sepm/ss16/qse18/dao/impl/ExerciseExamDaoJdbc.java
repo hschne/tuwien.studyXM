@@ -286,5 +286,4 @@ public class ExerciseExamDaoJdbc implements ExerciseExamDao {
 
         return examTime;
     }
-
 }
