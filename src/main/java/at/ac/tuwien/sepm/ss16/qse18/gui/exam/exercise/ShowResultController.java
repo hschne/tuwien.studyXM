@@ -35,7 +35,7 @@ import java.util.Map;
 
 
 
-    public ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
+    private ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList();
 
     @FXML public void initialize(ExerciseExam exerciseExam){
         logger.debug("entering initialize with parameters {}", exerciseExam);

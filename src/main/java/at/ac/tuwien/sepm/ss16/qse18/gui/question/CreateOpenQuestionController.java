@@ -31,7 +31,7 @@ public class CreateOpenQuestionController extends QuestionController {
 
     @Autowired
     public CreateOpenQuestionController(QuestionService questionService,
-                                        ResourceQuestionService resourceQuestionService) {
+        ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
     }
 
@@ -79,7 +79,7 @@ public class CreateOpenQuestionController extends QuestionController {
             this.choiceBoxQuestionTime.setValue(inputs.get(6).toString());
         }
 
-        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(7));
+        this.resource = inputs == null ? null : (ObservableResource) inputs.get(7);
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 

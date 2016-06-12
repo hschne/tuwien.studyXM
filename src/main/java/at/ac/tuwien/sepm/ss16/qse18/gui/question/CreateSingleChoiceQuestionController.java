@@ -95,7 +95,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
             this.choiceBoxQuestionTime.setValue(inputs.get(10).toString());
         }
 
-        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(11));
+        this.resource = inputs == null ? null : (ObservableResource) inputs.get(11);
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 

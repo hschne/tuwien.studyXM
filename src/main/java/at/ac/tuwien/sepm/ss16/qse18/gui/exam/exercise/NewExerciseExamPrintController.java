@@ -28,7 +28,7 @@ import java.io.File;
         super(exerciseExamService, subjectService, topicService, questionService);
     }
 
-    @FXML public void handleCreate() {
+    @Override @FXML public void handleCreate() {
         logger.debug("Create button pressed. Entering create method.");
         if (validateFields())
             return;

@@ -13,7 +13,6 @@ import java.util.stream.Collectors;
 public class DtoValidator {
 
     public DtoValidator() {
-        // Due to static import not necessary
     }
 
     /**

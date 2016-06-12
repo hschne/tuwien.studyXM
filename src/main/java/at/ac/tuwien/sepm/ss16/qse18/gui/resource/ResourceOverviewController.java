@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
     private ObservableList<ObservableResource> resourceList;
     private ResourceService resourceService;
     private List inputs;
-    private Label resourceLabel;
+    @FXML private Label resourceLabel;
     private QuestionType questionTypeOfResource;
 
     @Autowired ResourceNavigation resourceNavigation;
@@ -89,10 +90,8 @@ import java.util.stream.Collectors;
 
             resourceListView.getSelectionModel().selectedItemProperty()
                 .addListener((observable, oldValue, newValue) -> {
-                    // Replace resource with newly created one
-                    inputs.remove(inputs.size() - 1);
+                    inputs.remove(inputs.size() - 1); // Replace resource with newly created one
                     inputs.add(newValue);
-
                     switch (questionTypeOfResource) {
                         case MULTIPLECHOICE:
                             questionNavigation.handleMultipleChoiceQuestion(null, inputs);
@@ -106,6 +105,8 @@ import java.util.stream.Collectors;
                         case NOTECARD:
                             questionNavigation.handleImageQuestion(null, inputs);
                             break;
+                        default:
+                            throw new InputMismatchException("Can not determine type of resource");
                     }
                 });
         }

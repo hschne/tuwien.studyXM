@@ -38,9 +38,7 @@ import org.springframework.context.annotation.Scope;
             topicLable.setText(topic.getTopic());
             numberOfQuestions.setText(topic.getNumberOfQuestions());
             button.setText("add question");
-            button.setOnAction(e -> {
-                questionNavigation.handleCreateQuestion(topic);
-            });
+            button.setOnAction(e -> questionNavigation.handleCreateQuestion(topic));
             setGraphic(box);
         } else {
             setGraphic(null);

@@ -30,7 +30,6 @@ import java.util.List;
     @FXML Button buttonStartExam;
     @Autowired ExerciseExamService exerciseExamService;
     private ObservableExerciseExam exam;
-    @Autowired MainFrameController mainFrameController;
 
     @Autowired ExerciseExamItemController(ExerciseExamService exerciseExamService) {
         this.exerciseExamService = exerciseExamService;
