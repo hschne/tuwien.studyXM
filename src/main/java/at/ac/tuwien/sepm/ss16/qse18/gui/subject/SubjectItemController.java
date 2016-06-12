@@ -86,7 +86,7 @@ import org.springframework.stereotype.Component;
             try{
                 Topic t = topicService.createTopic(newTopic,subject.getSubject());
                 topicList.add(new ObservableTopic(t));
-                //mainFrameController.handleSubjects();
+                topicTf.clear();
             }
             catch (ServiceException e){
                 showError(e);
