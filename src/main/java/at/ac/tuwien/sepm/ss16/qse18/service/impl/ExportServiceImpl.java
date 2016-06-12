@@ -100,8 +100,6 @@ import java.util.List;
             objectOutputStream.writeObject(subject);
             objectOutputStream.close();
             output.close();
-        } catch (FileNotFoundException e) {
-            logger.error(e);
         } catch (IOException e) {
             logger.error(e);
         }

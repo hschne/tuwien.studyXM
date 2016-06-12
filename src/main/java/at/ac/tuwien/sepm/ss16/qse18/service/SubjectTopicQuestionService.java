@@ -11,7 +11,7 @@ import java.util.List;
  *
  * @author Philipp Ganiu
  */
-public interface SubjectTopicQuestionService {
+@FunctionalInterface public interface SubjectTopicQuestionService {
     /**
      * Returns all topics to a specific {@param subject} while also initializing the numberOfQuestion
      * variable of topic. F.e. if a topic has 10 question to this specific subject the numberOfQuestion

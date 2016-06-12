@@ -126,7 +126,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     public List<Question> getRightQuestions(ExerciseExam exerciseExam, int topicID, int examTime)
         throws ServiceException {
         logger
-            .debug("entering method getRigthQuestions with parameters {}", exerciseExam, topicID, examTime);
+            .debug("entering method getRigthQuestions with parameters {}", exerciseExam,
+                topicID, examTime);
         if (exerciseExam == null || topicID <= 0 || examTime <= 0) {
             logger.error("Service Exception getRightQuestions {}", exerciseExam, topicID, examTime);
             throw new ServiceException("Invalid values, please check your input");
@@ -135,8 +136,10 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         this.egp = new ExerciseExamGenParams();
 
         try {
-            this.egp.setNotAnsweredQuestionID(this.subjectQuestionDao.getAllQuestionsOfSubject(exerciseExam, topicID));
-            egp.setQuestionBooleans(this.exerciseExamQuestionDao.getAllQuestionBooleans(egp.getNotAnsweredQuestionID()));
+            this.egp.setNotAnsweredQuestionID(this.subjectQuestionDao
+                .getAllQuestionsOfSubject(exerciseExam, topicID));
+            egp.setQuestionBooleans(this.exerciseExamQuestionDao
+                .getAllQuestionBooleans(egp.getNotAnsweredQuestionID()));
 
             for (int e : egp.getNotAnsweredQuestionID()) {
                 egp.getNotAnsweredQuestions().add(this.questionDao.getQuestion(e));
@@ -149,7 +152,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             selectQuestions(egp.getRightAnsweredQuestions(), examTime);
 
         } catch (DaoException e) {
-            logger.error("Service Exception getRightQuestions with parameters{}", exerciseExam, topicID,
+            logger.error("Service Exception getRightQuestions with parameters{}",
+                exerciseExam, topicID,
                 examTime, e);
             throw new ServiceException(e.getMessage());
         }
@@ -157,8 +161,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         if (egp.getExamQuestions().isEmpty()) {
             logger.error("Service Exception getRightQuestions with parameters{}", exerciseExam);
             throw new ServiceException(
-                "Could not get Questions with subjectId " + exerciseExam.getSubjectID() + " and topicID "
-                    + topicID + " or examTime " + examTime + " is too small");
+                "Could not get Questions with subjectId " + exerciseExam.getSubjectID()
+                    + " and topicID " + topicID + " or examTime " + examTime + " is too small");
         }
 
         if (egp.getQuestionTime() < examTime * 0.8) {
@@ -268,30 +272,30 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         return result;
     }
 
-    public String[] calculateResult(Map<Integer, Boolean> questionBooleans){
+    public String[] calculateResult(Map<Integer, Boolean> questionBooleans) {
         logger.debug("entering calculateResult with parameters {}", questionBooleans);
         double incorrect = 0;
         double correct = 0;
         String[] result = new String[3];
 
-        if(questionBooleans != null && questionBooleans.size() > 0){
-            for(Map.Entry<Integer, Boolean> m: questionBooleans.entrySet()){
-                if(m.getValue()){
+        if(questionBooleans != null && questionBooleans.size() > 0) {
+            for(Map.Entry<Integer, Boolean> m: questionBooleans.entrySet()) {
+                if(m.getValue()) {
                     correct++;
-                }else{
+                } else {
                     incorrect++;
                 }
             }
         }
 
-        result[0] = correct + "";
-        result[1] = incorrect + "";
+        result[0] = Double.toString(correct);
+        result[1] = Double.toString(incorrect);
         result[2] = getGrade(correct, incorrect);
 
         return result;
     }
 
-    public String getGrade(double correct, double incorrect){
+    public String getGrade(double correct, double incorrect) {
         logger.debug("entering getGrade with parameters {}", correct, incorrect);
         double per = correct/((correct+incorrect)/100);
 

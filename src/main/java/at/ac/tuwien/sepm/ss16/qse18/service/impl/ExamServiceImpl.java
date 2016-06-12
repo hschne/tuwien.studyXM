@@ -79,7 +79,7 @@ import java.util.Map;
         return null;
     }
 
-    public List<Integer> getAllExerciseExamsOfExam(Exam exam) throws ServiceException {
+    @Override public List<Integer> getAllExerciseExamsOfExam(Exam exam) throws ServiceException {
         logger.debug("entering getAllExerciseExamsOfExam with parameters {}", exam);
         List<Integer> exerciseExamList = new ArrayList<>();
         try {
@@ -90,13 +90,12 @@ import java.util.Map;
                 }
             }
         } catch (DaoException e) {
-            logger.error("Service Exception getAllQuestionsOfExam with parameters {}", exam.getExamid(), e);
+            logger.error("Service Exception getAllQuestionsOfExam with parameters {}",
+                exam.getExamid(), e);
             throw new ServiceException(e.getMessage());
         }
         return exerciseExamList;
     }
-
-
 
     @Override public void validate(Exam exam) throws DtoValidatorException {
 
