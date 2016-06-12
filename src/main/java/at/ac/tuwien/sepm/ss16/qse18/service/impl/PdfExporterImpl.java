@@ -290,10 +290,10 @@ import static at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl.HtmlCons
 
 
     class HtmlConstant {
+        private HtmlConstant() {
 
+        }
         static final String H1_START_TAG = "<p><h1>";
         static final String H1_END_TAG = "</h1></p>";
-
-
     }
 }

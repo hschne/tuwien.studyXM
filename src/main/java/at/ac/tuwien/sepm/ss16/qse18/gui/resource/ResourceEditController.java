@@ -120,6 +120,8 @@ import java.util.*;
                 case NOTECARD:
                     questionNavigation.handleImageQuestion(null, inputs);
                     break;
+                default:
+                    throw new ServiceException("Unable to identify resource type");
             }
         } else {
             if (checkBoxContinue.isSelected()) {

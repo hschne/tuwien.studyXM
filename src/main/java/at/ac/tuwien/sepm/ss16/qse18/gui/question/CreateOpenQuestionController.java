@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
@@ -31,7 +30,7 @@ public class CreateOpenQuestionController extends QuestionController {
 
     @Autowired
     public CreateOpenQuestionController(QuestionService questionService,
-                                        ResourceQuestionService resourceQuestionService) {
+        ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
     }
 
@@ -79,7 +78,7 @@ public class CreateOpenQuestionController extends QuestionController {
             this.choiceBoxQuestionTime.setValue(inputs.get(6).toString());
         }
 
-        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(7));
+        this.resource = inputs == null ? null : (ObservableResource) inputs.get(7);
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 

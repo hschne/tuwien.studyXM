@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.ResourceServiceImpl;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
@@ -17,16 +16,13 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ResourceItemController extends
-    BaseController{
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ResourceItemController
+    extends BaseController {
 
     @FXML public Node root;
     @FXML public Label resourceName;

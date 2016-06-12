@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -30,7 +29,6 @@ import java.util.List;
     @FXML Button buttonStartExam;
     @Autowired ExerciseExamService exerciseExamService;
     private ObservableExerciseExam exam;
-    @Autowired private MainFrameController mainFrameController;
 
     @Autowired ExerciseExamItemController(ExerciseExamService exerciseExamService) {
         this.exerciseExamService = exerciseExamService;
@@ -48,7 +46,7 @@ import java.util.List;
             showError(e);
         }
 
-        boolean allAnswered = (allQuestionList.size() == answeredQuestions.size());
+        boolean allAnswered = allQuestionList.size() == answeredQuestions.size();
 
         //TODO put correctly answered question count here instead of if all questions were answered
         labelPassed.setText(allAnswered ? "Done" : "Incomplete");

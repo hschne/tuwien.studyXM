@@ -10,9 +10,8 @@ import org.springframework.stereotype.Component;
 /**
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public class ExerciseExamNavigation extends SubviewNavigation {
-
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class ExerciseExamNavigation
+    extends SubviewNavigation {
 
     @Autowired
     public ExerciseExamNavigation(SpringFXMLLoader fxmlLoader, AlertBuilder alertBuilder) {

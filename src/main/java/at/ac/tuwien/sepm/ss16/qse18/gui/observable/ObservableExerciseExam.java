@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import javafx.beans.property.*;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
 /**
@@ -91,5 +92,9 @@ public class ObservableExerciseExam {
         return new SimpleDateFormat(format).format(this.exerciseExam.getCreated());
     }
 
-    public void setCreated() {}
+    public void setCreated(Timestamp timestamp) {
+        this.exerciseExam.setCreated(timestamp);
+        this.created.set(new SimpleDateFormat("dd-MM-YYYY")
+            .format(timestamp));
+    }
 }

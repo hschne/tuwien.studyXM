@@ -70,5 +70,7 @@ public interface ExerciseExamQuestionDao {
 
     List<Integer> getAnsweredQuestionsPerExam(int examID) throws DaoException;
 
+    List<Integer> getNotAnsweredQuestionsPerExam(int examID) throws DaoException;
+
 
 }

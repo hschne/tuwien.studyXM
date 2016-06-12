@@ -2,16 +2,13 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.MainFrameController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.DoExerciseExamNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExerciseExamServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.QuestionServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,8 +17,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -47,15 +42,12 @@ import java.util.List;
     @FXML private Button showResultsButton;
     @FXML private Button pauseExamButton;
 
-    @Autowired SpringFXMLLoader springFXMLLoader;
     @Autowired SubjectServiceImpl subjectService;
     @Autowired ExerciseExamServiceImpl examService;
     @Autowired QuestionServiceImpl questionService;
-    @Autowired MainFrameController mainFrameController;
+    @Autowired DoExerciseExamNavigation doExerciseExamNavigation;
     @Autowired ShowResultController showResultController;
 
-    private static final Logger logger = LogManager.getLogger(DoExamController.class);
-    private int starttime;
     private int timeInMinutes;
     private int timeInSeconds;
     private ExerciseExam exam;
@@ -75,26 +67,16 @@ import java.util.List;
         mainFrameController.getButtonSubjects().setDisable(true);
         mainFrameController.getButtonResources().setDisable(true);
         this.exam = exam;
-        starttime = (int)exam.getExamTime();
-        timeInMinutes = starttime;
+        timeInMinutes = (int) exam.getExamTime();
         timeInSeconds = 0;
         timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + " min left");
-
+        doExerciseExamNavigation.setPane(subPane);
         countDown();
 
-
         try {
-            int numberOfAnsweredQuestions = examService.getAnsweredQuestionsOfExam(exam.getExamid()).size();
-            progress = new SimpleIntegerProperty(numberOfAnsweredQuestions);
-
-            Subject subject = subjectService.getSubject(exam.getSubjectID());
-            if(subject != null) {
-                titleLabel.setText("Exam in " + subject.getName());
-            }
-            List<Integer> questionIds = examService.getAllQuestionsOfExam(exam.getExamid());
-            progressLabel.textProperty().bind(new SimpleStringProperty("Progress ")
-               .concat(progress.asString()).concat("/").concat(questionIds.size()));
-
+            setProgressLabel();
+            setTitleLabel();
+            List<Integer> questionIds = examService.getNotAnsweredQuestionsOfExam(exam.getExamid());
 
             for (Integer i : questionIds) {
                     questions.add(questionService.getQuestion(i));
@@ -141,7 +123,7 @@ import java.util.List;
 
     public void handleShowResultsButton(){
         if(controller.noButtonSelected()){
-            showInformation("You have not selected and answer");
+            showInformation("You have not selected and answer.");
             return;
         }
         update();
@@ -149,12 +131,12 @@ import java.util.List;
         mainFrameController.getButtonSubjects().setDisable(false);
         mainFrameController.getButtonResources().setDisable(false);
         timeline.stop();
-        mainFrameController.handleShowExamResult();
+        doExerciseExamNavigation.handleShowExamResult();
         showResultController.initialize(this.exam);
     }
 
     public void handlePauseExamButton(){
-        if(showConfirmation("Do you want to pause the exam, you can resume it later")){
+        if(showConfirmation("Do you want to pause the exam? You can resume it later.")){
             mainFrameController.handleHome();
         }
         else {
@@ -168,6 +150,7 @@ import java.util.List;
             examService.update(exam.getExamid(), timeInSeconds < 30 ? timeInMinutes : timeInMinutes + 1);
         }
         catch (ServiceException e){
+            logger.error(e);
             showError(e.getMessage());
         }
 
@@ -207,13 +190,17 @@ import java.util.List;
         }
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e ->{
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e -> {
+            if(timeInMinutes <= 0 && timeInSeconds <= 0){
+                timeline.stop();
+                showInformation("Unfortunatly you are out of time!");
+                return;
+            }
             if(timeInSeconds == 0){
                 timeInMinutes--;
                 timeInSeconds = 59;
                 timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
-            }
-            else {
+            } else {
                 timeInSeconds--;
                 if(timeInSeconds < 10){
                 timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + "min left");
@@ -222,25 +209,13 @@ import java.util.List;
                     timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
                 }
             }
-            if(timeInMinutes <= 0 && timeInSeconds <= 0){
-                timeline.stop();
-                showInformation("Unfortunatly you are out of time!");
-            }
         }));
         timeline.playFromStart();
 
     }
 
     private void loadCorrectSubScreen(QuestionType type){
-        if(type == QuestionType.MULTIPLECHOICE || type == QuestionType.SINGLECHOICE){
-            controller = mainFrameController.handleMultipleChoice(subPane);
-        }
-        else if(type == QuestionType.NOTECARD){
-            controller = mainFrameController.handleNoteCard(subPane);
-        }
-        else if(type == QuestionType.OPENQUESTION){
-            controller = mainFrameController.handleOpenQuestion(subPane);
-        }
+        controller = doExerciseExamNavigation.loadQuestionView(type);
         setAnswers(currentQuestionNumber);
         controller.initialize(this.exam, questions.get(currentQuestionNumber),answer1,answer2,
             answer3,answer4);
@@ -255,6 +230,22 @@ import java.util.List;
             showError(e);
         }
 
+    }
+
+    private void setProgressLabel() throws ServiceException{
+        int numberOfAnsweredQuestions = examService.getAnsweredQuestionsOfExam(exam.getExamid()).size();
+        progress = new SimpleIntegerProperty(numberOfAnsweredQuestions); //set progress
+
+        int totalNumberOfQuestions = examService.getAllQuestionsOfExam(exam.getExamid()).size();
+        progressLabel.textProperty().bind(new SimpleStringProperty("Progress ")
+            .concat(progress.asString()).concat("/").concat(totalNumberOfQuestions)); //set progressLabel
+    }
+
+    private void setTitleLabel() throws ServiceException{
+        Subject subject = subjectService.getSubject(exam.getSubjectID());
+        if (subject != null) {
+            titleLabel.setText("Exam in " + subject.getName()); //set titelLabel with subject to exam
+        }
     }
 
 

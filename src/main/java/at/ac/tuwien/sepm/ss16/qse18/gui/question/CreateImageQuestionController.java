@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -194,7 +193,7 @@ public class CreateImageQuestionController extends QuestionController {
         if (inputs != null) {
             this.choiceBoxQuestionTime.setValue(inputs.get(11).toString());
         }
-        this.resource = (inputs == null ? null : (ObservableResource) inputs.get(12));
+        this.resource = inputs == null ? null : (ObservableResource) inputs.get(12);
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
@@ -229,8 +228,8 @@ public class CreateImageQuestionController extends QuestionController {
      */
     @Override protected Question newQuestionFromFields() {
         logger.debug("Creating new question");
-        return new Question(textFieldImagePath.getText(), getQuestionType()
-                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0,1)));
+        return new Question(textFieldImagePath.getText(), getQuestionType(),
+            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)));
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {

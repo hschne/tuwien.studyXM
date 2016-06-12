@@ -11,16 +11,10 @@ import javafx.beans.property.StringProperty;
  * @author Hans-Joerg Schroedl
  */
 public class ObservableResource {
-
     private IntegerProperty id;
     private StringProperty type;
     private StringProperty reference;
     private StringProperty name;
-
-    public Resource getResource() {
-        return resource;
-    }
-
     private Resource resource;
 
     public ObservableResource(Resource resource) {
@@ -29,6 +23,10 @@ public class ObservableResource {
         type = new SimpleStringProperty(resource.getType().toString());
         name = new SimpleStringProperty(resource.getName());
         reference = new SimpleStringProperty(resource.getReference());
+    }
+
+    public Resource getResource() {
+        return resource;
     }
 
     public int getId() {

@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
@@ -36,6 +35,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
     private static final Logger logger = LogManager.getLogger();
     private static final String UPDATE_SQL = "UPDATE REL_EXAM_QUESTION SET QUESTION_PASSED = ?, "
         + "ALREADY_ANSWERED = ? WHERE EXAMID = ? AND QUESTIONID = ?;";
+    private static final String INVALID_INPUT = "Invalid exercise ID, please check your input";
 
     @Autowired public ExerciseExamQuestionDaoJdbc(ConnectionH2 database) {
         this.database = database;
@@ -73,7 +73,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
         if (examID <= 0) {
             logger.error("Dao Exception delete() {}", examID);
-            throw new DaoException("Invalid examID, please check your input");
+            throw new DaoException(INVALID_INPUT);
         }
 
         PreparedStatement pstmt = null;
@@ -107,7 +107,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
             for(int e: questionList) {
                 if(e <= 0){
                     logger.error("Invalid question ID");
-                    throw new DaoException("Invalid question ID");
+                    throw new DaoException(INVALID_INPUT);
                 }
                 pstmt = this.database.getConnection()
                     .prepareStatement("SELECT * FROM REL_EXAM_QUESTION WHERE "
@@ -137,7 +137,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
         if(examID <= 0) {
             logger.error("Dao Exception in getAllQuestionsofExam with parameters", examID);
-            throw new DaoException("Invalid exercise ID, please check your input");
+            throw new DaoException(INVALID_INPUT);
         }
 
         PreparedStatement pstmt = null;
@@ -240,5 +240,39 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
         return questionIDList;
+    }
+
+    @Override public List<Integer> getNotAnsweredQuestionsPerExam(int examID) throws DaoException {
+        logger.debug("entering method getNotAnsweredQuestionsOfExam with parameters {}", examID);
+        List<Integer> questions = new ArrayList<>();
+
+        if(examID <= 0) {
+            logger.error("Dao Exception in getAnsweredQuestionsPerExam with parameters", examID);
+            throw new DaoException(INVALID_INPUT);
+        }
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        try {
+            pstmt = this.database.getConnection()
+                .prepareStatement("SELECT * FROM REL_EXAM_QUESTION WHERE EXAMID = ? "
+                    + "AND ALREADY_ANSWERED = FALSE");
+
+            pstmt.setInt(1, examID);
+            rs = pstmt.executeQuery();
+
+            while(rs.next()) {
+                questions.add(rs.getInt("questionid"));
+            }
+
+        } catch(SQLException e) {
+            logger.error("SQL Exception in getNotAnsweredQuestionsPerExam with parameters {}", examID, e);
+            throw new DaoException("Could not get List with not answered Questions for exercise ID " + examID);
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
+        }
+        return questions;
+
     }
 }

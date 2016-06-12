@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExerciseExam;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
 import org.apache.logging.log4j.LogManager;

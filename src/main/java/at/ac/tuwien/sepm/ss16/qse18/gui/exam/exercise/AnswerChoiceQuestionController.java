@@ -15,7 +15,7 @@ public class AnswerChoiceQuestionController extends AnswerQuestionController {
     @FXML public void initialize(ExerciseExam exam, Question question, Answer answer1, Answer answer2,
         Answer answer3, Answer answer4){
             super.initialize(exam,question,answer1,answer2,answer3,answer4);
-            String s = "";
+            String s;
             if(question.getType() == QuestionType.MULTIPLECHOICE){
                 s = "(MULTIPLECHOICE)";
             }

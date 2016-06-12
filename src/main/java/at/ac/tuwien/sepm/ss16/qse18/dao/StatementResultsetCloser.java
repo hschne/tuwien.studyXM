@@ -30,9 +30,17 @@ public class StatementResultsetCloser {
      * */
     public static void closeStatementsAndResultSets(Statement[] statements, ResultSet[] resultSets)
         throws DaoException {
-        if (statements == null) {
+
+        closeStatements(statements);
+
+        closeResultSets(resultSets);
+    }
+
+    private static void closeStatements(Statement[] statements) throws DaoException {
+        if(statements == null) {
             return;
         }
+
         for (Statement s : statements) {
             try {
                 if (s != null) {
@@ -43,7 +51,9 @@ public class StatementResultsetCloser {
                 throw new DaoException("Could not close statement: " + e.getMessage());
             }
         }
+    }
 
+    private static void closeResultSets(ResultSet[] resultSets) throws DaoException {
         if (resultSets == null) {
             return;
         }

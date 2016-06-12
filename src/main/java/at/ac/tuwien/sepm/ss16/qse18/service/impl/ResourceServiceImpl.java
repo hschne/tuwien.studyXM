@@ -86,7 +86,14 @@ public class ResourceServiceImpl implements ResourceService {
      */
     @Override
     public void openResource(Resource resource) throws ServiceException {
+        String operatingSystem = System.getProperty("os.name");
+        if(!(operatingSystem.contains("Windows") || operatingSystem.contains("mac"))){
+            throw new ServiceException("Opening resources is only available on windows and mac.");
+        }
+        openResourceFile(resource);
+    }
 
+    private void openResourceFile(Resource resource) throws ServiceException {
         if (Desktop.isDesktopSupported()) {
             try {
                 File file = new File(resource.getReference());
