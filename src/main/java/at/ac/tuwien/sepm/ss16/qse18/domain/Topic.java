@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+import java.io.Serializable;
+
 /**
  * Class Topic
  * represents the entity topic
@@ -9,7 +11,7 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
  *
  * @author Felix Almer on 10.05.2016.
  */
-public class Topic {
+public class Topic implements Serializable {
     private int topicId;
     private String topic;
     private String numberOfQuestions = "questions: 0";

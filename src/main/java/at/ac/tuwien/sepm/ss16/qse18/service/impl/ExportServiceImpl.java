@@ -14,6 +14,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,13 +50,16 @@ import java.util.List;
         try {
             List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);
             List<Question> questions = getQuestions(topics);
+            serializeSubject();
+            serializeTopics(topics);
+            serializeQuestions(questions);
             //List<Resource> resources = getResources(questions);
         } catch (DaoException e) {
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
     }
-    
+
 
     @Autowired public void setResourceQuestionDao(ResourceQuestionDao resourceQuestionDao) {
         this.resourceQuestionDao = resourceQuestionDao;
@@ -74,6 +78,7 @@ import java.util.List;
         }
     }
 
+
     private List<Resource> getResources(List<Question> questions) throws ServiceException {
         List<Resource> allResources = new ArrayList<>();
         try {
@@ -87,4 +92,43 @@ import java.util.List;
             throw new ServiceException(e);
         }
     }
+
+    private void serializeSubject(){
+        try {
+            FileOutputStream output = new FileOutputStream("./subject.data");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
+            objectOutputStream.writeObject(subject);
+            objectOutputStream.close();
+            output.close();
+        } catch (FileNotFoundException e) {
+            logger.error(e);
+        } catch (IOException e) {
+            logger.error(e);
+        }
+    }
+
+    private void serializeQuestions(List<Question> questions) {
+        try {
+            FileOutputStream output = new FileOutputStream("./questions.data");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
+            objectOutputStream.writeObject((Serializable) questions);
+            objectOutputStream.close();
+            output.close();
+        } catch (IOException e) {
+            logger.error(e);
+        }
+    }
+
+    private void serializeTopics(List<Topic> topics){
+        try {
+            FileOutputStream output = new FileOutputStream("./topics.data");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
+            objectOutputStream.writeObject((Serializable) topics);
+            objectOutputStream.close();
+            output.close();
+        } catch (IOException e) {
+            logger.error(e);
+        }
+    }
+
 }

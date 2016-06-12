@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+import java.io.Serializable;
+
 /**
  * Class Question
  * represents the entity question
@@ -11,7 +13,7 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
  * @author Felix Almer
  *
  * */
-public class Question {
+public class Question implements Serializable {
     private int questionId;
     private String questionString;
     private QuestionType type;

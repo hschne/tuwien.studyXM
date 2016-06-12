@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+import java.io.Serializable;
 import java.text.MessageFormat;
 
 /**
@@ -14,7 +15,7 @@ import java.text.MessageFormat;
  *
  * @author Hans-Joerg Schroedl
  */
-public class Subject {
+public class Subject implements Serializable {
 
     private int subjectId;
 
