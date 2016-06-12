@@ -4,26 +4,26 @@ import java.io.Serializable;
 
 /**
  * Class Topic
- * represents the entity topic
- * @parameter topicId primary key of topic
- * @parameter topic name of the topic
- * @parameter numberOfQuestions questions that belongs to the topic
+ * represents the entity topicString
+ * @parameter topicId primary key of topicString
+ * @parameter topicString name of the topicString
+ * @parameter numberOfQuestions questions that belongs to the topicString
  *
  * @author Felix Almer on 10.05.2016.
  */
 public class Topic implements Serializable {
     private int topicId;
-    private String topic;
+    private String topicString;
     private String numberOfQuestions = "questions: 0";
 
-    public Topic(int topicId, String topic) {
+    public Topic(int topicId, String topicString) {
         this.topicId = topicId;
-        this.topic = topic;
+        this.topicString = topicString;
     }
 
     public Topic() {
         this.topicId = -1;
-        this.topic = "";
+        this.topicString = "";
     }
 
     public String getNumberOfQuestions() {
@@ -43,17 +43,17 @@ public class Topic implements Serializable {
     }
 
     public String getTopic() {
-        return topic;
+        return topicString;
     }
 
     public void setTopic(String topic) {
-        this.topic = topic;
+        this.topicString = topic;
     }
 
     @Override public String toString() {
         return "Topic{" +
             "topicId=" + topicId +
-            ", topic='" + topic + '\'' +
+            ", topicString='" + topicString + '\'' +
             '}';
     }
 }

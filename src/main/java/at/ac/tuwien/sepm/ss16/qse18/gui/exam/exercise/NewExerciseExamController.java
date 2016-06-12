@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
         super(exerciseExamService, subjectService, topicService, questionService);
     }
 
-    @FXML public void handleCreate() {
+    @FXML @Override public void handleCreate() {
         logger.debug("Create button pressed. Entering create method.");
         if (validateFields())
             return;

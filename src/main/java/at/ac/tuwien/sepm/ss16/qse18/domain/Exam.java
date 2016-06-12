@@ -15,7 +15,7 @@ public class Exam {
     private List<ExerciseExam> exercises;
 
     public Exam() {
-
+        // For testing only
     }
 
     public Exam(String name, Timestamp dueDate, int subject) {

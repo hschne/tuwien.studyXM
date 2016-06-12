@@ -190,7 +190,7 @@ import java.util.List;
         }
         timeline = new Timeline();
         timeline.setCycleCount(Timeline.INDEFINITE);
-        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e ->{
+        timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e -> {
             if(timeInMinutes <= 0 && timeInSeconds <= 0){
                 timeline.stop();
                 showInformation("Unfortunatly you are out of time!");
@@ -200,8 +200,7 @@ import java.util.List;
                 timeInMinutes--;
                 timeInSeconds = 59;
                 timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
-            }
-            else {
+            } else {
                 timeInSeconds--;
                 if(timeInSeconds < 10){
                 timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + "min left");
@@ -210,7 +209,6 @@ import java.util.List;
                     timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
                 }
             }
-
         }));
         timeline.playFromStart();
 

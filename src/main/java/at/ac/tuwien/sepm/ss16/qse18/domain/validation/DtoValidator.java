@@ -12,6 +12,10 @@ import java.util.stream.Collectors;
  */
 public class DtoValidator {
 
+    public DtoValidator() {
+        // Due to static import not necessary
+    }
+
     /**
      * Checks whether the subject is valid or not.
      * @param subject the subject that should be validated

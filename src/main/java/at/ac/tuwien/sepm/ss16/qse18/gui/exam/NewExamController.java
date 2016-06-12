@@ -70,7 +70,7 @@ import java.util.stream.Collectors;
     private Exam createExamFromFields() throws DtoValidatorException {
         String name = fieldName.getText();
         Timestamp date = null;
-        int subjectId = -1;
+        int subjectId;
         try {
             date = Timestamp.valueOf(dueDate.getValue().atStartOfDay());
         } catch(NullPointerException e) {
