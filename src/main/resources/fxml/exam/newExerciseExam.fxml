@@ -27,8 +27,8 @@
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="468.0" minHeight="10.0" prefHeight="435.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="240.0" minHeight="10.0" prefHeight="58.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="468.0" minHeight="10.0" prefHeight="401.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="240.0" minHeight="10.0" prefHeight="92.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
 
@@ -78,8 +78,10 @@
 
                         <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0" GridPane.rowIndex="1">
                             <children>
-                                <Button layoutX="420.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="33.0" prefWidth="95.0" text="Ok" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0" />
-                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" prefWidth="89.0" text="Cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="10.0" />
+                                <Button layoutX="420.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="33.0" prefWidth="150.0" text="Create" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="40.0" />
+                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" prefWidth="150.0" text="Cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="40.0" />
+                        <Button layoutX="471.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleCreateAndStart" prefHeight="33.0" prefWidth="150.0" text="Create and start" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="390.0" AnchorPane.topAnchor="40.0" />
+                        <Button layoutX="644.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleCreateAndContinue" prefHeight="33.0" prefWidth="150.0" text="Create and continue" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="40.0" />
                             </children>
                         </AnchorPane>
                     </children>
