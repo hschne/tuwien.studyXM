@@ -4,7 +4,6 @@ BEGIN;
 DELETE FROM rel_exam_question;
 DELETE FROM rel_subject_topic;
 DELETE FROM rel_question_topic;
-DELETE FROM rel_resource_topic;
 DELETE FROM rel_resource_question;
 DELETE FROM entity_exam;
 DELETE FROM entity_subject;
@@ -300,55 +299,15 @@ INSERT INTO rel_question_topic VALUES
 (23,8),
 (24,8),
 (25,1),
-(25,2),
-(25,4),
-(25,5),
-(25,6),
 (26,1),
-(26,2),
-(26,4),
-(26,5),
-(26,6),
 (27,1),
-(27,2),
-(27,4),
-(27,5),
-(27,6),
 (28,1),
-(28,2),
-(28,4),
-(28,5),
-(28,6),
 (29,1),
-(29,2),
-(29,4),
-(29,5),
-(29,6),
 (30,1),
-(30,2),
-(30,4),
-(30,5),
-(30,6),
 (31,1),
-(31,2),
-(31,4),
-(31,5),
-(31,6),
 (32,1),
-(32,2),
-(32,4),
-(32,5),
-(32,6),
 (33,1),
-(33,2),
-(33,4),
-(33,5),
-(33,6),
 (34,1),
-(34,2),
-(34,4),
-(34,5),
-(34,6),
 (35,6),
 (36,6),
 (37,6),
@@ -626,9 +585,6 @@ INSERT INTO entity_resource VALUES
 (DEFAULT,1,'SEPM: Design Patterns','src/main/resources/resources/Block 10 - Design Patterns.pdf'),
 (DEFAULT,1,'SEPM: Technik und Werkzeuge','src/main/resources/resources/Block_3_Technik und Werkzeuge.pdf'),
 (DEFAULT,4,'TGI Test Beispiel (arbitration)','src/main/resources/resources/arbitration_einheit.gif');
---Insert for resource_topic
---(NOT NEEDED)
-INSERT INTO rel_resource_topic VALUES(1,1),(1,2),(2,4),(5,4),(6,6),(2,2);
 --Insert for resource_question
 INSERT INTO rel_resource_question VALUES
 (1,25),

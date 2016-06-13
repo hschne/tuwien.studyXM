@@ -18,8 +18,6 @@ CREATE TABLE rel_subject_topic(subjectid INTEGER REFERENCES entity_subject(subje
 
 CREATE TABLE rel_question_topic(questionid INTEGER REFERENCES entity_question(questionid),topicid INTEGER REFERENCES entity_topic(topicid),PRIMARY KEY(questionid,topicid));
 
-CREATE TABLE rel_resource_topic(resourceid INTEGER REFERENCES entity_resource(resourceid), topicid INTEGER REFERENCES entity_topic(topicid),PRIMARY KEY(resourceid,topicid));
-
 CREATE TABLE rel_resource_question(resourceid INTEGER REFERENCES entity_resource(resourceid),questionid INTEGER REFERENCES entity_question(questionid),PRIMARY KEY(resourceid,questionid));
 
 CREATE TABLE rel_exam_question(examid INTEGER REFERENCES entity_exercise_exam(examid),questionid INTEGER REFERENCES entity_question(questionid), question_passed BOOLEAN DEFAULT FALSE NOT NULL, already_answered BOOLEAN DEFAULT FALSE NOT NULL,PRIMARY KEY(examid,questionid));
