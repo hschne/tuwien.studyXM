@@ -312,8 +312,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
      * */
     public String[] calculateResult(Map<Integer, Boolean> questionBooleans){
         logger.debug("entering calculateResult with parameters {}", questionBooleans);
-        double incorrect = 0;
-        double correct = 0;
+        int incorrect = 0;
+        int correct = 0;
         String[] result = new String[3];
 
         if(questionBooleans != null && questionBooleans.size() > 0){
