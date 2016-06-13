@@ -113,28 +113,28 @@
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets existing="10.0" />
                            </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword two here..." GridPane.rowIndex="1">
                            <font>
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets existing="10.0" />
                            </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword three here..." GridPane.rowIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets existing="10.0" />
                            </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add keyword four here..." GridPane.rowIndex="3">
                            <font>
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets existing="10.0" />
                            </GridPane.margin></TextField>
                         <CheckBox fx:id="checkBoxAnswerOne" mnemonicParsing="false" text="correct answer" visible="false" GridPane.columnIndex="1">
                            <font>
@@ -197,7 +197,7 @@
                                     </FXCollections>
                                  </items>
                                  <GridPane.margin>
-                                    <Insets left="50.0" />
+                                    <Insets existing="50.0" />
                                  </GridPane.margin>
                               </ChoiceBox>
                               <Label text="question time" GridPane.columnIndex="1">

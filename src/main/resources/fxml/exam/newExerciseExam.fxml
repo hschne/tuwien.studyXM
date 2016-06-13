@@ -45,14 +45,14 @@
                                 <Label text="Topics" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                 <TextField fx:id="fieldAuthor" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="Enter author name here" GridPane.columnIndex="2">
                                     <GridPane.margin>
-                                        <Insets right="20.0" />
+                                        <Insets imported="20.0" />
                                     </GridPane.margin></TextField>
                                 <Label text="Select time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="fieldTime" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="Enter time here" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <ListView fx:id="topicListView" maxWidth="-Infinity" prefHeight="145.0" prefWidth="258.0" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                             </children>
                             <GridPane.margin>
-                                <Insets left="40.0" right="40.0" />
+                                <Insets existing="40.0" imported="40.0" />
                             </GridPane.margin>
                         </GridPane>
 

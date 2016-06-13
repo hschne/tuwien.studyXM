@@ -15,7 +15,7 @@ import java.util.Objects;
 /**
  * @author Hans-Joerg Schroedl
  */
-@Service public class ConflictDetection {
+@Service public class SubjectConflictDetection {
 
     private static final Logger logger = LogManager.getLogger();
 

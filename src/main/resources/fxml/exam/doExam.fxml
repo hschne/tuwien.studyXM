@@ -72,7 +72,7 @@
                                     <Image url="/icons/clock.png" />
                                  </image>
                                  <GridPane.margin>
-                                    <Insets left="20.0" />
+                                    <Insets existing="20.0" />
                                  </GridPane.margin>
                               </ImageView>
                            </children>
@@ -81,7 +81,7 @@
                   </GridPane>
                </children>
                <GridPane.margin>
-                  <Insets right="20.0" />
+                  <Insets imported="20.0" />
                </GridPane.margin>
             </GridPane>
             <AnchorPane fx:id="subPane" styleClass="root" GridPane.rowIndex="2">
@@ -90,12 +90,12 @@
                 </stylesheets>
                <GridPane.margin>
 
-                  <Insets bottom="50.0" left="100.0" right="100.0" />
+                  <Insets bottom="50.0" existing="100.0" imported="100.0" />
                </GridPane.margin>
             </AnchorPane>
             <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#handleNextQuestionButton" text="Next Question" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
-                  <Insets right="20.0" />
+                  <Insets imported="20.0" />
                </GridPane.margin></Button>
             <Label text="All subjects are covered" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
@@ -104,12 +104,12 @@
             <Button fx:id="showResultsButton" mnemonicParsing="false" onAction="#handleShowResultsButton" text="Show results" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <Button fx:id="skipQuesitonButton" mnemonicParsing="false" onAction="#handleSkipQuestionButton" text="Skip Question" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
-                  <Insets left="20.0" />
+                  <Insets existing="20.0" />
                </GridPane.margin>
             </Button>
             <Button fx:id="pauseExamButton" mnemonicParsing="false" onAction="#handlePauseExamButton" text="Pause Exam" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                <GridPane.margin>
-                  <Insets left="20.0" />
+                  <Insets existing="20.0" />
                </GridPane.margin></Button>
          </children>
          <padding>

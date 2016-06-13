@@ -41,7 +41,7 @@
             </TableView>
             <Button fx:id="buttonNewExam" mnemonicParsing="false" onAction="#createExerciseExam" style="-fx-background-color: #22374A;" text="New Exam" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2">
                <GridPane.margin>
-                  <Insets left="50.0" />
+                  <Insets existing="50.0" />
                </GridPane.margin>
                <font>
                   <Font name="Arial" size="14.0" />
@@ -49,7 +49,7 @@
             </Button>
             <Button fx:id="buttonShowQuestions" mnemonicParsing="false" onAction="#showQuestions" style="-fx-background-color: #22374A;" text="Show Questions" textFill="WHITE" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
                <GridPane.margin>
-                  <Insets right="50.0" />
+                  <Insets imported="50.0" />
                </GridPane.margin>
                <font>
                   <Font name="Arial" size="14.0" />

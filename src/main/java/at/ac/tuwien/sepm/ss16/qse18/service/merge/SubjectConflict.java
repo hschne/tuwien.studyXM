@@ -37,12 +37,7 @@ public class SubjectConflict {
     }
 
     public void resolveConflict() throws ServiceException {
-        try {
-            List<Topic> existingTopics = subjectTopicDao.getTopicToSubject(existingSubject);
-            List<Topic> importedTopics = new ArrayList<>();
-        } catch (DaoException e) {
-            logger.error(e);
-        }
+
     }
 
 

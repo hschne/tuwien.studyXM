@@ -27,22 +27,22 @@
       </Line>
       <RadioButton fx:id="answer1Button" mnemonicParsing="false" text="Answer 1" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets left="150.0" />
+            <Insets existing="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer2Button" mnemonicParsing="false" text="Answer 2" GridPane.rowIndex="2">
          <GridPane.margin>
-            <Insets left="150.0" />
+            <Insets existing="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer3Button" mnemonicParsing="false" text="Answer 3" GridPane.rowIndex="3">
          <GridPane.margin>
-            <Insets left="150.0" />
+            <Insets existing="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer4Button" mnemonicParsing="false" text="Answer 4" GridPane.rowIndex="4">
          <GridPane.margin>
-            <Insets left="150.0" />
+            <Insets existing="150.0" />
          </GridPane.margin>
       </RadioButton>
       <ImageView fx:id="image" fitHeight="218.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />

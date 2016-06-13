@@ -3,8 +3,6 @@ package at.ac.tuwien.sepm.ss16.qse18.service.merge;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.TopicServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,20 +20,20 @@ import static org.mockito.Mockito.when;
 /**
  * @author Hans-Joerg Schroedl
  */
-@RunWith(MockitoJUnitRunner.class) public class SubjectConflictDetectionTest {
+@RunWith(MockitoJUnitRunner.class) public class SubjectSubjectConflictDetectionTest {
 
     @Mock SubjectDao subjectDaoMock;
 
-    private ConflictDetection conflictDetection;
+    private SubjectConflictDetection subjectConflictDetection;
 
     @Before public void setUp() throws Exception {
-        conflictDetection = new ConflictDetection();
-        conflictDetection.setSubjectDao(subjectDaoMock);
+        subjectConflictDetection = new SubjectConflictDetection();
+        subjectConflictDetection.setSubjectDao(subjectDaoMock);
     }
 
     @Test(expected = ServiceException.class) public void test_getConflictingSubject_throwsExceptionIfNoConflict() throws Exception {
-        conflictDetection = new ConflictDetection();
-        conflictDetection.getConflictingSubject();
+        subjectConflictDetection = new SubjectConflictDetection();
+        subjectConflictDetection.getConflictingSubject();
     }
 
     @Test public void test_conflictExists_NoConflictExists() throws Exception {
@@ -43,7 +41,7 @@ import static org.mockito.Mockito.when;
 
         Subject importSubject = createDummySubject();
         importSubject.setName("Another name");
-        boolean result =conflictDetection.conflictExists(importSubject);
+        boolean result = subjectConflictDetection.conflictExists(importSubject);
 
         assertFalse(result);
 
@@ -54,7 +52,7 @@ import static org.mockito.Mockito.when;
 
         //create dummySubject creates the same subject contained in create DummySubjects
         Subject importSubject = createDummySubject();
-        boolean result =conflictDetection.conflictExists(importSubject);
+        boolean result = subjectConflictDetection.conflictExists(importSubject);
 
         assertTrue(result);
     }
@@ -67,8 +65,8 @@ import static org.mockito.Mockito.when;
         when(subjectDaoMock.getSubjects()).thenReturn(subjectList);
 
         Subject importSubject = createDummySubject();
-        conflictDetection.conflictExists(importSubject);
-        Subject conflictingSubject = conflictDetection.getConflictingSubject();
+        subjectConflictDetection.conflictExists(importSubject);
+        Subject conflictingSubject = subjectConflictDetection.getConflictingSubject();
 
         assertEquals(conflictingSubject, existingSubject);
     }

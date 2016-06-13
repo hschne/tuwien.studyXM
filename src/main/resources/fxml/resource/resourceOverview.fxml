@@ -25,7 +25,7 @@
             <children>
                 <ListView fx:id="resourceListView" styleClass="custom-list-view" GridPane.rowIndex="1">
                     <GridPane.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" existing="10.0" imported="10.0" top="10.0" />
                     </GridPane.margin></ListView>
                 <GridPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" GridPane.rowIndex="2">
                     <columnConstraints>
@@ -39,7 +39,7 @@
                     <children>
                         <Button mnemonicParsing="false" onAction="#handleNew" text="add new resource" GridPane.columnIndex="2">
                             <GridPane.margin>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                <Insets bottom="10.0" existing="10.0" imported="10.0" top="10.0" />
                             </GridPane.margin>
                      <font>
                         <Font size="16.0" />

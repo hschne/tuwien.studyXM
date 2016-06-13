@@ -174,7 +174,7 @@
                                     </FXCollections>
                                  </items>
                                  <GridPane.margin>
-                                    <Insets left="50.0" />
+                                    <Insets existing="50.0" />
                                  </GridPane.margin>
                               </ChoiceBox>
                               <Label text=" question time" GridPane.columnIndex="1">

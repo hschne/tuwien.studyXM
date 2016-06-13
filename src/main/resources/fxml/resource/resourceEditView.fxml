@@ -55,12 +55,12 @@
                       <children>
                           <Label text="Name">
                      <GridPane.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" existing="10.0" imported="10.0" top="10.0" />
                      </GridPane.margin>
                   </Label>
                           <Label text="File" GridPane.rowIndex="1">
                      <GridPane.margin>
-                        <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                        <Insets bottom="10.0" existing="10.0" imported="10.0" top="10.0" />
                      </GridPane.margin>
                   </Label>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
