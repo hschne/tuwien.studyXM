@@ -64,11 +64,11 @@ public class StatisticItemController extends
     private Label labelMoreTime;
 
     @FXML
-    private ImageView achievment1;
+    private ImageView achievement1;
     @FXML
-    private ImageView achievment2;
+    private ImageView achievement2;
     @FXML
-    private ImageView achievment3;
+    private ImageView achievement3;
 
     private ObservableSubject subject;
     private ObservableList<ObservableTopic> topicList;
@@ -100,7 +100,7 @@ public class StatisticItemController extends
 
     public void loadFields() {
         labelName.setText(subject.getName() + " (" + subject.getSemester() + ")");
-        labelAvgExamResult.setText("exams passed | ");
+        labelAvgExamResult.setText("avg. exam result | 80%");
 
         int estimated = (int) subject.getEcts() * 25;
         labelEctsTime.setText(estimated + " hours estimated (" +
@@ -114,14 +114,14 @@ public class StatisticItemController extends
         labelHint.setText("Hint - study a lot! ;)");
 
         //if(moreLess=="less"){
-            achievment1.setImage( new Image("/icons/acbrain.png"));
+            achievement1.setImage( new Image("/icons/acbrain.png"));
         //}
         //if(moreLess=="less"){
-            achievment2.setImage( new Image("/icons/acknow.png"));
+            achievement2.setImage( new Image("/icons/acknow.png"));
         //}
-        if(moreLess=="less"){
-            achievment3.setImage( new Image("/icons/actime.png"));
-        }
+       // if(moreLess=="less"){
+            achievement3.setImage( new Image("/icons/actime.png"));
+       // }
 
 
     }

@@ -27,7 +27,7 @@ public class StatisticTopicCell extends ListCell<ObservableTopic> {
 
     public StatisticTopicCell() {
         super();
-        box.getChildren().addAll(progressBar, TopicLabel, numberOfQuestions);
+        box.getChildren().addAll(progressBar,numberOfQuestions, TopicLabel);
     }
 
 
@@ -37,7 +37,7 @@ public class StatisticTopicCell extends ListCell<ObservableTopic> {
         if (topic != null) {
             TopicLabel.setText(topic.getTopic());
             progressBar.setProgress(0.5);
-            numberOfQuestions.setText(topic.getNumberOfQuestions());
+            numberOfQuestions.setText("1/"+topic.getNumberOfQuestions().substring(10,topic.getNumberOfQuestions().length()));
             setGraphic(box);
         } else {
             setGraphic(null);

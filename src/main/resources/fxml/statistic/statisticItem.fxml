@@ -107,14 +107,14 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="achievments:">
+            <Label text="achievements:">
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <ImageView fx:id="achievment1" fitHeight="22.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
-            <ImageView fx:id="achievment2" fitHeight="22.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
-            <ImageView fx:id="achievment3" fitHeight="22.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
+            <ImageView fx:id="achievement1" fitHeight="22.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1" />
+            <ImageView fx:id="achievement2" fitHeight="22.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="2" />
+            <ImageView fx:id="achievement3" fitHeight="22.0" fitWidth="97.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="3" />
          </children>
       </GridPane>
    </children>
