@@ -71,6 +71,8 @@ abstract class NewExerciseExamBase extends BaseController {
         logger.debug("Filling topic list");
         try {
             topicList.clear();
+            fieldAuthor.clear();
+            fieldTime.clear();
             List<ObservableTopic> observableTopics =
                 topicService.getTopicsFromSubject(subject).stream().map(ObservableTopic::new)
                     .collect(Collectors.toList());
