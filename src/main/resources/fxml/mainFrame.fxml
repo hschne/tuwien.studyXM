@@ -63,7 +63,7 @@
                               <Font name="Arial Bold" size="18.0" />
                            </font>
                         </Button>
-                        <Button fx:id="buttonStatistics" disable="true" mnemonicParsing="false" onAction="#handleStatistics" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #192836;" text="statistics" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                        <Button fx:id="buttonStatistics" mnemonicParsing="false" onAction="#handleStatistics" prefHeight="33.0" prefWidth="200.0" style="-fx-background-color: #192836;" text="statistics" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP" GridPane.rowIndex="4" GridPane.valignment="TOP">
                            <font>
                               <Font name="Arial Bold" size="18.0" />
                            </font>

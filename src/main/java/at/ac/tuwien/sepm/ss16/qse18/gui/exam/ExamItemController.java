@@ -74,11 +74,11 @@ import java.util.List;
             allQuestionList.size() + " " + percentageAnswered);
 
         if (percentageAnswered > 0.8d) {
-            examProgress.setStyle("-fx-accent:#8bf22f;");
+            examProgress.setStyle("-fx-accent:#A2E88B;");
         } else if (percentageAnswered > 0.3d) {
-            examProgress.setStyle("-fx-accent:yellow;");
+            examProgress.setStyle("-fx-accent:#F0F595;");
         } else {
-            examProgress.setStyle("-fx-accent:red;");
+            examProgress.setStyle("-fx-accent:#F7A099;");
         }
     }
 
