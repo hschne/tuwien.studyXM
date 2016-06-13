@@ -52,15 +52,6 @@ public class DoExerciseExamNavigation extends SubviewNavigation {
         return controller;
     }
 
-    public void handleShowExamResult(){
-        logger.debug("Loading doExam screen");
-        try{
-            setSubView("/fxml/exam/showResult.fxml", ShowResultController.class);
-        }
-        catch (IOException e){
-            handleException(e);
-        }
-    }
 
     private  <T extends GuiController> T handleMultipleChoice(){
         T controller = null;

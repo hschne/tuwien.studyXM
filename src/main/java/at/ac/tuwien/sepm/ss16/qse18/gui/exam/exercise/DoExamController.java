@@ -123,7 +123,7 @@ import java.util.List;
 
     public void handleShowResultsButton(){
         if(controller.noButtonSelected()){
-            showInformation("You have not selected and answer.");
+            showInformation("You have not selected an answer.");
             return;
         }
         update();
@@ -131,7 +131,7 @@ import java.util.List;
         mainFrameController.getButtonSubjects().setDisable(false);
         mainFrameController.getButtonResources().setDisable(false);
         timeline.stop();
-        doExerciseExamNavigation.handleShowExamResult();
+        mainFrameController.handleShowExamResult();
         showResultController.initialize(this.exam);
     }
 
