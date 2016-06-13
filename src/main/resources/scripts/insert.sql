@@ -4,7 +4,6 @@ BEGIN;
 DELETE FROM rel_exam_question;
 DELETE FROM rel_subject_topic;
 DELETE FROM rel_question_topic;
-DELETE FROM rel_resource_topic;
 DELETE FROM rel_resource_question;
 DELETE FROM entity_exam;
 DELETE FROM entity_subject;
@@ -586,9 +585,6 @@ INSERT INTO entity_resource VALUES
 (DEFAULT,1,'SEPM: Design Patterns','src/main/resources/resources/Block 10 - Design Patterns.pdf'),
 (DEFAULT,1,'SEPM: Technik und Werkzeuge','src/main/resources/resources/Block_3_Technik und Werkzeuge.pdf'),
 (DEFAULT,4,'TGI Test Beispiel (arbitration)','src/main/resources/resources/arbitration_einheit.gif');
---Insert for resource_topic
---(NOT NEEDED)
-INSERT INTO rel_resource_topic VALUES(1,1),(1,2),(2,4),(5,4),(6,6),(2,2);
 --Insert for resource_question
 INSERT INTO rel_resource_question VALUES
 (1,25),
