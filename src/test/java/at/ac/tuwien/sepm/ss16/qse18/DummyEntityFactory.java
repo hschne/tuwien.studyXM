@@ -22,6 +22,12 @@ public class DummyEntityFactory {
         return s;
     }
 
+    public static List<Subject> createDummySubjects(){
+        List<Subject> subjects = new ArrayList<>();
+        subjects.add(createDummySubject());
+        return subjects;
+    }
+
     public static Topic createDummyTopic() {
         Topic topic = new Topic();
         topic.setTopic("Topic");
