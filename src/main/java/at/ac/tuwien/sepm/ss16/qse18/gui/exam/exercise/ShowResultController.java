@@ -50,12 +50,13 @@ import java.util.Map;
         try {
             result = exerciseExamService.gradeExam(exerciseExam);
             labelGrade.setText("Grading: " + result[2]);
-            pieChartData.add(new PieChart.Data("correct", Double.parseDouble(result[0])));
-            pieChartData.add(new PieChart.Data("false", Double.parseDouble(result[1])));
+            pieChartData.add(new PieChart.Data("correct " + Double.parseDouble(result[0]), Double.parseDouble(result[0])));
+            pieChartData.add(new PieChart.Data("false " + Double.parseDouble(result[1]), Double.parseDouble(result[1])));
             pieChart.setTitle("correct/false answers");
             pieChart.setTitleSide(Side.BOTTOM);
             pieChart.setData(pieChartData);
             pieChart.setLegendVisible(false);
+
             pieChartData.get(0).getNode().setStyle("-fx-pie-color: " + "limegreen");
             pieChartData.get(1).getNode().setStyle("-fx-pie-color: " + "firebrick");
 
