@@ -84,7 +84,7 @@
                   <Insets right="20.0" />
                </GridPane.margin>
             </GridPane>
-            <AnchorPane fx:id="subPane" onDragDetected="#handlePauseExamButton" styleClass="root" GridPane.rowIndex="2">
+            <AnchorPane fx:id="subPane" styleClass="root" GridPane.rowIndex="2">
                 <stylesheets>
                     <URL value="@/examStyle.css" />
                 </stylesheets>

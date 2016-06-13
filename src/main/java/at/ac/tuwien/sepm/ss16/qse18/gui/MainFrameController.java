@@ -168,6 +168,17 @@ import java.util.List;
         }
     }
 
+
+    public void handleShowExamResult(){
+        logger.debug("Loading doExam screen");
+        try{
+            setSubView("/fxml/exam/showResult.fxml", ShowResultController.class,paneContent);
+        }
+        catch (IOException e){
+            handleException(e);
+        }
+    }
+
     public Pane getPaneContent() {
         return paneContent;
     }
