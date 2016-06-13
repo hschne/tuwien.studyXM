@@ -46,7 +46,6 @@ import java.util.Map;
 
         Map<Topic, String[]> topicResult = new HashMap<>();
 
-
         try {
             result = exerciseExamService.gradeExam(exerciseExam);
             labelGrade.setText("Grading: " + result[2]);
