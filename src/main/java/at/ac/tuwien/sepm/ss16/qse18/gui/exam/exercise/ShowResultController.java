@@ -71,7 +71,6 @@ import java.util.Map;
 
             for(Map.Entry<Topic, String[]> m: topicResult.entrySet()){
                 XYChart.Data data = new XYChart.Data(m.getKey().getTopic(), Integer.parseInt(m.getValue()[1]));
-                //data.getNode().setStyle("-fx-bar-fill: " + "limegreen"); funktioniert iwie nicht
                 series1.getData().add(data);
             }
 
