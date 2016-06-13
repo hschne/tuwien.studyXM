@@ -104,6 +104,7 @@ abstract class NewExerciseExamBase extends BaseController {
 
         exerciseExam.setSubjectID(subject.getSubjectId());
 
+
         try {
             examTime = Integer.parseInt(fieldTime.getText());
             exerciseExam.setExamTime(examTime);
@@ -111,6 +112,7 @@ abstract class NewExerciseExamBase extends BaseController {
                 .getQuestionsFromTopic(this.topicList.get(0)));
 
             exerciseExamService.createExam(exerciseExam, this.topicList, examTime);
+            topicList.clear();
 
         } catch (ServiceException e) {
             mistake = true;
