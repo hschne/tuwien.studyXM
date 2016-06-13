@@ -32,15 +32,22 @@ import java.io.File;
         logger.debug("Create button pressed. Entering create method.");
         if (validateFields())
             return;
-        ExerciseExam exam = createExam();
-        if (exam == null) {
-            return;
-        }
-        File file = selectFile();
-        if (file != null) {
-            tryPrint(exam, file);
-            showSuccess("exercise was saved as "+file.getName());
-            mainFrameController.handleExams();
+        try {
+            ExerciseExam exam = createExam();
+
+            if (exam == null) {
+                return;
+            }
+            File file = selectFile();
+            this.initializeTopicList();
+            if (file != null) {
+                tryPrint(exam, file);
+                showSuccess("exercise was saved as " + file.getName());
+                mainFrameController.handleExams();
+            }
+        } catch (ServiceException e) {
+            logger.error("Could not create exerciseExam: ", e);
+            showError(e.getMessage());
         }
     }
 

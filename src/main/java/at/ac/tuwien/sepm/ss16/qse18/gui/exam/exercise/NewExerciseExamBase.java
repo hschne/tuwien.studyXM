@@ -29,10 +29,12 @@ import java.util.stream.Collectors;
 abstract class NewExerciseExamBase extends BaseController {
 
     @FXML protected ListView<ObservableTopic> topicListView;
+    @FXML protected ListView<ObservableTopic> addedTopicListView;
     @FXML protected TextField fieldAuthor;
     @FXML protected TextField fieldTime;
     @FXML protected Button buttonAddTopic;
     @FXML protected Button buttonAddAll;
+    @FXML protected Button buttonDelete;
 
     private ExerciseExamService exerciseExamService;
     private SubjectService subjectService;
@@ -40,8 +42,9 @@ abstract class NewExerciseExamBase extends BaseController {
     protected QuestionService questionService;
     protected Subject subject;
     private ObservableExam exam;
+    ObservableList<ObservableTopic> firstTopicList;
+    ObservableList<ObservableTopic> secondTopicList;
     private List<Topic> topicList = new ArrayList<>();
-    protected boolean mistake;
 
     NewExerciseExamBase(ExerciseExamService exerciseExamService, SubjectService subjectService,
         TopicService topicService, QuestionService questionService) {
@@ -64,26 +67,23 @@ abstract class NewExerciseExamBase extends BaseController {
         initializeTopicList();
     }
 
-    private void initializeTopicList() {
+    protected void initializeTopicList() {
         logger.debug("Filling topic list");
         try {
+            topicList.clear();
             List<ObservableTopic> observableTopics =
                 topicService.getTopicsFromSubject(subject).stream().map(ObservableTopic::new)
                     .collect(Collectors.toList());
-            ObservableList<ObservableTopic> topicList =
+            firstTopicList =
                 FXCollections.observableList(observableTopics);
-            topicListView.setItems(topicList);
-            topicListView.setCellFactory(lv -> new ListCell<ObservableTopic>() {
-                @Override public void updateItem(ObservableTopic item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (empty) {
-                        setText(null);
-                    } else {
-                        String text = item.getT().getTopicId() + ": " + item.getTopic();
-                        setText(text);
-                    }
-                }
-            });
+
+            secondTopicList = FXCollections.observableList(new ArrayList<>());
+            addedTopicListView.setItems(secondTopicList);
+
+
+            topicListView.setItems(firstTopicList);
+
+
         } catch (ServiceException e) {
             logger.error("Initialize not successful", e);
             showError(e);
@@ -92,8 +92,7 @@ abstract class NewExerciseExamBase extends BaseController {
 
     protected abstract void handleCreate();
 
-    ExerciseExam createExam() {
-        mistake = false;
+    ExerciseExam createExam() throws ServiceException{
         ExerciseExam exerciseExam = new ExerciseExam();
         exerciseExam.setExam(exam.getExamid());
         exerciseExam.setAuthor(fieldAuthor.getText());
@@ -112,16 +111,8 @@ abstract class NewExerciseExamBase extends BaseController {
                 .getQuestionsFromTopic(this.topicList.get(0)));
 
             exerciseExamService.createExam(exerciseExam, this.topicList, examTime);
-            topicList.clear();
 
-        } catch (ServiceException e) {
-            mistake = true;
-            logger.error("Could not create exerciseExam: ", e);
-            showError("Check if the choosen topic has already questions to answer."
-                + "\nCheck if the length of the author do not exceed 80 characters."
-                + "\nCheck if there are enough questions in this topic to cover the exerciseExam time.");
-        } catch (NumberFormatException e) {
-            mistake = true;
+        }catch (NumberFormatException e) {
             logger.error("Could not create exerciseExam: ", e);
             showError("Could not parse exerciseExam time. " +
                 "Make sure it only contains numbers and is lower than " + Integer.MAX_VALUE + ".");
@@ -137,24 +128,44 @@ abstract class NewExerciseExamBase extends BaseController {
                 "No topic selected. You have to select the topic you want to create an exam to.");
         }
 
-        else if(!topicList.contains(topicListView.getSelectionModel().getSelectedItem().getT())) {
-            this.topicList.add(topicListView.getSelectionModel().getSelectedItem().getT());
-
-        }else{
-            logger.error("Topic has been added already");
-            showError("The selected Topic has been added already");
-        }
+        this.topicList.add(topicListView.getSelectionModel().getSelectedItem().getT());
+        secondTopicList.add(topicListView.getSelectionModel().getSelectedItem());
+        firstTopicList.remove(topicListView.getSelectionModel().getSelectedItem());
     }
 
     public void addAll(){
-        logger.debug("entering addAll");
-        try {
-            this.topicList = topicService.getTopicsFromSubject(subject);
+        logger.debug("entering addAll()");
+        ObservableList<ObservableTopic> temp = FXCollections.observableArrayList(copy(firstTopicList));
 
-        }catch (ServiceException e){
-            logger.error("addAll not successful", e);
-            showError(e);
+        if(firstTopicList.isEmpty()) {
+            logger.error("topic view is empty");
+            showError("All topics have been added already");
+
+        }else {
+            for (ObservableTopic t : temp) {
+                secondTopicList.add(t);
+                firstTopicList.remove(t);
+                this.topicList.add(t.getT());
+            }
         }
+
+
+    }
+
+    public void delete(){
+        logger.debug("entering delete()");
+        if (addedTopicListView.getSelectionModel().getSelectedItem() == null) {
+            logger.warn("No topic selected");
+            showError(
+                "No topic selected. You have to select the topic you want to delete.");
+        }else {
+
+            firstTopicList.add(addedTopicListView.getSelectionModel().getSelectedItem());
+            this.topicList.remove(addedTopicListView.getSelectionModel().getSelectedItem().getT());
+            secondTopicList.remove(addedTopicListView.getSelectionModel().getSelectedItem());
+
+        }
+
     }
 
     boolean validateFields() {
@@ -170,11 +181,19 @@ abstract class NewExerciseExamBase extends BaseController {
             return true;
         }
         if (this.topicList.isEmpty()) {
-            logger.warn("No topic selected");
+            logger.error("No topic added");
             showError(
-                "No topic selected. You have to select at least one topic you want to create an exam to.");
+                "No topic added. You have to add at least one topic you want to create an exam to.");
             return true;
         }
         return false;
+    }
+
+    private ObservableList<ObservableTopic> copy(ObservableList<ObservableTopic> topicObservableList){
+        ObservableList<ObservableTopic> temp = FXCollections.observableArrayList();
+        for(ObservableTopic t: topicObservableList){
+            temp.add(t);
+        }
+        return temp;
     }
 }

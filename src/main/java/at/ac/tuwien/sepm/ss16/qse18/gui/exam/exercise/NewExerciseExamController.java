@@ -2,10 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
-import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
-import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
-import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
+import at.ac.tuwien.sepm.ss16.qse18.service.*;
 import javafx.fxml.FXML;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,14 +24,15 @@ import org.springframework.stereotype.Component;
         logger.debug("Create button pressed. Entering create method.");
         if (validateFields())
             return;
-        exerciseExam = createExam();
 
-        if(!mistake) {
+        try {
+            exerciseExam = createExam();
+
             showSuccess("exercise was created with an exam time of " + exerciseExam.getExamTime());
-
             mainFrameController.handleExams();
-        }else {
-            return;
+        } catch (ServiceException e) {
+            logger.error("Could not create exerciseExam: ", e);
+            showError(e.getMessage());
         }
     }
 }
