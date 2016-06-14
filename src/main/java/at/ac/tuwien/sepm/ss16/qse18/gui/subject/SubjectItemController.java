@@ -85,7 +85,14 @@ import org.springframework.stereotype.Component;
         try {
             File selected = selectFile();
             if (selected != null) {
-                exportService.export(selected.getAbsolutePath());
+                boolean created = exportService.export(selected.getAbsolutePath());
+                if(created){
+                    showSuccess("Subject successfully exported");
+                }
+                else {
+                    showError("Couldn't export subject");
+                }
+
             }
         } catch (ServiceException e) {
             logger.error(e);
