@@ -55,9 +55,9 @@ import java.util.zip.ZipOutputStream;
     }
 
     @Override public boolean export(String outputpath) throws ServiceException {
+        logger.debug("Exporting subject " + subject);
         boolean success = false;
         ZipOutputStream zipOutputStream = null;
-
 
         try {
             List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);

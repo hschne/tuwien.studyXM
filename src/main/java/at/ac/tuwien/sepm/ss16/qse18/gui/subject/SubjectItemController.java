@@ -141,7 +141,7 @@ import org.springframework.stereotype.Component;
         String defaultPath = "src/main/resources/";
         File defaultDirectory = new File(defaultPath);
         fileChooser.setInitialDirectory(defaultDirectory);
-        fileChooser.setInitialFileName(subject.getName() + "_" + subject.getAuthor());
+        fileChooser.setInitialFileName("xms_" + subject.getName() + "_" + subject.getAuthor());
 
         fileChooser.getExtensionFilters()
             .addAll(new FileChooser.ExtensionFilter("ZIP FILES (.zip)", "*.zip"));

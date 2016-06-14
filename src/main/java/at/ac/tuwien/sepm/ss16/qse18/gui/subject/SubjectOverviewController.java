@@ -1,9 +1,11 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+import at.ac.tuwien.sepm.ss16.qse18.application.MainApplication;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import javafx.collections.FXCollections;
@@ -11,10 +13,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +36,9 @@ import java.util.stream.Collectors;
     @FXML private Button deleteButton;
     private ObservableList<ObservableSubject> subjectList;
     private SubjectService subjectService;
+    @Autowired private MainApplication mainApplication;
     @Autowired SubjectNavigation subjectNavigator;
+    @Autowired private ImportService importService;
 
     @Autowired ApplicationContext applicationContext;
 
@@ -60,6 +67,17 @@ import java.util.stream.Collectors;
     @FXML public void handleNew() throws IOException {
         logger.debug("Create new subject");
         subjectNavigator.handleCreateSubject(null);
+    }
+
+    @FXML public void handleImport() {
+        logger.debug("Import subject");
+        try {
+            File selected = selectFile();
+            importService.importSubject(selected);
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
+        }
     }
 
     /**
@@ -137,5 +155,21 @@ import java.util.stream.Collectors;
         observableSubject.setAuthor(subject.getAuthor());
     }
 
+    private File selectFile() throws ServiceException {
+        FileChooser fileChooser = new FileChooser();
+
+        fileChooser.getExtensionFilters()
+            .addAll(new FileChooser.ExtensionFilter("ZIP FILES (.zip)", "*.zip"));
+        fileChooser.setTitle("Choose zip file");
+        Stage mainStage = mainApplication.getPrimaryStage();
+        File selected = fileChooser.showOpenDialog(mainStage);
+
+        if (selected.getName().substring(0, 4).equals("xms_")) {
+            return selected;
+        } else {
+            logger.error("No valid file selected");
+            throw new ServiceException("Filename does not start with \"xms_\"");
+        }
+    }
 
 }
