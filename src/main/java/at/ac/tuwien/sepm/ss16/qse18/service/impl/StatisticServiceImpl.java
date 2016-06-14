@@ -55,8 +55,12 @@ public class StatisticServiceImpl implements StatisticService {
 
     @Override
     public double[] getCorrectQuestionsForTopic(Topic topic) throws ServiceException {
+        if (topic == null) {
+            logger.error("topic is null");
+            throw new ServiceException("topic must not be null");
+        }
 
-        logger.debug("calculating correct/false ratio");
+        logger.debug("calculating number of correct questions for ID:" + topic.getTopicId());
         this.topic = topic;
         try {
             getTopicQuestions();
@@ -76,47 +80,36 @@ public class StatisticServiceImpl implements StatisticService {
                 correct++;
             }
         }
-        if (questions.size() == 0) {
-            return new double[]{0, 0, 0};
-        } else {
-            return new double[]{correct / questions.size(), correct, questions.size()};
-        }
+        return questions.size() == 0 ? new double[]{0, 0, 0}
+                : new double[]{correct / questions.size(), correct, questions.size()};
     }
 
     @Override
-    public double gradeAllExamsForSubject(Subject subject) throws ServiceException {
-        double avgGrade = 0;
+    public double[] gradeAllExamsForSubject(Subject subject) throws ServiceException {
+        if (subject == null) {
+            logger.error("subject is null");
+            throw new ServiceException("subject must not be null");
+        }
+        logger.debug("calculating average exercise exam result for " + subject.getName());
+
+        double gradeSum = 0;
         int examCount = 0;
+
         try {
             for (Exam e : examDaoJdbc.getExams()) {
                 if (e.getSubject() == subject.getSubjectId()) {
                     for (Integer i : examService.getAllExerciseExamsOfExam(e)) {
                         examCount++;
                         ExerciseExam ex = exerciseExamDaoJdbc.getExam(i);
-                        switch (exerciseExamService.gradeExam(ex)[2]) {
-                            case "A":
-                                avgGrade += 1;
-                                break;
-                            case "B":
-                                avgGrade += 2;
-                                break;
-                            case "C":
-                                avgGrade += 3;
-                                break;
-                            case "D":
-                                avgGrade += 4;
-                                break;
-                            default:
-                                avgGrade += 5;
-                                break;
-                        }
+                        gradeSum += getIntValueOfGrade(exerciseExamService.gradeExam(ex)[2].charAt(0));
                     }
                 }
             }
         } catch (DaoException e) {
-            throw new ServiceException(e);
+            logger.debug("Unable to calculate grade for exercise exams ", e);
+            throw new ServiceException("Unable to calculate grade for exercise exams ", e);
         }
-        return avgGrade / examCount;
+        return examCount == 0 ? new double[]{-1, 0} : new double[]{gradeSum / examCount, examCount};
     }
 
     /**
@@ -145,7 +138,25 @@ public class StatisticServiceImpl implements StatisticService {
             }
         }
     }
-
-
+    /**
+     * Returns the int value for a given grade
+     *
+     * @param c grade as character
+     * @return 'A'=1,'B'=2,'C'=3,'D'=4,'F'=5
+     */
+    private int getIntValueOfGrade(char c) {
+        switch (c) {
+            case 'A':
+                return 1;
+            case 'B':
+                return 2;
+            case 'C':
+                return 3;
+            case 'D':
+                return 4;
+            default:
+                return 5;
+        }
+    }
 
 }

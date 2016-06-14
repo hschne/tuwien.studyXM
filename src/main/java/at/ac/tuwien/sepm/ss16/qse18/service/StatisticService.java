@@ -28,5 +28,5 @@ public interface StatisticService {
      * @param subject subject for which the average grade will calculated.
      * @return the average grade for this subject [1.0d,5.0d]
      */
-    double gradeAllExamsForSubject(Subject subject) throws ServiceException;
+    double[] gradeAllExamsForSubject(Subject subject) throws ServiceException;
 }

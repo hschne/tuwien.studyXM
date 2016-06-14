@@ -86,13 +86,17 @@ public class StatisticItemController extends
         }
     }
 
-    public void loadFields() {
+    public void loadFields() throws ServiceException {
         labelName.setText(subject.getName() + " (" + subject.getSemester() + ")");
 
-        try {
-            labelAvgExamResult.setText("avg. exam result | "+ statisticService.gradeAllExamsForSubject(subject.getSubject()));
-        } catch (ServiceException e) {
+        double[] result = statisticService.gradeAllExamsForSubject(subject.getSubject());
+        labelAvgExamResult.setText("average exercise exam result | "
+                + (result[0] == -1 ? "?" : result[0])
+                + " (" + (int) result[1]
+                + ((int) result[1] == 1 ? " exam)" : " exams)"));
 
+        if (result[0] < 2.0 && result[0] != -1) {
+            achievement1.setImage(new Image("/icons/acbrain.png"));
         }
 
         int estimated = (int) (subject.getEcts() * 25);
@@ -101,26 +105,22 @@ public class StatisticItemController extends
         labelTimeSpent.setText(subject.getTimeSpent() + " hours spent");
 
         String moreLess = estimated - subject.getTimeSpent() <= 0 ? "more" : "less";
+        if (moreLess.equals("less")) {
+            achievement3.setImage(new Image("/icons/actime.png"));
+        }
         labelMoreTime.setText(Math.abs(estimated - subject.getTimeSpent()) +
                 " hours " + moreLess + " than expected");
-
+        
+        //TODO: generate hint based on performance. set last achievement when all questions are
+        // answered correctly
         labelHint.setText("Hint - study a lot! ;)");
-
-        //if(moreLess=="less"){
-        achievement1.setImage(new Image("/icons/acbrain.png"));
-        //}
-        //if(moreLess=="less"){
         achievement2.setImage(new Image("/icons/acknow.png"));
-        //}
-        if(moreLess=="less"){
-        achievement3.setImage(new Image("/icons/actime.png"));
-        }
-
     }
 
     public void setSubject(ObservableSubject subject) {
         this.subject = subject;
     }
+
     public Node getRoot() {
         return root;
     }

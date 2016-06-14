@@ -36,7 +36,7 @@ public class StatisticTopicCell extends ListCell<ObservableTopic> {
     }
 
     @Override
-    public void updateItem(ObservableTopic topic, boolean empty) {
+    public void updateItem(ObservableTopic topic, boolean empty){
         super.updateItem(topic, empty);
         if (topic != null) {
             topicLabel.setText(topic.getTopic());
@@ -55,7 +55,7 @@ public class StatisticTopicCell extends ListCell<ObservableTopic> {
 
                 numberOfQuestions.setText((int) result[1] + "/" + (int) result[2]);
             } catch (ServiceException e) {
-                e.printStackTrace();
+                //TODO: Errorhandling
             }
             setGraphic(box);
         } else {

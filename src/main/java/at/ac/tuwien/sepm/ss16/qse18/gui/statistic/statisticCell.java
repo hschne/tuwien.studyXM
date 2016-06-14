@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.statistic;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
 import org.apache.logging.log4j.LogManager;
@@ -36,16 +37,21 @@ import java.io.IOException;
     private void setControllerProperties(ObservableSubject subject,
                                          StatisticItemController itemController) {
         itemController.initialize(subject);
-        itemController.loadFields();
+        try {
+            itemController.loadFields();
+        } catch (ServiceException e) {
+            logger.error(e);
+            //TODO: Errorhandling
+        }
         setGraphic(itemController.getRoot());
     }
 
     private StatisticItemController getController() {
-        SpringFXMLLoader.FXMLWrapper<Object, StatisticItemController> StatisticItemWrapper;
+        SpringFXMLLoader.FXMLWrapper<Object, StatisticItemController> statisticItemWrapper;
         try {
-            StatisticItemWrapper = springFXMLLoader
+            statisticItemWrapper = springFXMLLoader
                     .loadAndWrap("/fxml/statistic/statisticItem.fxml", StatisticItemController.class);
-            return StatisticItemWrapper.getController();
+            return statisticItemWrapper.getController();
         } catch (IOException e) {
             logger.error(e);
             throw new FxmlLoadException("Error loading subject item", e);
