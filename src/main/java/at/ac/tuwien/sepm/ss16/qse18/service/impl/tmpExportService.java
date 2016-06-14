@@ -103,7 +103,6 @@ import java.util.zip.ZipOutputStream;
             FileInputStream fis = new FileInputStream(new File(fileName));
             //ZipEntry zipEntry = new ZipEntry(fileName);
             zipOutputStream.putNextEntry(new ZipEntry("image/"));
-
             zipOutputStream.putNextEntry(new ZipEntry("resource/"));
             zipOutputStream.putNextEntry(new ZipEntry(fileName));
             byte[] bytes = new byte[1024];
@@ -112,6 +111,10 @@ import java.util.zip.ZipOutputStream;
                 zipOutputStream.write(bytes, 0, length);
             }
 
+            zipOutputStream.closeEntry();
+
+            zipOutputStream.putNextEntry(new ZipEntry("meta.txt"));
+            zipOutputStream.write(generateMeta().getBytes());
             zipOutputStream.closeEntry();
             fis.close();
             File file = new File(fileName);
@@ -125,7 +128,7 @@ import java.util.zip.ZipOutputStream;
         }
     }
 
-    private String gernerateMeta() {
+    private String generateMeta() {
         return "studyXM Subject Export\n\rGenerated: " +
             new SimpleDateFormat("dd.MM.YYYY HH:mm:ss").format(new Date());
     }
