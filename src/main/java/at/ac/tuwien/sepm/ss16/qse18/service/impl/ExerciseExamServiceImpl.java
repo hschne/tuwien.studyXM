@@ -271,7 +271,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             validate(exerciseExam);
         } catch (DtoValidatorException e) {
             logger.error("Exam [" + exerciseExam + "] is invalid", e);
-            throw new ServiceException("Exam [" + exerciseExam + "] is invalid: " + e);
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 

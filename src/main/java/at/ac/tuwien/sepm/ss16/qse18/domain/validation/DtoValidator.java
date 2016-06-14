@@ -102,7 +102,7 @@ public class DtoValidator {
                 "exercise author must not be empty (leading or trailing whitespaces are ignored)");
         }
         if (exerciseExam.getAuthor().length() > 80) {
-            throw new DtoValidatorException("exercise author must not be longer than 80 characters");
+            throw new DtoValidatorException("Exercise author must not be longer than 80 characters");
         }
     }
 
