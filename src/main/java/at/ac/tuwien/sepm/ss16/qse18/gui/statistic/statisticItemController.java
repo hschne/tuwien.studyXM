@@ -47,10 +47,6 @@ public class StatisticItemController extends
     private Label labelName;
     @FXML
     private ListView<ObservableTopic> topicListView;
-    @FXML
-    private Button addTopicButton;
-    @FXML
-    private TextField topicTf;
 
     @FXML
     private Label labelAvgExamResult;
@@ -62,7 +58,6 @@ public class StatisticItemController extends
     private Label labelHint;
     @FXML
     private Label labelMoreTime;
-
     @FXML
     private ImageView achievement1;
     @FXML
