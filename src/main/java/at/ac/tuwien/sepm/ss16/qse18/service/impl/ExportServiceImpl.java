@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,7 +24,7 @@ import java.util.List;
  *
  * @author Hans-Joerg Schroedl
  */
-@Service public class ExportServiceImpl {
+@Service public class ExportServiceImpl implements ExportService {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -42,11 +43,11 @@ import java.util.List;
     }
 
 
-    public void setSubject(Subject subject) {
+    @Override public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
-    public void export() throws ServiceException {
+    @Override public void export() throws ServiceException {
         try {
             List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);
             List<Question> questions = getQuestions(topics);
