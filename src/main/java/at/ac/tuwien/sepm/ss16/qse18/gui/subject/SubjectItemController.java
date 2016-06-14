@@ -138,7 +138,7 @@ import org.springframework.stereotype.Component;
 
     private File selectFile() {
         FileChooser fileChooser = new FileChooser();
-        String defaultPath = "src/main/resources/";
+        String defaultPath = "src/main/resources/export/zip";
         File defaultDirectory = new File(defaultPath);
         fileChooser.setInitialDirectory(defaultDirectory);
         fileChooser.setInitialFileName("xms_" + subject.getName() + "_" + subject.getAuthor());
