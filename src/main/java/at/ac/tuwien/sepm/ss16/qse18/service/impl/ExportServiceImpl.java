@@ -58,27 +58,22 @@ import java.util.zip.ZipOutputStream;
         try {
             List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);
             List<Question> questions = getQuestions(topics);
-            serializeSubject();
-            serializeTopics(topics);
-            serializeQuestions(questions);
-
             //List<Resource> resources = getResources(questions);
-        } catch (DaoException e) {
-            logger.error(e);
-            throw new ServiceException(e.getMessage());
-        }
-    }
 
-    private void zip() throws ServiceException{
-        try {
-            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("xms_"
-                + subject.getName()+ "_" +subject.getAuthor() + ".zip"));
-
-        }
-        catch (FileNotFoundException e){
-            logger.error("zip file name not found",e);
-            throw new ServiceException("zip file name not found",e);
-        }
+            try {
+                ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outputpath));
+                addToZipFile(serializeSubject(),zipOutputStream);
+                addToZipFile(serializeTopics(topics),zipOutputStream);
+                addToZipFile(serializeQuestions(questions),zipOutputStream);
+            }
+            catch (FileNotFoundException e){
+                logger.error("Outputpath is not a valid name",e);
+                throw new ServiceException("Outputpath is not a valid name",e);
+            }
+            } catch (DaoException e) {
+                logger.error(e);
+                throw new ServiceException(e.getMessage());
+            }
     }
 
     private void addToZipFile(String fileName, ZipOutputStream zipOutputStream) throws ServiceException{
@@ -136,7 +131,7 @@ import java.util.zip.ZipOutputStream;
         }
     }
 
-    private void serializeSubject(){
+    private String serializeSubject(){
         try {
             FileOutputStream output = new FileOutputStream("./subject.data");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
@@ -146,9 +141,10 @@ import java.util.zip.ZipOutputStream;
         } catch (IOException e) {
             logger.error(e);
         }
+        return "./subject.data";
     }
 
-    private void serializeQuestions(List<Question> questions) {
+    private String serializeQuestions(List<Question> questions) {
         try {
             FileOutputStream output = new FileOutputStream("./questions.data");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
@@ -158,12 +154,13 @@ import java.util.zip.ZipOutputStream;
         } catch (IOException e) {
             logger.error(e);
         }
+        return "./questions.data";
     }
 
-    private FileOutputStream serializeTopics(List<Topic> topics){
+    private String serializeTopics(List<Topic> topics){
         FileOutputStream output = null;
         try {
-             output = new FileOutputStream("./topics.data");
+            output = new FileOutputStream("./topics.data");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
             objectOutputStream.writeObject((Serializable) topics);
             objectOutputStream.close();
@@ -171,7 +168,7 @@ import java.util.zip.ZipOutputStream;
         } catch (IOException e) {
             logger.error(e);
         }
-        return output;
+        return "./topics.data";
     }
 
 }
