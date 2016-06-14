@@ -24,7 +24,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Importing subject from file " + zippedFile);
 
         unzipFile(zippedFile.getAbsolutePath(), zippedFile.getName());
-        System.out.println(parseSubject());
+        parseSubject();
         //parseTopics();
         //parseQuestions();
     }
@@ -83,7 +83,7 @@ import java.util.zip.ZipInputStream;
         Subject result = null;
 
         try {
-            FileInputStream fileIn = new FileInputStream(unzippedDir + "/subject.data");
+            FileInputStream fileIn = new FileInputStream(unzippedDir + "/subject.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             result = (Subject) in.readObject();
             in.close();

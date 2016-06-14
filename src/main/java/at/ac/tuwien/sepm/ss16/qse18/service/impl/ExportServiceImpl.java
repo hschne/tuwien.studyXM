@@ -146,7 +146,7 @@ import java.util.zip.ZipOutputStream;
 
     private String serializeSubject() {
         try {
-            FileOutputStream output = new FileOutputStream("./subject.data");
+            FileOutputStream output = new FileOutputStream("subject.ser");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
             objectOutputStream.writeObject(subject);
             objectOutputStream.close();
@@ -154,12 +154,12 @@ import java.util.zip.ZipOutputStream;
         } catch (IOException e) {
             logger.error(e);
         }
-        return "./subject.data";
+        return "subject.ser";
     }
 
     private String serializeQuestions(List<Question> questions) {
         try {
-            FileOutputStream output = new FileOutputStream("./questions.data");
+            FileOutputStream output = new FileOutputStream("questions.ser");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
             objectOutputStream.writeObject((Serializable) questions);
             objectOutputStream.close();
@@ -167,13 +167,13 @@ import java.util.zip.ZipOutputStream;
         } catch (IOException e) {
             logger.error(e);
         }
-        return "./questions.data";
+        return "questions.ser";
     }
 
     private String serializeTopics(List<Topic> topics) {
         FileOutputStream output = null;
         try {
-            output = new FileOutputStream("./topics.data");
+            output = new FileOutputStream("topics.ser");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
             objectOutputStream.writeObject((Serializable) topics);
             objectOutputStream.close();
@@ -181,7 +181,7 @@ import java.util.zip.ZipOutputStream;
         } catch (IOException e) {
             logger.error(e);
         }
-        return "./topics.data";
+        return "topics.ser";
     }
 
 }
