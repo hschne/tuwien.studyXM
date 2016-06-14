@@ -33,9 +33,9 @@ import java.util.List;
         this.subjectTopicDao = subjectTopicDao;
     }
 
-    public List<Duplicate<Topic>> getConflictingTopics() throws ServiceException {
+    public List<TopicConflict> getConflictingTopics() throws ServiceException {
         List<Topic> existingTopics = getExistingTopics();
-        List<Duplicate<Topic>> duplicates = new ArrayList<>();
+        List<TopicConflict> duplicates = new ArrayList<>();
         for (Topic existingTopic : existingTopics)
             for (Topic importedTopic : importedTopics) {
                 if (checkIfDuplicate(duplicates, existingTopic, importedTopic))
@@ -44,12 +44,12 @@ import java.util.List;
         return duplicates;
     }
 
-    private boolean checkIfDuplicate(List<Duplicate<Topic>> duplicates, Topic existingTopic,
+    private boolean checkIfDuplicate(List<TopicConflict> duplicates, Topic existingTopic,
         Topic importedTopic) {
         String existingTopicName = existingTopic.getTopic();
         String importedTopicName = importedTopic.getTopic();
         if (existingTopicName.equals(importedTopicName)) {
-            Duplicate<Topic> duplicate = new Duplicate<>(existingTopic, importedTopic);
+            TopicConflict duplicate = new TopicConflict(existingTopic, importedTopic);
             duplicates.add(duplicate);
             return true;
         }

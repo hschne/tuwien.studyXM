@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.merge;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,23 +18,39 @@ import java.util.List;
 @Service public class TopicConflict {
 
     private final Logger logger = LogManager.getLogger();
+    List<QuestionConflict> questionConflicts;
     private QuestionConflictDetection questionConflictDetection;
+
+    private Topic existingTopic;
+
+    private Topic importedTopic;
+
     private QuestionTopicDao questionTopicDao;
     private Duplicate<Topic> duplicate;
 
-    @Autowired public void setQuestionConflictDetection(QuestionConflictDetection questionConflictDetection) {
+    public TopicConflict(Topic existingTopic, Topic importedTopic) {
+        this.existingTopic = existingTopic;
+        this.importedTopic = importedTopic;
+    }
+
+    @Autowired
+    public void setQuestionConflictDetection(QuestionConflictDetection questionConflictDetection) {
         this.questionConflictDetection = questionConflictDetection;
     }
 
-    public void initialize(Duplicate<Topic> duplicate) {
-        this.duplicate = duplicate;
+    public void initialize(Topic existingTopic, Topic importedTopic) {
+        this.existingTopic = existingTopic;
+        this.importedTopic = importedTopic;
     }
 
-    public List<Duplicate<Question>> getConflictingQuestions() {
-        Topic existing = duplicate.getExisting();
-        Topic imported = duplicate.getImported();
+    public void getConflictingQuestions() throws ServiceException {
         List<Question> importedQuestions = new ArrayList<>();
-        questionConflictDetection.initialize(existing, importedQuestions);
-        return questionConflictDetection.getConflictingQuestions();
+        questionConflictDetection.initialize(existingTopic, importedQuestions);
+        questionConflicts.addAll(questionConflictDetection.getConflictingQuestions());
     }
+
+    public void resolve() {
+
+    }
+
 }

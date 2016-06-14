@@ -11,6 +11,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopic;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -29,34 +30,40 @@ import static org.mockito.Mockito.when;
     @Before public void setUp(){
         subjectConflict = new SubjectConflict();
         subjectConflict.setTopicConflictDetection(topicConflictDetectionMock);
-        subjectConflict.setTopicConflict(topicConflictMock);
     }
 
     @Test public void test_getConflictingQuestions_noConflictsFound() throws Exception{
-        List<Duplicate<Topic>> duplicateTopics = new ArrayList<>();
-        duplicateTopics.add(new Duplicate<>(null, null));
-        List<Duplicate<Question>> duplicateQuestions = new ArrayList<>();
-        when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(duplicateTopics);
-        when(topicConflictMock.getConflictingQuestions()).thenReturn(duplicateQuestions);
+        List<TopicConflict> topicConflicts = new ArrayList<>();
+        when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(topicConflicts);
 
-        List<Duplicate<Question>> result = subjectConflict.getConflictingQuestions();
+
+        subjectConflict.getConflictingTopics();
+        List<TopicConflict> result = subjectConflict.getTopicConflicts();
 
         assertTrue(result.isEmpty());
 
     }
 
     @Test public void test_getConflictingQuestions_conflictingQuestionsFound() throws Exception{
-        List<Duplicate<Topic>> duplicateTopics = new ArrayList<>();
-        duplicateTopics.add(new Duplicate<>(null, null));
-        List<Duplicate<Question>> duplicateQuestions = new ArrayList<>();
-        duplicateQuestions.add(new Duplicate<>(null, null));
-        when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(duplicateTopics);
-        when(topicConflictMock.getConflictingQuestions()).thenReturn(duplicateQuestions);
+        List<TopicConflict> topicConflicts = new ArrayList<>();
+        topicConflicts.add(new FakeTopicConflict(createDummyTopic(), createDummyTopic()));
+        when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(topicConflicts);
 
-        List<Duplicate<Question>> result = subjectConflict.getConflictingQuestions();
+        subjectConflict.getConflictingTopics();
+        List<TopicConflict> result = subjectConflict.getTopicConflicts();
 
         assertFalse(result.isEmpty());
+    }
 
+    private class FakeTopicConflict extends TopicConflict{
+
+        public FakeTopicConflict(Topic existingTopic, Topic importedTopic) {
+            super(existingTopic, importedTopic);
+        }
+
+        @Override public void getConflictingQuestions(){
+
+        }
     }
 
 }

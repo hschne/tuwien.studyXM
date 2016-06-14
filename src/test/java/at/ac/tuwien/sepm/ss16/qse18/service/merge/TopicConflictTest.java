@@ -20,7 +20,7 @@ import static org.junit.Assert.*;
     private TopicConflict topicConflict;
 
     @Before public void setUp(){
-        topicConflict = new TopicConflict();
+        topicConflict = new TopicConflict(null,null);
     }
 
     @Test public void test(){

@@ -38,7 +38,7 @@ import static org.mockito.Mockito.when;
 
         when(subjectTopicDaoMock.getTopicToSubject(any())).thenReturn(existingTopics);
 
-        List<Duplicate<Topic>> duplicates = topicConflictDetection.getConflictingTopics();
+        List<TopicConflict> duplicates = topicConflictDetection.getConflictingTopics();
 
         assertTrue(duplicates.isEmpty());
     }
@@ -50,7 +50,7 @@ import static org.mockito.Mockito.when;
         when(subjectTopicDaoMock.getTopicToSubject(any())).thenReturn(existingTopics);
 
         topicConflictDetection.initialize(null,importedTopics);
-        List<Duplicate<Topic>> duplicates = topicConflictDetection.getConflictingTopics();
+        List<TopicConflict> duplicates = topicConflictDetection.getConflictingTopics();
 
         assertFalse(duplicates.isEmpty());
     }
