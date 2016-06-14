@@ -12,8 +12,13 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * Created by Felix on 14.06.2016.
@@ -32,40 +37,97 @@ import java.util.List;
             throw new ServiceException("No subject selected for export.");
         }
 
+        boolean success = false;
+        ZipOutputStream zipOutputStream = null;
+
+        try {
+            zipOutputStream = new ZipOutputStream(new FileOutputStream(outputpath));
+            addToZipFile(serializeSubject(), zipOutputStream);
+            success = true;
+        } catch(FileNotFoundException e) {
+            logger.error("Path is not valid");
+            throw new ServiceException("Outputpath is not valid", e);
+        } finally {
+            if(zipOutputStream != null) {
+                try {
+                    zipOutputStream.close();
+                } catch(IOException e) {
+                    logger.error(e.getMessage(), e);
+                    throw new ServiceException("Could not close stream while writing to file", e);
+                }
+            }
+        }
+
         logger.debug("Exporting subject: {}", this.subject);
-        return false;
+        return success;
     }
 
-    @Override public void setSubject(Subject subject) throws ServiceException {
+    @Override public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
-    private ExportSubject serializeSubject() throws ServiceException {
+    private String serializeSubject() throws ServiceException {
         List<Topic> topics = getTopics();
-        List<Question> questions = new ArrayList<>();
-        List<Answer> answers = new ArrayList<>();
-        List<Resource> resources = new ArrayList<>();
-        List<Note> notes = new ArrayList<>();
+        List<ExportTopic> exportTopics = new ArrayList<>();
 
         for(Topic t : topics) {
-            questions.addAll(getQuestionsFromTopic(t));
+            List<Question> ql = getQuestionsFromTopic(t);
+            List<ExportQuestion> eql = new ArrayList<>();
+            for(Question q : ql) {
+                List<Answer> al = getAnswersFromQuestion(q);
+                Resource r = getResourcesFromQuestion(q);
+                ExportResource er = new ExportResource(r, getNotesFromResource(r));
+                eql.add(new ExportQuestion(q, er, al));
+            }
+            exportTopics.add(new ExportTopic(t, eql));
         }
 
-        for(Question q : questions) {
-            answers.addAll(getAnswersFromQuestion(q));
-            resources.add(getResourcesFromQuestion(q));
+        ExportSubject exportSubject = new ExportSubject(this.subject, exportTopics);
+
+        try {
+            FileOutputStream out = new FileOutputStream("ExportSubject.ser");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+            objectOutputStream.writeObject(exportSubject);
+            out.close();
+        } catch(IOException e) {
+            logger.error("Could not write subject and relations to file", e);
+            throw new ServiceException("Could not export subject", e);
         }
-
-        return null;
+        return "ExportSubject.ser";
     }
 
-    private ExportTopic serializeTopic(Topic topic, List<ExportQuestion> questions) {
-        return new ExportTopic(topic, questions);
+    private void addToZipFile(String fileName, ZipOutputStream zipOutputStream)
+        throws ServiceException {
+        logger.debug("Writing to zip file: " + fileName);
+        try {
+            FileInputStream fis = new FileInputStream(new File(fileName));
+            //ZipEntry zipEntry = new ZipEntry(fileName);
+            zipOutputStream.putNextEntry(new ZipEntry("image/"));
+
+            zipOutputStream.putNextEntry(new ZipEntry("resource/"));
+            zipOutputStream.putNextEntry(new ZipEntry(fileName));
+            byte[] bytes = new byte[1024];
+            int length;
+            while ((length = fis.read(bytes)) >= 0) {
+                zipOutputStream.write(bytes, 0, length);
+            }
+
+            zipOutputStream.closeEntry();
+            fis.close();
+            File file = new File(fileName);
+            file.delete();
+        } catch (FileNotFoundException e) {
+            logger.error("File " + fileName + "not found", e);
+            throw new ServiceException("File " + fileName + "not found", e);
+        } catch (IOException e) {
+            logger.error("Couldn't write " + fileName + "to zip file", e);
+            throw new ServiceException("Couldn't write " + fileName + "to zip file", e);
+        }
     }
 
-    private ExportQuestion serializeQuestion(Question question,
-        ExportResource resource, List<Answer> answers) {
-        return new ExportQuestion(question, resource, answers);
+    private String gernerateMeta() {
+        return "studyXM Subject Export\n\rGenerated: " +
+            new SimpleDateFormat("dd.MM.YYYY HH:mm:ss").format(new Date());
     }
 
     private List<Topic> getTopics() throws ServiceException {
@@ -78,6 +140,10 @@ import java.util.List;
 
     private List<Answer> getAnswersFromQuestion(Question question) throws ServiceException {
         return questionService.getCorrespondingAnswers(question);
+    }
+
+    private List<Note> getNotesFromResource(Resource resource) {
+        return new ArrayList<>(); //TODO
     }
 
     private Resource getResourcesFromQuestion(Question question) throws ServiceException {
