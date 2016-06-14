@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
+import at.ac.tuwien.sepm.ss16.qse18.application.MainApplication;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
@@ -19,10 +20,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
 
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -46,6 +50,7 @@ import org.springframework.stereotype.Component;
     private ObservableList<ObservableTopic> topicList;
 
     @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
+    @Autowired private MainApplication mainApplication;
 
     @Autowired private QuestionNavigation questionNavigation;
     @Autowired private TopicService topicService;
@@ -78,7 +83,10 @@ import org.springframework.stereotype.Component;
     @FXML public void handleExport() {
         exportService.setSubject(subject.getSubject());
         try {
-            exportService.export();
+            File selected = selectFile();
+            if (selected != null) {
+                exportService.export(selected.getAbsolutePath());
+            }
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
@@ -119,6 +127,20 @@ import org.springframework.stereotype.Component;
 
     public ObservableList<ObservableTopic> getTopicList(){
         return this.topicList;
+    }
+
+    private File selectFile() {
+        FileChooser fileChooser = new FileChooser();
+        String defaultPath = "src/main/resources/";
+        File defaultDirectory = new File(defaultPath);
+        fileChooser.setInitialDirectory(defaultDirectory);
+        fileChooser.setInitialFileName(subject.getName() + "_" + subject.getAuthor());
+
+        fileChooser.getExtensionFilters()
+            .addAll(new FileChooser.ExtensionFilter("ZIP FILES (.zip)", "*.zip"));
+        fileChooser.setTitle("Choose output directory");
+        Stage mainStage = mainApplication.getPrimaryStage();
+        return fileChooser.showSaveDialog(mainStage);
     }
 
 }
