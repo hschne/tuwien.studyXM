@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -12,31 +12,40 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Hans-Joerg Schroedl
  */
-@Service
-public class SubjectConflict {
+@Service public class SubjectConflict {
 
-    private static final  Logger logger = LogManager.getLogger();
-
+    private TopicConflictDetection topicConflictDetection;
+    private TopicConflict topicConflict;
     private Subject existingSubject;
-    private Subject importedSubject;
 
-    private SubjectTopicDao subjectTopicDao;
-
-    @Autowired public void setSubjectTopicDao(SubjectTopicDao subjectTopicDao) {
-        this.subjectTopicDao = subjectTopicDao;
+    @Autowired public void setTopicConflict(TopicConflict topicConflict) {
+        this.topicConflict = topicConflict;
     }
 
-    public void setSubjects(Subject existingSubject, Subject importedSubject){
+    @Autowired
+    public void setTopicConflictDetection(TopicConflictDetection topicConflictDetection) {
+        this.topicConflictDetection = topicConflictDetection;
+    }
+
+    public void initialize(Subject existingSubject, Subject importedSubject) {
         this.existingSubject = existingSubject;
-        this.importedSubject = importedSubject;
     }
 
-    public void resolveConflict() throws ServiceException {
+    public List<Duplicate<Question>> getConflictingQuestions() throws ServiceException {
+        //TODO: Here we need to acquire topics from imported subjects
+        List<Topic> importedTopics = new ArrayList<>();
+        topicConflictDetection.initialize(existingSubject, importedTopics);
+        List<Duplicate<Topic>> duplicateTopics = topicConflictDetection.getConflictingTopics();
+        List<Duplicate<Question>> duplicateQuestions = new ArrayList<>();
+        for (Duplicate<Topic> duplicateTopic : duplicateTopics) {
+            topicConflict.initialize(duplicateTopic);
+            duplicateQuestions.addAll(topicConflict.getConflictingQuestions());
+        }
+        return duplicateQuestions;
 
     }
 

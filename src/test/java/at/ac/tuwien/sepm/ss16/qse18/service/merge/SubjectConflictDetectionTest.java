@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
 /**
  * @author Hans-Joerg Schroedl
  */
-@RunWith(MockitoJUnitRunner.class) public class SubjectSubjectConflictDetectionTest {
+@RunWith(MockitoJUnitRunner.class) public class SubjectConflictDetectionTest {
 
     @Mock SubjectDao subjectDaoMock;
 

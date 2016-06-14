@@ -38,15 +38,22 @@ import java.util.List;
         List<Duplicate<Topic>> duplicates = new ArrayList<>();
         for (Topic existingTopic : existingTopics)
             for (Topic importedTopic : importedTopics) {
-                String existingTopicName = existingTopic.getTopic();
-                String importedTopicName = importedTopic.getTopic();
-                if (existingTopicName.equals(importedTopicName)) {
-                    Duplicate<Topic> duplicate = new Duplicate<>(existingTopic, importedTopic);
-                    duplicates.add(duplicate);
+                if (checkIfDuplicate(duplicates, existingTopic, importedTopic))
                     break;
-                }
             }
         return duplicates;
+    }
+
+    private boolean checkIfDuplicate(List<Duplicate<Topic>> duplicates, Topic existingTopic,
+        Topic importedTopic) {
+        String existingTopicName = existingTopic.getTopic();
+        String importedTopicName = importedTopic.getTopic();
+        if (existingTopicName.equals(importedTopicName)) {
+            Duplicate<Topic> duplicate = new Duplicate<>(existingTopic, importedTopic);
+            duplicates.add(duplicate);
+            return true;
+        }
+        return false;
     }
 
     private List<Topic> getExistingTopics() throws ServiceException {
