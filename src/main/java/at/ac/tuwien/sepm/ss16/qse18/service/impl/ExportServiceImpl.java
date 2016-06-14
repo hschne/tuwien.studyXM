@@ -10,7 +10,6 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +54,11 @@ import java.util.zip.ZipOutputStream;
         this.subject = subject;
     }
 
-    public boolean export(String outputpath) throws ServiceException {
+    @Override public boolean export(String outputpath) throws ServiceException {
             boolean success = false;
             ZipOutputStream zipOutputStream = null;
+
+
             try {
                 List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);
                 List<Question> questions = getQuestions(topics);
