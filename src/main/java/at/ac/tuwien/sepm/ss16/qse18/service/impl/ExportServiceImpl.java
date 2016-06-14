@@ -10,6 +10,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,26 +55,40 @@ import java.util.zip.ZipOutputStream;
         this.subject = subject;
     }
 
-    public void export(String outputpath) throws ServiceException {
-        try {
-            List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);
-            List<Question> questions = getQuestions(topics);
-            //List<Resource> resources = getResources(questions);
-
+    public boolean export(String outputpath) throws ServiceException {
+            boolean success = false;
+            ZipOutputStream zipOutputStream = null;
             try {
-                ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream(outputpath));
+                List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);
+                List<Question> questions = getQuestions(topics);
+                //List<Resource> resources = getResources(questions);
+
+                zipOutputStream = new ZipOutputStream(new FileOutputStream(outputpath));
                 addToZipFile(serializeSubject(),zipOutputStream);
                 addToZipFile(serializeTopics(topics),zipOutputStream);
                 addToZipFile(serializeQuestions(questions),zipOutputStream);
+                success  = true;
             }
             catch (FileNotFoundException e){
                 logger.error("Outputpath is not a valid name",e);
                 throw new ServiceException("Outputpath is not a valid name",e);
             }
-            } catch (DaoException e) {
+            catch (DaoException e) {
                 logger.error(e);
                 throw new ServiceException(e.getMessage());
             }
+            finally {
+                if(zipOutputStream != null){
+                    try {
+                        zipOutputStream.close();
+                    }
+                    catch (IOException e){
+                        logger.error(e.getMessage(),e);
+                        throw new ServiceException("Couldn't close zipOutputStream",e);
+                    }
+                }
+            }
+        return success;
     }
 
     private void addToZipFile(String fileName, ZipOutputStream zipOutputStream) throws ServiceException{
@@ -91,6 +106,8 @@ import java.util.zip.ZipOutputStream;
 
             zipOutputStream.closeEntry();
             fis.close();
+            File file = new File(fileName);
+            file.delete();
         }
         catch (FileNotFoundException e){
             logger.error("File "+ fileName + "not found",e);

@@ -10,9 +10,11 @@ public interface ExportService {
     /**
      * Exports a subject with its topics and questions
      *
+     * @param outputpath the path where the subjects is stored
+     * @return true if the export was successfull
      * @throws ServiceException
      */
-    void export(String outputpath) throws ServiceException;
+    boolean export(String outputpath) throws ServiceException;
 
     /**
      * Sets the subject that has to be exported.
