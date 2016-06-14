@@ -18,18 +18,20 @@ import java.util.zip.ZipInputStream;
 
     private static final Logger logger = LogManager.getLogger();
     private static final String OUTPUT_PATH = "src/main/resources/import";
+    private String unzippedDir = "";
 
     @Override public void importSubject(File zippedFile) throws ServiceException {
         logger.debug("Importing subject from file " + zippedFile);
 
         unzipFile(zippedFile.getAbsolutePath(), zippedFile.getName());
-        parseSubject();
+        System.out.println(parseSubject());
         //parseTopics();
         //parseQuestions();
     }
 
     private void unzipFile(String inputPath, String fileName) throws ServiceException {
         File destDir = new File(OUTPUT_PATH + File.separator + fileName.substring(0, fileName.length()-4));
+        unzippedDir = destDir.getAbsolutePath();
 
         if (!destDir.exists()) {
             destDir.mkdir();
@@ -77,10 +79,22 @@ import java.util.zip.ZipInputStream;
         bos.close();
     }
 
-    private Subject parseSubject() {
+    private Subject parseSubject() throws ServiceException {
         Subject result = null;
 
-
+        try {
+            FileInputStream fileIn = new FileInputStream(unzippedDir + "/subject.data");
+            ObjectInputStream in = new ObjectInputStream(fileIn);
+            result = (Subject) in.readObject();
+            in.close();
+            fileIn.close();
+        } catch(IOException e) {
+            logger.error(e);
+            throw new ServiceException(e);
+        } catch(ClassNotFoundException e) {
+            logger.error("Could not find class", e);
+            throw new ServiceException(e);
+        }
 
         return result;
     }
