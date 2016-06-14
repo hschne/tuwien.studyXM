@@ -42,6 +42,14 @@ public class DummyEntityFactory {
         return topics;
     }
 
+    public static Question createDummyQuestion(){
+        Question question = new Question();
+        question.setQuestionId(1);
+        question.setQuestion("Question");
+        question.setQuestionTime(1);
+        return question;
+    }
+
 
     public static List<ExerciseExam> createDummyExcerciseExams() {
         List<ExerciseExam> exerciseExams = new ArrayList<>();

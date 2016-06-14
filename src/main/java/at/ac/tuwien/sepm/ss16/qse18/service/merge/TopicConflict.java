@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -18,19 +17,23 @@ import java.util.List;
 @Service public class TopicConflict {
 
     private final Logger logger = LogManager.getLogger();
-    List<QuestionConflict> questionConflicts;
+
+    public void setQuestionConflicts(List<QuestionConflict> questionConflicts) {
+        this.questionConflicts = questionConflicts;
+    }
+
+    private List<QuestionConflict> questionConflicts;
     private QuestionConflictDetection questionConflictDetection;
-
     private Topic existingTopic;
-
     private Topic importedTopic;
-
-    private QuestionTopicDao questionTopicDao;
-    private Duplicate<Topic> duplicate;
 
     public TopicConflict(Topic existingTopic, Topic importedTopic) {
         this.existingTopic = existingTopic;
         this.importedTopic = importedTopic;
+    }
+
+    public List<QuestionConflict> getQuestionConflicts() {
+        return questionConflicts;
     }
 
     @Autowired
@@ -43,14 +46,28 @@ import java.util.List;
         this.importedTopic = importedTopic;
     }
 
-    public void getConflictingQuestions() throws ServiceException {
+    public List<QuestionConflict> getConflictingQuestions() throws ServiceException {
         List<Question> importedQuestions = new ArrayList<>();
         questionConflictDetection.initialize(existingTopic, importedQuestions);
-        questionConflicts.addAll(questionConflictDetection.getConflictingQuestions());
+        setQuestionConflicts(questionConflictDetection.getConflictingQuestions());
+        return questionConflicts;
     }
 
-    public void resolve() {
-
+    public List<Question> getNonConflictingImported() {
+        List<Question> imported = new ArrayList<>();
+        for (QuestionConflict questionConflict : questionConflicts) {
+            imported.remove(questionConflict.getImportedQuestion());
+        }
+        return imported;
     }
 
+    public void resolve() throws ServiceException {
+        for (QuestionConflict questionConflict : questionConflicts) {
+            questionConflict.resolve();
+        }
+    }
+
+    public Topic getImportedTopic() {
+        return importedTopic;
+    }
 }

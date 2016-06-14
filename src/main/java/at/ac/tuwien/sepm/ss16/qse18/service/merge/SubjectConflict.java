@@ -36,16 +36,21 @@ import java.util.List;
         List<Topic> importedTopics = new ArrayList<>();
         topicConflictDetection.initialize(existingSubject, importedTopics);
         topicConflicts = topicConflictDetection.getConflictingTopics();
-        for (TopicConflict topicConflict: topicConflicts) {
-            topicConflict.getConflictingQuestions();
+    }
+
+    public List<Topic> getNonConflictingImported() {
+        List<Topic> nonConflictingImported = new ArrayList<>();
+        topicConflicts.forEach(p -> nonConflictingImported.remove(p.getImportedTopic()));
+        return nonConflictingImported;
+    }
+
+    public void resolve() throws ServiceException{
+        for(TopicConflict topicConflict : topicConflicts){
+            topicConflict.resolve();
         }
     }
 
-    public void resolve(List<TopicConflict> resolvedTopicConflicts){
-        resolvedTopicConflicts.forEach(TopicConflict::resolve);
+    public void setTopicConflicts(List<TopicConflict> topicConflicts) {
+        this.topicConflicts = topicConflicts;
     }
-
-
-
-
 }

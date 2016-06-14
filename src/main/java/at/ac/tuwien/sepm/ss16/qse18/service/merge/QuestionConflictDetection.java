@@ -36,8 +36,8 @@ import java.util.List;
     public List<QuestionConflict> getConflictingQuestions() throws ServiceException {
         List<QuestionConflict> result = new ArrayList<>();
         List<Question> existingQuestions = getExistingQuestions();
-        for(Question existingQuestion : existingQuestions){
-            for(Question importedQuestion : importedQuestions){
+        for (Question existingQuestion : existingQuestions) {
+            for (Question importedQuestion : importedQuestions) {
                 checkForConflict(result, existingQuestion, importedQuestion);
             }
         }
@@ -48,8 +48,9 @@ import java.util.List;
         Question importedQuestion) {
         String existingQuestionText = existingQuestion.getQuestion();
         String importedQuestionText = importedQuestion.getQuestion();
-        if(existingQuestionText.equals(importedQuestionText)){
-            QuestionConflict questionConflict = new QuestionConflict(existingQuestion, importedQuestion);
+        if (existingQuestionText.equals(importedQuestionText)) {
+            QuestionConflict questionConflict =
+                new QuestionConflict(existingQuestion, importedQuestion);
             result.add(questionConflict);
         }
     }
@@ -59,7 +60,7 @@ import java.util.List;
             return questionTopicDao.getQuestionToTopic(existingTopic);
         } catch (DaoException e) {
             logger.error(e);
-            throw new ServiceException("Could not load questions for topic.",e);
+            throw new ServiceException("Could not load questions for topic.", e);
         }
     }
 }
