@@ -89,7 +89,7 @@ import java.util.Optional;
     private void closeWithConfirmation(Event e) {
         Optional<ButtonType> closing =
             showAlert(Alert.AlertType.CONFIRMATION, "Closing application", "Closing application",
-                "Are you sure you want to close the application?");
+                "Are you sure you want to close the application? Progress in unpaused exams will be lost!");
 
         if (closing.get() != ButtonType.OK) {
             e.consume();

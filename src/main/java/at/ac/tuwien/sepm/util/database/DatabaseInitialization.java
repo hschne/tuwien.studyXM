@@ -21,9 +21,9 @@ public class DatabaseInitialization {
         Connection connection = connectionH2.getConnection();
         ScriptRunner runner = new ScriptRunner(connection, false, false);
 
-        String drop = DatabaseInitialization.class.getResource("/scripts/drop.sql").getPath();
-        String create = DatabaseInitialization.class.getResource("/scripts/create.sql").getPath();
-        String insert = DatabaseInitialization.class.getResource("/scripts/insert.sql").getPath();
+        String drop = DatabaseInitialization.class.getResource("/scripts/drop.sql").getPath().replaceAll("%20", " ");
+        String create = DatabaseInitialization.class.getResource("/scripts/create.sql").getPath().replaceAll("%20", " ");
+        String insert = DatabaseInitialization.class.getResource("/scripts/insert.sql").getPath().replaceAll("%20", " ");
 
         runner.runScript(new BufferedReader(new FileReader(drop)));
         runner.runScript(new BufferedReader(new FileReader(create)));

@@ -67,4 +67,8 @@ public class ObservableTopic {
     public void setT(Topic t) {
         this.t = t;
     }
+
+    public String toString(){
+        return this.getTopic();
+    }
 }

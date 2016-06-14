@@ -47,6 +47,7 @@ import static org.mockito.Mockito.*;
     private ExerciseExamServiceImpl exerciseExamService;
     private ExerciseExam exerciseExam;
     private Topic topic;
+    private List<Topic> topicList;
 
 
     @Before public void setUp() throws Exception {
@@ -61,8 +62,7 @@ import static org.mockito.Mockito.*;
                 this.mockExerciseExamQuestionDaoJdbc, this.mockQuestionDaoJdbc, this.mockSubjectTopicDaoJdbc,
                 this.mockQuestionTopicDaoJdbc, this.mockSubjectDaoJdbc);
 
-        ArrayList<Question> al = new ArrayList<Question>() {
-        };
+        ArrayList<Question> al = new ArrayList<Question>();
         Question question = new Question();
         question.setQuestion("TestQuestion");
         question.setQuestionId(1);
@@ -76,6 +76,10 @@ import static org.mockito.Mockito.*;
         this.topic = new Topic();
         topic.setTopic("Topic1");
         topic.setTopicId(1);
+
+        topicList = new ArrayList<>();
+        topicList.add(this.topic);
+
     }
 
     //Testing getExam(int)
@@ -113,7 +117,7 @@ import static org.mockito.Mockito.*;
             .thenReturn(questionBooleans);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
 
-        this.exerciseExamService.createExam(this.exerciseExam, topic, 1000);
+        this.exerciseExamService.createExam(this.exerciseExam, topicList, 1000);
         verify(this.mockExerciseExamDaoJdbc).create(this.exerciseExam, this.exerciseExam.getExamQuestions());
     }
 
@@ -121,13 +125,18 @@ import static org.mockito.Mockito.*;
     public void test_createExam_invalidAuthorThrowsException() throws Exception {
         ExerciseExam fail = createDummyExam(2, "");
 
-        this.exerciseExamService.createExam(fail, topic, 1000);
+        this.exerciseExamService.createExam(fail, topicList, 1000);
     }
 
     @Test(expected = ServiceException.class) public void test_createExam_ExamIDThrowsException()
         throws Exception {
         ExerciseExam fail = createDummyExam(-2, "Author2");
-        this.exerciseExamService.createExam(fail, topic, 1000);
+        this.exerciseExamService.createExam(fail, topicList, 1000);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_createExamWithInvalidExamTime_should_fail() throws Exception {
+        this.exerciseExamService.createExam(this.exerciseExam, topicList, 0);
     }
     //----------------------------------------------------------------------------------------------
 
@@ -160,7 +169,7 @@ import static org.mockito.Mockito.*;
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
 
 
-        this.exerciseExamService.getRightQuestions(this.exerciseExam, 1, 1000);
+        this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 1000);
         verify(this.mockSubjectQuestionDaoJdbc).getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         verify(this.mockExerciseExamQuestionDaoJdbc).getAllQuestionBooleans(questionIDList);
@@ -196,7 +205,7 @@ import static org.mockito.Mockito.*;
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3);
 
-        test = this.exerciseExamService.getRightQuestions(this.exerciseExam, 1, 1500);
+        test = this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 1500);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
@@ -246,7 +255,7 @@ import static org.mockito.Mockito.*;
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3);
 
-        test = this.exerciseExamService.getRightQuestions(this.exerciseExam, 1, 1000);
+        test = this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 1000);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
@@ -287,7 +296,7 @@ import static org.mockito.Mockito.*;
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3).thenReturn(q4);
 
-        test = this.exerciseExamService.getRightQuestions(this.exerciseExam, 1, 1000);
+        test = this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 1000);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(questionIDList);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
@@ -301,9 +310,66 @@ import static org.mockito.Mockito.*;
 
     }
 
+    @Test public void test_getRightQuestionsWith3Topics_should_persist() throws Exception{
+        List<Topic> topicList = new ArrayList<>();
+        topicList.add(new Topic(1, "topic1"));
+        topicList.add(new Topic(2, "topic2"));
+        topicList.add(new Topic(3, "topic3"));
+
+        List<Integer> questionIDList1 = new ArrayList<>();
+        List<Integer> questionIDList2 = new ArrayList<>();
+        List<Integer> questionIDList3 = new ArrayList<>();
+
+        Question q1 = createDummyQuestion(1, "question1");
+        Question q2 = createDummyQuestion(2, "question2");
+        Question q3 = createDummyQuestion(3, "question3");
+        Question q4 = createDummyQuestion(4, "question4");
+        Question q5 = createDummyQuestion(3, "question5");
+        Question q6 = createDummyQuestion(4, "question6");
+
+        questionIDList1.add(1);
+        questionIDList1.add(2);
+        questionIDList2.add(3);
+        questionIDList2.add(4);
+        questionIDList3.add(5);
+        questionIDList3.add(6);
+
+        List<Question> questions1 = new ArrayList<>();
+        List<Question> questions2 = new ArrayList<>();
+        List<Question> questions3 = new ArrayList<>();
+
+        questions1.add(q1);
+        questions1.add(q2);
+        questions2.add(q3);
+        questions2.add(q4);
+        questions3.add(q5);
+        questions3.add(q6);
+
+        List<Question> test;
+
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1)).thenReturn(questionIDList1);
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 2)).thenReturn(questionIDList2);
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 3)).thenReturn(questionIDList3);
+        when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
+            .thenReturn(q3).thenReturn(q4).thenReturn(q5).thenReturn(q6);
+
+        test = this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 3000);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 2);
+        this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 3);
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList1.get(0));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList1.get(1));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList2.get(0));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList2.get(1));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList3.get(0));
+        this.mockQuestionDaoJdbc.getQuestion(questionIDList3.get(1));
+
+        assertTrue("Exam should contain 6 questions", test.size() == 6);
+    }
+
     @Test(expected = ServiceException.class)
     public void test_getRightQuestionsWithEmptyExamQuestionList_should_fail() throws Exception {
-        this.exerciseExamService.getRightQuestions(this.exerciseExam, 1, 2);
+        this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 2);
     }
 
     @Test(expected = ServiceException.class)
@@ -315,13 +381,11 @@ import static org.mockito.Mockito.*;
         List<Question> questions = new ArrayList<>();
         questions.add(q1);
 
-        List<Question> test;
-
         when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
             .thenReturn(questionIDList);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1);
 
-        this.exerciseExamService.getRightQuestions(this.exerciseExam, 1, 700);
+        this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 400);
         this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1);
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(0));
     }
@@ -329,7 +393,7 @@ import static org.mockito.Mockito.*;
     @Test(expected = ServiceException.class)
     public void test_getRightQuestionsWithoutDatabaseConnection_should_fail() throws Exception {
         when(this.mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        this.exerciseExamService.getRightQuestions(this.exerciseExam, 1, 1500);
+        this.exerciseExamService.getRightQuestions(this.exerciseExam, topicList, 1500);
         PowerMockito.verifyStatic();
         this.mockConnectionH2.getConnection();
     }
@@ -506,8 +570,112 @@ import static org.mockito.Mockito.*;
     @Test(expected = ServiceException.class) public void test_topicGradeWithNull_should_fail()throws Exception{
         this.exerciseExamService.topicGrade(null);
     }
-
     //----------------------------------------------------------------------------------------------
+
+    //Testing getAnsweredQuestionsOfExam(int)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_getAnsweredQuestionsOfExamCallsRightMethodsInDao_should_persist() throws Exception{
+        List<Integer> answeredQuestions = new ArrayList<>();
+        answeredQuestions.add(1);
+
+        when(this.mockExerciseExamQuestionDaoJdbc.getAnsweredQuestionsPerExam(1)).thenReturn(answeredQuestions);
+        this.exerciseExamService.getAnsweredQuestionsOfExam(1);
+        verify(this.mockExerciseExamQuestionDaoJdbc).getAnsweredQuestionsPerExam(1);
+    }
+
+    @Test public void test_getAnsweredQuestionsOfExamWith3AnsweredQuestions_should_persist() throws Exception{
+        List<Integer> answeredQuestions = new ArrayList<>();
+        answeredQuestions.add(1);
+        answeredQuestions.add(2);
+        answeredQuestions.add(3);
+
+        List<Integer> test;
+
+        when(this.mockExerciseExamQuestionDaoJdbc.getAnsweredQuestionsPerExam(1)).thenReturn(answeredQuestions);
+        test = this.exerciseExamService.getAnsweredQuestionsOfExam(1);
+
+        assertTrue("List should contain 3 question ID's", test.size() == 3);
+        assertTrue("First Element should be 1", test.get(0) == 1);
+        assertTrue("Second Element should be 2", test.get(1) == 2);
+        assertTrue("Third Element should be 3", test.get(2) == 3);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_getAnsweredQuestionsOfExamWithInvalidExamID_should_fail() throws Exception{
+        this.exerciseExamService.getAnsweredQuestionsOfExam(0);
+    }
+
+    //Testing update(int, int, boolean, boolean)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_updateCallsRightMethodInDAO_should_persist() throws Exception{
+        this.exerciseExamService.update(1, 1, false, false);
+        verify(this.mockExerciseExamQuestionDaoJdbc).update(1, 1, false, false);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_updateWithInvalidExamID_should_fail()throws Exception{
+        this.exerciseExamService.update(-1, 1, false, true);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_updateWithInvalidQuestionID_should_fail()throws Exception{
+        this.exerciseExamService.update(1, 0, true, true);
+    }
+    //----------------------------------------------------------------------------------------------
+
+    //Testing update(int, long)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_update2CallsRightMethodInDao_should_persist() throws Exception{
+        this.exerciseExamService.update(1, 200);
+        verify(this.mockExerciseExamDaoJdbc).update(1, 200);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_update2WithInvalidExamID_should_fail()throws Exception{
+        this.exerciseExamService.update(-1, 200);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_updateWithInvalidExamTime_should_fail()throws Exception{
+        this.exerciseExamService.update(1, 0);
+    }
+    //----------------------------------------------------------------------------------------------
+
+
+    //Testing getNotAnsweredQuestionsOfExam(int)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_getNotAnsweredQuestionsOfExamCallsRightMethodsInDao_should_persist() throws Exception{
+        List<Integer> notAnsweredQuestions = new ArrayList<>();
+        notAnsweredQuestions.add(1);
+
+        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1)).thenReturn(notAnsweredQuestions);
+        this.exerciseExamService.getNotAnsweredQuestionsOfExam(1);
+        verify(this.mockExerciseExamQuestionDaoJdbc).getNotAnsweredQuestionsPerExam(1);
+    }
+
+    @Test public void test_getNotAnsweredQuestionsOfExamWith3AnsweredQuestions_should_persist() throws Exception{
+        List<Integer> notAnsweredQuestions = new ArrayList<>();
+        notAnsweredQuestions.add(1);
+        notAnsweredQuestions.add(2);
+        notAnsweredQuestions.add(3);
+
+        List<Integer> test;
+
+        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1)).thenReturn(notAnsweredQuestions);
+        test = this.exerciseExamService.getNotAnsweredQuestionsOfExam(1);
+
+        assertTrue("List should contain 3 question ID's", test.size() == 3);
+        assertTrue("First Element should be 1", test.get(0) == 1);
+        assertTrue("Second Element should be 2", test.get(1) == 2);
+        assertTrue("Third Element should be 3", test.get(2) == 3);
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_getNotAnsweredQuestionsOfExamWithInvalidExamID_should_fail() throws Exception{
+        this.exerciseExamService.getNotAnsweredQuestionsOfExam(0);
+    }
+    //----------------------------------------------------------------------------------------------
+
 
     @After public void tearDown() throws Exception {
         //nothing to tear down

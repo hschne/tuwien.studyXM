@@ -46,16 +46,16 @@ import java.util.Map;
 
         Map<Topic, String[]> topicResult = new HashMap<>();
 
-
         try {
             result = exerciseExamService.gradeExam(exerciseExam);
             labelGrade.setText("Grading: " + result[2]);
-            pieChartData.add(new PieChart.Data("correct", Double.parseDouble(result[0])));
-            pieChartData.add(new PieChart.Data("false", Double.parseDouble(result[1])));
+            pieChartData.add(new PieChart.Data("correct " + Integer.parseInt(result[0]), Integer.parseInt(result[0])));
+            pieChartData.add(new PieChart.Data("false " + Integer.parseInt(result[1]), Integer.parseInt(result[1])));
             pieChart.setTitle("correct/false answers");
             pieChart.setTitleSide(Side.BOTTOM);
             pieChart.setData(pieChartData);
             pieChart.setLegendVisible(false);
+
             pieChartData.get(0).getNode().setStyle("-fx-pie-color: " + "limegreen");
             pieChartData.get(1).getNode().setStyle("-fx-pie-color: " + "firebrick");
 
@@ -70,8 +70,7 @@ import java.util.Map;
             series1.setName("false");
 
             for(Map.Entry<Topic, String[]> m: topicResult.entrySet()){
-                XYChart.Data data = new XYChart.Data(m.getKey().getTopic(), Double.parseDouble(m.getValue()[1]));
-                //data.getNode().setStyle("-fx-bar-fill: " + "limegreen"); funktioniert iwie nicht
+                XYChart.Data data = new XYChart.Data(m.getKey().getTopic(), Integer.parseInt(m.getValue()[1]));
                 series1.getData().add(data);
             }
 
@@ -80,7 +79,7 @@ import java.util.Map;
             series2.setName("correct");
 
             for(Map.Entry<Topic, String[]> f: topicResult.entrySet()){
-                series2.getData().add(new XYChart.Data(f.getKey().getTopic(),  Double.parseDouble(f.getValue()[0])));
+                series2.getData().add(new XYChart.Data(f.getKey().getTopic(),  Integer.parseInt(f.getValue()[0])));
             }
 
             barChart.getData().addAll(series1, series2);
