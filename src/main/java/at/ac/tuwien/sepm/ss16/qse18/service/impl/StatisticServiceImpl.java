@@ -3,12 +3,10 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeMap;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExamDaoJdbc;
@@ -16,6 +14,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ExerciseExamDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.QuestionTopicDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
@@ -26,6 +25,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.StatisticService;
 
 /**
  * Implementation of the statistics service layer
+ *
  * @author Julian Strohmayer
  */
 
@@ -54,7 +54,7 @@ public class StatisticServiceImpl implements StatisticService {
     }
 
     @Override
-    public double[] getCorrectFalseRatio(Topic topic) throws ServiceException {
+    public double[] getCorrectQuestionsForTopic(Topic topic) throws ServiceException {
 
         logger.debug("calculating correct/false ratio");
         this.topic = topic;
@@ -76,14 +76,54 @@ public class StatisticServiceImpl implements StatisticService {
                 correct++;
             }
         }
-        return new double[]{correct / questions.size(), correct, questions.size()};
+        if (questions.size() == 0) {
+            return new double[]{0, 0, 0};
+        } else {
+            return new double[]{correct / questions.size(), correct, questions.size()};
+        }
+    }
+
+    @Override
+    public double gradeAllExamsForSubject(Subject subject) throws ServiceException {
+        double avgGrade = 0;
+        int examCount = 0;
+        try {
+            for (Exam e : examDaoJdbc.getExams()) {
+                if (e.getSubject() == subject.getSubjectId()) {
+                    for (Integer i : examService.getAllExerciseExamsOfExam(e)) {
+                        examCount++;
+                        ExerciseExam ex = exerciseExamDaoJdbc.getExam(i);
+                        switch (exerciseExamService.gradeExam(ex)[2]) {
+                            case "A":
+                                avgGrade += 1;
+                                break;
+                            case "B":
+                                avgGrade += 2;
+                                break;
+                            case "C":
+                                avgGrade += 3;
+                                break;
+                            case "D":
+                                avgGrade += 4;
+                                break;
+                            default:
+                                avgGrade += 5;
+                                break;
+                        }
+                    }
+                }
+            }
+        } catch (DaoException e) {
+            throw new ServiceException(e);
+        }
+        return avgGrade / examCount;
     }
 
     /**
      * Fills the question Map with all questions in the topic
      */
     private void getTopicQuestions() throws DaoException {
-        questions = new HashMap<>();
+        questions = new TreeMap<>();
         for (Question q : questionTopicDaoJdbc.getQuestionToTopic(topic)) {
             questions.put(q.getQuestionId(), false);
         }
@@ -105,5 +145,7 @@ public class StatisticServiceImpl implements StatisticService {
             }
         }
     }
+
+
 
 }

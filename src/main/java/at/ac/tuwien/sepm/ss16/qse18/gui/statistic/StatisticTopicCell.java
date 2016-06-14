@@ -1,10 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.statistic;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.StatisticService;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.StatisticServiceImpl;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ProgressBar;
@@ -16,6 +14,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 /**
+ * This class represents the topic items in the statistics table view
+ *
  * @author Julian Strohmayer
  */
 
@@ -23,32 +23,40 @@ import org.springframework.stereotype.Component;
 @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 public class StatisticTopicCell extends ListCell<ObservableTopic> {
     private HBox box = new HBox(10);
-    private Label TopicLabel = new Label();
+    private Label topicLabel = new Label();
     private Label numberOfQuestions = new Label();
     private ProgressBar progressBar = new ProgressBar(0);
 
-    @Autowired StatisticService statisticService;
+    @Autowired
+    StatisticService statisticService;
 
     StatisticTopicCell() {
         super();
-        box.getChildren().addAll(progressBar,numberOfQuestions, TopicLabel);
+        box.getChildren().addAll(progressBar, numberOfQuestions, topicLabel);
     }
-
 
     @Override
     public void updateItem(ObservableTopic topic, boolean empty) {
         super.updateItem(topic, empty);
         if (topic != null) {
-            TopicLabel.setText(topic.getTopic());
+            topicLabel.setText(topic.getTopic());
 
             try {
-                double[] result = statisticService.getCorrectFalseRatio(topic.getT());
-               progressBar.setProgress(result[0]);
-               numberOfQuestions.setText(result[1]+"/"+result[2]);
+                double[] result = statisticService.getCorrectQuestionsForTopic(topic.getT());
+                progressBar.setProgress(result[1] / result[2]);
+
+                if (progressBar.getProgress() > 0.66) {
+                    progressBar.setStyle("-fx-accent:#A2E88B;");
+                } else if (progressBar.getProgress() < 0.33) {
+                    progressBar.setStyle("-fx-accent:#F7A099;");
+                } else {
+                    progressBar.setStyle("-fx-accent:#F0F595;");
+                }
+
+                numberOfQuestions.setText((int) result[1] + "/" + (int) result[2]);
             } catch (ServiceException e) {
                 e.printStackTrace();
             }
-
             setGraphic(box);
         } else {
             setGraphic(null);
