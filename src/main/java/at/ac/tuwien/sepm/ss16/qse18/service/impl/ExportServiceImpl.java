@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +26,7 @@ import java.util.zip.ZipOutputStream;
  *
  * @author Hans-Joerg Schroedl
  */
-@Service public class ExportServiceImpl {
+@Service public class ExportServiceImpl implements ExportService {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -49,7 +50,7 @@ import java.util.zip.ZipOutputStream;
 
 
 
-    public void setSubject(Subject subject) {
+    @Override public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
