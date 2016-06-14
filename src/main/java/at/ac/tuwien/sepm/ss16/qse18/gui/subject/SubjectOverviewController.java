@@ -74,6 +74,7 @@ import java.util.stream.Collectors;
         try {
             File selected = selectFile();
             importService.importSubject(selected);
+            showSuccess("File was successfully imported");
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
