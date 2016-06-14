@@ -17,6 +17,8 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  * This class exports data
@@ -41,18 +43,24 @@ import java.util.List;
         this.subjectTopicDao = subjectTopicDao;
     }
 
+    @Autowired public void setResourceQuestionDao(ResourceQuestionDao resourceQuestionDao) {
+        this.resourceQuestionDao = resourceQuestionDao;
+    }
+
+
 
     public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
-    public void export() throws ServiceException {
+    public void export(String outputpath) throws ServiceException {
         try {
             List<Topic> topics = subjectTopicDao.getTopicToSubject(subject);
             List<Question> questions = getQuestions(topics);
             serializeSubject();
             serializeTopics(topics);
             serializeQuestions(questions);
+
             //List<Resource> resources = getResources(questions);
         } catch (DaoException e) {
             logger.error(e);
@@ -60,10 +68,44 @@ import java.util.List;
         }
     }
 
+    private void zip() throws ServiceException{
+        try {
+            ZipOutputStream zipOutputStream = new ZipOutputStream(new FileOutputStream("xms_"
+                + subject.getName()+ "_" +subject.getAuthor() + ".zip"));
 
-    @Autowired public void setResourceQuestionDao(ResourceQuestionDao resourceQuestionDao) {
-        this.resourceQuestionDao = resourceQuestionDao;
+        }
+        catch (FileNotFoundException e){
+            logger.error("zip file name not found",e);
+            throw new ServiceException("zip file name not found",e);
+        }
     }
+
+    private void addToZipFile(String fileName, ZipOutputStream zipOutputStream) throws ServiceException{
+        logger.debug("Writing" + fileName + "to zip file");
+        try {
+            FileInputStream fis = new FileInputStream(new File(fileName));
+            ZipEntry zipEntry = new ZipEntry(fileName);
+            zipOutputStream.putNextEntry(zipEntry);
+
+            byte[] bytes = new byte[1024];
+            int length;
+            while ((length = fis.read(bytes)) >= 0) {
+                zipOutputStream.write(bytes, 0, length);
+            }
+
+            zipOutputStream.closeEntry();
+            fis.close();
+        }
+        catch (FileNotFoundException e){
+            logger.error("File "+ fileName + "not found",e);
+            throw new ServiceException("File "+ fileName + "not found",e);
+        }
+        catch (IOException e){
+            logger.error("Couldn't write "+ fileName + "to zip file",e);
+            throw new ServiceException("Couldn't write "+ fileName + "to zip file",e);
+        }
+    }
+
 
     private List<Question> getQuestions(List<Topic> topics) throws ServiceException {
         List<Question> allQuestions = new ArrayList<>();
@@ -117,9 +159,10 @@ import java.util.List;
         }
     }
 
-    private void serializeTopics(List<Topic> topics){
+    private FileOutputStream serializeTopics(List<Topic> topics){
+        FileOutputStream output = null;
         try {
-            FileOutputStream output = new FileOutputStream("./topics.data");
+             output = new FileOutputStream("./topics.data");
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(output);
             objectOutputStream.writeObject((Serializable) topics);
             objectOutputStream.close();
@@ -127,6 +170,7 @@ import java.util.List;
         } catch (IOException e) {
             logger.error(e);
         }
+        return output;
     }
 
 }
