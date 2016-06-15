@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * Created by Zhang Haixiang on 15.06.2016.
+ * @author Zhang Haixiang on 15.06.2016.
  */
 @Component public class PostExerciseExamItemController extends BaseController{
     @FXML private Node root;
