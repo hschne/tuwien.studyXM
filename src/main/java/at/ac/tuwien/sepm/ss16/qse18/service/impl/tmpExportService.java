@@ -27,7 +27,7 @@ import java.util.zip.ZipOutputStream;
     private static final Logger logger = LogManager.getLogger();
 
     private Subject subject;
-    private List<String> questionPaths = new ArrayList<>();
+    private List<String> paths = new ArrayList<>();
     @Autowired private SubjectService subjectService;
     @Autowired private TopicService topicService;
     @Autowired private QuestionService questionService;
@@ -38,6 +38,7 @@ import java.util.zip.ZipOutputStream;
             throw new ServiceException("No subject selected for export.");
         }
 
+        paths.clear();
         boolean success = false;
         ZipOutputStream zipOutputStream = null;
 
@@ -48,12 +49,19 @@ import java.util.zip.ZipOutputStream;
             zipOutputStream.putNextEntry(new ZipEntry("meta.txt"));
             zipOutputStream.write(generateMeta().getBytes());
             zipOutputStream.closeEntry();
-            addToZipFile(serializeSubject(), zipOutputStream);
-            System.out.println(questionPaths.size());
-            for(String s: questionPaths){
+            addToZipFile(null, serializeSubject(), zipOutputStream);
+            System.out.println(paths.size());
+            for(String s: paths){
                 File file = new File("./" + s);
                 if(file.exists()) {
-                    addToZipFile(file.getAbsolutePath(), zipOutputStream);
+                    if(s.contains("src/main/resources/images/")) {
+                        addToZipFile("image/" + file.getName(), file.getAbsolutePath(),
+                            zipOutputStream);
+                    }
+                    else {
+                        addToZipFile("resource/" + file.getName(), file.getAbsolutePath(),
+                            zipOutputStream);
+                    }
                 }
                 else {
                     logger.error("File not found " + s);
@@ -88,13 +96,13 @@ import java.util.zip.ZipOutputStream;
 
 
 
-    private void addToZipFile(String fileName, ZipOutputStream zipOutputStream)
+    private void addToZipFile(String zipPath, String fileName, ZipOutputStream zipOutputStream)
         throws ServiceException {
         logger.debug("Writing to zip file: " + fileName);
         try {
             FileInputStream fis = new FileInputStream(new File(fileName));
             //ZipEntry zipEntry = new ZipEntry(fileName);
-            zipOutputStream.putNextEntry(new ZipEntry(fileName));
+            zipOutputStream.putNextEntry(new ZipEntry(zipPath == null ? fileName : zipPath));
             byte[] bytes = new byte[1024];
             int length;
             while ((length = fis.read(bytes)) >= 0) {
@@ -102,8 +110,11 @@ import java.util.zip.ZipOutputStream;
             }
             zipOutputStream.closeEntry();
             fis.close();
-            File file = new File(fileName);
-            file.delete();
+
+            if(zipPath == null) {
+                File file = new File(fileName);
+                file.delete();
+            }
         } catch (FileNotFoundException e) {
             logger.error("File " + fileName + " not found", e);
             throw new ServiceException("File " + fileName + " not found", e);
@@ -151,13 +162,18 @@ import java.util.zip.ZipOutputStream;
             List<Question> ql = getQuestionsFromTopic(t);
             for(Question q : ql){
                 if(q.getType() == QuestionType.NOTECARD){
-                    questionPaths.add(q.getQuestion());
+                    paths.add(q.getQuestion());
                 }
             }
             List<ExportQuestion> eql = new ArrayList<>();
             for(Question q : ql) {
                 List<Answer> al = getAnswersFromQuestion(q);
                 Resource r = getResourcesFromQuestion(q);
+                if(r != null){
+                    if(!paths.contains(r.getReference())){
+                        paths.add(r.getReference());
+                    }
+                }
                 ExportResource er = new ExportResource(r, getNotesFromResource(r));
                 eql.add(new ExportQuestion(q, er, al));
             }
