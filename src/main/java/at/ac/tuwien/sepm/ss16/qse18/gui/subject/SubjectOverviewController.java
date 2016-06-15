@@ -70,11 +70,14 @@ import java.util.stream.Collectors;
     }
 
     @FXML public void handleImport() {
-        logger.debug("Import subject");
+        logger.debug("Import button pressed");
         try {
             File selected = selectFile();
-            importService.importSubject(selected);
-            showSuccess("File was successfully imported");
+            if (selected != null) {
+                importService.importSubject(selected);
+                initializeListView();
+                showSuccess("File was successfully imported");
+            }
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
@@ -161,17 +164,22 @@ import java.util.stream.Collectors;
         FileChooser fileChooser = new FileChooser();
 
         fileChooser.getExtensionFilters()
-            .addAll(new FileChooser.ExtensionFilter("ZIP FILES (.zip)", "*.zip"));
-        fileChooser.setTitle("Choose zip file");
+            .addAll(new FileChooser.ExtensionFilter("XMS FILES (.xms)", "*.xms"));
+        fileChooser.setTitle("Choose xms file");
         Stage mainStage = mainApplication.getPrimaryStage();
         File selected = fileChooser.showOpenDialog(mainStage);
 
-        if (selected.getName().substring(0, 4).equals("xms_")) {
-            return selected;
-        } else {
-            logger.error("No valid file selected");
-            throw new ServiceException("Filename does not start with \"xms_\"");
+        if (selected != null) {
+            if (selected.getName()
+                .substring(selected.getName().length() - 4, selected.getName().length())
+                .equals(".xms")) {
+                return selected;
+            } else {
+                logger.error("No valid file selected");
+                throw new ServiceException("No valid file selected");
+            }
         }
+        return null;
     }
 
 }

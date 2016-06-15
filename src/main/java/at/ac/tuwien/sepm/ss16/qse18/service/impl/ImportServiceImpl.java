@@ -28,6 +28,7 @@ import java.util.zip.ZipInputStream;
     @Autowired private QuestionDao questionDao;
     @Autowired private ResourceDao resourceDao;
     @Autowired private AnswerDao answerDao;
+    @Autowired private ExportUtil exportUtil;
 
     @Override public void importSubject(File zippedFile) throws ServiceException {
         logger.debug("Importing subject from file " + zippedFile);
@@ -57,21 +58,17 @@ import java.util.zip.ZipInputStream;
         }
 
         ZipInputStream zipIn = null;
+        FileInputStream fileInputStream = null;
         ZipEntry zipEntry = null;
 
         try {
-            zipIn = new ZipInputStream(new FileInputStream(inputPath));
+            fileInputStream = new FileInputStream(inputPath);
+            zipIn = new ZipInputStream(fileInputStream);
             zipEntry = zipIn.getNextEntry();
 
             while (zipEntry != null) {
                 String filePath = destDir + File.separator + zipEntry.getName();
-
-                if (!zipEntry.isDirectory()) {
-                    extractFile(zipIn, filePath);
-                } else {
-                    File dir = new File(filePath);
-                    dir.mkdir();
-                }
+                extractFileOrMakeDirectory(zipEntry, zipIn, filePath);
                 zipIn.closeEntry();
                 zipEntry = zipIn.getNextEntry();
             }
@@ -93,10 +90,20 @@ import java.util.zip.ZipInputStream;
         }
     }
 
+    private void extractFileOrMakeDirectory(ZipEntry zipEntry, ZipInputStream zipIn,
+        String filePath) throws IOException {
+        if (!zipEntry.isDirectory()) {
+            extractFile(zipIn, filePath);
+        } else {
+            File dir = new File(filePath);
+            dir.mkdir();
+        }
+    }
+
     private void extractFile(ZipInputStream zipIn, String filePath) throws IOException {
         BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(filePath));
         byte[] bytesIn = new byte[1024];
-        int read = 0;
+        int read;
         while ((read = zipIn.read(bytesIn)) != -1) {
             bos.write(bytesIn, 0, read);
         }
@@ -161,7 +168,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Setting database autocommit to " + value);
 
         try {
-            ExportUtil.setAutocommit(value);
+            exportUtil.setAutocommit(value);
         } catch (DaoException e) {
             logger.error("Could not prepare database", e);
             throw new ServiceException("Could not prepare database", e);
@@ -172,7 +179,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Rolling back changes");
 
         try {
-            ExportUtil.rollback();
+            exportUtil.rollback();
         } catch (DaoException e) {
             logger.error("Could not roll back changes", e);
             throw new ServiceException("Could not roll back changes", e);

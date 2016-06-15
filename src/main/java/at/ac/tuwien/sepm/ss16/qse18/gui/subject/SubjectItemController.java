@@ -38,8 +38,8 @@ import org.springframework.stereotype.Component;
  *
  * @author Hans-Joerg Schroedl,Philipp Ganiu
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectItemController extends
-    BaseController {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class SubjectItemController
+    extends BaseController {
 
     @FXML private Node root;
     @FXML private Label name;
@@ -57,22 +57,20 @@ import org.springframework.stereotype.Component;
     @Autowired private TopicService topicService;
     @Autowired private ExportService exportService;
 
-    @FXML
-    public void initialize(ObservableSubject subject){
+    @FXML public void initialize(ObservableSubject subject) {
         try {
             this.subject = subject;
-            List<ObservableTopic> observableTopics =
-                    subjectTopicQuestionService.getTopicToSubjectWithNumberOfQuestions(subject.getSubject())
-                        .stream().map(ObservableTopic::new).collect(Collectors.toList());
+            List<ObservableTopic> observableTopics = subjectTopicQuestionService
+                .getTopicToSubjectWithNumberOfQuestions(subject.getSubject()).stream()
+                .map(ObservableTopic::new).collect(Collectors.toList());
             topicList = FXCollections.observableList(observableTopics);
             topicListView.setItems(topicList);
-            topicListView.setCellFactory(listView  -> {
+            topicListView.setCellFactory(listView -> {
                 TopicCell topicCell = new TopicCell();
                 topicCell.setQuestionNavigation(questionNavigation);
                 return topicCell;
             });
-        }
-        catch (ServiceException e){
+        } catch (ServiceException e) {
             showError(e);
         }
     }
@@ -86,14 +84,8 @@ import org.springframework.stereotype.Component;
         try {
             File selected = selectFile();
             if (selected != null) {
-                boolean created = exportService.export(selected.getAbsolutePath());
-                if(created){
-                    showSuccess("Subject successfully exported");
-                }
-                else {
-                    showError("Couldn't export subject");
-                }
-
+                exportService.export(selected.getAbsolutePath());
+                showSuccess("Subject successfully exported");
             }
         } catch (ServiceException e) {
             logger.error(e);
@@ -101,25 +93,25 @@ import org.springframework.stereotype.Component;
         }
     }
 
-    public void setAddTopicButtonAction(ObservableSubject subject,ObservableList<ObservableTopic> topicList){
+    public void setAddTopicButtonAction(ObservableSubject subject,
+        ObservableList<ObservableTopic> topicList) {
         addTopicButton.setOnAction(event -> {
-            Topic newTopic = new Topic(-1,topicTf.getText());
-            try{
-                Topic t = topicService.createTopic(newTopic,subject.getSubject());
+            Topic newTopic = new Topic(-1, topicTf.getText());
+            try {
+                Topic t = topicService.createTopic(newTopic, subject.getSubject());
                 topicList.add(new ObservableTopic(t));
                 topicTf.clear();
-            }
-            catch (ServiceException e){
+            } catch (ServiceException e) {
                 showError(e);
             }
-            });
+        });
     }
 
     @FXML public void handleDelete() {
         //TODO implement this method
     }
 
-    @FXML public void handleEditQuestions(){
+    @FXML public void handleEditQuestions() {
         mainFrameController.handleQuestionOverview(subject);
     }
 
@@ -133,7 +125,7 @@ import org.springframework.stereotype.Component;
     }
 
 
-    public ObservableList<ObservableTopic> getTopicList(){
+    public ObservableList<ObservableTopic> getTopicList() {
         return this.topicList;
     }
 
@@ -145,7 +137,7 @@ import org.springframework.stereotype.Component;
         fileChooser.setInitialFileName("xms_" + subject.getName() + "_" + subject.getAuthor());
 
         fileChooser.getExtensionFilters()
-            .addAll(new FileChooser.ExtensionFilter("ZIP FILES (.zip)", "*.zip"));
+            .addAll(new FileChooser.ExtensionFilter("XMS FILES (.xms)", "*.xms"));
         fileChooser.setTitle("Choose output directory");
         Stage mainStage = mainApplication.getPrimaryStage();
         return fileChooser.showSaveDialog(mainStage);

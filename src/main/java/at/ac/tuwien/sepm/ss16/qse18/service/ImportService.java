@@ -2,6 +2,12 @@ package at.ac.tuwien.sepm.ss16.qse18.service;
 
 import java.io.File;
 
+/**
+ * Interface ImportService
+ * imports a subject
+ *
+ * @author Bicer Cem
+ */
 public interface ImportService {
 
     /**

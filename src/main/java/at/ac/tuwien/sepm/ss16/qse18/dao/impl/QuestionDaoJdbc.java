@@ -219,7 +219,7 @@ import java.util.List;
         } finally {
             closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
         }
-        return new ArrayList<>();
+        return result;
     }
 
     private void isQuestionNull(Question q) throws DaoException {

@@ -32,13 +32,13 @@ import java.util.zip.ZipOutputStream;
     @Autowired private QuestionService questionService;
     @Autowired private ResourceQuestionDao resourceQuestionDao;
 
-    @Override public boolean export(String outputpath) throws ServiceException {
+    @Override public void export(String outputpath) throws ServiceException {
         if (this.subject == null) {
-            throw new ServiceException("No subject selected for export.");
+            logger.error("No subject selected for export");
+            throw new ServiceException("No subject selected for export");
         }
 
         paths.clear();
-        boolean success = false;
         ZipOutputStream zipOutputStream = null;
 
         try {
@@ -48,23 +48,10 @@ import java.util.zip.ZipOutputStream;
             zipOutputStream.putNextEntry(new ZipEntry("meta.txt"));
             zipOutputStream.write(generateMeta().getBytes());
             zipOutputStream.closeEntry();
+
             addToZipFile(null, serializeSubject(), zipOutputStream);
-            for (String s : paths) {
-                File file = new File("./" + s);
-                if (file.exists()) {
-                    if (s.contains("src/main/resources/images/")) {
-                        addToZipFile("image/" + file.getName(), file.getAbsolutePath(),
-                            zipOutputStream);
-                    } else {
-                        addToZipFile("resource/" + file.getName(), file.getAbsolutePath(),
-                            zipOutputStream);
-                    }
-                } else {
-                    logger.error("File not found " + s);
-                    throw new ServiceException("Could not parse file from path " + s);
-                }
-            }
-            success = true;
+
+            addImagesAndResourcesToZip(zipOutputStream);
         } catch (FileNotFoundException e) {
             logger.error("Path is not valid");
             throw new ServiceException("Outputpath is not valid", e);
@@ -83,14 +70,30 @@ import java.util.zip.ZipOutputStream;
         }
 
         logger.debug("Exporting subject: {}", this.subject);
-        return success;
     }
 
     @Override public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
-
+    private void addImagesAndResourcesToZip(ZipOutputStream zipOutputStream)
+        throws ServiceException {
+        for (String s : paths) {
+            File file = new File("./" + s);
+            if (file.exists()) {
+                if (s.contains("src/main/resources/images/")) {
+                    addToZipFile("image/" + file.getName(), file.getAbsolutePath(),
+                        zipOutputStream);
+                } else {
+                    addToZipFile("resource/" + file.getName(), file.getAbsolutePath(),
+                        zipOutputStream);
+                }
+            } else {
+                logger.error("File not found " + s);
+                throw new ServiceException("Could not parse file from path " + s);
+            }
+        }
+    }
 
     private void addToZipFile(String zipPath, String fileName, ZipOutputStream zipOutputStream)
         throws ServiceException {
@@ -150,6 +153,7 @@ import java.util.zip.ZipOutputStream;
     }
 
     private String serializeSubject() throws ServiceException {
+        logger.debug("Serializing subject " + subject);
         List<Topic> topics = getTopics();
         List<ExportTopic> exportTopics = new ArrayList<>();
 
@@ -164,11 +168,7 @@ import java.util.zip.ZipOutputStream;
             for (Question q : ql) {
                 List<Answer> al = getAnswersFromQuestion(q);
                 Resource r = getResourcesFromQuestion(q);
-                if (r != null) {
-                    if (!paths.contains(r.getReference())) {
-                        paths.add(r.getReference());
-                    }
-                }
+                addIfNotAlreadyAdded(r);
                 ExportResource er = new ExportResource(r, getNotesFromResource(r));
                 eql.add(new ExportQuestion(q, er, al));
             }
@@ -189,6 +189,10 @@ import java.util.zip.ZipOutputStream;
         return "ExportSubject.ser";
     }
 
-
+    private void addIfNotAlreadyAdded(Resource r) {
+        if (r != null && !paths.contains(r.getReference())) {
+            paths.add(r.getReference());
+        }
+    }
 
 }
