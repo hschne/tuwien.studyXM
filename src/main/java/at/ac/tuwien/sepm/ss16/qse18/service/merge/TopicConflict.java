@@ -46,7 +46,7 @@ import java.util.List;
         this.importedTopic = importedTopic;
     }
 
-    public List<QuestionConflict> getConflictingQuestions() throws ServiceException {
+    public List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
         List<Question> importedQuestions = new ArrayList<>();
         questionConflictDetection.initialize(existingTopic, importedQuestions);
         setQuestionConflicts(questionConflictDetection.getConflictingQuestions());

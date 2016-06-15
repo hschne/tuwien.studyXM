@@ -32,7 +32,7 @@ import java.io.IOException;
 
     private void setControllerProperties(ObservableTopicConflict topicConflict,
         TopicConflictItemController itemController) {
-        itemController.initialize(topicConflict);
+        itemController.setQuestionConflict(topicConflict);
         setGraphic(itemController.getRoot());
     }
 
