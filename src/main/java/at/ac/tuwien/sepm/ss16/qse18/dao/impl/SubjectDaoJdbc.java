@@ -3,7 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import org.apache.logging.log4j.LogManager;
@@ -11,10 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +34,14 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
     private SubjectTopicDaoJdbc subjectTopicDaoJdbc;
 
-    private ExerciseExamDaoJdbc examDaoJdbc;
+    private ExamDaoJdbc examDaoJdbc;
 
     @Autowired public SubjectDaoJdbc(DataBaseConnection database) {
         this.database = database;
+    }
+
+    @Autowired public void setExamDaoJdbc(ExamDaoJdbc examDaoJdbc) {
+        this.examDaoJdbc = examDaoJdbc;
     }
 
     @Autowired public void setTopicDaoJdbc(TopicDaoJdbc topicDaoJdbc) {
@@ -51,9 +52,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         this.subjectTopicDaoJdbc = subjectTopicDaoJdbc;
     }
 
-    @Autowired public void setExerciseExamDaoJdbc(ExerciseExamDaoJdbc exerciseExamDaoJdbc) {
-        this.examDaoJdbc = exerciseExamDaoJdbc;
-    }
+
 
     @Override public Subject getSubject(int id) throws DaoException {
         logger.debug("Entering getSubject(" + id + ")");
@@ -139,8 +138,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
             return res;
         } catch (SQLException e) {
-            logger
-                .error("Could not create subject with values " + subjectValues(subject), e);
+            logger.error("Could not create subject with values " + subjectValues(subject), e);
             throw new DaoException(
                 "Could not create subject with values " + subjectValues(subject));
         } finally {
@@ -151,24 +149,28 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     @Override public Subject deleteSubject(Subject subject) throws DaoException {
         assertNotNull(subject);
         logger.debug("Entering deleteSubject with values " + subjectValues(subject));
-        deleteTopics(subject);
-        deleteExams(subject);
-        PreparedStatement ps = null;
         try {
-            ps = database.getConnection().prepareStatement(
-                "DELETE FROM ENTITY_SUBJECT WHERE SUBJECTID = ? AND name = ? AND ects = ? AND semester = ? AND time_spent = ? AND author = ?");
-            fillPreparedStatementWithSubject(false, ps, subject);
-            ps.executeUpdate();
-            ps.close();
+            Connection connection = database.getConnection();
+            connection.setAutoCommit(false);
+            deleteSubjectAndRelated(subject);
+            connection.commit();
+            connection.setAutoCommit(true);
             return subject;
         } catch (SQLException e) {
-            logger
-                .error("Could not delete subject with values " + subjectValues(subject), e);
+            logger.error("Could not delete subject with values " + subjectValues(subject), e);
             throw new DaoException(
                 "Could not delete subject with values " + subjectValues(subject));
-        } finally {
-            closeStatementsAndResultSets(new Statement[] {ps}, null);
         }
+    }
+
+    private void deleteSubjectAndRelated(Subject subject) throws DaoException, SQLException {
+        deleteTopics(subject);
+        deleteExams(subject);
+        PreparedStatement ps = database.getConnection()
+            .prepareStatement("DELETE FROM ENTITY_SUBJECT WHERE SUBJECTID = ?");
+        ps.setInt(1, subject.getSubjectId());
+        ps.executeUpdate();
+        ps.close();
     }
 
     @Override public Subject updateSubject(Subject subject) throws DaoException {
@@ -208,8 +210,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     private void deleteExams(Subject subject) throws DaoException {
-        List<ExerciseExam> exerciseExams = examDaoJdbc.getAllExamsOfSubject(subject);
-        for (ExerciseExam exerciseExam : exerciseExams) {
+        List<Exam> exerciseExams = examDaoJdbc.getAllExamsOfSubject(subject);
+        for (Exam exerciseExam : exerciseExams) {
             examDaoJdbc.delete(exerciseExam);
         }
     }
@@ -239,8 +241,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         }
     }
 
-    private void fillPreparedStatementWithSubject(boolean inCreateMethod,
-        PreparedStatement ps, Subject s) throws SQLException {
+    private void fillPreparedStatementWithSubject(boolean inCreateMethod, PreparedStatement ps,
+        Subject s) throws SQLException {
         if (ps != null) {
             if (inCreateMethod) {
                 ps.setString(1, s.getName());

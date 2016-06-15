@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 
 import java.util.List;
 
@@ -9,7 +10,9 @@ import java.util.List;
  */
 public interface ExamDao {
     Exam create(Exam exam) throws DaoException;
-    Exam delete(Exam exam) throws DaoException;
+    void delete(Exam exam) throws DaoException;
     Exam getExam(int examID) throws DaoException;
     List<Exam> getExams() throws DaoException;
+
+    List<Exam> getAllExamsOfSubject(Subject subject) throws DaoException;
 }

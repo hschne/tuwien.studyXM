@@ -3,7 +3,10 @@ package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ConnectionH2;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,14 +19,22 @@ import java.util.List;
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
 /**
+ * Implements {@link ExamDao}
+ * for H2 Databases
+ *
  * Created by Felix on 05.06.2016.
  */
 @Repository public class ExamDaoJdbc implements ExamDao {
     private static final Logger logger = LogManager.getLogger(ExamDaoJdbc.class);
     private ConnectionH2 database;
+    private ExerciseExamDao exerciseExamDao;
 
     @Autowired public ExamDaoJdbc(ConnectionH2 database) {
         this.database = database;
+    }
+
+    @Autowired public void setExerciseExamDao(ExerciseExamDao exerciseExamDao) {
+        this.exerciseExamDao = exerciseExamDao;
     }
 
     @Override public Exam create(Exam exam) throws DaoException {
@@ -65,9 +76,25 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         return exam;
     }
 
-    @Override public Exam delete(Exam exam) throws DaoException {
-        //TODO
-        return null;
+    @Override public void delete(Exam exam) throws DaoException {
+        logger.debug("entering method delete with parameters {}", exam);
+        deleteExerciseExams(exam);
+        try {
+            PreparedStatement pstmt = this.database.getConnection()
+                .prepareStatement("DELETE FROM ENTITY_EXAM WHERE EXAMID = ?");
+            pstmt.setInt(1, exam.getExamid());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException("Error deleting exam " + exam.toString());
+        }
+    }
+
+    private void deleteExerciseExams(Exam exam) throws DaoException {
+        List<ExerciseExam> exerciseExams = exerciseExamDao.getExerciseExamsFrom(exam);
+        for(ExerciseExam exerciseExam : exerciseExams){
+            exerciseExamDao.delete(exerciseExam);
+        }
     }
 
     @Override public Exam getExam(int examID) throws DaoException {
@@ -123,7 +150,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         return examList;
     }
 
-    public List<Exam> fillList(ResultSet rs) throws SQLException {
+    private List<Exam> fillList(ResultSet rs) throws SQLException {
         Exam exam;
         List<Exam> examList = new ArrayList<>();
 
@@ -139,5 +166,19 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         }
 
         return examList;
+    }
+
+    @Override public List<Exam> getAllExamsOfSubject(Subject subject) throws DaoException {
+        logger.debug("entering method getExamsFor {}", subject);
+        try {
+            PreparedStatement pstmt = this.database.getConnection()
+                .prepareStatement("SELECT * FROM ENTITY_EXAM WHERE SUBJECT = ?");
+            pstmt.setInt(1, subject.getSubjectId());
+            ResultSet rs = pstmt.executeQuery();
+            return fillList(rs);
+        } catch (SQLException e) {
+            logger.error(e);
+            throw new DaoException("Could not get list with of Exams", e);
+        }
     }
 }
