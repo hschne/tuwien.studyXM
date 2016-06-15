@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -23,6 +24,14 @@ import java.util.List;
     private Topic existingTopic;
     private QuestionTopicDao questionTopicDao;
     private List<Question> importedQuestions;
+    private AnswerConflictDetection answerConflictDetection;
+
+    private List<QuestionConflict> questionConflicts;
+
+    @Autowired
+    public void setAnswerConflictDetection(AnswerConflictDetection answerConflictDetection) {
+        this.answerConflictDetection = answerConflictDetection;
+    }
 
     @Autowired public void setQuestionTopicDao(QuestionTopicDao questionTopicDao) {
         this.questionTopicDao = questionTopicDao;
@@ -31,28 +40,45 @@ import java.util.List;
     public void initialize(Topic existing, List<Question> importedQuestions) {
         this.existingTopic = existing;
         this.importedQuestions = importedQuestions;
+        questionConflicts = new ArrayList<>();
     }
 
     public List<QuestionConflict> getConflictingQuestions() throws ServiceException {
-        List<QuestionConflict> result = new ArrayList<>();
         List<Question> existingQuestions = getExistingQuestions();
         for (Question existingQuestion : existingQuestions) {
             for (Question importedQuestion : importedQuestions) {
-                checkForConflict(result, existingQuestion, importedQuestion);
+                checkForConflict(existingQuestion, importedQuestion);
             }
         }
-        return result;
+        return questionConflicts;
     }
 
-    private void checkForConflict(List<QuestionConflict> result, Question existingQuestion,
-        Question importedQuestion) {
+    private void checkForConflict(Question existingQuestion,
+        Question importedQuestion) throws ServiceException {
         String existingQuestionText = existingQuestion.getQuestion();
         String importedQuestionText = importedQuestion.getQuestion();
         if (existingQuestionText.equals(importedQuestionText)) {
-            QuestionConflict questionConflict =
-                new QuestionConflict(existingQuestion, importedQuestion);
-            result.add(questionConflict);
+            checkIfAnswersEqual(existingQuestion,importedQuestion);
         }
+    }
+
+    private void checkIfAnswersEqual(Question existingQuestion, Question importedQuestion)
+        throws ServiceException {
+        //TODO: Get imported answers here
+        List<Answer> importedAnswers = new ArrayList<>();
+        answerConflictDetection.initialize(existingQuestion, importedAnswers);
+        createConflict(existingQuestion, importedQuestion);
+
+    }
+
+    private void createConflict(Question existingQuestion, Question importedQuestion)
+        throws ServiceException {
+        QuestionConflict questionConflict =
+            new QuestionConflict(existingQuestion, importedQuestion);
+        if(answerConflictDetection.areAnswersEqual()){
+            questionConflict.setResolution(ConflictResolution.EXISTING);
+        }
+        questionConflicts.add(questionConflict);
     }
 
     private List<Question> getExistingQuestions() throws ServiceException {

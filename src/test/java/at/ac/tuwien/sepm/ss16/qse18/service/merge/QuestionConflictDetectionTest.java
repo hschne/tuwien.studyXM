@@ -25,16 +25,20 @@ import static org.mockito.Mockito.when;
 
     @Mock private QuestionTopicDao questionTopicDaoMock;
 
+    @Mock private AnswerConflictDetection answerConflictDetection;
+
     @Before public void setUp(){
         questionConflictDetection = new QuestionConflictDetection();
         questionConflictDetection.setQuestionTopicDao(questionTopicDaoMock);
+        questionConflictDetection.setAnswerConflictDetection(answerConflictDetection);
     }
 
     @Test public void test_getConflictingQuestions_noConflictingQuestions() throws Exception {
         List<Question> exstingQuestions = new ArrayList<>();
         exstingQuestions.add(createDummyQuestion());
 
-        List<QuestionConflict> questionConflicts = questionConflictDetection.getConflictingQuestions();
+        questionConflictDetection.initialize(null, null);
+       List<QuestionConflict> questionConflicts = questionConflictDetection.getConflictingQuestions();
 
         assertTrue(questionConflicts.isEmpty());
     }
@@ -50,7 +54,26 @@ import static org.mockito.Mockito.when;
 
         List<Question> importedQuestions = new ArrayList<>();
         importedQuestions.add(duplicateQuestion);
+        when(answerConflictDetection.areAnswersEqual()).thenReturn(false);
 
+        questionConflictDetection.initialize(null, importedQuestions);
+        List<QuestionConflict> questionConflicts = questionConflictDetection.getConflictingQuestions();
+
+        assertFalse(questionConflicts.isEmpty());
+    }
+
+    @Test public void test_getConflictingQuestions_duplicateQuestionsReturned() throws Exception {
+        Question duplicateQuestion = createDummyQuestion();
+        Question otherExistingQuestion = createDummyQuestion();
+        otherExistingQuestion.setQuestion("SomethingDifferent");
+        List<Question> existingQuestions = new ArrayList<>();
+        existingQuestions.add(duplicateQuestion);
+        existingQuestions.add(otherExistingQuestion);
+        when(questionTopicDaoMock.getQuestionToTopic(any())).thenReturn(existingQuestions);
+
+        List<Question> importedQuestions = new ArrayList<>();
+        importedQuestions.add(duplicateQuestion);
+        when(answerConflictDetection.areAnswersEqual()).thenReturn(true);
 
         questionConflictDetection.initialize(null, importedQuestions);
         List<QuestionConflict> questionConflicts = questionConflictDetection.getConflictingQuestions();

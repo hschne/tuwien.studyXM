@@ -50,6 +50,16 @@ public class DummyEntityFactory {
         return question;
     }
 
+    public static Answer createDummyAnswer(){
+        Answer answer = new Answer();
+        answer.setAnswer("Answer");
+        answer.setAnswerId(1);
+        answer.setCorrect(false);
+        answer.setQuestion(createDummyQuestion());
+        answer.setType(QuestionType.MULTIPLECHOICE);
+        return answer;
+    }
+
 
     public static List<ExerciseExam> createDummyExcerciseExams() {
         List<ExerciseExam> exerciseExams = new ArrayList<>();

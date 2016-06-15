@@ -30,7 +30,9 @@ public class QuestionConflict {
 
     public void resolve() throws ServiceException {
         if(resolution == null){
-            throw new ServiceException("Conflict has not been resolved.");
+            String message = "No conflict resolution selected. Conflict has not been resolved";
+            logger.error(message);
+            throw new ServiceException(message);
         }
         if(resolution == ConflictResolution.EXISTING){
             logger.debug("Keeping existing question");
