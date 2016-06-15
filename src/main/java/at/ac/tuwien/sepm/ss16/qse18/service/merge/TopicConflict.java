@@ -17,23 +17,23 @@ import java.util.List;
 @Service public class TopicConflict {
 
     private final Logger logger = LogManager.getLogger();
-
-    public void setQuestionConflicts(List<QuestionConflict> questionConflicts) {
-        this.questionConflicts = questionConflicts;
-    }
-
     private List<QuestionConflict> questionConflicts;
     private QuestionConflictDetection questionConflictDetection;
     private Topic existingTopic;
     private Topic importedTopic;
 
-    public TopicConflict(Topic existingTopic, Topic importedTopic) {
+    public void setTopics(Topic existingTopic, Topic importedTopic) {
         this.existingTopic = existingTopic;
         this.importedTopic = importedTopic;
+        questionConflicts = new ArrayList<>();
     }
 
     public List<QuestionConflict> getQuestionConflicts() {
         return questionConflicts;
+    }
+
+    public void setQuestionConflicts(List<QuestionConflict> questionConflicts) {
+        this.questionConflicts = questionConflicts;
     }
 
     @Autowired

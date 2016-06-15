@@ -49,7 +49,8 @@ import java.util.List;
         String existingTopicName = existingTopic.getTopic();
         String importedTopicName = importedTopic.getTopic();
         if (existingTopicName.equals(importedTopicName)) {
-            TopicConflict duplicate = new TopicConflict(existingTopic, importedTopic);
+            TopicConflict duplicate = new TopicConflict();
+            duplicate.setTopics(existingTopic, importedTopic);
             duplicates.add(duplicate);
             return true;
         }

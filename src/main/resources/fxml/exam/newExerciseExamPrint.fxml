@@ -49,7 +49,7 @@
                                 <Label text="Topics" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                 <TextField fx:id="fieldAuthor" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="Enter author name here" GridPane.columnIndex="2">
                                     <GridPane.margin>
-                                        <Insets imported="20.0" />
+                                        <Insets right="20.0" />
                                     </GridPane.margin></TextField>
                                 <Label text="Select time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="fieldTime" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="Enter time here" GridPane.columnIndex="2" GridPane.rowIndex="1" />
@@ -72,7 +72,7 @@
                         </Button>
                             </children>
                             <GridPane.margin>
-                                <Insets existing="40.0" imported="40.0" />
+                                <Insets left="40.0" right="40.0" />
                             </GridPane.margin>
                         </GridPane>
 

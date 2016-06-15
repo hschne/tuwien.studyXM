@@ -46,7 +46,7 @@
       </AnchorPane>
       <Button fx:id="buttonFinish" mnemonicParsing="false" onAction="#finish" text="finish" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
          <GridPane.margin>
-            <Insets imported="40.0" />
+            <Insets right="40.0" />
          </GridPane.margin>
       </Button>
       <Label text="exam Results" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
@@ -56,7 +56,7 @@
       </Label>
       <ImageView fitHeight="28.0" fitWidth="28.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
          <GridPane.margin>
-            <Insets existing="50.0" />
+            <Insets left="50.0" />
          </GridPane.margin>
          <image>
             <Image url="/icons/pie.PNG" />

@@ -59,7 +59,7 @@ import static org.mockito.Mockito.when;
     }
 
     @Test public void test_getNonConflictingImported_noneReturned() throws Exception{
-        TopicConflict conflict = new TopicConflict(null, null);
+        TopicConflict conflict = new TopicConflict();
         List<TopicConflict> topicConflicts = new ArrayList<>();
         topicConflicts.add(conflict);
         subjectConflict.setTopicConflicts(topicConflicts);

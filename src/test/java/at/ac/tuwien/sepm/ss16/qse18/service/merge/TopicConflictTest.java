@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
     private TopicConflict topicConflict;
 
     @Before public void setUp(){
-        topicConflict = new TopicConflict(null,null);
+        topicConflict = new TopicConflict();
         topicConflict.setQuestionConflictDetection(questionConflictDetectionMock);
     }
 

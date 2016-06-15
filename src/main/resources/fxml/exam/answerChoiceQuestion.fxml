@@ -32,22 +32,22 @@
          </font></Label>
       <RadioButton fx:id="answer1Button" mnemonicParsing="false" text="Answer 1" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer2Button" mnemonicParsing="false" text="Answer 2" GridPane.rowIndex="2">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer3Button" mnemonicParsing="false" text="Answer 3" GridPane.rowIndex="3">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer4Button" mnemonicParsing="false" text="Answer 4" GridPane.rowIndex="4">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
    </children>

@@ -44,14 +44,14 @@
                                 <Label text="Due Date" GridPane.rowIndex="2" />
                                 <TextField fx:id="fieldName" prefColumnCount="0" prefHeight="25.0" prefWidth="459.0" GridPane.columnIndex="1">
                            <GridPane.margin>
-                              <Insets imported="20.0" />
+                              <Insets right="20.0" />
                            </GridPane.margin></TextField>
                         <DatePicker fx:id="dueDate" prefHeight="25.0" prefWidth="216.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <ComboBox fx:id="subjects" prefHeight="25.0" prefWidth="213.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <Label text="Subject" GridPane.rowIndex="1" />
                             </children>
                             <GridPane.margin>
-                                <Insets existing="40.0" imported="40.0" />
+                                <Insets left="40.0" right="40.0" />
                             </GridPane.margin>
                         </GridPane>
 

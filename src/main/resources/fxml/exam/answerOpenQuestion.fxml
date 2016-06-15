@@ -30,27 +30,27 @@
          </font></Label>
       <RadioButton fx:id="answer1Button" mnemonicParsing="false" text="Answer 1" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer2Button" mnemonicParsing="false" text="Answer 2" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer3Button" mnemonicParsing="false" text="Answer 3" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
       <RadioButton fx:id="answer4Button" mnemonicParsing="false" text="Answer 4" visible="false" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets existing="150.0" />
+            <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
       <TextArea fx:id="textArea" prefHeight="200.0" prefWidth="200.0" GridPane.rowIndex="1">
          <GridPane.margin>
-            <Insets bottom="20.0" existing="40.0" imported="40.0" top="20.0" />
+            <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
          </GridPane.margin>
       </TextArea>
    </children>
