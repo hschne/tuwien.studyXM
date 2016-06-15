@@ -4,7 +4,7 @@
 *.iws
 *.class
 
-!**/resources/images/
+**/resources/images/
 **/resources/resources/
 !graph.jpg
 !graph.png
