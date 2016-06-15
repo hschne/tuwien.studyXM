@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.QuestionNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.topic.TopicCell;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectTopicQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
@@ -54,7 +55,7 @@ import org.springframework.stereotype.Component;
 
     @Autowired private QuestionNavigation questionNavigation;
     @Autowired private TopicService topicService;
-    @Autowired private ExportServiceImpl exportService;
+    @Autowired private ExportService exportService;
 
     @FXML
     public void initialize(ObservableSubject subject){

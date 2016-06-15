@@ -20,9 +20,7 @@ public interface ExportService {
      * Sets the subject that has to be exported.
      *
      * Note: This method has to be called before export().
-     *
-     * @throws ServiceException
      */
-   void setSubject(Subject subject) throws ServiceException;
+   void setSubject(Subject subject);
 
 }

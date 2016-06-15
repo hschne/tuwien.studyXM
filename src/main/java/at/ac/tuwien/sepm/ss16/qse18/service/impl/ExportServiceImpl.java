@@ -89,7 +89,7 @@ import java.util.zip.ZipOutputStream;
         return success;
     }
 
-    @Override public void setSubject(Subject subject) {
+    @Override public void setSubject (Subject subject) {
         this.subject = subject;
     }
 
