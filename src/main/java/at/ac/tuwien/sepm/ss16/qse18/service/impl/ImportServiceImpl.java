@@ -24,7 +24,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Importing subject from file " + zippedFile);
 
         unzipFile(zippedFile.getAbsolutePath(), zippedFile.getName());
-        parseSubject();
+       // parseSubject();
         //parseTopics();
         //parseQuestions();
     }
@@ -47,7 +47,13 @@ import java.util.zip.ZipInputStream;
             while (zipEntry != null) {
                 String filePath = destDir + File.separator + zipEntry.getName();
 
-                extractFile(zipIn, filePath);
+                if(!zipEntry.isDirectory()){
+                    extractFile(zipIn, filePath);
+                }
+                else {
+                    File dir = new File(filePath);
+                    dir.mkdir();
+                }
                 zipIn.closeEntry();
                 zipEntry = zipIn.getNextEntry();
             }
@@ -83,7 +89,7 @@ import java.util.zip.ZipInputStream;
         Subject result = null;
 
         try {
-            FileInputStream fileIn = new FileInputStream(unzippedDir + "/subject.ser");
+            FileInputStream fileIn = new FileInputStream(unzippedDir + "/ExportSubject.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             result = (Subject) in.readObject();
             in.close();
