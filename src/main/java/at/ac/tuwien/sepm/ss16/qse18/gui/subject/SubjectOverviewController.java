@@ -87,7 +87,8 @@ import java.util.stream.Collectors;
     @FXML public void handleDelete() {
         try {
             logger.debug("Delete subject from table");
-            if (!showConfirmation("This will remove the subject and all associated questions, materials and exams.")) {
+            if (!showConfirmation(
+                "This will remove the subject and all associated questions, materials and exams.")) {
                 return;
             }
             ObservableSubject subjectToDelete =
@@ -129,7 +130,7 @@ import java.util.stream.Collectors;
      * @param subject           The new subject, containing new values
      */
     void updateSubject(ObservableSubject observableSubject, Subject subject) {
-            updateEntry(observableSubject, subject);
+        updateEntry(observableSubject, subject);
     }
 
     private void initializeListView() throws ServiceException {

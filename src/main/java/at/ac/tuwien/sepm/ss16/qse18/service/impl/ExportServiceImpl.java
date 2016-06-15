@@ -23,7 +23,7 @@ import java.util.zip.ZipOutputStream;
 /**
  * @author Felix Almer, Cem Bicer, Philipp Ganiu
  */
-@Service public class ExportServiceImpl implements ExportService{
+@Service public class ExportServiceImpl implements ExportService {
     private static final Logger logger = LogManager.getLogger();
 
     private Subject subject;
@@ -33,7 +33,7 @@ import java.util.zip.ZipOutputStream;
     @Autowired private ResourceQuestionDao resourceQuestionDao;
 
     @Override public boolean export(String outputpath) throws ServiceException {
-        if(this.subject == null) {
+        if (this.subject == null) {
             throw new ServiceException("No subject selected for export.");
         }
 
@@ -49,36 +49,33 @@ import java.util.zip.ZipOutputStream;
             zipOutputStream.write(generateMeta().getBytes());
             zipOutputStream.closeEntry();
             addToZipFile(null, serializeSubject(), zipOutputStream);
-            System.out.println(paths.size());
-            for(String s: paths){
+            for (String s : paths) {
                 File file = new File("./" + s);
-                if(file.exists()) {
-                    if(s.contains("src/main/resources/images/")) {
+                if (file.exists()) {
+                    if (s.contains("src/main/resources/images/")) {
                         addToZipFile("image/" + file.getName(), file.getAbsolutePath(),
                             zipOutputStream);
-                    }
-                    else {
+                    } else {
                         addToZipFile("resource/" + file.getName(), file.getAbsolutePath(),
                             zipOutputStream);
                     }
-                }
-                else {
+                } else {
                     logger.error("File not found " + s);
+                    throw new ServiceException("Could not parse file from path " + s);
                 }
             }
             success = true;
-        } catch(FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             logger.error("Path is not valid");
             throw new ServiceException("Outputpath is not valid", e);
-        }
-        catch (IOException e){
+        } catch (IOException e) {
             logger.error("Couldn't create image or resource directory", e);
             throw new ServiceException("Couldn't create image or resource directory", e);
-        }finally {
-            if(zipOutputStream != null) {
+        } finally {
+            if (zipOutputStream != null) {
                 try {
                     zipOutputStream.close();
-                } catch(IOException e) {
+                } catch (IOException e) {
                     logger.error(e.getMessage(), e);
                     throw new ServiceException("Could not close stream while writing to file", e);
                 }
@@ -89,7 +86,7 @@ import java.util.zip.ZipOutputStream;
         return success;
     }
 
-    @Override public void setSubject (Subject subject) {
+    @Override public void setSubject(Subject subject) {
         this.subject = subject;
     }
 
@@ -100,7 +97,6 @@ import java.util.zip.ZipOutputStream;
         logger.debug("Writing to zip file: " + fileName);
         try {
             FileInputStream fis = new FileInputStream(new File(fileName));
-            //ZipEntry zipEntry = new ZipEntry(fileName);
             zipOutputStream.putNextEntry(new ZipEntry(zipPath == null ? fileName : zipPath));
             byte[] bytes = new byte[1024];
             int length;
@@ -110,7 +106,7 @@ import java.util.zip.ZipOutputStream;
             zipOutputStream.closeEntry();
             fis.close();
 
-            if(zipPath == null) {
+            if (zipPath == null) {
                 File file = new File(fileName);
                 file.delete();
             }
@@ -124,8 +120,8 @@ import java.util.zip.ZipOutputStream;
     }
 
     private String generateMeta() {
-        return "studyXM Subject Export\n\rGenerated: " +
-            new SimpleDateFormat("dd.MM.YYYY HH:mm:ss").format(new Date());
+        return "studyXM Subject Export\n\rGenerated: " + new SimpleDateFormat("dd.MM.YYYY HH:mm:ss")
+            .format(new Date());
     }
 
     private List<Topic> getTopics() throws ServiceException {
@@ -147,7 +143,7 @@ import java.util.zip.ZipOutputStream;
     private Resource getResourcesFromQuestion(Question question) throws ServiceException {
         try {
             return resourceQuestionDao.getResourceOfQuestion(question);
-        } catch(DaoException e) {
+        } catch (DaoException e) {
             logger.error("Could not get resource of question {}", question, e);
             throw new ServiceException("Could not get resource of question.", e);
         }
@@ -157,19 +153,19 @@ import java.util.zip.ZipOutputStream;
         List<Topic> topics = getTopics();
         List<ExportTopic> exportTopics = new ArrayList<>();
 
-        for(Topic t : topics) {
+        for (Topic t : topics) {
             List<Question> ql = getQuestionsFromTopic(t);
-            for(Question q : ql){
-                if(q.getType() == QuestionType.NOTECARD){
+            for (Question q : ql) {
+                if (q.getType() == QuestionType.NOTECARD) {
                     paths.add(q.getQuestion());
                 }
             }
             List<ExportQuestion> eql = new ArrayList<>();
-            for(Question q : ql) {
+            for (Question q : ql) {
                 List<Answer> al = getAnswersFromQuestion(q);
                 Resource r = getResourcesFromQuestion(q);
-                if(r != null){
-                    if(!paths.contains(r.getReference())){
+                if (r != null) {
+                    if (!paths.contains(r.getReference())) {
                         paths.add(r.getReference());
                     }
                 }
@@ -186,7 +182,7 @@ import java.util.zip.ZipOutputStream;
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
             objectOutputStream.writeObject(exportSubject);
             out.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             logger.error("Could not write subject and relations to file", e);
             throw new ServiceException("Could not export subject", e);
         }

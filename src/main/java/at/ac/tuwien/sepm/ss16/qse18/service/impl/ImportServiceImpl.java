@@ -190,7 +190,8 @@ import java.util.zip.ZipInputStream;
         }
     }
 
-    private List<Topic> createTopics(Subject subject, List<ExportTopic> topics) throws ServiceException {
+    private List<Topic> createTopics(Subject subject, List<ExportTopic> topics)
+        throws ServiceException {
         logger.debug("Creating topics to " + subject);
         List<Topic> created = new ArrayList<>();
 
