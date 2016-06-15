@@ -27,6 +27,7 @@ import java.util.zip.ZipOutputStream;
     private static final Logger logger = LogManager.getLogger();
 
     private Subject subject;
+    private List<String> questionPaths = new ArrayList<>();
     @Autowired private SubjectService subjectService;
     @Autowired private TopicService topicService;
     @Autowired private QuestionService questionService;
@@ -42,12 +43,31 @@ import java.util.zip.ZipOutputStream;
 
         try {
             zipOutputStream = new ZipOutputStream(new FileOutputStream(outputpath));
+            zipOutputStream.putNextEntry(new ZipEntry("image/"));
+            zipOutputStream.putNextEntry(new ZipEntry("resource/"));
+            zipOutputStream.putNextEntry(new ZipEntry("meta.txt"));
+            zipOutputStream.write(generateMeta().getBytes());
+            zipOutputStream.closeEntry();
             addToZipFile(serializeSubject(), zipOutputStream);
+            System.out.println(questionPaths.size());
+            for(String s: questionPaths){
+                File file = new File("./" + s);
+                if(file.exists()) {
+                    addToZipFile(file.getAbsolutePath(), zipOutputStream);
+                }
+                else {
+                    logger.error("File not found " + s);
+                }
+            }
             success = true;
         } catch(FileNotFoundException e) {
             logger.error("Path is not valid");
             throw new ServiceException("Outputpath is not valid", e);
-        } finally {
+        }
+        catch (IOException e){
+            logger.error("Couldn't create image or resource directory", e);
+            throw new ServiceException("Couldn't create image or resource directory", e);
+        }finally {
             if(zipOutputStream != null) {
                 try {
                     zipOutputStream.close();
@@ -66,35 +86,7 @@ import java.util.zip.ZipOutputStream;
         this.subject = subject;
     }
 
-    private String serializeSubject() throws ServiceException {
-        List<Topic> topics = getTopics();
-        List<ExportTopic> exportTopics = new ArrayList<>();
 
-        for(Topic t : topics) {
-            List<Question> ql = getQuestionsFromTopic(t);
-            List<ExportQuestion> eql = new ArrayList<>();
-            for(Question q : ql) {
-                List<Answer> al = getAnswersFromQuestion(q);
-                Resource r = getResourcesFromQuestion(q);
-                ExportResource er = new ExportResource(r, getNotesFromResource(r));
-                eql.add(new ExportQuestion(q, er, al));
-            }
-            exportTopics.add(new ExportTopic(t, eql));
-        }
-
-        ExportSubject exportSubject = new ExportSubject(this.subject, exportTopics);
-
-        try {
-            FileOutputStream out = new FileOutputStream("ExportSubject.ser");
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
-            objectOutputStream.writeObject(exportSubject);
-            out.close();
-        } catch(IOException e) {
-            logger.error("Could not write subject and relations to file", e);
-            throw new ServiceException("Could not export subject", e);
-        }
-        return "ExportSubject.ser";
-    }
 
     private void addToZipFile(String fileName, ZipOutputStream zipOutputStream)
         throws ServiceException {
@@ -102,26 +94,19 @@ import java.util.zip.ZipOutputStream;
         try {
             FileInputStream fis = new FileInputStream(new File(fileName));
             //ZipEntry zipEntry = new ZipEntry(fileName);
-            zipOutputStream.putNextEntry(new ZipEntry("image/"));
-            zipOutputStream.putNextEntry(new ZipEntry("resource/"));
             zipOutputStream.putNextEntry(new ZipEntry(fileName));
             byte[] bytes = new byte[1024];
             int length;
             while ((length = fis.read(bytes)) >= 0) {
                 zipOutputStream.write(bytes, 0, length);
             }
-
-            zipOutputStream.closeEntry();
-
-            zipOutputStream.putNextEntry(new ZipEntry("meta.txt"));
-            zipOutputStream.write(generateMeta().getBytes());
             zipOutputStream.closeEntry();
             fis.close();
             File file = new File(fileName);
             file.delete();
         } catch (FileNotFoundException e) {
-            logger.error("File " + fileName + "not found", e);
-            throw new ServiceException("File " + fileName + "not found", e);
+            logger.error("File " + fileName + " not found", e);
+            throw new ServiceException("File " + fileName + " not found", e);
         } catch (IOException e) {
             logger.error("Couldn't write " + fileName + "to zip file", e);
             throw new ServiceException("Couldn't write " + fileName + "to zip file", e);
@@ -157,4 +142,42 @@ import java.util.zip.ZipOutputStream;
             throw new ServiceException("Could not get resource of question.", e);
         }
     }
+
+    private String serializeSubject() throws ServiceException {
+        List<Topic> topics = getTopics();
+        List<ExportTopic> exportTopics = new ArrayList<>();
+
+        for(Topic t : topics) {
+            List<Question> ql = getQuestionsFromTopic(t);
+            for(Question q : ql){
+                if(q.getType() == QuestionType.NOTECARD){
+                    questionPaths.add(q.getQuestion());
+                }
+            }
+            List<ExportQuestion> eql = new ArrayList<>();
+            for(Question q : ql) {
+                List<Answer> al = getAnswersFromQuestion(q);
+                Resource r = getResourcesFromQuestion(q);
+                ExportResource er = new ExportResource(r, getNotesFromResource(r));
+                eql.add(new ExportQuestion(q, er, al));
+            }
+            exportTopics.add(new ExportTopic(t, eql));
+        }
+
+        ExportSubject exportSubject = new ExportSubject(this.subject, exportTopics);
+
+        try {
+            FileOutputStream out = new FileOutputStream("ExportSubject.ser");
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(out);
+            objectOutputStream.writeObject(exportSubject);
+            out.close();
+        } catch(IOException e) {
+            logger.error("Could not write subject and relations to file", e);
+            throw new ServiceException("Could not export subject", e);
+        }
+        return "ExportSubject.ser";
+    }
+
+
+
 }
