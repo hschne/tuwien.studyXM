@@ -6,6 +6,9 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,7 +17,7 @@ import java.util.List;
 /**
  * @author Hans-Joerg Schroedl
  */
-@Service public class TopicConflict {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class TopicConflict {
 
     private final Logger logger = LogManager.getLogger();
     private List<QuestionConflict> questionConflicts;

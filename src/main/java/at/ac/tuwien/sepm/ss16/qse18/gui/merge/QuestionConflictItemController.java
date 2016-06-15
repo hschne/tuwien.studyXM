@@ -6,10 +6,12 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestionConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import at.ac.tuwien.sepm.ss16.qse18.service.merge.ConflictResolution;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -27,6 +29,10 @@ public class QuestionConflictItemController extends BaseController {
     @Autowired QuestionService questionService;
     private ObservableQuestionConflict questionConflict;
     @FXML private Node root;
+
+    @FXML private Pane existingPane;
+
+    @FXML private Pane importedPane;
 
     @FXML private Label questionText;
 
@@ -56,8 +62,16 @@ public class QuestionConflictItemController extends BaseController {
         }
     }
 
-    @FXML public void handleSelectExisting(){
+    @FXML public void handleSelectExisting() {
+        questionConflict.getConflict().setResolution(ConflictResolution.EXISTING);
+        existingPane.setStyle("-fx-background-color: #192836");
+        importedPane.setStyle("-fx-background-color: white;");
+    }
 
+    @FXML public void handleSelectImported() {
+        questionConflict.getConflict().setResolution(ConflictResolution.IMPORTED);
+        importedPane.setStyle("-fx-background-color: #192836");
+        existingPane.setStyle("-fx-background-color: white;");
     }
 
     public Node getRoot() {

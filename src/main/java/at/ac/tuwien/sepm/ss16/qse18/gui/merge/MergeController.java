@@ -2,6 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.merge.SubjectConflict;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -30,12 +31,12 @@ import java.util.stream.Collectors;
     private Stage stage;
 
     @FXML public void initialize() {
-//        List<ObservableTopicConflict> observableTopicConflicts =
-//            subjectConflict.getTopicConflicts().stream().map(ObservableTopicConflict::new)
-//                .collect(Collectors.toList());
-//        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
-//        listView.setItems(topicConflictList);
-//        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
+        List<ObservableTopicConflict> observableTopicConflicts =
+            subjectConflict.getTopicConflicts().stream().map(ObservableTopicConflict::new)
+                .collect(Collectors.toList());
+        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
+        listView.setItems(topicConflictList);
+        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
     }
 
     public void setStage(Stage stage) {
@@ -43,7 +44,12 @@ import java.util.stream.Collectors;
     }
 
     @FXML void handleConfirm() {
-
+        try {
+            subjectConflict.resolve();
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
+        }
     }
 
     @FXML void handleCancel() {
