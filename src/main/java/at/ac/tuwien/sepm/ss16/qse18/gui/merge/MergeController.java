@@ -30,12 +30,12 @@ import java.util.stream.Collectors;
     private Stage stage;
 
     @FXML public void initialize() {
-        List<ObservableTopicConflict> observableTopicConflicts =
-            subjectConflict.getTopicConflicts().stream().map(ObservableTopicConflict::new)
-                .collect(Collectors.toList());
-        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
-        listView.setItems(topicConflictList);
-        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
+//        List<ObservableTopicConflict> observableTopicConflicts =
+//            subjectConflict.getTopicConflicts().stream().map(ObservableTopicConflict::new)
+//                .collect(Collectors.toList());
+//        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
+//        listView.setItems(topicConflictList);
+//        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
     }
 
     public void setStage(Stage stage) {

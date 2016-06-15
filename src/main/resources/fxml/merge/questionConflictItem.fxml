@@ -44,7 +44,6 @@
                      </GridPane.margin>
                   </Button>
                   <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEdit" text="Edit" GridPane.columnIndex="1" />
-                  <Button mnemonicParsing="false" onAction="#handleShowMergeWindow" text="Show Merge Thing" GridPane.columnIndex="2" />
                </children>
             </GridPane>
             <GridPane prefHeight="76.0" prefWidth="1018.0">

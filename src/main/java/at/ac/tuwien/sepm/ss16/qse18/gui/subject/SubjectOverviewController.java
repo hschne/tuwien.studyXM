@@ -2,15 +2,20 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.subject;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.merge.MergeController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.SubjectNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
+import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -81,6 +86,23 @@ import java.util.stream.Collectors;
             logger.error(e);
             showError(e);
         }
+    }
+
+    @FXML public void handleShowMergeWindow() throws IOException {
+        logger.info("Starting Application");
+        Stage stage = new Stage();
+        stage.setTitle("Study XM");
+        SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
+        SpringFXMLLoader.FXMLWrapper<Object, MergeController> mfWrapper =
+            springFXMLLoader.loadAndWrap("/fxml/merge/mergeOverview.fxml", MergeController.class);
+        MergeController controller = mfWrapper.getController();
+        Scene scene = new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
+        String css = this.getClass().getResource("/style.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.setScene(scene);
+        controller.setStage(stage);
+
+        stage.show();
     }
 
     /**
