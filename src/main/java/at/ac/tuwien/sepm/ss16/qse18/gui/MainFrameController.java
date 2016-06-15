@@ -67,6 +67,16 @@ import java.util.List;
         }
     }
 
+    @FXML public void handleShowDetail(){
+        logger.debug("Loading details");
+        try{
+            setSubView("/fxml/exam/postExerciseExamOverview.fxml", PostExerciseExamOverviewController.class, paneContent);
+
+        }catch (IOException e){
+            handleException(e);
+        }
+    }
+
     @FXML public void handleResources() {
         logger.debug("Loading resource view");
         handleChooseResource(null, null, null);

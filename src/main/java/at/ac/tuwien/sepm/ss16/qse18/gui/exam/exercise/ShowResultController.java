@@ -23,15 +23,19 @@ import java.util.Map;
  */
 @Component public class ShowResultController extends BaseController{
     @Autowired private ExerciseExamServiceImpl exerciseExamService;
-    @FXML public PieChart pieChart;
-    @FXML public BarChart barChart;
+    @Autowired PostExerciseExamOverviewController postExerciseExamOverviewController;
+    @FXML private PieChart pieChart;
+    @FXML private BarChart barChart;
 
-    @FXML public Button buttonFinish;
+    @FXML private Button buttonFinish;
+    @FXML private Button showDetailsButton;
 
-    @FXML public Label labelGrade;
+    @FXML private Label labelGrade;
 
-    @FXML public CategoryAxis xAxis = new CategoryAxis();
-    @FXML public NumberAxis yAxis = new NumberAxis();
+    @FXML private CategoryAxis xAxis = new CategoryAxis();
+    @FXML private NumberAxis yAxis = new NumberAxis();
+
+    private ExerciseExam exerciseExam;
 
 
 
@@ -39,6 +43,7 @@ import java.util.Map;
 
     @FXML public void initialize(ExerciseExam exerciseExam){
         logger.debug("entering initialize with parameters {}", exerciseExam);
+        this.exerciseExam = exerciseExam;
         pieChart.getData().clear();
         pieChartData.clear();
 
@@ -89,6 +94,12 @@ import java.util.Map;
             logger.error("Service Exception initialize {}", exerciseExam, e);
             showError(e);
         }
+    }
+
+    public void showDetail(){
+        logger.debug("entering showDetail()");
+        mainFrameController.handleShowDetail();
+        postExerciseExamOverviewController.initialize(exerciseExam);
     }
 
     public void finish(){

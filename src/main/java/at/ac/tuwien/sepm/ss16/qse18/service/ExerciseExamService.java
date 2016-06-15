@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
@@ -93,4 +94,15 @@ public interface ExerciseExamService {
 
     void update(int examid, long examTime) throws ServiceException;
 
+    /**
+     * getQuestionBooleansOfExam
+     * The question ID's and the Boolean whether a question has been answered correctly are retrieved
+     * for the given examID from the database and saved in a Map
+     * @param examID primary key of the exam the questions belong to
+     * @param questionList List of Questions of which the Booleans should be retrieved
+     * @return returns a Hashmap that contains the question ID's and the Booleans
+     * @throws ServiceException
+     *
+     * */
+    Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Question> questionList) throws ServiceException;
 }

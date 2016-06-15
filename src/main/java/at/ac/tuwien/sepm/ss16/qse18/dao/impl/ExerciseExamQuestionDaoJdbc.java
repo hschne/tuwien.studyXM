@@ -97,7 +97,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
     @Override public Map<Integer, Boolean> getAllQuestionBooleans(List<Integer> questionList)
         throws DaoException{
-        logger.debug("entering method getALlQuestionBooleans with parameters {}");
+        logger.debug("entering method getAllQuestionBooleans with parameters {}", questionList);
         Map<Integer, Boolean> questionBoolean = new HashMap<>();
 
         PreparedStatement pstmt = null;
@@ -124,7 +124,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
 
         } catch(SQLException e) {
             logger.error("SQL Exception in getAllQuestionBooleans", e);
-            throw new DaoException("Could not get List with all Question Booleans for Questions");
+            throw new DaoException("Could not get Map with all Question Booleans for Questions");
         } finally {
             closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
         }
@@ -274,5 +274,48 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
         }
         return questions;
 
+    }
+
+    @Override
+    public Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Question> questionList)
+        throws DaoException{
+        logger.debug("entering method getQuestionBooleansOfExam with parameters {}", questionList);
+        Map<Integer, Boolean> questionBoolean = new HashMap<>();
+
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+
+        if(examID <= 0){
+            logger.error("Dao Exception in getQuestionBooleansOfExam with parameters", examID);
+            throw new DaoException(INVALID_INPUT);
+        }
+
+        try{
+            for(Question e: questionList) {
+                if(e.getQuestionId() <= 0){
+                    logger.error("Invalid question ID");
+                    throw new DaoException(INVALID_INPUT);
+                }
+                pstmt = this.database.getConnection()
+                    .prepareStatement("SELECT * FROM REL_EXAM_QUESTION WHERE EXAMID = ? and "
+                        + "QUESTIONID = ? AND ALREADY_ANSWERED = ?");
+
+                pstmt.setInt(1, examID);
+                pstmt.setInt(2, e.getQuestionId());
+                pstmt.setBoolean(3, true);
+                rs = pstmt.executeQuery();
+
+                if(rs.next()) {
+                    questionBoolean.put(rs.getInt("questionid"), rs.getBoolean("question_passed"));
+                }
+            }
+
+        } catch(SQLException e) {
+            logger.error("SQL Exception in getQuestionBooleansOfExam", e);
+            throw new DaoException("Could not get Map with all Question Booleans for Exam");
+        } finally {
+            closeStatementsAndResultSets(new Statement[]{pstmt}, new ResultSet[]{rs});
+        }
+        return questionBoolean;
     }
 }
