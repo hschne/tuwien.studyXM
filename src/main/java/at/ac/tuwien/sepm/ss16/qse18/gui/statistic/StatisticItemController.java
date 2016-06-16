@@ -113,7 +113,7 @@ public class StatisticItemController extends
         if (spent - estimated <= 0) {
             achievement3.setImage(new Image("/icons/actime.png"));
         }
-        //achievement2.setImage(new Image("/icons/acknow.png"));
+        achievement2.setImage(new Image("/icons/acknow.png"));
     }
 
 
