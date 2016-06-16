@@ -16,9 +16,10 @@ public interface StatisticService {
      *
      * @param topic topic for which the correct questions are counted.
      * @return the amount of correct answered questions from this topic.
-     * return[0] = correct/false ratio
-     * return[1] = correct answered questions
-     * return[2] = number of questions in the topic
+     * [0] = correct/false ratio
+     * [1] = correct answered questions
+     * [2] = number of questions in the topic
+     * @throws ServiceException
      */
     double[] getCorrectQuestionsForTopic(Topic topic) throws ServiceException;
 
@@ -27,6 +28,20 @@ public interface StatisticService {
      *
      * @param subject subject for which the average grade will calculated.
      * @return the average grade for this subject [1.0d,5.0d]
+     * @throws ServiceException
      */
     double[] gradeAllExamsForSubject(Subject subject) throws ServiceException;
+
+    /**
+     * Generates basic hints for every subject in the database.
+     * @throws ServiceException
+     */
+    void initializeHints() throws ServiceException;
+
+    /**
+     * Retuns the hint for a given subject.
+     * @param subject the subject
+     * @return the hint for this subject
+     */
+    String getHint(Subject subject);
 }

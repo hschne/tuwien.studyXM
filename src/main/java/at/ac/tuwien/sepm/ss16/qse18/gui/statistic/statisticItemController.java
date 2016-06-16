@@ -6,7 +6,6 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.StatisticService;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectTopicQuestionService;
-import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -52,6 +51,7 @@ public class StatisticItemController extends
     private Label labelHint;
     @FXML
     private Label labelMoreTime;
+
     @FXML
     private ImageView achievement1;
     @FXML
@@ -87,35 +87,35 @@ public class StatisticItemController extends
     }
 
     public void loadFields() throws ServiceException {
-        labelName.setText(subject.getName() + " (" + subject.getSemester() + ")");
 
+        statisticService.initializeHints();
         double[] result = statisticService.gradeAllExamsForSubject(subject.getSubject());
-        labelAvgExamResult.setText("average exercise exam result | "
-                + (result[0] == -1 ? "?" : result[0])
-                + " (" + (int) result[1]
-                + ((int) result[1] == 1 ? " exam)" : " exams)"));
+        int estimated = (int) (subject.getEcts() * 25);
+        int spent = subject.getTimeSpent() / 60;
+
+        labelName.setText(subject.getName() + " (" + subject.getSemester() + ")");
+        labelAvgExamResult.setText("average exercise exam result | " +
+                (result[0] == -1 ? "?" : result[0]) +
+                " (" + (int) result[1] +
+                ((int) result[1] == 1 ? " exam)" : " exams)"));
+
+        labelEctsTime.setText(estimated + " hours estimated (" +
+                String.valueOf(subject.getEcts()).substring(0, 3) + " ECTS)");
+        labelTimeSpent.setText(spent + " hours spent");
+        labelMoreTime.setText(Math.abs(estimated - spent) +
+                " hours " + (spent - estimated <= 0 ? "less" : "more") + " than expected");
+
+        labelHint.setText(statisticService.getHint(subject.getSubject()));
 
         if (result[0] < 2.0 && result[0] != -1) {
             achievement1.setImage(new Image("/icons/acbrain.png"));
         }
-
-        int estimated = (int) (subject.getEcts() * 25);
-        labelEctsTime.setText(estimated + " hours estimated (" +
-                String.valueOf(subject.getEcts()).substring(0, 3) + " ECTS)");
-        labelTimeSpent.setText(subject.getTimeSpent() + " hours spent");
-
-        String moreLess = estimated - subject.getTimeSpent() <= 0 ? "more" : "less";
-        if (moreLess.equals("less")) {
+        if (spent - estimated <= 0) {
             achievement3.setImage(new Image("/icons/actime.png"));
         }
-        labelMoreTime.setText(Math.abs(estimated - subject.getTimeSpent()) +
-                " hours " + moreLess + " than expected");
-        
-        //TODO: generate hint based on performance. set last achievement when all questions are
-        // answered correctly
-        labelHint.setText("Hint - study a lot! ;)");
-        achievement2.setImage(new Image("/icons/acknow.png"));
+        //achievement2.setImage(new Image("/icons/acknow.png"));
     }
+
 
     public void setSubject(ObservableSubject subject) {
         this.subject = subject;

@@ -3,8 +3,12 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.statistic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ListCell;
+import javafx.stage.Modality;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +23,19 @@ import java.io.IOException;
  *
  * @author Julian Strohmayer
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) class StatisticCell
+@Component
+@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+class StatisticCell
         extends ListCell<ObservableSubject> {
 
-    @Autowired SpringFXMLLoader springFXMLLoader;
+    @Autowired
+    SpringFXMLLoader springFXMLLoader;
 
     private static final Logger logger = LogManager.getLogger();
+    private AlertBuilder alertBuilder;
 
-    @Override public void updateItem(ObservableSubject subject, boolean empty) {
+    @Override
+    public void updateItem(ObservableSubject subject, boolean empty) {
         super.updateItem(subject, empty);
         if (subject != null) {
             StatisticItemController itemController = getController();
@@ -41,7 +50,7 @@ import java.io.IOException;
             itemController.loadFields();
         } catch (ServiceException e) {
             logger.error(e);
-            //TODO: Errorhandling
+            showAlert("Error", "Unable to initialize fields", e.getMessage());
         }
         setGraphic(itemController.getRoot());
     }
@@ -56,5 +65,13 @@ import java.io.IOException;
             logger.error(e);
             throw new FxmlLoadException("Error loading subject item", e);
         }
+    }
+
+    private void showAlert(String title, String headerMsg, String contentMsg) {
+        Alert alert =
+                alertBuilder.alertType(Alert.AlertType.INFORMATION).title(title).headerText(headerMsg)
+                        .modality(Modality.APPLICATION_MODAL).contentText(contentMsg).setResizable(true)
+                        .build();
+        alert.showAndWait();
     }
 }
