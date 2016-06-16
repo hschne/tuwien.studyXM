@@ -35,39 +35,53 @@
 
                         <GridPane prefHeight="409.0" prefWidth="835.0" GridPane.halignment="CENTER">
                             <columnConstraints>
-                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="566.0" minWidth="10.0" prefWidth="250.0" />
-                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="566.0" minWidth="10.0" prefWidth="193.0" />
-                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="837.0" minWidth="10.0" prefWidth="479.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="566.0" minWidth="10.0" prefWidth="41.0" />
+                                <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="566.0" minWidth="10.0" prefWidth="129.0" />
+                                <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="837.0" minWidth="10.0" prefWidth="249.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="837.0" minWidth="10.0" prefWidth="163.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="837.0" minWidth="10.0" prefWidth="246.0" />
+                        <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="837.0" minWidth="10.0" prefWidth="94.0" />
                             </columnConstraints>
                             <rowConstraints>
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="179.0" minHeight="10.0" prefHeight="97.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="192.0" minHeight="10.0" prefHeight="15.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="224.0" minHeight="10.0" prefHeight="39.0" valignment="CENTER" vgrow="SOMETIMES" />
+                                <RowConstraints maxHeight="258.0" minHeight="10.0" prefHeight="217.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="258.0" minHeight="10.0" prefHeight="69.0" vgrow="SOMETIMES" />
                             </rowConstraints>
                             <children>
-                                <Label text="Author" GridPane.columnIndex="1" />
-                                <Label text="Topics" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                <TextField fx:id="fieldAuthor" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="Enter author name here" GridPane.columnIndex="2">
+                                <Label text="Author" GridPane.columnIndex="1" GridPane.halignment="RIGHT">
+                           <GridPane.margin>
+                              <Insets right="20.0" />
+                           </GridPane.margin></Label>
+                                <Label text="Topics" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+                           <GridPane.margin>
+                              <Insets right="20.0" />
+                           </GridPane.margin></Label>
+                                <TextField fx:id="fieldAuthor" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="enter author name here" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                                     <GridPane.margin>
-                                        <Insets right="20.0" />
+                                        <Insets />
                                     </GridPane.margin></TextField>
-                                <Label text="Select time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <TextField fx:id="fieldTime" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="Enter time here" GridPane.columnIndex="2" GridPane.rowIndex="1" />
-                        <ListView fx:id="topicListView" maxWidth="-Infinity" prefHeight="145.0" prefWidth="129.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                        <Button mnemonicParsing="false" onAction="#addAll" prefHeight="22.0" prefWidth="85.0" text="add All" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                                <Label text="Select time" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                            <GridPane.margin>
-                              <Insets bottom="20.0" right="60.0" />
+                              <Insets right="20.0" />
+                           </GridPane.margin></Label>
+                        <TextField fx:id="fieldTime" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="enter time here" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+                        <ListView fx:id="topicListView" maxWidth="-Infinity" prefHeight="168.0" prefWidth="250.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                        <Button mnemonicParsing="false" onAction="#addAll" prefHeight="22.0" prefWidth="250.0" text="add all topics" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
+                           <GridPane.margin>
+                              <Insets />
                            </GridPane.margin>
                         </Button>
-                        <Button layoutX="451.0" layoutY="356.0" mnemonicParsing="false" onAction="#addTopic" prefHeight="22.0" prefWidth="85.0" text="add Topic" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                        <Button layoutX="451.0" layoutY="356.0" mnemonicParsing="false" onAction="#addTopic" prefHeight="25.0" prefWidth="100.0" text="add topic =&gt;" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER">
                            <GridPane.margin>
-                              <Insets right="60.0" top="20.0" />
+                              <Insets />
                            </GridPane.margin>
                         </Button>
-                        <ListView fx:id="addedTopicListView" layoutX="451.0" layoutY="300.0" maxWidth="-Infinity" prefHeight="145.0" prefWidth="129.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                        <Button layoutX="785.0" layoutY="330.0" mnemonicParsing="false" onAction="#delete" prefHeight="22.0" prefWidth="85.0" text="delete" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <ListView fx:id="addedTopicListView" layoutX="451.0" layoutY="300.0" maxWidth="-Infinity" prefHeight="145.0" prefWidth="250.0" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="CENTER" />
+                        <Button layoutX="785.0" layoutY="330.0" mnemonicParsing="false" onAction="#delete" prefHeight="22.0" prefWidth="200250.0" text="remove selected topic" GridPane.columnIndex="4" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="TOP">
                            <GridPane.margin>
-                              <Insets right="60.0" />
+                              <Insets />
                            </GridPane.margin>
                         </Button>
                             </children>
@@ -78,8 +92,8 @@
 
                         <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0" GridPane.rowIndex="1">
                             <children>
-                                <Button layoutX="420.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="33.0" prefWidth="95.0" text="Ok" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0" />
-                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" prefWidth="89.0" text="Cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="10.0" />
+                                <Button layoutX="420.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleCreate" prefWidth="80.0" text="ok" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0" />
+                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefWidth="80.0" text="cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="10.0" />
                             </children>
                         </AnchorPane>
                     </children>

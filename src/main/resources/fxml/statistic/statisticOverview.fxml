@@ -18,11 +18,11 @@
           <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="546.0" minHeight="72.0" prefHeight="78.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="626.0" minHeight="10.0" prefHeight="462.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="546.0" minHeight="52.0" prefHeight="52.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="626.0" minHeight="10.0" prefHeight="538.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <ListView fx:id="subjectListView" prefHeight="452.0" prefWidth="1008.0" styleClass="custom-list-view" GridPane.rowIndex="1">
+            <ListView fx:id="subjectListView" prefHeight="486.0" prefWidth="1008.0" styleClass="custom-list-view" GridPane.rowIndex="1">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin></ListView>
