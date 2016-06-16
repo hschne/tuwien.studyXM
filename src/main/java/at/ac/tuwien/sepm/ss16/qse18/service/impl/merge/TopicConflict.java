@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
@@ -9,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -70,5 +68,10 @@ import java.util.List;
 
     public ExportTopic getImportedTopic() {
         return importedTopic;
+    }
+
+
+    public Topic getExistingTopic() {
+        return existingTopic;
     }
 }

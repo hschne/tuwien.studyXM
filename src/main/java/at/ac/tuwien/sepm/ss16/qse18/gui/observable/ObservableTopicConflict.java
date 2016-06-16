@@ -12,12 +12,15 @@ public class ObservableTopicConflict {
 
     private TopicConflict topicConflict;
 
-    public ObservableTopicConflict(TopicConflict topicConflict){
-
+    public ObservableTopicConflict(TopicConflict topicConflict) {
         this.topicConflict = topicConflict;
     }
 
-    public List<QuestionConflict> getTopicConflicts() {
+    public List<QuestionConflict> getQuestionConflicts() {
         return topicConflict.getQuestionConflicts();
+    }
+
+    public String getTopicName() {
+        return topicConflict.getExistingTopic().getTopic();
     }
 }

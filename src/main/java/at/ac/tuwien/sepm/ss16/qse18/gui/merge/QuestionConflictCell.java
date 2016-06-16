@@ -31,15 +31,19 @@ import java.util.Map;
     @Override public void updateItem(ObservableQuestionConflict question, boolean empty) {
         super.updateItem(question, empty);
         if (question != null) {
-            if(!existingControllers.containsKey(question)){
-                QuestionConflictItemController itemController = getController();
-                setControllerProperties(question, itemController);
-                existingControllers.put(question, itemController);
-            }
-            else{
-                QuestionConflictItemController itemController = existingControllers.get(question);
-                setGraphic(itemController.getRoot());
-            }
+            createOrLoadController(question);
+        }
+    }
+
+    private void createOrLoadController(ObservableQuestionConflict question) {
+        if(!existingControllers.containsKey(question)){
+            QuestionConflictItemController itemController = getController();
+            setControllerProperties(question, itemController);
+            existingControllers.put(question, itemController);
+        }
+        else{
+            QuestionConflictItemController itemController = existingControllers.get(question);
+            setGraphic(itemController.getRoot());
         }
     }
 
