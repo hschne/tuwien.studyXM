@@ -114,7 +114,7 @@ abstract class NewExerciseExamBase extends BaseController {
 
             exerciseExamService.createExam(exerciseExam, this.topicList, examTime);
 
-        }catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             logger.error("Could not create exerciseExam: ", e);
             showError("Could not parse exerciseExam time. " +
                 "Make sure it only contains numbers and is lower than " + Integer.MAX_VALUE + ".");

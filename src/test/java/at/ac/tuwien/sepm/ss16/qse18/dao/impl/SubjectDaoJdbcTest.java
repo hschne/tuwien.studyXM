@@ -16,7 +16,7 @@ import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import java.sql.*;
+import java.sql.SQLException;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -35,7 +35,7 @@ import static org.mockito.Mockito.*;
     private SubjectDaoJdbc sdao;
     @Mock private SubjectTopicDaoJdbc mockSubjectTopicDaoJdbc;
     @Mock private TopicDaoJdbc mockTopicDaoJdbc;
-    @Mock private ExerciseExamDaoJdbc exerciseExamDaoJdbc;
+    @Mock private ExamDaoJdbc examDaoMock;
 
 
     @Before public void setUp() throws Exception {
@@ -44,7 +44,7 @@ import static org.mockito.Mockito.*;
         sdao = new SubjectDaoJdbc(mockConnectionH2);
         sdao.setSubjectTopicDaoJdbc(mockSubjectTopicDaoJdbc);
         sdao.setTopicDaoJdbc(mockTopicDaoJdbc);
-        sdao.setExerciseExamDaoJdbc(exerciseExamDaoJdbc);
+        sdao.setExamDaoJdbc(examDaoMock);
     }
 
     // Testing getSubject(int) method

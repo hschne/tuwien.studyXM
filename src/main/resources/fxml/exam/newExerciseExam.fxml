@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -27,8 +29,8 @@
                         <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="468.0" minHeight="10.0" prefHeight="401.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="240.0" minHeight="10.0" prefHeight="92.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="468.0" minHeight="10.0" prefHeight="426.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="240.0" minHeight="10.0" prefHeight="67.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
 
@@ -51,23 +53,23 @@
                                     <GridPane.margin>
                                         <Insets right="20.0" />
                                     </GridPane.margin></TextField>
-                                <Label text="Select time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                <Label text="Exam time" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField fx:id="fieldTime" maxWidth="-Infinity" minWidth="-Infinity" prefColumnCount="0" prefHeight="25.0" prefWidth="250.0" promptText="Enter time here" GridPane.columnIndex="2" GridPane.rowIndex="1" />
                         <ListView fx:id="topicListView" maxWidth="-Infinity" prefHeight="145.0" prefWidth="129.0" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                        <Button fx:id="buttonAddAll" mnemonicParsing="false" onAction="#addAll" prefHeight="22.0" prefWidth="85.0" text="add All" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
+                        <Button fx:id="buttonAddAll" mnemonicParsing="false" onAction="#addAll" prefHeight="22.0" prefWidth="100.0" text="add All" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                            <GridPane.margin>
-                              <Insets bottom="20.0" right="60.0" />
+                              <Insets bottom="20.0" right="40.0" />
                            </GridPane.margin>
                         </Button>
-                        <Button fx:id="buttonAddTopic" layoutX="451.0" layoutY="356.0" mnemonicParsing="false" onAction="#addTopic" prefHeight="22.0" prefWidth="85.0" text="add Topic" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                        <Button fx:id="buttonAddTopic" layoutX="451.0" layoutY="356.0" mnemonicParsing="false" onAction="#addTopic" prefHeight="22.0" prefWidth="100.0" text="add Topic" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                            <GridPane.margin>
-                              <Insets right="60.0" top="20.0" />
+                              <Insets right="40.0" top="20.0" />
                            </GridPane.margin>
                         </Button>
                         <ListView fx:id="addedTopicListView" layoutX="451.0" layoutY="300.0" maxWidth="-Infinity" prefHeight="145.0" prefWidth="129.0" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-                        <Button fx:id="buttonDelete" layoutX="785.0" layoutY="330.0" mnemonicParsing="false" onAction="#delete" prefHeight="22.0" prefWidth="85.0" text="delete Topic" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+                        <Button fx:id="buttonDelete" layoutX="785.0" layoutY="330.0" mnemonicParsing="false" onAction="#delete" prefHeight="22.0" prefWidth="100.0" text="remove Topic" GridPane.columnIndex="2" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                            <GridPane.margin>
-                              <Insets right="60.0" />
+                              <Insets right="40.0" />
                            </GridPane.margin>
                         </Button>
                             </children>
@@ -78,10 +80,13 @@
 
                         <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0" GridPane.rowIndex="1">
                             <children>
-                                <Button layoutX="420.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="33.0" prefWidth="150.0" text="Create" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="40.0" />
-                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" prefWidth="150.0" text="Cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="40.0" />
-                        <Button layoutX="471.0" layoutY="40.0" mnemonicParsing="false" onAction="#handleCreateAndStart" prefHeight="33.0" prefWidth="150.0" text="Create and start" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="390.0" AnchorPane.topAnchor="40.0" />
-                        <Button layoutX="644.0" layoutY="42.0" mnemonicParsing="false" onAction="#handleCreateAndContinue" prefHeight="33.0" prefWidth="150.0" text="Create and continue" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="210.0" AnchorPane.topAnchor="40.0" />
+                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" prefWidth="150.0" text="cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="20.0" />
+                        <SplitMenuButton fx:id="createButton" layoutX="856.0" layoutY="21.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="33.0" prefWidth="150.0" text="create" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+                          <items>
+                            <MenuItem mnemonicParsing="false" onAction="#handleCreateAndContinue" text="create and continue" />
+                              <MenuItem mnemonicParsing="false" onAction="#handleCreateAndStart" text="create and start" />
+                          </items>
+                        </SplitMenuButton>
                             </children>
                         </AnchorPane>
                     </children>
