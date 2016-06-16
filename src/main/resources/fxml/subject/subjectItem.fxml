@@ -37,7 +37,7 @@
             </Button>
             <HBox spacing="10.0">
                <children>
-                  <Button fx:id="addTopicButton" mnemonicParsing="false" text="Add Topic">
+                  <Button fx:id="addTopicButton" mnemonicParsing="false" prefHeight="25.0" prefWidth="80.0" text="Add Topic">
                      <HBox.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                      </HBox.margin>

@@ -14,7 +14,7 @@ import java.io.Serializable;
  *
  * */
 public class Question implements Serializable {
-    private int questionId;
+    private transient int questionId;
     private String questionString;
     private QuestionType type;
     private long questionTime;

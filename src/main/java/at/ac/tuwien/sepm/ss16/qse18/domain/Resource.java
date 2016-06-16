@@ -1,13 +1,15 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+import java.io.Serializable;
+
 /**
  * Class Resource
  * represents the entity resource
  *
  * @author Felix Almer on 10.05.2016.
  */
-public class Resource {
-    private int resourceId;
+public class Resource implements Serializable {
+    private transient int resourceId;
     private ResourceType type;
     private String name;
     private String reference;

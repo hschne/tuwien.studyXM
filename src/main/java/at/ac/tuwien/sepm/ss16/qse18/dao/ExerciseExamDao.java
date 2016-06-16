@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
@@ -77,4 +78,5 @@ public interface ExerciseExamDao {
     List<ExerciseExam> getAllExamsOfSubject(Subject subject) throws DaoException;
 
 
+    List<ExerciseExam> getExerciseExamsFrom(Exam exam) throws DaoException;
 }
