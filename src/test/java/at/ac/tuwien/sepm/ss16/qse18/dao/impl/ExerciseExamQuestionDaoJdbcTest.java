@@ -210,14 +210,12 @@ public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
     //----------------------------------------------------------------------------------------------
     @Test public void test_geQuestionBooleansOfExamWith3ElementsInDatabase_should_persist()
         throws Exception {
-        List<Question> questionList = new ArrayList<>();
+        List<Integer> questionList = new ArrayList<>();
         Map<Integer, Boolean> questionBooleans = new HashMap<>();
-        Question q1 = new Question(1, "question1", QuestionType.valueOf(1), 1);
-        Question q2 = new Question(1, "question2", QuestionType.valueOf(2), 4);
-        Question q3 = new Question(1, "question3", QuestionType.valueOf(3), 6);
-        questionList.add(q1);
-        questionList.add(q2);
-        questionList.add(q3);
+
+        questionList.add(1);
+        questionList.add(2);
+        questionList.add(3);
 
         when(this.mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(2).thenReturn(3);
@@ -238,23 +236,23 @@ public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
 
     @Test(expected = DaoException.class)
     public void test_getQuestionBooleansOfExamWithInvalidExamID_should_fail() throws Exception{
-        List<Question> questionList = new ArrayList<>();
-        questionList.add(new Question(1, "question1", QuestionType.valueOf(1), 2));
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(1);
         this.examQuestionDaoJdbc.getQuestionBooleansOfExam(0, questionList);
     }
 
     @Test(expected = DaoException.class)
     public void test_getQuestionBooleansOfExamWithInvalidQuestionID_should_fail() throws Exception{
-        List<Question> questionList = new ArrayList<>();
-        questionList.add(new Question(-1, "question1", QuestionType.valueOf(1), 2));
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(-1);
         this.examQuestionDaoJdbc.getQuestionBooleansOfExam(this.testExerciseExam.getExamid(), questionList);
     }
 
     @Test(expected = DaoException.class)
     public void test_getQuestionBooleansOfExamWithoutDatabaseConnection_should_fail()
         throws Exception {
-        List<Question> questionList = new ArrayList<>();
-        questionList.add(new Question(1, "question1", QuestionType.valueOf(1), 1));
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(1);
         when(this.mockConnectionH2.getConnection()).thenThrow(SQLException.class);
         this.examQuestionDaoJdbc.getQuestionBooleansOfExam(this.testExerciseExam.getExamid(), questionList);
         PowerMockito.verifyStatic();

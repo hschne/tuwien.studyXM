@@ -486,7 +486,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     @Override
-    public Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Question> questionList)
+    public Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Integer> questionList)
         throws ServiceException{
         logger.debug("entering getQuestionBooleansOfExam with parameters {}", examID, questionList);
 

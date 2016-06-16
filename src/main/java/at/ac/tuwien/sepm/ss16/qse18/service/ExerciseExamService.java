@@ -104,5 +104,5 @@ public interface ExerciseExamService {
      * @throws ServiceException
      *
      * */
-    Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Question> questionList) throws ServiceException;
+    Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Integer> questionList) throws ServiceException;
 }

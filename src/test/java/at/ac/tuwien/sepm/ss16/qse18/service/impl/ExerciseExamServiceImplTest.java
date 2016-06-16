@@ -679,10 +679,10 @@ import static org.mockito.Mockito.*;
     //Testing getQuestionBooleansOfExam(int, List<Question>)
     //----------------------------------------------------------------------------------------------
     @Test public void test_getQuestionBooleansOfExamCallsRightMethodInDAO_should_persist() throws Exception{
-        List<Question> questionList = new ArrayList<>();
+        List<Integer> questionList = new ArrayList<>();
         Map<Integer, Boolean> questionBooleans = new HashMap<>();
         questionBooleans.put(1, false);
-        questionList.add(new Question(1, "question1", QuestionType.valueOf(1), 2));
+        questionList.add(1);
 
         when(this.mockExerciseExamQuestionDaoJdbc.getQuestionBooleansOfExam(this.exerciseExam.getExamid(),
             questionList)).thenReturn(questionBooleans);
@@ -693,8 +693,8 @@ import static org.mockito.Mockito.*;
 
     @Test (expected = ServiceException.class)
     public void test_getQuestionBooleansOfExamWithInvalidExamID_should_fail() throws Exception{
-        List<Question> questionList = new ArrayList<>();
-        questionList.add(new Question(1, "question1", QuestionType.valueOf(1), 2));
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(1);
         this.exerciseExamService.getQuestionBooleansOfExam(0, questionList);
 
     }

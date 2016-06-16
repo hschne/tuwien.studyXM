@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExerciseExamServiceImpl;
 import javafx.collections.FXCollections;
@@ -23,6 +24,7 @@ import java.util.Map;
  */
 @Component public class ShowResultController extends BaseController{
     @Autowired private ExerciseExamServiceImpl exerciseExamService;
+    @Autowired private QuestionService questionService;
     @Autowired PostExerciseExamOverviewController postExerciseExamOverviewController;
     @FXML private PieChart pieChart;
     @FXML private BarChart barChart;
@@ -99,12 +101,28 @@ import java.util.Map;
     public void showDetail(){
         logger.debug("entering showDetail()");
         mainFrameController.handleShowDetail();
-        postExerciseExamOverviewController.initialize(exerciseExam);
+        if(this.exerciseExam.getExamQuestions().size() == 0) {
+            setExamQuestions();
+        }
+
+        postExerciseExamOverviewController.initialize(this.exerciseExam);
+
     }
 
     public void finish(){
         logger.debug("entering finish()");
         mainFrameController.handleHome();
+    }
+
+    private void setExamQuestions(){
+        try {
+            for (int i : exerciseExamService.getAllQuestionsOfExam(this.exerciseExam.getExamid())) {
+                this.exerciseExam.getExamQuestions().add(questionService.getQuestion(i));
+            }
+        }catch (ServiceException e){
+            logger.error("Service Exception setExamQuestions()", e);
+            showError(e.getMessage());
+        }
     }
 
 }

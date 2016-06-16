@@ -277,7 +277,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
     }
 
     @Override
-    public Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Question> questionList)
+    public Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Integer> questionList)
         throws DaoException{
         logger.debug("entering method getQuestionBooleansOfExam with parameters {}", questionList);
         Map<Integer, Boolean> questionBoolean = new HashMap<>();
@@ -291,8 +291,8 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
         }
 
         try{
-            for(Question e: questionList) {
-                if(e.getQuestionId() <= 0){
+            for(Integer e: questionList) {
+                if(e <= 0){
                     logger.error("Invalid question ID");
                     throw new DaoException(INVALID_INPUT);
                 }
@@ -301,7 +301,7 @@ public class ExerciseExamQuestionDaoJdbc implements ExerciseExamQuestionDao {
                         + "QUESTIONID = ? AND ALREADY_ANSWERED = ?");
 
                 pstmt.setInt(1, examID);
-                pstmt.setInt(2, e.getQuestionId());
+                pstmt.setInt(2, e);
                 pstmt.setBoolean(3, true);
                 rs = pstmt.executeQuery();
 

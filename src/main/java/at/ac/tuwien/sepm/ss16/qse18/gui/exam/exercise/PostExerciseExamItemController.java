@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableAnswer;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestion;
+import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.beans.InvalidationListener;
@@ -20,12 +21,17 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +39,7 @@ import java.util.stream.Collectors;
  */
 @Component public class PostExerciseExamItemController extends BaseController{
     @FXML private Node root;
-    @FXML protected ListView<ObservableAnswer> answerListView;
+    @FXML protected ListView<String> answerListView;
     @FXML protected Label questionLabel;
     @FXML protected ImageView questionImageView;
     @FXML protected Button showResourceButton;
@@ -41,19 +47,18 @@ import java.util.stream.Collectors;
     @Autowired private QuestionService questionService;
 
     private ObservableQuestion question;
-    private ObservableList<ObservableAnswer> answerList;
+    private ObservableList<String> answerList;
 
-    private ScrollPane scrollPane = new ScrollPane();
-    final DoubleProperty zoomProperty = new SimpleDoubleProperty(200);
 
     @FXML public void initialize(ObservableQuestion question){
         try {
             this.question = question;
+
             List<ObservableAnswer> observableAnswers = questionService.
                 getCorrespondingAnswers(question.getQuestionInstance()).
                 stream().map(ObservableAnswer::new).collect(Collectors.toList());
 
-            answerList = FXCollections.observableList(observableAnswers);
+            answerList = FXCollections.observableList(fillWithAnswerName(observableAnswers));
             answerListView.setItems(answerList);
 
 
@@ -69,15 +74,6 @@ import java.util.stream.Collectors;
 
         if(question.getType() == 4) {
             questionLabel.setVisible(false);
-
-            zoomProperty.addListener(new InvalidationListener() {
-                @Override
-                public void invalidated(Observable arg0) {
-                    questionImageView.setFitWidth(zoomProperty.get() * 4);
-                    questionImageView.setFitHeight(zoomProperty.get() * 3);
-                }
-            });
-
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialDirectory(new File(question.getQuestion()));
             questionImageView.setImage(new Image(fileChooser.getInitialDirectory().toURI().toString()));
@@ -87,6 +83,14 @@ import java.util.stream.Collectors;
 
     public Node getRoot() {
         return root;
+    }
+
+    private List<String> fillWithAnswerName(List<ObservableAnswer> observableAnswers){
+        List <String> answers = new ArrayList<>();
+        for(ObservableAnswer a: observableAnswers){
+            answers.add(a.getAnswer());
+        }
+        return answers;
     }
 
 }
