@@ -1,8 +1,9 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummySubject;
 import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopics;
@@ -45,7 +47,8 @@ import static org.mockito.Mockito.when;
 
     @Test public void test_getConflictingTopics_conflictingTopicsReturned() throws Exception {
         List<Topic> existingTopics = createDummyTopics();
-        List<Topic> importedTopics = createDummyTopics();
+
+        List<ExportTopic> importedTopics = createDummyExportTopics();
 
         when(subjectTopicDaoMock.getTopicToSubject(any())).thenReturn(existingTopics);
 
@@ -64,6 +67,11 @@ import static org.mockito.Mockito.when;
         topicConflictDetection.getConflictingTopics();
 
         verify(subjectTopicDaoMock).getTopicToSubject(existingSubject);
+    }
+
+    private List<ExportTopic> createDummyExportTopics(){
+        List<Topic> topics = createDummyTopics();
+        return topics.stream().map(p -> new ExportTopic(p, null)).collect(Collectors.toList());
     }
 
 

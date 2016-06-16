@@ -1,8 +1,9 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,7 +23,7 @@ import java.util.Objects;
     private SubjectDao subjectDao;
     private Subject conflictingSubject = null;
 
-    public Subject getConflictingSubject() throws ServiceException {
+    public Subject getConflictingExistingSubject() throws ServiceException {
         if (conflictingSubject == null) {
             throw new ServiceException(
                 "No conflicting subject available. Check if a conflict exists first.");
@@ -34,7 +35,7 @@ import java.util.Objects;
         this.subjectDao = subjectDao;
     }
 
-    public boolean conflictExists(Subject importedSubject) throws ServiceException {
+    public boolean conflictExists(ExportSubject importedSubject) throws ServiceException {
         try {
             List<Subject> existingSubjects = subjectDao.getSubjects();
             for (Subject subject : existingSubjects) {
@@ -49,7 +50,7 @@ import java.util.Objects;
         }
     }
 
-    private boolean conflictExists(Subject existingSubject, Subject importedSubject) {
+    private boolean conflictExists(Subject existingSubject, ExportSubject importedSubject) {
         String existingName = existingSubject.getName();
         String importedName = importedSubject.getName();
         boolean namesEqual = Objects.equals(existingName, importedName);

@@ -3,8 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.merge.SubjectConflict;
-import javafx.collections.FXCollections;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,9 +12,6 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Hans-Joerg Schroedl

@@ -1,7 +1,8 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -52,8 +53,8 @@ import static org.mockito.Mockito.when;
         existingQuestions.add(otherExistingQuestion);
         when(questionTopicDaoMock.getQuestionToTopic(any())).thenReturn(existingQuestions);
 
-        List<Question> importedQuestions = new ArrayList<>();
-        importedQuestions.add(duplicateQuestion);
+        List<ExportQuestion> importedQuestions = new ArrayList<>();
+        importedQuestions.add(new ExportQuestion(duplicateQuestion, null, null));
         when(answerConflictDetection.areAnswersEqual()).thenReturn(false);
 
         questionConflictDetection.initialize(null, importedQuestions);
@@ -62,23 +63,5 @@ import static org.mockito.Mockito.when;
         assertFalse(questionConflicts.isEmpty());
     }
 
-    @Test public void test_getConflictingQuestions_duplicateQuestionsReturned() throws Exception {
-        Question duplicateQuestion = createDummyQuestion();
-        Question otherExistingQuestion = createDummyQuestion();
-        otherExistingQuestion.setQuestion("SomethingDifferent");
-        List<Question> existingQuestions = new ArrayList<>();
-        existingQuestions.add(duplicateQuestion);
-        existingQuestions.add(otherExistingQuestion);
-        when(questionTopicDaoMock.getQuestionToTopic(any())).thenReturn(existingQuestions);
-
-        List<Question> importedQuestions = new ArrayList<>();
-        importedQuestions.add(duplicateQuestion);
-        when(answerConflictDetection.areAnswersEqual()).thenReturn(true);
-
-        questionConflictDetection.initialize(null, importedQuestions);
-        List<QuestionConflict> questionConflicts = questionConflictDetection.getConflictingQuestions();
-
-        assertFalse(questionConflicts.isEmpty());
-    }
 
 }

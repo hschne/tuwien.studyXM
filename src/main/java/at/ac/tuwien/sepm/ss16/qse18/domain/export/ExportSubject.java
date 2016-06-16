@@ -25,6 +25,14 @@ public class ExportSubject implements Serializable {
         this.subject = subject;
     }
 
+    public String getName() {
+        return subject.getName();
+    }
+
+    public String getSemester() {
+        return subject.getSemester();
+    }
+
     public List<ExportTopic> getTopics() {
         return topics;
     }

@@ -1,6 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 
-import at.ac.tuwien.sepm.ss16.qse18.service.merge.QuestionConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.QuestionConflict;
 
 /**
  * @author Hans-Joerg Schroedl

@@ -1,7 +1,8 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,15 +34,15 @@ import static org.mockito.Mockito.when;
 
     @Test(expected = ServiceException.class) public void test_getConflictingSubject_throwsExceptionIfNoConflict() throws Exception {
         subjectConflictDetection = new SubjectConflictDetection();
-        subjectConflictDetection.getConflictingSubject();
+        subjectConflictDetection.getConflictingExistingSubject();
     }
 
     @Test public void test_conflictExists_NoConflictExists() throws Exception {
         when(subjectDaoMock.getSubjects()).thenReturn(createDummySubjects());
 
-        Subject importSubject = createDummySubject();
-        importSubject.setName("Another name");
-        boolean result = subjectConflictDetection.conflictExists(importSubject);
+        ExportSubject exportSubject = new ExportSubject(createDummySubject(),null);
+        exportSubject.getSubject().setName("Another name");
+        boolean result = subjectConflictDetection.conflictExists(exportSubject);
 
         assertFalse(result);
 
@@ -51,7 +52,7 @@ import static org.mockito.Mockito.when;
         when(subjectDaoMock.getSubjects()).thenReturn(createDummySubjects());
 
         //create dummySubject creates the same subject contained in create DummySubjects
-        Subject importSubject = createDummySubject();
+        ExportSubject importSubject = new ExportSubject(createDummySubject(),null);
         boolean result = subjectConflictDetection.conflictExists(importSubject);
 
         assertTrue(result);
@@ -64,9 +65,9 @@ import static org.mockito.Mockito.when;
         subjectList.add(existingSubject);
         when(subjectDaoMock.getSubjects()).thenReturn(subjectList);
 
-        Subject importSubject = createDummySubject();
+        ExportSubject importSubject = new ExportSubject(createDummySubject(),null);
         subjectConflictDetection.conflictExists(importSubject);
-        Subject conflictingSubject = subjectConflictDetection.getConflictingSubject();
+        Subject conflictingSubject = subjectConflictDetection.getConflictingExistingSubject();
 
         assertEquals(conflictingSubject, existingSubject);
     }

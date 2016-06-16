@@ -1,6 +1,7 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,9 +17,9 @@ public class QuestionConflict {
 
     private Question existingQuestion;
 
-    private Question importedQuestion;
+    private ExportQuestion importedQuestion;
 
-    public QuestionConflict(Question existingQuestion, Question importedQuestion) {
+    public QuestionConflict(Question existingQuestion, ExportQuestion importedQuestion) {
         this.existingQuestion = existingQuestion;
         this.importedQuestion = importedQuestion;
     }
@@ -42,7 +43,7 @@ public class QuestionConflict {
         }
     }
 
-    public Question getImportedQuestion() {
+    public ExportQuestion getImportedQuestion() {
         return importedQuestion;
     }
 

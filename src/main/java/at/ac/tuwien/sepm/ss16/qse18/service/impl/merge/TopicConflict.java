@@ -1,7 +1,9 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -9,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,9 +24,9 @@ import java.util.List;
     private List<QuestionConflict> questionConflicts;
     private QuestionConflictDetection questionConflictDetection;
     private Topic existingTopic;
-    private Topic importedTopic;
+    private ExportTopic importedTopic;
 
-    public void setTopics(Topic existingTopic, Topic importedTopic) {
+    public void setTopics(Topic existingTopic, ExportTopic importedTopic) {
         this.existingTopic = existingTopic;
         this.importedTopic = importedTopic;
         questionConflicts = new ArrayList<>();
@@ -44,13 +45,9 @@ import java.util.List;
         this.questionConflictDetection = questionConflictDetection;
     }
 
-    public void initialize(Topic existingTopic, Topic importedTopic) {
-        this.existingTopic = existingTopic;
-        this.importedTopic = importedTopic;
-    }
 
     public List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
-        List<Question> importedQuestions = new ArrayList<>();
+        List<ExportQuestion> importedQuestions = importedTopic.getQuestions();
         questionConflictDetection.initialize(existingTopic, importedQuestions);
         setQuestionConflicts(questionConflictDetection.getConflictingQuestions());
         return questionConflicts;
@@ -70,7 +67,7 @@ import java.util.List;
         }
     }
 
-    public Topic getImportedTopic() {
+    public ExportTopic getImportedTopic() {
         return importedTopic;
     }
 }

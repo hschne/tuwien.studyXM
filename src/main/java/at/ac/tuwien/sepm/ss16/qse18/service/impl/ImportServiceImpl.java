@@ -7,9 +7,13 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflictDetection;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
@@ -23,6 +27,13 @@ import java.util.zip.ZipInputStream;
     private static final Logger logger = LogManager.getLogger();
     private static final String OUTPUT_PATH = "src/main/resources/import";
     private String unzippedDir = "";
+
+    @Autowired private SubjectConflictDetection subjectConflictDetection;
+
+    @Autowired private SubjectConflict conflict;
+
+    @Autowired ApplicationContext applicationContext;
+
     @Autowired private SubjectDao subjectDao;
     @Autowired private TopicDao topicDao;
     @Autowired private QuestionDao questionDao;
@@ -30,11 +41,22 @@ import java.util.zip.ZipInputStream;
     @Autowired private AnswerDao answerDao;
     @Autowired private ExportUtil exportUtil;
 
+    @Autowired
+    public void setSubjectConflictDetection(SubjectConflictDetection subjectConflictDetection) {
+        this.subjectConflictDetection = subjectConflictDetection;
+    }
+
     @Override public void importSubject(File zippedFile) throws ServiceException {
         logger.debug("Importing subject from file " + zippedFile);
 
         unzipFile(zippedFile.getAbsolutePath(), zippedFile.getName());
         ExportSubject subject = deserialize();
+
+        if(subjectConflictDetection.conflictExists(subject)){
+            Subject conflictingSubject = subjectConflictDetection.getConflictingExistingSubject();
+            conflict.initialize(conflictingSubject, subject);
+            List<TopicConflict> conflicts = conflict.getTopicConflicts();
+        }
 
         setDatabaseAutocommit(false);
         try {
@@ -45,6 +67,7 @@ import java.util.zip.ZipInputStream;
         }
         setDatabaseAutocommit(true);
     }
+
 
     private void unzipFile(String inputPath, String fileName) throws ServiceException {
         logger.debug("Unzipping exported file");

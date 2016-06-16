@@ -2,11 +2,12 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestionConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.merge.ConflictResolution;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.ConflictResolution;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -80,7 +81,7 @@ public class QuestionConflictItemController extends BaseController {
 
     private void initializeFields() throws ServiceException {
         Question existingQuestion = questionConflict.getConflict().getExistingQuestion();
-        Question importedQuestion = questionConflict.getConflict().getImportedQuestion();
+        ExportQuestion importedQuestion = questionConflict.getConflict().getImportedQuestion();
         questionText.setText(existingQuestion.getQuestion());
         setFieldsForExisting(existingQuestion);
         setFieldsForImported(importedQuestion);
@@ -98,14 +99,14 @@ public class QuestionConflictItemController extends BaseController {
     }
 
 
-    private void setFieldsForImported(Question importedQuestion) {
+    private void setFieldsForImported(ExportQuestion importedQuestion) {
         List<Label> importedLabels =
             createLabels(importedAnswerOne, importedAnswerTwo, importedAnswerThree,
                 importedAnswerFour);
         List<CheckBox> checkboxes =
             createCheckboxes(importedCorrectOne, importedCorrectTwo, importedCorrectThree,
                 importedCorrectFour);
-        List<Answer> existingAnswers = new ArrayList<>();
+        List<Answer> existingAnswers = importedQuestion.getAnswers();
         setCheckboxesAndLabels(importedLabels, checkboxes, existingAnswers);
     }
 

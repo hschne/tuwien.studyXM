@@ -1,7 +1,8 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,7 +13,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopic;
+import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummySubject;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -37,7 +38,8 @@ import static org.mockito.Mockito.when;
     @Test public void test_getConflictingQuestions_noConflictsFound() throws Exception{
         List<TopicConflict> topicConflicts = new ArrayList<>();
         when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(topicConflicts);
-
+        Subject existingSubject = createDummySubject();
+        subjectConflict.initialize(existingSubject,new ExportSubject(createDummySubject(),null));
 
         subjectConflict.getConflictingTopics();
         List<TopicConflict> result = subjectConflict.getTopicConflicts();
@@ -51,6 +53,8 @@ import static org.mockito.Mockito.when;
         TopicConflict conflict = Mockito.mock(TopicConflict.class);
         topicConflicts.add(conflict);
         when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(topicConflicts);
+        Subject existingSubject = createDummySubject();
+        subjectConflict.initialize(existingSubject,new ExportSubject(createDummySubject(),null));
 
         subjectConflict.getConflictingTopics();
         List<TopicConflict> result = subjectConflict.getTopicConflicts();

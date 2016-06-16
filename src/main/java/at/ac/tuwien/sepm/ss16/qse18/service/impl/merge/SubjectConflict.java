@@ -1,7 +1,9 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import java.util.List;
 @Service public class SubjectConflict {
 
     private Subject existingSubject;
+    private ExportSubject importedSubject;
     private TopicConflictDetection topicConflictDetection;
     private List<TopicConflict> topicConflicts;
 
@@ -23,8 +26,9 @@ import java.util.List;
         this.topicConflictDetection = topicConflictDetection;
     }
 
-    public void initialize(Subject existingSubject, Subject importedSubject) {
+    public void initialize(Subject existingSubject, ExportSubject importedSubject) {
         this.existingSubject = existingSubject;
+        this.importedSubject = importedSubject;
     }
 
     public List<TopicConflict> getTopicConflicts(){
@@ -32,8 +36,7 @@ import java.util.List;
     }
 
     public void getConflictingTopics() throws ServiceException {
-        //TODO: Here we need to acquire topics from imported subjects
-        List<Topic> importedTopics = new ArrayList<>();
+        List<ExportTopic> importedTopics = importedSubject.getTopics();
         topicConflictDetection.initialize(existingSubject, importedTopics);
         topicConflicts = topicConflictDetection.getConflictingTopics();
     }

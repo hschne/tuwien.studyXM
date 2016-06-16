@@ -1,7 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.observable;
 
-import at.ac.tuwien.sepm.ss16.qse18.service.merge.QuestionConflict;
-import at.ac.tuwien.sepm.ss16.qse18.service.merge.TopicConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.QuestionConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 
 import java.util.List;
 

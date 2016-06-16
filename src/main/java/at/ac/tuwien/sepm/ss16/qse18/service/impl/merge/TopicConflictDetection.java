@@ -1,9 +1,11 @@
-package at.ac.tuwien.sepm.ss16.qse18.service.merge;
+package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,11 +22,11 @@ import java.util.List;
 
     private static final Logger logger = LogManager.getLogger();
     private Subject subject;
-    private List<Topic> importedTopics;
+    private List<ExportTopic> importedTopics;
 
     private SubjectTopicDao subjectTopicDao;
 
-    public void initialize(Subject subject, List<Topic> importedTopics) {
+    public void initialize(Subject subject, List<ExportTopic> importedTopics) {
         this.subject = subject;
         this.importedTopics = importedTopics;
     }
@@ -37,7 +39,7 @@ import java.util.List;
         List<Topic> existingTopics = getExistingTopics();
         List<TopicConflict> duplicates = new ArrayList<>();
         for (Topic existingTopic : existingTopics)
-            for (Topic importedTopic : importedTopics) {
+            for (ExportTopic importedTopic : importedTopics) {
                 if (checkIfDuplicate(duplicates, existingTopic, importedTopic))
                     break;
             }
@@ -45,9 +47,9 @@ import java.util.List;
     }
 
     private boolean checkIfDuplicate(List<TopicConflict> duplicates, Topic existingTopic,
-        Topic importedTopic) {
+        ExportTopic importedTopic) {
         String existingTopicName = existingTopic.getTopic();
-        String importedTopicName = importedTopic.getTopic();
+        String importedTopicName = importedTopic.getTopic().getTopic();
         if (existingTopicName.equals(importedTopicName)) {
             TopicConflict duplicate = new TopicConflict();
             duplicate.setTopics(existingTopic, importedTopic);
