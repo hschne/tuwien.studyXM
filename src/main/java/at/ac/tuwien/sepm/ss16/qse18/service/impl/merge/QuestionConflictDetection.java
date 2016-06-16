@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Service public class QuestionConflictDetection {
 
-    private final static Logger logger = LogManager.getLogger();
+    private static final  Logger logger = LogManager.getLogger();
 
     private Topic existingTopic;
     private ExportTopic importedTopic;
@@ -45,13 +45,13 @@ import java.util.List;
         this.questionTopicDao = questionTopicDao;
     }
 
-    public void setTopics(Topic existing, ExportTopic imported) {
+    void setTopics(Topic existing, ExportTopic imported) {
         this.existingTopic = existing;
         this.importedTopic = imported;
         questionConflicts = new ArrayList<>();
     }
 
-    public List<QuestionConflict> getConflictingQuestions() throws ServiceException {
+    List<QuestionConflict> getConflictingQuestions() throws ServiceException {
         List<Question> existingQuestions = getExistingQuestions();
         for (Question existingQuestion : existingQuestions) {
             List<ExportQuestion> importedQuestions = importedTopic.getQuestions();
@@ -76,7 +76,6 @@ import java.util.List;
         throws ServiceException {
         answerConflictDetection.setQuestions(existingQuestion, importedQuestion);
         createConflict(existingQuestion, importedQuestion);
-
     }
 
     private void createConflict(Question existingQuestion, ExportQuestion importedQuestion)
@@ -84,7 +83,7 @@ import java.util.List;
         QuestionConflict questionConflict = applicationContext.getBean(QuestionConflict.class);
         questionConflict.setQuestions(existingQuestion, importedQuestion);
         if (answerConflictDetection.areAnswersEqual()) {
-            questionConflict.setResolution(ConflictResolution.EXISTING);
+            questionConflict.setResolution(ConflictResolution.DUPLICATE);
         }
         questionConflicts.add(questionConflict);
     }

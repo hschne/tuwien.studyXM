@@ -29,6 +29,7 @@ public class QuestionConflictItemController extends BaseController {
 
     @Autowired QuestionService questionService;
     private ObservableQuestionConflict questionConflict;
+
     @FXML private Node root;
 
     @FXML private Pane existingPane;
@@ -65,14 +66,14 @@ public class QuestionConflictItemController extends BaseController {
 
     @FXML public void handleSelectExisting() {
         questionConflict.getConflict().setResolution(ConflictResolution.EXISTING);
-        existingPane.setStyle("-fx-background-color: #192836");
-        importedPane.setStyle("-fx-background-color: white;");
+        existingPane.getStyleClass().add("selected-question-pane");
+        importedPane.getStyleClass().clear();
     }
 
     @FXML public void handleSelectImported() {
         questionConflict.getConflict().setResolution(ConflictResolution.IMPORTED);
-        importedPane.setStyle("-fx-background-color: #192836");
-        existingPane.setStyle("-fx-background-color: white;");
+        existingPane.getStyleClass().clear();
+        importedPane.getStyleClass().add("selected-question-pane");
     }
 
     public Node getRoot() {
@@ -137,7 +138,9 @@ public class QuestionConflictItemController extends BaseController {
         for (int i = 0; i < 4; i++) {
             Label currentLabel = labels.get(i);
             CheckBox checkBox = checkboxes.get(i);
-            if (i > existingAnswers.size()) {
+            checkBox.setDisable(true);
+            checkBox.setStyle("-fx-opacity: 1");
+            if (i >= existingAnswers.size()) {
                 currentLabel.setVisible(false);
                 checkBox.setVisible(false);
                 continue;

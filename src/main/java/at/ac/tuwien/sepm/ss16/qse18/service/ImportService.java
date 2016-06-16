@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
+
 import java.io.File;
 
 /**
@@ -17,5 +19,5 @@ public interface ImportService {
      * @param zippedFile The file to import
      * @throws ServiceException
      */
-    void importSubject(File zippedFile) throws ServiceException;
+    SubjectConflict importSubject(File zippedFile) throws ServiceException;
 }

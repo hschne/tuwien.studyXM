@@ -7,7 +7,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.merge.QuestionConflictItemController">
+<AnchorPane fx:id="root" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.merge.QuestionConflictItemController">
    <children>
       <GridPane prefHeight="300.0" prefWidth="800.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -32,7 +32,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <GridPane fx:id="importedPane" GridPane.columnIndex="1">
+                  <GridPane fx:id="importedPane" onMouseClicked="#handleSelectImported" GridPane.columnIndex="1">
                      <children>
                         <Label fx:id="importedAnswerOne" text="Label" GridPane.columnIndex="1" />
                         <Label fx:id="importedAnswerTwo" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="1" />

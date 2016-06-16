@@ -47,18 +47,36 @@ import java.util.List;
 
     private boolean answerTextsEqual(List<Answer> existingAnswers) {
         for (Answer existingAnswer : existingAnswers) {
-            String existingText = existingAnswer.getAnswer();
-            List<Answer> importedAnswers = importedQuestion.getAnswers();
-            for (Answer importedAnswer : importedAnswers) {
-                String importedText = importedAnswer.getAnswer();
-                if (existingText.equals(importedText)) {
-                    continue;
-                }
-                //No matching imported answer has been found, so not identical.
-                return false;
+            if(matchingImportedExists(existingAnswer)){
+                continue;
             }
+            //No exact matching imported answer has been found, so not identical.
+            return false;
         }
         return true;
+    }
+
+    private boolean matchingImportedExists(Answer existingAnswer){
+        List<Answer> importedAnswers = importedQuestion.getAnswers();
+        for (Answer importedAnswer : importedAnswers) {
+            if (answerTextEqual(existingAnswer, importedAnswer) &&
+                answerCorrectEqual(existingAnswer, importedAnswer)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean answerTextEqual(Answer existingAnswer, Answer importedAnswer){
+        String existingAnswerText = existingAnswer.getAnswer();
+        String importedAnswerText = importedAnswer.getAnswer();
+        return existingAnswerText.equals(importedAnswerText);
+    }
+
+    private boolean answerCorrectEqual(Answer existingAnswer, Answer importedAnswer){
+        boolean existingCorrect = existingAnswer.isCorrect();
+        boolean importedCorrect = importedAnswer.isCorrect();
+        return existingCorrect == importedCorrect;
     }
 
     private List<Answer> getExistingAnswers() throws ServiceException {

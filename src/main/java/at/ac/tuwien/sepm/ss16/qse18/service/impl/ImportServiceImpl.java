@@ -9,7 +9,6 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflictDetection;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +45,7 @@ import java.util.zip.ZipInputStream;
         this.subjectConflictDetection = subjectConflictDetection;
     }
 
-    @Override public void importSubject(File zippedFile) throws ServiceException {
+    @Override public SubjectConflict importSubject(File zippedFile) throws ServiceException {
         logger.debug("Importing subject from file " + zippedFile);
 
         unzipFile(zippedFile.getAbsolutePath(), zippedFile.getName());
@@ -55,7 +54,7 @@ import java.util.zip.ZipInputStream;
         if(subjectConflictDetection.conflictExists(subject)){
             Subject conflictingSubject = subjectConflictDetection.getConflictingExistingSubject();
             conflict.initialize(conflictingSubject, subject);
-            List<TopicConflict> conflicts = conflict.getConflictingTopics();
+            return conflict;
         }
 
         setDatabaseAutocommit(false);
@@ -66,6 +65,7 @@ import java.util.zip.ZipInputStream;
             throw e;
         }
         setDatabaseAutocommit(true);
+        return null;
     }
 
 

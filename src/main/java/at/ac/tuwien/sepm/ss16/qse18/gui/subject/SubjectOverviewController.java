@@ -9,6 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +19,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -36,16 +36,15 @@ import java.util.stream.Collectors;
  */
 @Component public class SubjectOverviewController extends BaseController {
 
+    @Autowired SubjectNavigation subjectNavigator;
+    @Autowired ApplicationContext applicationContext;
     @FXML private ListView<ObservableSubject> subjectListView;
     @FXML private Button editButton;
     @FXML private Button deleteButton;
     private ObservableList<ObservableSubject> subjectList;
     private SubjectService subjectService;
     @Autowired private MainApplication mainApplication;
-    @Autowired SubjectNavigation subjectNavigator;
     @Autowired private ImportService importService;
-
-    @Autowired ApplicationContext applicationContext;
 
     @Autowired public SubjectOverviewController(SubjectService subjectService) {
         this.subjectService = subjectService;
@@ -77,12 +76,7 @@ import java.util.stream.Collectors;
     @FXML public void handleImport() {
         logger.debug("Import button pressed");
         try {
-            File selected = selectFile();
-            if (selected != null) {
-                importService.importSubject(selected);
-                initializeListView();
-                showSuccess("File was successfully imported");
-            }
+            tryHandleImport();
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
@@ -111,23 +105,6 @@ import java.util.stream.Collectors;
         }
     }
 
-    @FXML public void handleShowMergeWindow() throws IOException {
-        logger.info("Starting Application");
-        Stage stage = new Stage();
-        stage.setTitle("Study XM");
-        SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
-        SpringFXMLLoader.FXMLWrapper<Object, MergeController> mfWrapper =
-            springFXMLLoader.loadAndWrap("/fxml/merge/mergeOverview.fxml", MergeController.class);
-        MergeController controller = mfWrapper.getController();
-        Scene scene = new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
-        String css = this.getClass().getResource("/style.css").toExternalForm();
-        scene.getStylesheets().add(css);
-        stage.setScene(scene);
-        controller.setStage(stage);
-
-        stage.show();
-    }
-
     /**
      * Action handler for editing the selected subject
      *
@@ -139,23 +116,44 @@ import java.util.stream.Collectors;
         subjectNavigator.handleCreateSubject(subject);
     }
 
-    /**
-     * Creates a new subject and adds it to the subject list
-     *
-     * @param subject The subject to be added
-     */
-    void addSubject(ObservableSubject subject) {
-        subjectList.add(subject);
+    private void tryHandleImport() throws ServiceException {
+        File selected = selectFile();
+        if (selected != null) {
+            SubjectConflict conflict = importService.importSubject(selected);
+            if (conflict == null) {
+                initializeListView();
+                showSuccess("File was successfully imported");
+            } else {
+                tryShowMergeWindow(conflict);
+            }
+        }
     }
 
-    /**
-     * Updates a subject in the list and in the database
-     *
-     * @param observableSubject The current subject in the list
-     * @param subject           The new subject, containing new values
-     */
-    void updateSubject(ObservableSubject observableSubject, Subject subject) {
-        updateEntry(observableSubject, subject);
+    private void tryShowMergeWindow(SubjectConflict conflict) throws ServiceException {
+        try {
+            showMergeWindow(conflict);
+        } catch (IOException e) {
+            logger.error(e);
+            throw new ServiceException("Could not load merge window");
+        }
+    }
+
+    private void showMergeWindow(SubjectConflict conflict) throws IOException {
+        logger.info("Starting Application");
+        Stage stage = new Stage();
+        stage.setTitle("Study XM");
+        SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
+        SpringFXMLLoader.FXMLWrapper<Object, MergeController> mfWrapper =
+            springFXMLLoader.loadAndWrap("/fxml/merge/mergeOverview.fxml", MergeController.class);
+        MergeController controller = mfWrapper.getController();
+        controller.setSubjectConflict(conflict);
+        Scene scene = new Scene((Parent) mfWrapper.getLoadedObject(), 1280, 720);
+        String css = this.getClass().getResource("/style.css").toExternalForm();
+        scene.getStylesheets().add(css);
+        stage.setScene(scene);
+        controller.setStage(stage);
+
+        stage.show();
     }
 
     private void initializeListView() throws ServiceException {
@@ -202,6 +200,25 @@ import java.util.stream.Collectors;
             }
         }
         return null;
+    }
+
+    /**
+     * Creates a new subject and adds it to the subject list
+     *
+     * @param subject The subject to be added
+     */
+    void addSubject(ObservableSubject subject) {
+        subjectList.add(subject);
+    }
+
+    /**
+     * Updates a subject in the list and in the database
+     *
+     * @param observableSubject The current subject in the list
+     * @param subject           The new subject, containing new values
+     */
+    void updateSubject(ObservableSubject observableSubject, Subject subject) {
+        updateEntry(observableSubject, subject);
     }
 
 }
