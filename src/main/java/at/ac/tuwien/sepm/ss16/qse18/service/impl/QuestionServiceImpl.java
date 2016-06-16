@@ -98,17 +98,7 @@ import java.util.List;
 
     @Override public List<Answer> getCorrespondingAnswers(Question q) throws ServiceException {
         try {
-            List<Answer> al = adao.getAnswer();
-            Iterator<Answer> it = al.listIterator();
-
-            while(it.hasNext()){
-                Answer a = it.next();
-                if (!a.getQuestion().equals(q)) {
-                    it.remove();
-                }
-            }
-
-            return al;
+            return qdao.getRelatedAnswers(q);
         } catch(DaoException e) {
             logger.error("Could not get corresponding answers: ", e);
             throw new ServiceException("Could not get corresponding answers");

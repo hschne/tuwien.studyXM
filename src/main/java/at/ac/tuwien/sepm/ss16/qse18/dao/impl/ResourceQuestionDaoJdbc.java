@@ -1,9 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
-import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceQuestionDao;
-import at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser;
+import at.ac.tuwien.sepm.ss16.qse18.dao.*;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ResourceType;
@@ -27,6 +24,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     private static final Logger logger = LogManager.getLogger();
     private DataBaseConnection database;
+    @Autowired ResourceDao resourceDao;
 
     @Autowired public ResourceQuestionDaoJdbc(DataBaseConnection database) {
         this.database = database;
@@ -69,14 +67,14 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
         try {
             ps = database.getConnection().prepareStatement(
-                "SELECT t.* FROM entity_topic t NATURAL JOIN rel_resource_question"
-                    + " WHERE questionId = ?");
+                "SELECT * FROM REL_RESOURCE_QUESTION WHERE QUESTIONID = ?");
 
+            ps.setInt(1, question.getQuestionId());
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                res = new Resource(rs.getInt(1), ResourceType.valueOf(rs.getString(2)),
-                    rs.getString(3), rs.getString(4));
+                int resourceId = rs.getInt("RESOURCEID");
+                return resourceDao.getResource(resourceId);
             }
         } catch (SQLException e) {
             logger.error("Could not get the resource of question {}", question, e);

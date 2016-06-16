@@ -159,7 +159,7 @@ import java.util.*;
         Resource resource = new Resource();
         resource.setType(getResourceType());
         resource.setName(resourceName.getText());
-        resource.setReference(out.getAbsolutePath());
+        resource.setReference(out.getPath());
         return resource;
     }
 

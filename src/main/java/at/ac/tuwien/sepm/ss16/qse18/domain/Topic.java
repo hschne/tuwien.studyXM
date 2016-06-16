@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author Felix Almer on 10.05.2016.
  */
 public class Topic implements Serializable {
-    private int topicId;
+    private transient int topicId;
     private String topicString;
     private String numberOfQuestions = "questions: 0";
 
