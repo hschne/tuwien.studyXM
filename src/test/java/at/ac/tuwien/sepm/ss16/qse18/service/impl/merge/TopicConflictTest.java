@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
+import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopic;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,6 +35,7 @@ import static org.mockito.Mockito.when;
         List<QuestionConflict> conflicts = new ArrayList<>();
         when(questionConflictDetectionMock.getConflictingQuestions()).thenReturn(conflicts);
 
+        topicConflict.setTopics(createDummyTopic(), new ExportTopic(createDummyTopic(), null));
         List<QuestionConflict> result = topicConflict.initializeQuestionConflicts();
 
         assertEquals(conflicts, result);

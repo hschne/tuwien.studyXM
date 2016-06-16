@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +29,12 @@ import static org.mockito.Mockito.when;
 
     @Mock private SubjectTopicDao subjectTopicDaoMock;
 
+    @Mock private ApplicationContext applicationContextMock;
+
     private TopicConflictDetection topicConflictDetection;
 
     @Before public void setUp(){
-        topicConflictDetection = new TopicConflictDetection();
+        topicConflictDetection = new TopicConflictDetection(applicationContextMock);
         topicConflictDetection.setSubjectTopicDao(subjectTopicDaoMock);
     }
 
@@ -51,6 +54,7 @@ import static org.mockito.Mockito.when;
         List<ExportTopic> importedTopics = createDummyExportTopics();
 
         when(subjectTopicDaoMock.getTopicToSubject(any())).thenReturn(existingTopics);
+        when(applicationContextMock.getBean(TopicConflict.class)).thenReturn(new TopicConflict());
 
         topicConflictDetection.initialize(null,importedTopics);
         List<TopicConflict> duplicates = topicConflictDetection.getConflictingTopics();

@@ -4,12 +4,12 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
-import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,6 +26,12 @@ import java.util.List;
 
     private SubjectTopicDao subjectTopicDao;
 
+    private ApplicationContext applicationContext;
+
+    @Autowired public TopicConflictDetection(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
     public void initialize(Subject subject, List<ExportTopic> importedTopics) {
         this.subject = subject;
         this.importedTopics = importedTopics;
@@ -40,8 +46,12 @@ import java.util.List;
         List<TopicConflict> duplicates = new ArrayList<>();
         for (Topic existingTopic : existingTopics)
             for (ExportTopic importedTopic : importedTopics) {
-                if (checkIfDuplicate(duplicates, existingTopic, importedTopic))
+                if (checkIfDuplicate(duplicates, existingTopic, importedTopic)) {
+                    TopicConflict conflict = applicationContext.getBean(TopicConflict.class);
+                    conflict.setTopics(existingTopic, importedTopic);
+                    duplicates.add(conflict);
                     break;
+                }
             }
         return duplicates;
     }

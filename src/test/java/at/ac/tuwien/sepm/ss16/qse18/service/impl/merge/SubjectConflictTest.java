@@ -41,9 +41,7 @@ import static org.mockito.Mockito.when;
         Subject existingSubject = createDummySubject();
         subjectConflict.initialize(existingSubject,new ExportSubject(createDummySubject(),null));
 
-        subjectConflict.getConflictingTopics();
-        List<TopicConflict> result = subjectConflict.getTopicConflicts();
-
+        List<TopicConflict> result = subjectConflict.getConflictingTopics();
         assertTrue(result.isEmpty());
 
     }
@@ -57,7 +55,7 @@ import static org.mockito.Mockito.when;
         subjectConflict.initialize(existingSubject,new ExportSubject(createDummySubject(),null));
 
         subjectConflict.getConflictingTopics();
-        List<TopicConflict> result = subjectConflict.getTopicConflicts();
+        List<TopicConflict> result = subjectConflict.getConflictingTopics();
 
         assertFalse(result.isEmpty());
     }

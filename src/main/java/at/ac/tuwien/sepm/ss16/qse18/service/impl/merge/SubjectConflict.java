@@ -31,14 +31,12 @@ import java.util.List;
         this.importedSubject = importedSubject;
     }
 
-    public List<TopicConflict> getTopicConflicts(){
-        return topicConflicts;
-    }
 
-    public void getConflictingTopics() throws ServiceException {
+    public List<TopicConflict> getConflictingTopics() throws ServiceException {
         List<ExportTopic> importedTopics = importedSubject.getTopics();
         topicConflictDetection.initialize(existingSubject, importedTopics);
         topicConflicts = topicConflictDetection.getConflictingTopics();
+        return topicConflicts;
     }
 
     public List<Topic> getNonConflictingImported() {

@@ -55,7 +55,7 @@ import java.util.zip.ZipInputStream;
         if(subjectConflictDetection.conflictExists(subject)){
             Subject conflictingSubject = subjectConflictDetection.getConflictingExistingSubject();
             conflict.initialize(conflictingSubject, subject);
-            List<TopicConflict> conflicts = conflict.getTopicConflicts();
+            List<TopicConflict> conflicts = conflict.getConflictingTopics();
         }
 
         setDatabaseAutocommit(false);
