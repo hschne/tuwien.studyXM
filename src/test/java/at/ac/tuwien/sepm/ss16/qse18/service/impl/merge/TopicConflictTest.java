@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +46,7 @@ import static org.mockito.Mockito.when;
         List<QuestionConflict> conflicts = new ArrayList<>();
         topicConflict.setQuestionConflicts(conflicts);
 
-        List<Question> result = topicConflict.getNonConflictingImported();
+        List<ExportQuestion> result = topicConflict.getNonConflictingImported();
 
         assertTrue(result.isEmpty());
     }

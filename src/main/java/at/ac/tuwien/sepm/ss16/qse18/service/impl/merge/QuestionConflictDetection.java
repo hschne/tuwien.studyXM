@@ -2,14 +2,15 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,11 +24,17 @@ import java.util.List;
     private final static Logger logger = LogManager.getLogger();
 
     private Topic existingTopic;
+    private ExportTopic importedTopic;
     private QuestionTopicDao questionTopicDao;
-    private List<ExportQuestion> importedQuestions;
     private AnswerConflictDetection answerConflictDetection;
 
     private List<QuestionConflict> questionConflicts;
+
+    private ApplicationContext applicationContext;
+
+    @Autowired public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Autowired
     public void setAnswerConflictDetection(AnswerConflictDetection answerConflictDetection) {
@@ -38,15 +45,16 @@ import java.util.List;
         this.questionTopicDao = questionTopicDao;
     }
 
-    public void initialize(Topic existing, List<ExportQuestion> importedQuestions) {
+    public void setTopics(Topic existing, ExportTopic imported) {
         this.existingTopic = existing;
-        this.importedQuestions = importedQuestions;
+        this.importedTopic = imported;
         questionConflicts = new ArrayList<>();
     }
 
     public List<QuestionConflict> getConflictingQuestions() throws ServiceException {
         List<Question> existingQuestions = getExistingQuestions();
         for (Question existingQuestion : existingQuestions) {
+            List<ExportQuestion> importedQuestions = importedTopic.getQuestions();
             for (ExportQuestion importedQuestion : importedQuestions) {
                 checkForConflict(existingQuestion, importedQuestion);
             }
@@ -54,28 +62,28 @@ import java.util.List;
         return questionConflicts;
     }
 
-    private void checkForConflict(Question existingQuestion,
-        ExportQuestion importedQuestion) throws ServiceException {
+
+    private void checkForConflict(Question existingQuestion, ExportQuestion importedQuestion)
+        throws ServiceException {
         String existingQuestionText = existingQuestion.getQuestion();
         String importedQuestionText = importedQuestion.getQuestion().getQuestion();
         if (existingQuestionText.equals(importedQuestionText)) {
-            checkIfAnswersEqual(existingQuestion,importedQuestion);
+            checkIfAnswersEqual(existingQuestion, importedQuestion);
         }
     }
 
     private void checkIfAnswersEqual(Question existingQuestion, ExportQuestion importedQuestion)
         throws ServiceException {
-        List<Answer> importedAnswers = importedQuestion.getAnswers();
-        answerConflictDetection.initialize(existingQuestion, importedAnswers);
+        answerConflictDetection.setQuestions(existingQuestion, importedQuestion);
         createConflict(existingQuestion, importedQuestion);
 
     }
 
     private void createConflict(Question existingQuestion, ExportQuestion importedQuestion)
         throws ServiceException {
-        QuestionConflict questionConflict =
-            new QuestionConflict(existingQuestion, importedQuestion);
-        if(answerConflictDetection.areAnswersEqual()){
+        QuestionConflict questionConflict = applicationContext.getBean(QuestionConflict.class);
+        questionConflict.setQuestions(existingQuestion, importedQuestion);
+        if (answerConflictDetection.areAnswersEqual()) {
             questionConflict.setResolution(ConflictResolution.EXISTING);
         }
         questionConflicts.add(questionConflict);

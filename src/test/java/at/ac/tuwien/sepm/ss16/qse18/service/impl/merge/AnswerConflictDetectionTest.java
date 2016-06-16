@@ -2,10 +2,12 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
@@ -36,10 +38,11 @@ import static org.mockito.Mockito.when;
         List<Answer> existingAnswers = new ArrayList<>();
         existingAnswers.add(createDummyAnswer());
         when(questionDaoMock.getRelatedAnswers(any())).thenReturn(existingAnswers);
+        ExportQuestion importedQuestion = Mockito.mock(ExportQuestion.class);
+        when(importedQuestion.getAnswers()).thenReturn(existingAnswers);
 
-        List<Answer> importedAnswers = existingAnswers;
 
-        answerConflictDetection.initialize(null, importedAnswers);
+        answerConflictDetection.setQuestions(null, importedQuestion);
         boolean result = answerConflictDetection.areAnswersEqual();
 
         assertTrue(result);
@@ -49,12 +52,13 @@ import static org.mockito.Mockito.when;
         List<Answer> existingAnswers = new ArrayList<>();
         existingAnswers.add(createDummyAnswer());
         when(questionDaoMock.getRelatedAnswers(any())).thenReturn(existingAnswers);
-
         List<Answer> importedAnswers = new ArrayList<>();
         importedAnswers.add(createDummyAnswer());
         importedAnswers.add(createDummyAnswer());
+        ExportQuestion importedQuestion = Mockito.mock(ExportQuestion.class);
+        when(importedQuestion.getAnswers()).thenReturn(importedAnswers);
 
-        answerConflictDetection.initialize(null, importedAnswers);
+        answerConflictDetection.setQuestions(null, importedQuestion);
         boolean result = answerConflictDetection.areAnswersEqual();
 
         assertFalse(result);
@@ -64,13 +68,14 @@ import static org.mockito.Mockito.when;
         List<Answer> existingAnswers = new ArrayList<>();
         existingAnswers.add(createDummyAnswer());
         when(questionDaoMock.getRelatedAnswers(any())).thenReturn(existingAnswers);
-
         List<Answer> importedAnswers = new ArrayList<>();
         Answer importedAnswer = createDummyAnswer();
         importedAnswer.setAnswer("Something else");
         importedAnswers.add(importedAnswer);
+        ExportQuestion importedQuestion = Mockito.mock(ExportQuestion.class);
+        when(importedQuestion.getAnswers()).thenReturn(importedAnswers);
 
-        answerConflictDetection.initialize(null, importedAnswers);
+        answerConflictDetection.setQuestions(null, importedQuestion);
         boolean result = answerConflictDetection.areAnswersEqual();
 
         assertFalse(result);

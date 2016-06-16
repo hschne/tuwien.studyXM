@@ -9,6 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ import java.util.List;
     private QuestionConflictDetection questionConflictDetection;
     private Topic existingTopic;
     private ExportTopic importedTopic;
+
 
     public void setTopics(Topic existingTopic, ExportTopic importedTopic) {
         this.existingTopic = existingTopic;
@@ -47,14 +49,13 @@ import java.util.List;
 
 
     public List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
-        List<ExportQuestion> importedQuestions = importedTopic.getQuestions();
-        questionConflictDetection.initialize(existingTopic, importedQuestions);
+        questionConflictDetection.setTopics(existingTopic, importedTopic);
         setQuestionConflicts(questionConflictDetection.getConflictingQuestions());
         return questionConflicts;
     }
 
-    public List<Question> getNonConflictingImported() {
-        List<Question> imported = new ArrayList<>();
+    public List<ExportQuestion> getNonConflictingImported() {
+        List<ExportQuestion> imported = new ArrayList<>();
         for (QuestionConflict questionConflict : questionConflicts) {
             imported.remove(questionConflict.getImportedQuestion());
         }

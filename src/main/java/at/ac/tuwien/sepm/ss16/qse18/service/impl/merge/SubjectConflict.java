@@ -33,14 +33,13 @@ import java.util.List;
 
 
     public List<TopicConflict> getConflictingTopics() throws ServiceException {
-        List<ExportTopic> importedTopics = importedSubject.getTopics();
-        topicConflictDetection.initialize(existingSubject, importedTopics);
+        topicConflictDetection.setSubjects(existingSubject, importedSubject);
         topicConflicts = topicConflictDetection.getConflictingTopics();
         return topicConflicts;
     }
 
-    public List<Topic> getNonConflictingImported() {
-        List<Topic> nonConflictingImported = new ArrayList<>();
+    public List<ExportTopic> getNonConflictingImported() {
+        List<ExportTopic> nonConflictingImported = new ArrayList<>();
         topicConflicts.forEach(p -> nonConflictingImported.remove(p.getImportedTopic()));
         return nonConflictingImported;
     }

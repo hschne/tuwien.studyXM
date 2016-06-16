@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,7 +67,7 @@ import static org.mockito.Mockito.when;
         topicConflicts.add(conflict);
         subjectConflict.setTopicConflicts(topicConflicts);
 
-        List<Topic> topics = subjectConflict.getNonConflictingImported();
+        List<ExportTopic> topics = subjectConflict.getNonConflictingImported();
 
         assertTrue(topics.isEmpty());
     }
