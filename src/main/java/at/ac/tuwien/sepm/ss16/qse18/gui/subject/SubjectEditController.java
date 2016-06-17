@@ -7,7 +7,6 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.SubjectService;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -24,16 +23,14 @@ import org.springframework.stereotype.Component;
 @Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class SubjectEditController
     extends BaseController {
 
+    @Autowired SubjectNavigation subjectNavigator;
     @FXML private TextField name;
     @FXML private TextField semester;
     @FXML private TextField ects;
     @FXML private TextField author;
-    @FXML private CheckBox createAndContinue;
     private ObservableSubject subject;
     private boolean isNew;
     private SubjectOverviewController subjectOverviewController;
-
-    @Autowired SubjectNavigation subjectNavigator;
     @Autowired private SubjectService subjectService;
 
     @Autowired
@@ -55,7 +52,7 @@ import org.springframework.stereotype.Component;
     /**
      * Invoked when pressing ok, creates or updates exam then returns to overview
      */
-    @FXML public void handleOk() {
+    @FXML public void handleCreate() {
         Subject newSubject;
         try {
             newSubject = newSubjectFromFields();
@@ -66,7 +63,14 @@ import org.springframework.stereotype.Component;
         if (createOrUpdateSubject(newSubject))
             return;
         showSuccess("Subject successfully created");
-        changeView();
+        mainFrameController.handleSubjects();
+    }
+
+    /**
+     * Invoked when pressing create and continue, creates another exam
+     */
+    @FXML public void handleCreateAndContinue() {
+        subjectNavigator.handleCreateSubject(null);
     }
 
     /**
@@ -110,15 +114,6 @@ import org.springframework.stereotype.Component;
             return true;
         }
         return false;
-    }
-
-    private void changeView() {
-        if (!createAndContinue.isSelected()) {
-            mainFrameController.handleSubjects();
-        } else {
-            subjectNavigator.handleCreateSubject(null);
-            createAndContinue.setSelected(true);
-        }
     }
 
     private Subject newSubjectFromFields() throws ServiceException {
