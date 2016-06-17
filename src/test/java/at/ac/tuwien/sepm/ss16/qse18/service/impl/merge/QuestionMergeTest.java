@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
+import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.junit.Before;
@@ -22,6 +23,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class) public class QuestionMergeTest {
 
+    @Mock ImportService importServiceMock;
 
     @Mock QuestionService questionServiceMock;
 
@@ -30,6 +32,7 @@ import static org.mockito.Mockito.when;
     @Before public void setUp() {
         questionMerge = new QuestionMerge();
         questionMerge.setQuestionService(questionServiceMock);
+        questionMerge.setImportService(importServiceMock);
     }
 
     @Test(expected = ServiceException.class) public void test_merge_NoResultionSet() throws Exception {
@@ -59,7 +62,8 @@ import static org.mockito.Mockito.when;
 
         questionMerge.merge(questionConflict, topic);
 
-        verify(questionServiceMock).createQuestion(any(), eq(topic));
+        verify(questionServiceMock).deleteQuestion(any());
+        verify(importServiceMock).importQuestion(any(), any());
 
     }
 
