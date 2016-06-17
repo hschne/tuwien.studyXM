@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.dao.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory;
+import at.ac.tuwien.sepm.ss16.qse18.dao.AnswerDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
@@ -12,7 +13,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.powermock.api.mockito.PowerMockito;
 
 import java.sql.SQLException;
@@ -34,6 +34,7 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
 
     private QuestionDaoJdbc qdao;
     @Mock private QuestionTopicDao questionTopicDao;
+    @Mock private AnswerDaoJdbc answerDaoMock;
     private Question testQuestion;
 
     @Before public void setUp() throws Exception {
@@ -43,6 +44,7 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
 
         qdao = new QuestionDaoJdbc(mockConnectionH2);
         qdao.setQuestionTopicDao(questionTopicDao);
+        qdao.setAnswerDaoJdbc(answerDaoMock);
     }
 
     //Testing getQuestion(int)
@@ -181,8 +183,9 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
     }
 
     @Test public void test_deleteQuestion_valid() throws Exception {
-        qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
-        verify(mockPreparedStatement).executeUpdate();
+        qdao.deleteQuestion(new Question(1, "Test", QuestionType.MULTIPLECHOICE, 1L));
+
+        verify(mockPreparedStatement, times(2)).executeUpdate();
     }
 
     @Test(expected = DaoException.class) public void test_deleteQuestion_invalid()

@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
+import at.ac.tuwien.sepm.ss16.qse18.dao.ImportUtil;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -24,6 +25,8 @@ import static org.mockito.Mockito.*;
 
     @Mock ImportService importServiceMock;
 
+    @Mock ImportUtil importUtilMock;
+
     @Mock TopicMerge topicMergeMock;
 
     private SubjectMerge subjectMerge;
@@ -32,6 +35,7 @@ import static org.mockito.Mockito.*;
         subjectMerge = new SubjectMerge();
         subjectMerge.setImportService(importServiceMock);
         subjectMerge.setTopicMerge(topicMergeMock);
+        subjectMerge.setImportUtil(importUtilMock);
     }
 
     @Test(expected = ServiceException.class) public void test_merge_notResolved() throws Exception {

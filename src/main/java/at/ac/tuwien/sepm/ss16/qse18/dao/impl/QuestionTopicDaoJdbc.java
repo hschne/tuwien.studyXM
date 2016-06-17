@@ -15,9 +15,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ArrayList;
 
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 
@@ -31,11 +31,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 @Repository public class QuestionTopicDaoJdbc implements QuestionTopicDao {
 
     private static final Logger logger = LogManager.getLogger();
-    private DataBaseConnection database;
     private static final String QUESTIONTOTOPIC_SQL =
         "SELECT Q.QUESTIONID,Q.QUESTION,Q.TYPE,Q.QUESTION_TIME "
             + "FROM ENTITY_QUESTION Q NATURAL JOIN REL_QUESTION_TOPIC R WHERE R.TOPICID = ?;";
     private static final String CREATE_SQL = "INSERT INTO REL_QUESTION_TOPIC VALUES(?,?);";
+    private DataBaseConnection database;
 
     @Autowired public QuestionTopicDaoJdbc(DataBaseConnection database) {
         this.database = database;
@@ -55,7 +55,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
 
         try {
             ps = database.getConnection().prepareStatement(
-                "SELECT t.* FROM rel_question_topic NATURAL JOIN entity_topic t WHERE questionId = ?");
+                "SELECT t.TOPICID,t.TOPIC FROM rel_question_topic NATURAL JOIN entity_topic t WHERE questionId = ?;");
             ps.setInt(1, question.getQuestionId());
             rs = ps.executeQuery();
 
