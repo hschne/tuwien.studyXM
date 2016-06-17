@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
@@ -72,7 +73,7 @@ abstract class NewExerciseExamBase extends BaseController {
         try {
             topicList.clear();
             fieldAuthor.clear();
-            fieldTime.clear();
+            populateExamTime();
             List<ObservableTopic> observableTopics =
                 topicService.getTopicsFromSubject(subject).stream().map(ObservableTopic::new)
                     .collect(Collectors.toList());
@@ -92,6 +93,27 @@ abstract class NewExerciseExamBase extends BaseController {
         }
     }
 
+    private void populateExamTime() {
+        fieldTime.clear();
+        int minTime = Integer.MAX_VALUE;
+        int maxTime = 0;
+        try {
+            for(Topic t : topicService.getTopicsFromSubject(subject)) {
+                for(Question q : questionService.getQuestionsFromTopic(t)) {
+                    maxTime += q.getQuestionTime();
+                    if(q.getQuestionTime() < minTime) {
+                        minTime = (int)q.getQuestionTime();
+                    }
+                }
+            }
+            fieldTime.setPromptText(maxTime == 0 ? "No questions for this subjects yet" :
+                                                minTime + " - " + maxTime + " minutes");
+        } catch(ServiceException e) {
+            logger.error("Could not populate exam time range", e);
+            showError("Could not determine minimum and maximum exam time.");
+        }
+    }
+
     protected abstract void handleCreate();
 
     ExerciseExam createExam() throws ServiceException{
@@ -100,12 +122,9 @@ abstract class NewExerciseExamBase extends BaseController {
         exerciseExam.setAuthor(fieldAuthor.getText());
         exerciseExam.setCreated(new Timestamp(new Date().getTime()));
         exerciseExam.setPassed(false);
-
         int examTime;
 
         exerciseExam.setSubjectID(subject.getSubjectId());
-
-
         try {
             examTime = Integer.parseInt(fieldTime.getText());
             exerciseExam.setExamTime(examTime);
@@ -128,8 +147,7 @@ abstract class NewExerciseExamBase extends BaseController {
             logger.warn("No topic selected");
             showError(
                 "No topic selected. You have to select the topic you want to create an exam to.");
-        }
-        else {
+        } else {
             this.topicList.add(topicListView.getSelectionModel().getSelectedItem().getT());
             secondTopicList.add(topicListView.getSelectionModel().getSelectedItem());
             firstTopicList.remove(topicListView.getSelectionModel().getSelectedItem());
@@ -143,16 +161,13 @@ abstract class NewExerciseExamBase extends BaseController {
         if(firstTopicList.isEmpty()) {
             logger.error("topic view is empty");
             showError("All topics have been added already");
-
-        }else {
+        } else {
             for (ObservableTopic t : temp) {
                 secondTopicList.add(t);
                 firstTopicList.remove(t);
                 this.topicList.add(t.getT());
             }
         }
-
-
     }
 
     public void delete(){
@@ -161,14 +176,11 @@ abstract class NewExerciseExamBase extends BaseController {
             logger.warn("No topic selected");
             showError(
                 "No topic selected. You have to select the topic you want to delete.");
-        }else {
-
+        } else {
             firstTopicList.add(addedTopicListView.getSelectionModel().getSelectedItem());
             this.topicList.remove(addedTopicListView.getSelectionModel().getSelectedItem().getT());
             secondTopicList.remove(addedTopicListView.getSelectionModel().getSelectedItem());
-
         }
-
     }
 
     boolean validateFields() {
