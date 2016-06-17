@@ -11,13 +11,18 @@ import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflictDetection;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -25,6 +30,10 @@ import java.util.zip.ZipInputStream;
 
     private static final Logger logger = LogManager.getLogger();
     private static final String OUTPUT_PATH = "src/main/resources/import";
+    private static final String IMAGE_PATH = "src/main/resources/images";
+    private static final String RESOURCE_PATH = "src/main/resources/resources";
+    private boolean isImage = false;
+    private boolean isResource = false;
     private String unzippedDir = "";
 
     @Autowired private SubjectConflictDetection subjectConflictDetection;
@@ -133,11 +142,18 @@ import java.util.zip.ZipInputStream;
             zipEntry = zipIn.getNextEntry();
 
             while (zipEntry != null) {
-                String filePath = destDir + File.separator + zipEntry.getName();
+                String filePath = "";
+                filePath = destDir + File.separator + zipEntry.getName();
                 extractFileOrMakeDirectory(zipEntry, zipIn, filePath);
                 zipIn.closeEntry();
                 zipEntry = zipIn.getNextEntry();
             }
+            File imageFiles = new File(unzippedDir + File.separator + "image/");
+            File resourceFiles = new File(unzippedDir + File.separator + "resource/");
+
+            copyFile(imageFiles,IMAGE_PATH);
+            copyFile(resourceFiles,RESOURCE_PATH);
+
         } catch (FileNotFoundException e) {
             logger.error("Zip file \"" + fileName + "\" does not exist", e);
             throw new ServiceException("Zip file \"" + fileName + "\" does not exist", e);
@@ -175,6 +191,32 @@ import java.util.zip.ZipInputStream;
         }
         bos.close();
     }
+
+    private void copyFile(File files, String path) throws ServiceException{
+        int replace = 0;
+        for(File f: files.listFiles()){
+            File dest = new File(path + File.separator + f.getName());
+            while(dest.exists()){
+                replace++;
+                String s = FilenameUtils.removeExtension(dest.toString());
+                String extension = FilenameUtils.getExtension(dest.toString());
+                dest.renameTo(new File(s + "_" + replace + "."  + extension));
+            }
+            copyFile(f, dest);
+
+        }
+    }
+
+    private void copyFile (File source, File dest) throws ServiceException{
+        try {
+            Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        }
+        catch (IOException e){
+            logger.error("Could not copy file");
+            throw new ServiceException("Could not copy file");
+        }
+    }
+
 
     private ExportSubject deserialize() throws ServiceException {
         logger.debug("Deserializing ExportSubject.ser");
