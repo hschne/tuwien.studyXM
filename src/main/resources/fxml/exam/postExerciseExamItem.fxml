@@ -30,7 +30,7 @@
          </GridPane.margin>
       </Label>
       <Button fx:id="showResourceButton" mnemonicParsing="false" text="show Resource" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="CENTER" />
-      <ImageView fx:id="questionImageView" fitHeight="40.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+      <ImageView fx:id="questionImageView" fitHeight="40.0" fitWidth="200.0" onMouseClicked="#onClick" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets bottom="10.0" top="10.0" />
          </GridPane.margin>
