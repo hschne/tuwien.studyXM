@@ -31,6 +31,9 @@ import java.util.List;
         this.importedSubject = importedSubject;
     }
 
+    public boolean isResolved(){
+        return topicConflicts.stream().allMatch(p -> p.isResolved());
+    }
 
     public List<TopicConflict> getConflictingTopics() throws ServiceException {
         topicConflictDetection.setSubjects(existingSubject, importedSubject);
@@ -38,19 +41,14 @@ import java.util.List;
         return topicConflicts;
     }
 
-    public List<ExportTopic> getNonConflictingImported() {
+    List<ExportTopic> getNonConflictingImported() {
         List<ExportTopic> nonConflictingImported = new ArrayList<>();
         topicConflicts.forEach(p -> nonConflictingImported.remove(p.getImportedTopic()));
         return nonConflictingImported;
     }
 
-    public void resolve() throws ServiceException{
-        for(TopicConflict topicConflict : topicConflicts){
-            topicConflict.resolve();
-        }
-    }
 
-    public void setTopicConflicts(List<TopicConflict> topicConflicts) {
+    void setTopicConflicts(List<TopicConflict> topicConflicts) {
         this.topicConflicts = topicConflicts;
     }
 }

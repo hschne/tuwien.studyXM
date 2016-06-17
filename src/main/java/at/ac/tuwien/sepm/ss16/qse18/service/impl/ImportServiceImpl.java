@@ -68,6 +68,14 @@ import java.util.zip.ZipInputStream;
         return null;
     }
 
+    @Override public void importTopic(Topic topic) {
+
+    }
+
+    @Override public void importQuestion(ExportQuestion exportQuestion, Topic existingTopic) {
+
+    }
+
 
     private void unzipFile(String inputPath, String fileName) throws ServiceException {
         logger.debug("Unzipping exported file");

@@ -72,15 +72,29 @@ import static org.mockito.Mockito.when;
         assertTrue(topics.isEmpty());
     }
 
-    @Test public void test_resolve_resolveTopicConflictCalled() throws Exception{
+    @Test public void test_isResolved_trueReturned() throws Exception{
         TopicConflict conflict = Mockito.mock(TopicConflict.class);
+        when(conflict.isResolved()).thenReturn(true);
         List<TopicConflict> topicConflicts = new ArrayList<>();
         topicConflicts.add(conflict);
         subjectConflict.setTopicConflicts(topicConflicts);
 
-        subjectConflict.resolve();
+        Boolean result = subjectConflict.isResolved();
 
-        verify(conflict).resolve();
+        assertTrue(result);
+    }
+
+
+    @Test public void test_isResolved_falseReturned() throws Exception{
+        TopicConflict conflict = Mockito.mock(TopicConflict.class);
+        when(conflict.isResolved()).thenReturn(false);
+        List<TopicConflict> topicConflicts = new ArrayList<>();
+        topicConflicts.add(conflict);
+        subjectConflict.setTopicConflicts(topicConflicts);
+
+        Boolean result = subjectConflict.isResolved();
+
+        assertFalse(result);
     }
 
 

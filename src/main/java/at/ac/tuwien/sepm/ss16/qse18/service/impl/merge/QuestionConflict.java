@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
-import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -28,30 +27,23 @@ import org.springframework.stereotype.Component;
         this.importedQuestion = importedQuestion;
     }
 
-    public void setResolution(ConflictResolution resolution) {
-        this.resolution = resolution;
-    }
-
-    public void resolve() throws ServiceException {
-        if (resolution == null) {
-            String message = "No conflict resolution selected. Conflict has not been resolved";
-            logger.error(message);
-            throw new ServiceException(message);
-        }
-        if (resolution == ConflictResolution.EXISTING) {
-            logger.debug("Keeping existing question");
-            return;
-        }
-        if (resolution == ConflictResolution.IMPORTED) {
-            //Remove existing, write imported
-        }
-    }
-
     public ExportQuestion getImportedQuestion() {
         return importedQuestion;
     }
 
     public Question getExistingQuestion() {
         return existingQuestion;
+    }
+
+    public ConflictResolution getResolution() {
+        return resolution;
+    }
+
+    public void setResolution(ConflictResolution resolution) {
+        this.resolution = resolution;
+    }
+
+    public boolean isResolved() {
+        return resolution != ConflictResolution.UNRESOLVED;
     }
 }

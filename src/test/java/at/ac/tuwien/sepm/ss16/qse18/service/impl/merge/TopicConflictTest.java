@@ -52,15 +52,28 @@ import static org.mockito.Mockito.when;
     }
 
 
-    @Test public void test_resolve_questionConflictResolveCalled() throws Exception{
+    @Test public void test_isResolved_conflictNotResolved() throws Exception{
         List<QuestionConflict> conflicts = new ArrayList<>();
         QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
+        when(conflict.isResolved()).thenReturn(false);
         conflicts.add(conflict);
         topicConflict.setQuestionConflicts(conflicts);
 
-        topicConflict.resolve();
+        boolean result = topicConflict.isResolved();
 
-        verify(conflict).resolve();
+        assertFalse(result);
+    }
+
+    @Test public void test_isResolved_conflictResolved() throws Exception{
+        List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
+        when(conflict.isResolved()).thenReturn(true);
+        conflicts.add(conflict);
+        topicConflict.setQuestionConflicts(conflicts);
+
+        boolean result = topicConflict.isResolved();
+
+        assertTrue(result);
     }
 
 

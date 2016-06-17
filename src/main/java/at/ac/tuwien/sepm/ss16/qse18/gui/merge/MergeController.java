@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectMerge;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -57,7 +58,8 @@ import java.util.stream.Collectors;
 
     @FXML void handleConfirm() {
         try {
-            subjectConflict.resolve();
+            SubjectMerge merge = applicationContext.getBean(SubjectMerge.class);
+            merge.merge(subjectConflict);
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);

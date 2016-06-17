@@ -24,7 +24,7 @@ import java.util.List;
     private QuestionConflictDetection questionConflictDetection;
     private Topic existingTopic;
     private ExportTopic importedTopic;
-
+    private boolean resolved;
 
     public void setTopics(Topic existingTopic, ExportTopic importedTopic) {
         this.existingTopic = existingTopic;
@@ -60,11 +60,6 @@ import java.util.List;
         return imported;
     }
 
-    public void resolve() throws ServiceException {
-        for (QuestionConflict questionConflict : questionConflicts) {
-            questionConflict.resolve();
-        }
-    }
 
     public ExportTopic getImportedTopic() {
         return importedTopic;
@@ -73,5 +68,9 @@ import java.util.List;
 
     public Topic getExistingTopic() {
         return existingTopic;
+    }
+
+    public boolean isResolved() {
+        return questionConflicts.stream().allMatch(QuestionConflict::isResolved);
     }
 }
