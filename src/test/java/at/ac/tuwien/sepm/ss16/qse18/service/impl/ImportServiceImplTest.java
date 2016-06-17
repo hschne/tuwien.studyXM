@@ -50,6 +50,7 @@ public class ImportServiceImplTest extends ImportExportBaseTest {
     @Mock private ZipEntry mockZipEntry;
     @Mock private BufferedOutputStream mockBufferedOutputStream;
     @Mock private ObjectInputStream mockObjectInputStream;
+    @Mock private FileOutputStream mockFileOutputStream;
 
     @Mock private File mockFile;
 
@@ -147,6 +148,8 @@ public class ImportServiceImplTest extends ImportExportBaseTest {
     }
 
     private void setUpMocksForSuccessfulUnzipping() throws Exception {
+        whenNew(File.class).withArguments(anyString()).thenReturn(mockFile);
+        whenNew(FileOutputStream.class).withArguments(anyString()).thenReturn(mockFileOutputStream);
         whenNew(FileInputStream.class).withParameterTypes(File.class).withArguments(any(File.class))
             .thenReturn(mockFileInputStream);
         whenNew(ZipInputStream.class).withParameterTypes(InputStream.class)

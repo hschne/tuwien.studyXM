@@ -194,6 +194,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Filling database with values");
 
         if (exportSubject == null) {
+            logger.error("Could not read subject from import file. Subject is null");
             throw new ServiceException("Could not read subject from import file. Subject is null");
         }
 
