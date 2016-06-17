@@ -20,28 +20,41 @@ import java.util.List;
     private TopicConflictDetection topicConflictDetection;
     private List<TopicConflict> topicConflicts;
 
-    Subject getExistingSubject() {
-        return existingSubject;
-    }
-
     @Autowired
     public void setTopicConflictDetection(TopicConflictDetection topicConflictDetection) {
         this.topicConflictDetection = topicConflictDetection;
     }
 
-    public void initialize(Subject existingSubject, ExportSubject importedSubject) {
+    public void initialize(Subject existingSubject, ExportSubject importedSubject)
+        throws ServiceException {
         this.existingSubject = existingSubject;
         this.importedSubject = importedSubject;
-    }
-
-    boolean isResolved() {
-        return topicConflicts.stream().allMatch(TopicConflict::isResolved);
+        initializeSubConflicts();
     }
 
     public List<TopicConflict> getConflictingTopics() throws ServiceException {
+
+        return topicConflicts;
+    }
+
+    public boolean isDuplicate() {
+        return topicConflicts.stream()
+            .allMatch(p -> p.getResolution() == ConflictResolution.DUPLICATE);
+    }
+
+    private void initializeSubConflicts() throws ServiceException {
         topicConflictDetection.setSubjects(existingSubject, importedSubject);
         topicConflicts = topicConflictDetection.getConflictingTopics();
-        return topicConflicts;
+    }
+
+    Subject getExistingSubject() {
+        return existingSubject;
+    }
+
+    boolean isResolved() {
+        // If no more topics are unresolved, the subject conflict is resolved
+        return !topicConflicts.stream()
+            .anyMatch(p -> p.getResolution() == ConflictResolution.UNRESOLVED);
     }
 
     List<ExportTopic> getNonConflictingImported() {

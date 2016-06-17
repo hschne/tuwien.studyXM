@@ -86,9 +86,6 @@
     -fx-background-radius: 0;
 }
 
-.list-cell:filled:selected:focused, .list-cell:filled:selected, .list-cell:selected{
-    -fx-background-color: white;
-}
 
 .selected-question-pane {
     -fx-background-color: #192836;

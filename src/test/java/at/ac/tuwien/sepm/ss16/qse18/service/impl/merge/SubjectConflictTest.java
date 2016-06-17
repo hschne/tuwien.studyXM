@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
@@ -74,7 +73,7 @@ import static org.mockito.Mockito.when;
 
     @Test public void test_isResolved_trueReturned() throws Exception{
         TopicConflict conflict = Mockito.mock(TopicConflict.class);
-        when(conflict.isResolved()).thenReturn(true);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.EXISTING);
         List<TopicConflict> topicConflicts = new ArrayList<>();
         topicConflicts.add(conflict);
         subjectConflict.setTopicConflicts(topicConflicts);
@@ -87,7 +86,7 @@ import static org.mockito.Mockito.when;
 
     @Test public void test_isResolved_falseReturned() throws Exception{
         TopicConflict conflict = Mockito.mock(TopicConflict.class);
-        when(conflict.isResolved()).thenReturn(false);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.UNRESOLVED);
         List<TopicConflict> topicConflicts = new ArrayList<>();
         topicConflicts.add(conflict);
         subjectConflict.setTopicConflicts(topicConflicts);

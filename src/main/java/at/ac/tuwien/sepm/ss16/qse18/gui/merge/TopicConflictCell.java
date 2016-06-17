@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestionConflict;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.ConflictResolution;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
 import org.apache.logging.log4j.LogManager;
@@ -20,36 +20,38 @@ import java.util.Map;
  * @author Hans-Joerg Schroedl
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class TopicConflictCell
-    extends ListCell<ObservableTopicConflict> {
+    extends ListCell<TopicConflict> {
 
     private static final Logger logger = LogManager.getLogger();
 
 
-    private static Map<ObservableTopicConflict, TopicConflictItemController>
-        existingControllers = new HashMap<>();
+    private static Map<TopicConflict, TopicConflictItemController> existingControllers =
+        new HashMap<>();
 
     @Autowired SpringFXMLLoader springFXMLLoader;
 
-    @Override public void updateItem(ObservableTopicConflict topic, boolean empty) {
+    @Override public void updateItem(TopicConflict topic, boolean empty) {
         super.updateItem(topic, empty);
         if (topic != null) {
-            createOrLoadController(topic);
+            boolean isDuplicate = topic.getResolution() == ConflictResolution.DUPLICATE;
+            if(!isDuplicate){
+                createOrLoadController(topic);
+            }
         }
     }
 
-    private void createOrLoadController(ObservableTopicConflict topic) {
-        if(!existingControllers.containsKey(topic)){
+    private void createOrLoadController(TopicConflict topic) {
+        if (!existingControllers.containsKey(topic)) {
             TopicConflictItemController itemController = getController();
             setControllerProperties(topic, itemController);
             existingControllers.put(topic, itemController);
-        }
-        else{
+        } else {
             TopicConflictItemController itemController = existingControllers.get(topic);
             setGraphic(itemController.getRoot());
         }
     }
 
-    private void setControllerProperties(ObservableTopicConflict topicConflict,
+    private void setControllerProperties(TopicConflict topicConflict,
         TopicConflictItemController itemController) {
         itemController.setQuestionConflict(topicConflict);
         setGraphic(itemController.getRoot());
