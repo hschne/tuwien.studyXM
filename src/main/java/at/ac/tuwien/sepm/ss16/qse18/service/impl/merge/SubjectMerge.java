@@ -1,11 +1,9 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
-import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ImportUtil;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
-import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +21,10 @@ import java.util.List;
     private TopicMerge topicMerge;
     private Logger logger = LogManager.getLogger();
 
+    private ImportUtil importUtil;
+
+    private String databaseErrorMessage = "Error configuring database connection. View logs for details.";
+
     @Autowired public void setTopicMerge(TopicMerge topicMerge) {
         this.topicMerge = topicMerge;
     }
@@ -30,6 +32,11 @@ import java.util.List;
     @Autowired public void setImportService(ImportService importService) {
         this.importService = importService;
     }
+
+    @Autowired public void setImportUtil(ImportUtil importUtil) {
+        this.importUtil = importUtil;
+    }
+
 
     public void merge(SubjectConflict subjectConflict) throws ServiceException {
         if (!subjectConflict.isResolved()) {
@@ -41,17 +48,56 @@ import java.util.List;
         importSubject(subjectConflict);
     }
 
+
     private void importSubject(SubjectConflict subjectConflict) throws ServiceException {
-        List<ExportTopic> importedWithoutConflict = subjectConflict.getNonConflictingImported();
-        for (ExportTopic exportTopic : importedWithoutConflict) {
-            importService.importTopic(exportTopic.getTopic(), subjectConflict.getExistingSubject());
+        setAutocommitFalse();
+        try {
+            List<ExportTopic> importedWithoutConflict = subjectConflict.getNonConflictingImported();
+            for (ExportTopic exportTopic : importedWithoutConflict) {
+                importService
+                    .importTopic(exportTopic.getTopic(), subjectConflict.getExistingSubject());
+            }
+            List<TopicConflict> conflictingTopics = subjectConflict.getConflictingTopics();
+            for (TopicConflict topicConflict : conflictingTopics) {
+                topicMerge.merge(topicConflict);
+            }
+        } catch (ServiceException e) {
+            tryRollback();
+            throw e;
         }
-        List<TopicConflict> conflictingTopics = subjectConflict.getConflictingTopics();
-        for (TopicConflict topicConflict : conflictingTopics) {
-            topicMerge.merge(topicConflict);
+
+        setAutocommitTrue();
+    }
+
+    private void tryRollback() throws ServiceException {
+        try {
+            importUtil.rollback();
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(databaseErrorMessage
+                , e);
         }
     }
 
+    private void setAutocommitFalse() throws ServiceException {
+        try {
+            importUtil.setAutocommit(false);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(
+                databaseErrorMessage, e);
+        }
+    }
+
+    private void setAutocommitTrue() throws ServiceException {
+        try {
+            importUtil.setAutocommit(true);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(
+                databaseErrorMessage, e);
+        }
+    }
 
 
 

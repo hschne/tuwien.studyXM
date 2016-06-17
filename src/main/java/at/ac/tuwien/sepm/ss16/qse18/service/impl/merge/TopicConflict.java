@@ -45,14 +45,31 @@ import java.util.List;
         this.questionConflictDetection = questionConflictDetection;
     }
 
+    public Topic getExistingTopic() {
+        return existingTopic;
+    }
 
-    public List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
+    public ConflictResolution getResolution() {
+        boolean allDuplicates = questionConflicts.stream()
+            .allMatch(p -> p.getResolution() == ConflictResolution.DUPLICATE);
+        if (allDuplicates) {
+            return ConflictResolution.DUPLICATE;
+        }
+        boolean unresolvedExist = questionConflicts.stream()
+            .anyMatch(p -> p.getResolution() == ConflictResolution.UNRESOLVED);
+        if (unresolvedExist) {
+            return ConflictResolution.UNRESOLVED;
+        } else
+            return ConflictResolution.EXISTING;
+    }
+
+    List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
         questionConflictDetection.setTopics(existingTopic, importedTopic);
         setQuestionConflicts(questionConflictDetection.getConflictingQuestions());
         return questionConflicts;
     }
 
-    public List<ExportQuestion> getNonConflictingImported() {
+    List<ExportQuestion> getNonConflictingImported() {
         List<ExportQuestion> imported = new ArrayList<>();
         for (QuestionConflict questionConflict : questionConflicts) {
             imported.remove(questionConflict.getImportedQuestion());
@@ -60,17 +77,7 @@ import java.util.List;
         return imported;
     }
 
-
-    public ExportTopic getImportedTopic() {
+    ExportTopic getImportedTopic() {
         return importedTopic;
-    }
-
-
-    public Topic getExistingTopic() {
-        return existingTopic;
-    }
-
-    public boolean isResolved() {
-        return questionConflicts.stream().allMatch(QuestionConflict::isResolved);
     }
 }

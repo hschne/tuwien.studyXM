@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
  * @author Hans-Joerg Schroedl
  */
 
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class QuestionConflict {
-
-    private static final Logger logger = LogManager.getLogger();
+public class QuestionConflict {
 
     private ConflictResolution resolution;
 
@@ -22,7 +20,11 @@ import org.springframework.stereotype.Component;
 
     private ExportQuestion importedQuestion;
 
-    public void setQuestions(Question existingQuestion, ExportQuestion importedQuestion) {
+    public QuestionConflict(){
+        resolution = ConflictResolution.UNRESOLVED;
+    }
+
+    void setQuestions(Question existingQuestion, ExportQuestion importedQuestion) {
         this.existingQuestion = existingQuestion;
         this.importedQuestion = importedQuestion;
     }
@@ -43,7 +45,4 @@ import org.springframework.stereotype.Component;
         this.resolution = resolution;
     }
 
-    public boolean isResolved() {
-        return resolution != ConflictResolution.UNRESOLVED;
-    }
 }

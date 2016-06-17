@@ -9,7 +9,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +31,11 @@ import static org.mockito.Mockito.when;
 
     @Mock private AnswerConflictDetection answerConflictDetection;
 
-    @Mock private ApplicationContext applicationContextMock;
 
     @Before public void setUp() {
         questionConflictDetection = new QuestionConflictDetection();
         questionConflictDetection.setQuestionTopicDao(questionTopicDaoMock);
         questionConflictDetection.setAnswerConflictDetection(answerConflictDetection);
-        questionConflictDetection.setApplicationContext(applicationContextMock);
     }
 
     @Test public void test_getConflictingQuestions_noConflictingQuestions() throws Exception {
@@ -63,8 +60,6 @@ import static org.mockito.Mockito.when;
         importedQuestions.add(new ExportQuestion(duplicateQuestion, null, null));
         when(importedTopic.getQuestions()).thenReturn(importedQuestions);
         when(answerConflictDetection.areAnswersEqual()).thenReturn(false);
-
-        when(applicationContextMock.getBean(QuestionConflict.class)).thenReturn(new QuestionConflict());
 
         questionConflictDetection.setTopics(null, importedTopic);
         List<QuestionConflict> questionConflicts =

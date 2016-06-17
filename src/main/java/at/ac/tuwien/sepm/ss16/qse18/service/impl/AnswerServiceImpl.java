@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.AnswerDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
-import at.ac.tuwien.sepm.ss16.qse18.dao.impl.AnswerDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
@@ -67,9 +66,9 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
-    @Override public Answer deleteAnswer(Answer a) throws ServiceException {
+    @Override public void deleteAnswer(Answer a) throws ServiceException {
         try {
-            return this.adao.deleteAnswer(a);
+            adao.deleteAnswer(a);
         } catch(DaoException e) {
             logger.error("Could not delete answer: ", e);
             throw new ServiceException("Could not delete answer");

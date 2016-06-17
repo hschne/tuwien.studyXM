@@ -57,5 +57,5 @@ public interface AnswerDao {
      * @return Returns the deleted answer.
      * @throws DaoException
      */
-    public Answer deleteAnswer(Answer a) throws DaoException;
+    public void deleteAnswer(Answer a) throws DaoException;
 }

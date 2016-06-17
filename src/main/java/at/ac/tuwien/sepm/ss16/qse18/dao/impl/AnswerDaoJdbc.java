@@ -151,26 +151,24 @@ public class AnswerDaoJdbc implements AnswerDao {
         }
     }
 
-    @Override public Answer deleteAnswer(Answer a) throws DaoException {
+    @Override public void deleteAnswer(Answer a) throws DaoException {
         logger.info("Removing answer from database");
         isAnswerNull(a);
 
         if(a.getAnswerId() < 0) {
             logger.info("Answer not in database, nothing to do");
-            return a;
+            throw new DaoException("Answer not in database, can not delete");
         }
-
         try {
             PreparedStatement ps = con.getConnection().prepareStatement(DELETE_ANSWER);
             ps.setInt(1, a.getAnswerId());
             ps.executeUpdate();
-            a.setAnswerId(-1);
-            return a;
         } catch(Exception e) {
-            logger.debug("Could not delete answer", e);
-            throw new DaoException("Could not delete answer");
+            logger.debug(e);
+            throw new DaoException(e);
         }
     }
+
 
     private Question getCorrespondingQuestion(int questionId) throws DaoException {
         return new QuestionDaoJdbc(this.con).getQuestion(questionId);

@@ -12,16 +12,16 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 public interface StatisticService {
 
     /**
-     * This method returns the number of correct answered questions for a specific topic.
+     * This method returns the number of answered questions for a specific topic.
      *
-     * @param topic topic for which the correct questions are counted.
-     * @return the amount of correct answered questions from this topic.
-     * [0] = correct/false ratio
-     * [1] = correct answered questions
+     * @param topic topic for which the answered questions are counted.
+     * @return the amount of answered questions from this topic.
+     * [0] = answered/not answered ratio
+     * [1] = answered questions
      * [2] = number of questions in the topic
      * @throws ServiceException
      */
-    double[] getCorrectQuestionsForTopic(Topic topic) throws ServiceException;
+    double[] getAnsweredQuestionsForTopic(Topic topic) throws ServiceException;
 
     /**
      * Calculates the average exercise performance for a given subject.
@@ -39,9 +39,17 @@ public interface StatisticService {
     void initializeHints() throws ServiceException;
 
     /**
-     * Retuns the hint for a given subject.
+     * Returns the hint for a given subject.
      * @param subject the subject
      * @return the hint for this subject
      */
-    String getHint(Subject subject);
+    String getHint(Subject subject) throws ServiceException;
+
+    /**
+     * Checks if the user has answered all questions of this subject
+     * @param subject the subject
+     * @return true if all questions were answered, false else
+     * @throws ServiceException
+     */
+    boolean checkKnowItAllAchievement(Subject subject) throws ServiceException;
 }

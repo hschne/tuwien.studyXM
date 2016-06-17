@@ -34,14 +34,11 @@ import java.util.zip.ZipInputStream;
     private static final String RESOURCE_PATH = "src/main/resources/resources";
     private boolean isImage = false;
     private boolean isResource = false;
-    private String unzippedDir = "";
-
-    @Autowired private SubjectConflictDetection subjectConflictDetection;
-
-    @Autowired private SubjectConflict conflict;
 
     @Autowired ApplicationContext applicationContext;
-
+    private String unzippedDir = "";
+    @Autowired private SubjectConflictDetection subjectConflictDetection;
+    @Autowired private SubjectConflict conflict;
     @Autowired private SubjectDao subjectDao;
     @Autowired private TopicDao topicDao;
     @Autowired private QuestionDao questionDao;
@@ -98,6 +95,11 @@ import java.util.zip.ZipInputStream;
         if (subjectConflictDetection.conflictExists(subject)) {
             Subject conflictingSubject = subjectConflictDetection.getConflictingExistingSubject();
             conflict.initialize(conflictingSubject, subject);
+            if (conflict.isDuplicate()) {
+                throw new ServiceException(
+                    "The imported subject is a duplicate of existing subject '" + conflictingSubject
+                        .getName() + "'.");
+            }
             return conflict;
         }
 

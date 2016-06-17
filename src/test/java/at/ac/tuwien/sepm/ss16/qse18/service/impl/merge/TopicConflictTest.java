@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
@@ -55,25 +54,37 @@ import static org.mockito.Mockito.when;
     @Test public void test_isResolved_conflictNotResolved() throws Exception{
         List<QuestionConflict> conflicts = new ArrayList<>();
         QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
-        when(conflict.isResolved()).thenReturn(false);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.UNRESOLVED);
         conflicts.add(conflict);
         topicConflict.setQuestionConflicts(conflicts);
 
-        boolean result = topicConflict.isResolved();
+        ConflictResolution result = topicConflict.getResolution();
 
-        assertFalse(result);
+        assertEquals(ConflictResolution.UNRESOLVED, result);
     }
 
-    @Test public void test_isResolved_conflictResolved() throws Exception{
+    @Test public void test_isResolved_topicIsDuplicate() throws Exception{
         List<QuestionConflict> conflicts = new ArrayList<>();
         QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
-        when(conflict.isResolved()).thenReturn(true);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.DUPLICATE);
         conflicts.add(conflict);
         topicConflict.setQuestionConflicts(conflicts);
 
-        boolean result = topicConflict.isResolved();
+        ConflictResolution result = topicConflict.getResolution();
 
-        assertTrue(result);
+        assertEquals(ConflictResolution.DUPLICATE, result);
+    }
+
+    @Test public void test_isResolved_topicIsResolved() throws Exception{
+        List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.IMPORTED);
+        conflicts.add(conflict);
+        topicConflict.setQuestionConflicts(conflicts);
+
+        ConflictResolution result = topicConflict.getResolution();
+
+        assertEquals(ConflictResolution.EXISTING, result);
     }
 
 

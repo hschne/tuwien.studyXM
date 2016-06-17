@@ -19,7 +19,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 /**
  * @author Bicer Cem
@@ -126,7 +126,7 @@ import static org.mockito.Mockito.when;
 
     @Test(expected = ServiceException.class) public void test_deleteAnswer_withNull_Fail()
         throws Exception {
-        when(mockAnswerDao.deleteAnswer(any(Answer.class))).thenThrow(DaoException.class);
+        doThrow(new DaoException("")).when(mockAnswerDao).deleteAnswer(any(Answer.class));
 
         answerService.deleteAnswer(null);
     }
@@ -135,11 +135,9 @@ import static org.mockito.Mockito.when;
         Answer testAnswer =
             new Answer(1, QuestionType.MULTIPLECHOICE, "TestAnswer", false, new Question());
 
-        when(mockAnswerDao.deleteAnswer(any(Answer.class))).thenReturn(testAnswer);
+        answerService.deleteAnswer(testAnswer);
 
-        Answer testResult = answerService.deleteAnswer(testAnswer);
-        assertEquals("The result should equal the method argument", testAnswer.getAnswerId(),
-            testResult.getAnswerId());
+        verify(mockAnswerDao).deleteAnswer(testAnswer);
     }
 
     @After public void tearDown() throws Exception {

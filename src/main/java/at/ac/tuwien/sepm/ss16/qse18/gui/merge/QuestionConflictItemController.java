@@ -4,10 +4,10 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestionConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.ConflictResolution;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.QuestionConflict;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.CheckBox;
@@ -28,7 +28,7 @@ import java.util.List;
 public class QuestionConflictItemController extends BaseController {
 
     @Autowired QuestionService questionService;
-    private ObservableQuestionConflict questionConflict;
+    private QuestionConflict questionConflict;
 
     @FXML private Node root;
 
@@ -55,7 +55,7 @@ public class QuestionConflictItemController extends BaseController {
     @FXML private CheckBox importedCorrectThree;
     @FXML private CheckBox importedCorrectFour;
 
-    public void setQuestionConflict(ObservableQuestionConflict questionConflict) {
+    public void setQuestionConflict(QuestionConflict questionConflict) {
         this.questionConflict = questionConflict;
         try {
             initializeFields();
@@ -65,13 +65,13 @@ public class QuestionConflictItemController extends BaseController {
     }
 
     @FXML public void handleSelectExisting() {
-        questionConflict.getConflict().setResolution(ConflictResolution.EXISTING);
+        questionConflict.setResolution(ConflictResolution.EXISTING);
         existingPane.getStyleClass().add("selected-question-pane");
         importedPane.getStyleClass().clear();
     }
 
     @FXML public void handleSelectImported() {
-        questionConflict.getConflict().setResolution(ConflictResolution.IMPORTED);
+        questionConflict.setResolution(ConflictResolution.IMPORTED);
         existingPane.getStyleClass().clear();
         importedPane.getStyleClass().add("selected-question-pane");
     }
@@ -81,8 +81,8 @@ public class QuestionConflictItemController extends BaseController {
     }
 
     private void initializeFields() throws ServiceException {
-        Question existingQuestion = questionConflict.getConflict().getExistingQuestion();
-        ExportQuestion importedQuestion = questionConflict.getConflict().getImportedQuestion();
+        Question existingQuestion = questionConflict.getExistingQuestion();
+        ExportQuestion importedQuestion = questionConflict.getImportedQuestion();
         questionText.setText(existingQuestion.getQuestion());
         setFieldsForExisting(existingQuestion);
         setFieldsForImported(importedQuestion);

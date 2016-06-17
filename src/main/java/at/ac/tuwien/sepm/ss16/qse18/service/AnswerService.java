@@ -50,7 +50,7 @@ public interface AnswerService {
      * @param a The answer which shall be removed
      * @return Returns the instance of answer which is removed from the database
      */
-    public Answer deleteAnswer(Answer a) throws ServiceException;
+    public void deleteAnswer(Answer a) throws ServiceException;
 
     /**
      * getCorrespondingQuestion

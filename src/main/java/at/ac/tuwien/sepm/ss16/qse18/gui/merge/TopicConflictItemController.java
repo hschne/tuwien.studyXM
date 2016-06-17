@@ -1,8 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestionConflict;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.QuestionConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,7 +16,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Hans-Joerg Schroedl
@@ -29,23 +28,18 @@ import java.util.stream.Collectors;
 
     @FXML private Label topicName;
 
-    @FXML private ListView<ObservableQuestionConflict> questionConflictListView;
+    @FXML private ListView<QuestionConflict> questionConflictListView;
 
     @Autowired private ApplicationContext applicationContext;
 
-    private ObservableTopicConflict topicConflict;
-
-    private ObservableList<ObservableQuestionConflict> questionConflictList;
-
-    public void setQuestionConflict(ObservableTopicConflict topicConflict) {
-        this.topicConflict = topicConflict;
-        List<ObservableQuestionConflict> observableTopicConflicts =
-            topicConflict.getQuestionConflicts().stream().map(ObservableQuestionConflict::new)
-                        .collect(Collectors.toList());
-        questionConflictList = FXCollections.observableArrayList(observableTopicConflicts);
+    void setQuestionConflict(TopicConflict topicConflict) {
+        List<QuestionConflict> observableTopicConflicts = topicConflict.getQuestionConflicts();
+        ObservableList<QuestionConflict> questionConflictList =
+            FXCollections.observableArrayList(observableTopicConflicts);
         questionConflictListView.setItems(questionConflictList);
-        questionConflictListView.setCellFactory(listView -> applicationContext.getBean(QuestionConflictCell.class));
-        topicName.setText(topicConflict.getTopicName());
+        questionConflictListView
+            .setCellFactory(listView -> applicationContext.getBean(QuestionConflictCell.class));
+        topicName.setText(topicConflict.getExistingTopic().getTopic());
     }
 
     public Node getRoot() {
