@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
@@ -23,7 +24,7 @@ public interface ImportService {
      */
     SubjectConflict importSubject(File zippedFile) throws ServiceException;
 
-    void importTopic(Topic topic);
+    void importTopic(Topic topic, Subject existingSubject);
 
     void importQuestion(ExportQuestion exportQuestion, Topic existingTopic);
 }

@@ -103,7 +103,7 @@ import java.util.zip.ZipInputStream;
         return null;
     }
 
-    @Override public void importTopic(Topic topic) {
+    @Override public void importTopic(Topic topic, Subject existingSubject) {
 
     }
 

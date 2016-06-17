@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -21,6 +20,10 @@ import java.util.List;
     private TopicConflictDetection topicConflictDetection;
     private List<TopicConflict> topicConflicts;
 
+    Subject getExistingSubject() {
+        return existingSubject;
+    }
+
     @Autowired
     public void setTopicConflictDetection(TopicConflictDetection topicConflictDetection) {
         this.topicConflictDetection = topicConflictDetection;
@@ -31,8 +34,8 @@ import java.util.List;
         this.importedSubject = importedSubject;
     }
 
-    public boolean isResolved(){
-        return topicConflicts.stream().allMatch(p -> p.isResolved());
+    boolean isResolved() {
+        return topicConflicts.stream().allMatch(TopicConflict::isResolved);
     }
 
     public List<TopicConflict> getConflictingTopics() throws ServiceException {

@@ -19,59 +19,40 @@ import java.util.List;
  */
 @Component public class SubjectMerge {
 
-    @Autowired ImportService importService;
-    @Autowired QuestionService questionService;
+    private ImportService importService;
+    private TopicMerge topicMerge;
     private Logger logger = LogManager.getLogger();
+
+    @Autowired public void setTopicMerge(TopicMerge topicMerge) {
+        this.topicMerge = topicMerge;
+    }
+
+    @Autowired public void setImportService(ImportService importService) {
+        this.importService = importService;
+    }
 
     public void merge(SubjectConflict subjectConflict) throws ServiceException {
         if (!subjectConflict.isResolved()) {
-            throw new ServiceException(
-                "The conflict has not been resolved. Please make sure that all conflicting questions have a resolution.");
-        }
-        List<ExportTopic> importedWithoutConflict = subjectConflict.getNonConflictingImported();
-        for (ExportTopic exportTopic : importedWithoutConflict) {
-            importService.importTopic(exportTopic.getTopic());
-        }
-        List<TopicConflict> conflictingTopics = subjectConflict.getConflictingTopics();
-        for (TopicConflict topicConflict : conflictingTopics) {
-            merge(topicConflict);
-        }
-    }
-
-    private void merge(TopicConflict topicConflict) throws ServiceException {
-        List<ExportQuestion> importedQuestionWithoutConflict =
-            topicConflict.getNonConflictingImported();
-        for (ExportQuestion exportQuestion : importedQuestionWithoutConflict) {
-            importService.importQuestion(exportQuestion, topicConflict.getExistingTopic());
-        }
-        Topic existingTopic = topicConflict.getExistingTopic();
-        List<QuestionConflict> questionConflicts = topicConflict.getQuestionConflicts();
-        for (QuestionConflict questionConflict : questionConflicts) {
-            merge(questionConflict, existingTopic);
-        }
-    }
-
-    private void merge(QuestionConflict questionConflict, Topic existingTopic)
-        throws ServiceException {
-        ConflictResolution resolution = questionConflict.getResolution();
-        if (resolution == null) {
-            String message = "No conflict resolution selected. Conflict has not been resolved";
+            String message =
+                "The conflict has not been resolved. Please make sure that all conflicting questions have a resolution.";
             logger.error(message);
             throw new ServiceException(message);
         }
-        if (resolution == ConflictResolution.EXISTING
-            || resolution == ConflictResolution.DUPLICATE) {
-            logger.debug("Keeping existing question");
-            return;
+        importSubject(subjectConflict);
+    }
+
+    private void importSubject(SubjectConflict subjectConflict) throws ServiceException {
+        List<ExportTopic> importedWithoutConflict = subjectConflict.getNonConflictingImported();
+        for (ExportTopic exportTopic : importedWithoutConflict) {
+            importService.importTopic(exportTopic.getTopic(), subjectConflict.getExistingSubject());
         }
-        if (resolution == ConflictResolution.IMPORTED) {
-            questionService.deleteQuestion(questionConflict.getExistingQuestion());
-            ExportQuestion exportQuestion = questionConflict.getImportedQuestion();
-            Question importedQuestion = exportQuestion.getQuestion();
-            Question createdQuestion =
-                questionService.createQuestion(importedQuestion, existingTopic);
-            questionService.setCorrespondingAnswers(createdQuestion, exportQuestion.getAnswers());
+        List<TopicConflict> conflictingTopics = subjectConflict.getConflictingTopics();
+        for (TopicConflict topicConflict : conflictingTopics) {
+            topicMerge.merge(topicConflict);
         }
     }
+
+
+
 
 }
