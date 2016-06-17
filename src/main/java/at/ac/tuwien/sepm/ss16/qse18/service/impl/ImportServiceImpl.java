@@ -104,9 +104,10 @@ import java.util.zip.ZipInputStream;
         return null;
     }
 
-    @Override public void importTopic(Topic topic, Subject existingSubject) {
+    @Override public void importTopic(ExportTopic exportTopic, Subject existingSubject) {
 
     }
+
 
     @Override public void importQuestion(ExportQuestion exportQuestion, Topic existingTopic) {
 

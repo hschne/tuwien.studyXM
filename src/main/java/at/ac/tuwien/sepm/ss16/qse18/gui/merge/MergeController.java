@@ -1,12 +1,14 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectMerge;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -23,6 +25,9 @@ import java.util.List;
 @Component public class MergeController extends BaseController {
 
     @Autowired ApplicationContext applicationContext;
+
+    @Autowired SubjectOverviewController subjectOverviewController;
+
     @FXML private ListView<TopicConflict> listView;
     @FXML private Button cancelButton;
     @FXML private Button confirmButton;
@@ -56,13 +61,16 @@ import java.util.List;
         try {
             SubjectMerge merge = applicationContext.getBean(SubjectMerge.class);
             merge.merge(subjectConflict);
+            subjectOverviewController.initialize();
+            showInformation("Subject has successfully been inported");
+            stage.close();
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
         }
     }
 
-    @FXML void handleCancel() {
+    @FXML public void handleCancel(Event e) {
         boolean shouldCancel = showConfirmation(
             "This will cancel the import. Resolved conflicts will be lost. Are you sure?");
         if (shouldCancel) {

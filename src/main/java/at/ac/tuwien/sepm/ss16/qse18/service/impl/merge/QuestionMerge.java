@@ -1,8 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
-import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
+import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
@@ -15,11 +14,18 @@ import org.springframework.stereotype.Component;
  */
 @Component public class QuestionMerge {
 
-    QuestionService questionService;
+    private QuestionService questionService;
+
+    private ImportService importService;
+
     private Logger logger = LogManager.getLogger();
 
     @Autowired public void setQuestionService(QuestionService questionService) {
         this.questionService = questionService;
+    }
+
+    @Autowired public void setImportService(ImportService importService) {
+        this.importService = importService;
     }
 
     public void merge(QuestionConflict questionConflict, Topic existingTopic)
@@ -37,12 +43,9 @@ import org.springframework.stereotype.Component;
         }
         if (resolution == ConflictResolution.IMPORTED) {
             questionService.deleteQuestion(questionConflict.getExistingQuestion());
-            ExportQuestion exportQuestion = questionConflict.getImportedQuestion();
-            Question importedQuestion = exportQuestion.getQuestion();
-            Question createdQuestion =
-                questionService.createQuestion(importedQuestion, existingTopic);
-            questionService.setCorrespondingAnswers(createdQuestion, exportQuestion.getAnswers());
+            importService.importQuestion(questionConflict.getImportedQuestion(), existingTopic);
         }
     }
+
 
 }

@@ -55,7 +55,7 @@ import java.util.List;
             List<ExportTopic> importedWithoutConflict = subjectConflict.getNonConflictingImported();
             for (ExportTopic exportTopic : importedWithoutConflict) {
                 importService
-                    .importTopic(exportTopic.getTopic(), subjectConflict.getExistingSubject());
+                    .importTopic(exportTopic, subjectConflict.getExistingSubject());
             }
             List<TopicConflict> conflictingTopics = subjectConflict.getConflictingTopics();
             for (TopicConflict topicConflict : conflictingTopics) {
