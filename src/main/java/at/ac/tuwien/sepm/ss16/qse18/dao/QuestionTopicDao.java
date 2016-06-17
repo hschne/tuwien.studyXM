@@ -30,10 +30,12 @@ public interface QuestionTopicDao {
      * */
     List<Topic> getTopicsFromQuestion(Question question) throws DaoException;
 
-    void removeQuestionFromTopic(Topic topic) throws DaoException;
+    void removeTopic(Topic topic) throws DaoException;
 
 
-     /***
+    void removeQuestion(Question question) throws DaoException;
+
+    /***
      * Inserts a relation between a {@param question} and a {@param topic} in the resource.
      *
      * @param question the question for which the relation is inserted

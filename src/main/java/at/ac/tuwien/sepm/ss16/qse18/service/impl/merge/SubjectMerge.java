@@ -48,7 +48,6 @@ import java.util.List;
         importSubject(subjectConflict);
     }
 
-
     private void importSubject(SubjectConflict subjectConflict) throws ServiceException {
         setAutocommitFalse();
         try {

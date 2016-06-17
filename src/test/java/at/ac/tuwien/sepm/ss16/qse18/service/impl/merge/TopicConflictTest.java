@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopic;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -22,7 +24,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class) public class TopicConflictTest {
 
-@Mock QuestionConflictDetection questionConflictDetectionMock;
+    @Mock QuestionConflictDetection questionConflictDetectionMock;
 
     private TopicConflict topicConflict;
 
@@ -41,13 +43,40 @@ import static org.mockito.Mockito.when;
         assertEquals(conflicts, result);
     }
 
-    @Test public void test_getNonConflictingImported_nonConflictingReturned() throws Exception{
+    @Test public void test_getNonConflictingImported_importedHaveConflicts() throws Exception{
+        ExportQuestion exportQuestion = new ExportQuestion(null, null,null);
+        ExportTopic importedTopic = mock(ExportTopic.class);
+        List<ExportQuestion> importedQuestions = new ArrayList<>();
+        importedQuestions.add(exportQuestion);
+        when(importedTopic.getQuestions()).thenReturn(importedQuestions);
+        topicConflict.setTopics(createDummyTopic(), importedTopic);
         List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict questionConflict = mock(QuestionConflict.class);
+        when(questionConflict.getImportedQuestion()).thenReturn(exportQuestion);
+        conflicts.add(questionConflict);
         topicConflict.setQuestionConflicts(conflicts);
 
         List<ExportQuestion> result = topicConflict.getNonConflictingImported();
 
         assertTrue(result.isEmpty());
+    }
+
+    @Test public void test_getNonConflictingImported_importedHaveNoConflicts() throws Exception{
+        ExportQuestion exportQuestion = new ExportQuestion(null, null,null);
+        ExportTopic importedTopic = mock(ExportTopic.class);
+        List<ExportQuestion> importedQuestions = new ArrayList<>();
+        importedQuestions.add(exportQuestion);
+        when(importedTopic.getQuestions()).thenReturn(importedQuestions);
+        topicConflict.setTopics(createDummyTopic(), importedTopic);
+        List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict questionConflict = mock(QuestionConflict.class);
+        when(questionConflict.getImportedQuestion()).thenReturn(new ExportQuestion(null, null,null));
+        conflicts.add(questionConflict);
+        topicConflict.setQuestionConflicts(conflicts);
+
+        List<ExportQuestion> result = topicConflict.getNonConflictingImported();
+
+        assertFalse(result.isEmpty());
     }
 
 

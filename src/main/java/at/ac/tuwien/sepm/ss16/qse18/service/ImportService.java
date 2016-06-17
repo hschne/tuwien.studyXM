@@ -26,8 +26,9 @@ public interface ImportService {
      */
     SubjectConflict importSubject(File zippedFile) throws ServiceException;
 
+    void importSubject(ExportSubject exportSubject) throws ServiceException;
 
-    void importTopic(ExportTopic exportTopic, Subject existingSubject);
+    void importTopic(ExportTopic exportTopic, Subject existingSubject) throws ServiceException;
 
-    void importQuestion(ExportQuestion exportQuestion, Topic existingTopic);
+    void importQuestion(ExportQuestion exportQuestion, Topic existingTopic) throws ServiceException;
 }

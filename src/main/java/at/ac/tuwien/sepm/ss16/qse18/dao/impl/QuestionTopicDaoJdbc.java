@@ -109,12 +109,24 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         return questions;
     }
 
-    @Override public void removeQuestionFromTopic(Topic topic) throws DaoException {
+    @Override public void removeTopic(Topic topic) throws DaoException {
         PreparedStatement pstmt;
         try {
             pstmt = database.getConnection()
                 .prepareStatement("DELETE FROM REL_QUESTION_TOPIC WHERE TOPICID =?;");
             pstmt.setInt(1, topic.getTopicId());
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    @Override public void removeQuestion(Question question) throws DaoException {
+        PreparedStatement pstmt;
+        try {
+            pstmt = database.getConnection()
+                .prepareStatement("DELETE FROM REL_QUESTION_TOPIC WHERE QUESTIONID = ? ;");
+            pstmt.setInt(1, question.getQuestionId());
             pstmt.executeUpdate();
 
         } catch (SQLException e) {

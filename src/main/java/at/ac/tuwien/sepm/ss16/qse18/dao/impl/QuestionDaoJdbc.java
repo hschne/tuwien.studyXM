@@ -233,10 +233,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     }
 
     private void removeLinksToTopics(Question question) throws DaoException {
-        List<Topic> topics = questionTopicDao.getTopicsFromQuestion(question);
-        for (Topic topic : topics) {
-            questionTopicDao.removeQuestionFromTopic(topic);
-        }
+        questionTopicDao.removeQuestion(question);
     }
 
     private void deleteQuestionFromExams(Question question) throws SQLException {

@@ -9,9 +9,9 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ImportService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflictDetection;
+import org.apache.commons.io.FilenameUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -19,10 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -32,9 +29,6 @@ import java.util.zip.ZipInputStream;
     private static final String OUTPUT_PATH = "src/main/resources/import";
     private static final String IMAGE_PATH = "src/main/resources/images";
     private static final String RESOURCE_PATH = "src/main/resources/resources";
-    private boolean isImage = false;
-    private boolean isResource = false;
-
     @Autowired ApplicationContext applicationContext;
     private String unzippedDir = "";
     @Autowired private SubjectConflictDetection subjectConflictDetection;
@@ -45,41 +39,6 @@ import java.util.zip.ZipInputStream;
     @Autowired private ResourceDao resourceDao;
     @Autowired private AnswerDao answerDao;
     @Autowired private ImportUtil importUtil;
-
-    // is needed for unit testing
-    public void setSubjectDao(SubjectDao subjectDao) {
-        this.subjectDao = subjectDao;
-    }
-
-    // is needed for unit testing
-    public void setTopicDao(TopicDao topicDao) {
-        this.topicDao = topicDao;
-    }
-
-    // is needed for unit testing
-    public void setQuestionDao(QuestionDao questionDao) {
-        this.questionDao = questionDao;
-    }
-
-    // is needed for unit testing
-    public void setResourceDao(ResourceDao resourceDao) {
-        this.resourceDao = resourceDao;
-    }
-
-    // is needed for unit testing
-    public void setAnswerDao(AnswerDao answerDao) {
-        this.answerDao = answerDao;
-    }
-
-    // is needed for unit testing
-    public void setImportUtil(ImportUtil importUtil) {
-        this.importUtil = importUtil;
-    }
-
-    // is needed for unit testing
-    public void setSubjectConflict(SubjectConflict conflict) {
-        this.conflict = conflict;
-    }
 
     @Autowired
     public void setSubjectConflictDetection(SubjectConflictDetection subjectConflictDetection) {
@@ -105,7 +64,7 @@ import java.util.zip.ZipInputStream;
 
         setDatabaseAutocommit(false);
         try {
-            fillDatabase(subject);
+            importSubject(subject);
         } catch (ServiceException e) {
             rollbackChanges();
             throw e;
@@ -114,22 +73,48 @@ import java.util.zip.ZipInputStream;
         return null;
     }
 
-    @Override public void importTopic(ExportTopic exportTopic, Subject existingSubject) {
-
+    @Override public void importSubject(ExportSubject exportSubject) throws ServiceException {
+        Subject subject = createSubject(exportSubject.getSubject());
+        List<ExportTopic> exportTopics = exportSubject.getTopics();
+        for (ExportTopic exportTopic : exportTopics) {
+            importTopic(exportTopic, subject);
+        }
     }
 
-
-    @Override public void importQuestion(ExportQuestion exportQuestion, Topic existingTopic) {
-
+    @Override public void importTopic(ExportTopic exportTopic, Subject existingSubject)
+        throws ServiceException {
+        logger.debug("Creating topics to " + existingSubject);
+        try {
+            Topic topic = topicDao.createTopic(exportTopic.getTopic(), existingSubject);
+            for (ExportQuestion exportQuestion : exportTopic.getQuestions()) {
+                importQuestion(exportQuestion, topic);
+            }
+        } catch (DaoException e) {
+            logger.error("Could not import topics.", e);
+            throw new ServiceException(e.getMessage());
+        }
     }
 
+    @Override public void importQuestion(ExportQuestion exportQuestion, Topic existingTopic)
+        throws ServiceException {
+        try {
+            exportQuestion.getQuestion().setQuestionId(-1);
+            Question question =
+                questionDao.createQuestion(exportQuestion.getQuestion(), existingTopic);
+            createAnswersFor(question, exportQuestion.getAnswers());
+            createResource(exportQuestion);
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e.getMessage());
+        }
+    }
 
     private void unzipFile(String inputPath, String fileName) throws ServiceException {
         logger.debug("Unzipping exported file");
 
         ZipInputStream zipIn = null;
-        FileInputStream fileInputStream = null;
-        ZipEntry zipEntry = null;
+        FileInputStream fileInputStream;
+        ZipEntry zipEntry;
 
         try {
             File destDir = new File(
@@ -151,7 +136,7 @@ import java.util.zip.ZipInputStream;
                 zipIn.closeEntry();
                 zipEntry = zipIn.getNextEntry();
             }
-            if(unzippedDir != null) {
+            if (unzippedDir != null) {
                 File imageFiles = new File(unzippedDir + File.separator + "image/");
                 File resourceFiles = new File(unzippedDir + File.separator + "resource/");
 
@@ -197,36 +182,33 @@ import java.util.zip.ZipInputStream;
         bos.close();
     }
 
-    private void copyFile(File files, String path) throws ServiceException{
+    private void copyFile(File files, String path) throws ServiceException {
         int replace = 0;
-        for(File f: files.listFiles()){
+        for (File f : files.listFiles()) {
             File dest = new File(path + File.separator + f.getName());
-            while(dest.exists()){
+            while (dest.exists()) {
                 replace++;
                 String s = FilenameUtils.removeExtension(dest.toString());
                 String extension = FilenameUtils.getExtension(dest.toString());
-                dest.renameTo(new File(s + "_" + replace + "."  + extension));
+                dest.renameTo(new File(s + "_" + replace + "." + extension));
             }
             copyFile(f, dest);
         }
     }
 
-    private void copyFile (File source, File dest) throws ServiceException{
+    private void copyFile(File source, File dest) throws ServiceException {
         try {
             Files.copy(source.toPath(), dest.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        }
-        catch (IOException e){
-            logger.error("Could not copy file");
-            throw new ServiceException("Could not copy file");
+        } catch (IOException e) {
+            logger.error(e);
+            throw new ServiceException("Could not copy file.", e);
         }
     }
-
 
     private ExportSubject deserialize() throws ServiceException {
         logger.debug("Deserializing ExportSubject.ser");
 
-        ExportSubject result = null;
-
+        ExportSubject result;
         try {
             FileInputStream fileIn = new FileInputStream(unzippedDir + "/ExportSubject.ser");
             ObjectInputStream in = new ObjectInputStream(fileIn);
@@ -242,39 +224,6 @@ import java.util.zip.ZipInputStream;
         }
 
         return result;
-    }
-
-    private void fillDatabase(ExportSubject exportSubject) throws ServiceException {
-        logger.debug("Filling database with values");
-
-        if (exportSubject == null) {
-            logger.error("Could not read subject from import file. Subject is null");
-            throw new ServiceException("Could not read subject from import file. Subject is null");
-        }
-
-        Subject subject = createSubject(exportSubject.getSubject());
-        List<Topic> topics = createTopics(subject, exportSubject.getTopics());
-
-        int i = 0;
-        for (ExportTopic exportTopic : exportSubject.getTopics()) {
-            List<Question> questions = createQuestions(topics.get(i), exportTopic.getQuestions());
-
-            int j = 0;
-            for (ExportQuestion exportQuestion : exportTopic.getQuestions()) {
-                resetQuestionAnswerRelation(exportQuestion.getAnswers(), questions.get(j));
-                createAnswers(exportQuestion.getAnswers());
-                j++;
-            }
-
-            createResource(exportTopic.getQuestions());
-            i++;
-        }
-    }
-
-    private void resetQuestionAnswerRelation(List<Answer> answers, Question question) {
-        for (Answer answer : answers) {
-            answer.setQuestion(question);
-        }
     }
 
     private void setDatabaseAutocommit(boolean value) throws ServiceException {
@@ -295,7 +244,7 @@ import java.util.zip.ZipInputStream;
             importUtil.rollback();
         } catch (DaoException e) {
             logger.error("Could not roll back changes", e);
-            throw new ServiceException("Could not roll back changes", e);
+            throw new ServiceException("Could not roll back changes.", e);
         }
     }
 
@@ -306,73 +255,68 @@ import java.util.zip.ZipInputStream;
             return subjectDao.createSubject(subject);
         } catch (DaoException e) {
             logger.error("Could not import subject", e);
-            throw new ServiceException("Could not import subject", e);
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 
-    private List<Topic> createTopics(Subject subject, List<ExportTopic> topics)
-        throws ServiceException {
-        logger.debug("Creating topics to " + subject);
-        List<Topic> created = new ArrayList<>();
-
-        try {
-            for (ExportTopic eTopic : topics) {
-                created.add(topicDao.createTopic(eTopic.getTopic(), subject));
-            }
-            return created;
-        } catch (DaoException e) {
-            logger.error("Could not import topics", e);
-            throw new ServiceException("Could not import topics", e);
-        }
-    }
-
-    private List<Question> createQuestions(Topic topic, List<ExportQuestion> questions)
-        throws ServiceException {
-        logger.debug("Create questions to topic " + topic);
-        List<Question> created = new ArrayList<>();
-
-        try {
-            for (ExportQuestion eQuestion : questions) {
-                eQuestion.getQuestion().setQuestionId(-1);
-                created.add(questionDao.createQuestion(eQuestion.getQuestion(), topic));
-            }
-            return created;
-        } catch (DaoException e) {
-            logger.error("Could not import questions", e);
-            throw new ServiceException("Could not import questions", e);
-        }
-    }
-
-    private List<Answer> createAnswers(List<Answer> answers) throws ServiceException {
+    private void createAnswersFor(Question question, List<Answer> answers) throws ServiceException {
         logger.debug("Creating answers");
-        List<Answer> created = new ArrayList<>();
-
         try {
             for (Answer answer : answers) {
-                created.add(answerDao.createAnswer(answer));
+                answer.setQuestion(question);
+                answerDao.createAnswer(answer);
             }
-            return created;
         } catch (DaoException e) {
-            logger.error("Could not import answers", e);
-            throw new ServiceException("Could not import answers", e);
+            logger.error(e);
+            throw new ServiceException(e.getMessage(), e);
         }
     }
 
-    private List<Resource> createResource(List<ExportQuestion> questions) throws ServiceException {
+    private void createResource(ExportQuestion question) throws ServiceException {
         logger.debug("Creating questions");
-        List<Resource> created = new ArrayList<>();
-
         try {
-            for (ExportQuestion eQuestion : questions) {
-                Resource tmp = eQuestion.getResource().getResource();
-                if (tmp != null) {
-                    created.add(resourceDao.createResource(tmp));
-                }
+            Resource resource = question.getResource().getResource();
+            if (resource != null) {
+                resourceDao.createResource(resource);
             }
-            return created;
         } catch (DaoException e) {
             logger.error("Could not import resource", e);
-            throw new ServiceException("Could not import resource", e);
+            throw new ServiceException(e.getMessage(), e);
         }
+    }
+
+    // is needed for unit testing
+    void setSubjectDao(SubjectDao subjectDao) {
+        this.subjectDao = subjectDao;
+    }
+
+    // is needed for unit testing
+    void setTopicDao(TopicDao topicDao) {
+        this.topicDao = topicDao;
+    }
+
+    // is needed for unit testing
+    void setQuestionDao(QuestionDao questionDao) {
+        this.questionDao = questionDao;
+    }
+
+    // is needed for unit testing
+    void setResourceDao(ResourceDao resourceDao) {
+        this.resourceDao = resourceDao;
+    }
+
+    // is needed for unit testing
+    void setAnswerDao(AnswerDao answerDao) {
+        this.answerDao = answerDao;
+    }
+
+    // is needed for unit testing
+    void setImportUtil(ImportUtil importUtil) {
+        this.importUtil = importUtil;
+    }
+
+    // is needed for unit testing
+    void setSubjectConflict(SubjectConflict conflict) {
+        this.conflict = conflict;
     }
 }

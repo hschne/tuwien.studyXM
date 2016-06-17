@@ -31,7 +31,6 @@ import java.util.List;
     @FXML private ListView<TopicConflict> listView;
     @FXML private Button cancelButton;
     @FXML private Button confirmButton;
-    private ObservableList<TopicConflict> topicConflictList;
     private SubjectConflict subjectConflict;
     private Stage stage;
 
@@ -52,22 +51,29 @@ import java.util.List;
 
     private void initializeListView(SubjectConflict subjectConflict) throws ServiceException {
         List<TopicConflict> observableTopicConflicts = subjectConflict.getConflictingTopics();
-        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
+        ObservableList<TopicConflict> topicConflictList =
+            FXCollections.observableArrayList(observableTopicConflicts);
         listView.setItems(topicConflictList);
-        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
+        listView.setCellFactory(lv -> applicationContext.getBean(TopicConflictCell.class));
     }
 
     @FXML void handleConfirm() {
         try {
             SubjectMerge merge = applicationContext.getBean(SubjectMerge.class);
             merge.merge(subjectConflict);
+            showFeedback();
             subjectOverviewController.initialize();
-            showInformation("Subject has successfully been inported");
             stage.close();
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
         }
+    }
+
+    private void showFeedback(){
+        //TODO: Detailliertes Feedback einführen
+        showSuccess("Subject "+subjectConflict.getSubjectName() +" has successfully been imported.\n"
+            + "Duplicates have been ignored and new/selected topics have been added.");
     }
 
     @FXML public void handleCancel(Event e) {

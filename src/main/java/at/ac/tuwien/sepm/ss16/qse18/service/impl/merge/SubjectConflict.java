@@ -20,6 +20,10 @@ import java.util.List;
     private TopicConflictDetection topicConflictDetection;
     private List<TopicConflict> topicConflicts;
 
+    public String getSubjectName(){
+        return existingSubject.getName();
+    }
+
     @Autowired
     public void setTopicConflictDetection(TopicConflictDetection topicConflictDetection) {
         this.topicConflictDetection = topicConflictDetection;

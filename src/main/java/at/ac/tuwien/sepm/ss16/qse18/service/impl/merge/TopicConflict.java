@@ -24,19 +24,12 @@ import java.util.List;
     private QuestionConflictDetection questionConflictDetection;
     private Topic existingTopic;
     private ExportTopic importedTopic;
-    private boolean resolved;
-
-    public void setTopics(Topic existingTopic, ExportTopic importedTopic) {
-        this.existingTopic = existingTopic;
-        this.importedTopic = importedTopic;
-        questionConflicts = new ArrayList<>();
-    }
 
     public List<QuestionConflict> getQuestionConflicts() {
         return questionConflicts;
     }
 
-    public void setQuestionConflicts(List<QuestionConflict> questionConflicts) {
+    void setQuestionConflicts(List<QuestionConflict> questionConflicts) {
         this.questionConflicts = questionConflicts;
     }
 
@@ -63,6 +56,12 @@ import java.util.List;
             return ConflictResolution.EXISTING;
     }
 
+    void setTopics(Topic existingTopic, ExportTopic importedTopic) {
+        this.existingTopic = existingTopic;
+        this.importedTopic = importedTopic;
+        questionConflicts = new ArrayList<>();
+    }
+
     List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
         questionConflictDetection.setTopics(existingTopic, importedTopic);
         setQuestionConflicts(questionConflictDetection.getConflictingQuestions());
@@ -70,7 +69,7 @@ import java.util.List;
     }
 
     List<ExportQuestion> getNonConflictingImported() {
-        List<ExportQuestion> imported = new ArrayList<>();
+        List<ExportQuestion> imported = importedTopic.getQuestions();
         for (QuestionConflict questionConflict : questionConflicts) {
             imported.remove(questionConflict.getImportedQuestion());
         }

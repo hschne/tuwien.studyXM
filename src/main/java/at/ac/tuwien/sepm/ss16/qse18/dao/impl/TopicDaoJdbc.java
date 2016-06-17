@@ -143,7 +143,7 @@ import java.util.List;
             logger.error(e);
             throw new DaoException(e.getMessage());
         }
-        questionTopicDao.removeQuestionFromTopic(topic);
+        questionTopicDao.removeTopic(topic);
         resourceTopicDao.removeResourceTopic(topic);
         PreparedStatement pstmt = null;
         try {
