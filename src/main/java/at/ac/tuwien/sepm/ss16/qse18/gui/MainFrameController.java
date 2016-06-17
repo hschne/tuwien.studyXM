@@ -15,6 +15,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController;
+import at.ac.tuwien.sepm.ss16.qse18.gui.statistic.StatisticOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.util.AlertBuilder;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
@@ -84,6 +85,15 @@ import java.util.List;
         handleChooseResource(null, null, null);
     }
 
+    @FXML public void handleStatistics() {
+        logger.debug("Loading statistics overview");
+        try {
+            setSubView("/fxml/statistic/statisticOverview.fxml", StatisticOverviewController.class,paneContent);
+        } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
     public void handleChooseResource(List inputs, Label resourceLabel, QuestionType questionType) {
         logger.debug("Loading resource view with input");
         try {
@@ -96,9 +106,7 @@ import java.util.List;
         }
     }
 
-    @FXML public void handleStatistics() {
-        //TODO: Display view here
-    }
+
 
     public void handleQuestionOverview(ObservableSubject subject) {
         logger.debug("Loading question overview for " + subject.getName());

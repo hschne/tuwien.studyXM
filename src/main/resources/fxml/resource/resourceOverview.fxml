@@ -39,10 +39,10 @@
                     <children>
                         <Button mnemonicParsing="false" onAction="#handleNew" text="add new resource" GridPane.columnIndex="2">
                             <GridPane.margin>
-                                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+                                <Insets bottom="10.0" left="10.0" right="20.0" top="10.0" />
                             </GridPane.margin>
                      <font>
-                        <Font size="16.0" />
+                        <Font size="14.0" />
                      </font>
                         </Button>
                     </children>

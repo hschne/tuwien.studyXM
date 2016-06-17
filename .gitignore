@@ -6,12 +6,13 @@
 
 **/resources/images/
 **/resources/resources/
+**/resources/import/
 !graph.jpg
 !graph.png
 !imagePlaceholder.png
 !aktivitaetsdiagramm_1.png
 !aktivitaetsdiagramm_2.png
-!decorater_pattern.png
+!decorator_pattern.png
 !klassendiagramm_1.png
 !mietvertrag_binaer.png
 !mietvertrag_ternaer.png
@@ -45,6 +46,14 @@
 !fiber.png
 !paper.png
 !logo.png
+!statistic.png
+!acbrain.png
+!acknow.png
+!actime.png
+!export.png
+!newExam.png
+!resume.png
+
 log/
 target/
 out/

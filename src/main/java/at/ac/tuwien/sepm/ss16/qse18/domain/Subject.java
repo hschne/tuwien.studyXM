@@ -17,7 +17,7 @@ import java.text.MessageFormat;
  */
 public class Subject implements Serializable {
 
-    private int subjectId;
+    private transient int subjectId;
 
     private String name;
 

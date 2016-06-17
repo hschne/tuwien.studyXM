@@ -22,6 +22,12 @@ public class DummyEntityFactory {
         return s;
     }
 
+    public static List<Subject> createDummySubjects(){
+        List<Subject> subjects = new ArrayList<>();
+        subjects.add(createDummySubject());
+        return subjects;
+    }
+
     public static Topic createDummyTopic() {
         Topic topic = new Topic();
         topic.setTopic("Topic");
@@ -34,6 +40,25 @@ public class DummyEntityFactory {
         List<Topic> topics = new ArrayList<>();
         topics.add(new Topic());
         return topics;
+    }
+
+    public static Question createDummyQuestion(){
+        Question question = new Question();
+        question.setQuestionId(1);
+        question.setQuestion("Question");
+        question.setType(QuestionType.MULTIPLECHOICE);
+        question.setQuestionTime(1);
+        return question;
+    }
+
+    public static Answer createDummyAnswer(){
+        Answer answer = new Answer();
+        answer.setAnswer("Answer");
+        answer.setAnswerId(1);
+        answer.setCorrect(false);
+        answer.setQuestion(createDummyQuestion());
+        answer.setType(QuestionType.MULTIPLECHOICE);
+        return answer;
     }
 
 

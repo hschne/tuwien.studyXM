@@ -1,5 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.domain;
 
+import java.io.Serializable;
+
 /**
  * Class Answer
  * represents the entity answer
@@ -11,8 +13,8 @@ package at.ac.tuwien.sepm.ss16.qse18.domain;
  *
  * @author Felix Almer on 06.05.2016.
  */
-public class Answer {
-    private int answerId;
+public class Answer implements Serializable {
+    private transient int answerId;
     private QuestionType type;
     private String answerString;
     private boolean isCorrect;
