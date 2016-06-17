@@ -46,6 +46,7 @@ public class DummyEntityFactory {
         Question question = new Question();
         question.setQuestionId(1);
         question.setQuestion("Question");
+        question.setType(QuestionType.MULTIPLECHOICE);
         question.setQuestionTime(1);
         return question;
     }

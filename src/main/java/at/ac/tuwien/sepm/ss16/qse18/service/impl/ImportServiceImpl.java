@@ -39,7 +39,7 @@ import java.util.zip.ZipInputStream;
     @Autowired private QuestionDao questionDao;
     @Autowired private ResourceDao resourceDao;
     @Autowired private AnswerDao answerDao;
-    @Autowired private ExportUtil exportUtil;
+    @Autowired private ImportUtil importUtil;
 
     @Autowired
     public void setSubjectConflictDetection(SubjectConflictDetection subjectConflictDetection) {
@@ -191,7 +191,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Setting database autocommit to " + value);
 
         try {
-            exportUtil.setAutocommit(value);
+            importUtil.setAutocommit(value);
         } catch (DaoException e) {
             logger.error("Could not prepare database", e);
             throw new ServiceException("Could not prepare database", e);
@@ -202,7 +202,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Rolling back changes");
 
         try {
-            exportUtil.rollback();
+            importUtil.rollback();
         } catch (DaoException e) {
             logger.error("Could not roll back changes", e);
             throw new ServiceException("Could not roll back changes", e);

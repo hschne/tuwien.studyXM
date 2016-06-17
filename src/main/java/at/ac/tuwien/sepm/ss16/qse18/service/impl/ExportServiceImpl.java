@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.dao.*;
 import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportResource;
@@ -30,7 +29,22 @@ import java.util.zip.ZipOutputStream;
     private List<String> paths = new ArrayList<>();
     @Autowired private TopicService topicService;
     @Autowired private QuestionService questionService;
-    @Autowired private ResourceQuestionDao resourceQuestionDao;
+    @Autowired private ResourceQuestionService resourceQuestionService;
+
+    // is needed for unit testing
+    public void setTopicService(TopicService topicService) {
+        this.topicService = topicService;
+    }
+
+    // is needed for unit testing
+    public void setQuestionService(QuestionService questionService) {
+        this.questionService = questionService;
+    }
+
+    // is needed for unit testing
+    public void setResourceQuestionService(ResourceQuestionService resourceQuestionService) {
+        this.resourceQuestionService = resourceQuestionService;
+    }
 
     @Override public void export(String outputpath) throws ServiceException {
         if (this.subject == null) {
@@ -56,8 +70,10 @@ import java.util.zip.ZipOutputStream;
             logger.error("Path is not valid");
             throw new ServiceException("Outputpath is not valid", e);
         } catch (IOException e) {
-            logger.error("Couldn't create image or resource directory", e);
-            throw new ServiceException("Couldn't create image or resource directory", e);
+            logger.error("Couldn't create image or resource directory or could not write meta file",
+                e);
+            throw new ServiceException(
+                "Couldn't create image or resource directory or could not write meta file", e);
         } finally {
             if (zipOutputStream != null) {
                 try {
@@ -117,8 +133,8 @@ import java.util.zip.ZipOutputStream;
             logger.error("File " + fileName + " not found", e);
             throw new ServiceException("File " + fileName + " not found", e);
         } catch (IOException e) {
-            logger.error("Couldn't write " + fileName + "to zip file", e);
-            throw new ServiceException("Couldn't write " + fileName + "to zip file", e);
+            logger.error("Couldn't write " + fileName + " to zip file", e);
+            throw new ServiceException("Couldn't write " + fileName + " to zip file", e);
         }
     }
 
@@ -144,12 +160,7 @@ import java.util.zip.ZipOutputStream;
     }
 
     private Resource getResourcesFromQuestion(Question question) throws ServiceException {
-        try {
-            return resourceQuestionDao.getResourceOfQuestion(question);
-        } catch (DaoException e) {
-            logger.error("Could not get resource of question {}", question, e);
-            throw new ServiceException("Could not get resource of question.", e);
-        }
+        return resourceQuestionService.getResourceFromQuestion(question);
     }
 
     private String serializeSubject() throws ServiceException {

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 
-@Component public class ExportUtil {
+@Component public class ImportUtil {
     private static final Logger logger = LogManager.getLogger();
     @Autowired private ConnectionH2 databaseConnection;
 

@@ -8,12 +8,14 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -198,6 +200,8 @@ import java.util.List;
     @Override public List<Answer> getRelatedAnswers(Question q) throws DaoException {
         logger.debug("Getting all answers to question " + q);
 
+        tryValidateQuestion(q);
+
         List<Answer> result = new ArrayList<>();
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -226,6 +230,15 @@ import java.util.List;
         if (q == null) {
             logger.error("Given question must not be null");
             throw new DaoException("Question must not be null");
+        }
+    }
+
+    private void tryValidateQuestion(Question question) throws DaoException {
+        try {
+            validate(question);
+        } catch (DtoValidatorException e) {
+            logger.error(e);
+            throw new DaoException(e);
         }
     }
 
