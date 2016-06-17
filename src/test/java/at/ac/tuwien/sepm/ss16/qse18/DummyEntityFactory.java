@@ -51,6 +51,12 @@ public class DummyEntityFactory {
         return question;
     }
 
+    public static List<Question> createDummyQuestions(){
+        List<Question> questions = new ArrayList<>();
+        questions.add(createDummyQuestion());
+        return questions;
+    }
+
     public static Answer createDummyAnswer(){
         Answer answer = new Answer();
         answer.setAnswer("Answer");

@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -26,31 +25,46 @@ import java.util.List;
         this.topicConflictDetection = topicConflictDetection;
     }
 
-    public void initialize(Subject existingSubject, ExportSubject importedSubject) {
+    public void initialize(Subject existingSubject, ExportSubject importedSubject)
+        throws ServiceException {
         this.existingSubject = existingSubject;
         this.importedSubject = importedSubject;
+        initializeSubConflicts();
     }
 
-
     public List<TopicConflict> getConflictingTopics() throws ServiceException {
-        topicConflictDetection.setSubjects(existingSubject, importedSubject);
-        topicConflicts = topicConflictDetection.getConflictingTopics();
+
         return topicConflicts;
     }
 
-    public List<ExportTopic> getNonConflictingImported() {
+    public boolean isDuplicate() {
+        return topicConflicts.stream()
+            .allMatch(p -> p.getResolution() == ConflictResolution.DUPLICATE);
+    }
+
+    private void initializeSubConflicts() throws ServiceException {
+        topicConflictDetection.setSubjects(existingSubject, importedSubject);
+        topicConflicts = topicConflictDetection.getConflictingTopics();
+    }
+
+    Subject getExistingSubject() {
+        return existingSubject;
+    }
+
+    boolean isResolved() {
+        // If no more topics are unresolved, the subject conflict is resolved
+        return !topicConflicts.stream()
+            .anyMatch(p -> p.getResolution() == ConflictResolution.UNRESOLVED);
+    }
+
+    List<ExportTopic> getNonConflictingImported() {
         List<ExportTopic> nonConflictingImported = new ArrayList<>();
         topicConflicts.forEach(p -> nonConflictingImported.remove(p.getImportedTopic()));
         return nonConflictingImported;
     }
 
-    public void resolve() throws ServiceException{
-        for(TopicConflict topicConflict : topicConflicts){
-            topicConflict.resolve();
-        }
-    }
 
-    public void setTopicConflicts(List<TopicConflict> topicConflicts) {
+    void setTopicConflicts(List<TopicConflict> topicConflicts) {
         this.topicConflicts = topicConflicts;
     }
 }

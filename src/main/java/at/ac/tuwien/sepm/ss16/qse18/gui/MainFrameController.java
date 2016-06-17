@@ -42,6 +42,7 @@ import java.util.List;
     @FXML private Button buttonHome;
     @FXML private Button buttonSubjects;
     @FXML private Button buttonResources;
+    @FXML private Button buttonStatistics;
 
 
 
@@ -201,6 +202,10 @@ import java.util.List;
 
     public Button getButtonResources() {
         return buttonResources;
+    }
+
+    public Button getButtonStatistics() {
+        return buttonStatistics;
     }
 
     private <T extends GuiController> T setSubView(String fxmlPath, Class T, Pane paneContent) throws IOException {

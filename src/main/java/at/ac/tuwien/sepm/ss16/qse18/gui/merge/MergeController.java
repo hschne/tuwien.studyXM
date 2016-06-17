@@ -1,9 +1,10 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectMerge;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -15,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Hans-Joerg Schroedl
@@ -23,10 +23,10 @@ import java.util.stream.Collectors;
 @Component public class MergeController extends BaseController {
 
     @Autowired ApplicationContext applicationContext;
-    @FXML private ListView<ObservableTopicConflict> listView;
+    @FXML private ListView<TopicConflict> listView;
     @FXML private Button cancelButton;
     @FXML private Button confirmButton;
-    private ObservableList<ObservableTopicConflict> topicConflictList;
+    private ObservableList<TopicConflict> topicConflictList;
     private SubjectConflict subjectConflict;
     private Stage stage;
 
@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
         this.stage = stage;
     }
 
-    public void setSubjectConflict(SubjectConflict subjectConflict){
+    public void setSubjectConflict(SubjectConflict subjectConflict) {
         this.subjectConflict = subjectConflict;
         try {
             initializeListView(subjectConflict);
@@ -46,10 +46,7 @@ import java.util.stream.Collectors;
     }
 
     private void initializeListView(SubjectConflict subjectConflict) throws ServiceException {
-        List<ObservableTopicConflict>
-            observableTopicConflicts = subjectConflict.getConflictingTopics().stream().map(
-            ObservableTopicConflict::new)
-            .collect(Collectors.toList());
+        List<TopicConflict> observableTopicConflicts = subjectConflict.getConflictingTopics();
         topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
         listView.setItems(topicConflictList);
         listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
@@ -57,7 +54,8 @@ import java.util.stream.Collectors;
 
     @FXML void handleConfirm() {
         try {
-            subjectConflict.resolve();
+            SubjectMerge merge = applicationContext.getBean(SubjectMerge.class);
+            merge.merge(subjectConflict);
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);

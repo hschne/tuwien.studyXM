@@ -30,12 +30,6 @@ import java.util.List;
 
     private List<QuestionConflict> questionConflicts;
 
-    private ApplicationContext applicationContext;
-
-    @Autowired public void setApplicationContext(ApplicationContext applicationContext) {
-        this.applicationContext = applicationContext;
-    }
-
     @Autowired
     public void setAnswerConflictDetection(AnswerConflictDetection answerConflictDetection) {
         this.answerConflictDetection = answerConflictDetection;
@@ -80,7 +74,7 @@ import java.util.List;
 
     private void createConflict(Question existingQuestion, ExportQuestion importedQuestion)
         throws ServiceException {
-        QuestionConflict questionConflict = applicationContext.getBean(QuestionConflict.class);
+        QuestionConflict questionConflict = new QuestionConflict();
         questionConflict.setQuestions(existingQuestion, importedQuestion);
         if (answerConflictDetection.areAnswersEqual()) {
             questionConflict.setResolution(ConflictResolution.DUPLICATE);

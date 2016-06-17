@@ -25,14 +25,10 @@ import java.util.zip.ZipInputStream;
 
     private static final Logger logger = LogManager.getLogger();
     private static final String OUTPUT_PATH = "src/main/resources/import";
-    private String unzippedDir = "";
-
-    @Autowired private SubjectConflictDetection subjectConflictDetection;
-
-    @Autowired private SubjectConflict conflict;
-
     @Autowired ApplicationContext applicationContext;
-
+    private String unzippedDir = "";
+    @Autowired private SubjectConflictDetection subjectConflictDetection;
+    @Autowired private SubjectConflict conflict;
     @Autowired private SubjectDao subjectDao;
     @Autowired private TopicDao topicDao;
     @Autowired private QuestionDao questionDao;
@@ -40,20 +36,60 @@ import java.util.zip.ZipInputStream;
     @Autowired private AnswerDao answerDao;
     @Autowired private ImportUtil importUtil;
 
+    // is needed for unit testing
+    public void setSubjectDao(SubjectDao subjectDao) {
+        this.subjectDao = subjectDao;
+    }
+
+    // is needed for unit testing
+    public void setTopicDao(TopicDao topicDao) {
+        this.topicDao = topicDao;
+    }
+
+    // is needed for unit testing
+    public void setQuestionDao(QuestionDao questionDao) {
+        this.questionDao = questionDao;
+    }
+
+    // is needed for unit testing
+    public void setResourceDao(ResourceDao resourceDao) {
+        this.resourceDao = resourceDao;
+    }
+
+    // is needed for unit testing
+    public void setAnswerDao(AnswerDao answerDao) {
+        this.answerDao = answerDao;
+    }
+
+    // is needed for unit testing
+    public void setImportUtil(ImportUtil importUtil) {
+        this.importUtil = importUtil;
+    }
+
+    // is needed for unit testing
+    public void setSubjectConflict(SubjectConflict conflict) {
+        this.conflict = conflict;
+    }
+
     @Autowired
     public void setSubjectConflictDetection(SubjectConflictDetection subjectConflictDetection) {
         this.subjectConflictDetection = subjectConflictDetection;
     }
 
-    @Override public SubjectConflict importSubject(File zippedFile) throws ServiceException {
-        logger.debug("Importing subject from file " + zippedFile);
+    @Override public SubjectConflict importSubject(File zipFile) throws ServiceException {
+        logger.debug("Importing subject from file " + zipFile);
 
-        unzipFile(zippedFile.getAbsolutePath(), zippedFile.getName());
+        unzipFile(zipFile.getAbsolutePath(), zipFile.getName());
         ExportSubject subject = deserialize();
 
-        if(subjectConflictDetection.conflictExists(subject)){
+        if (subjectConflictDetection.conflictExists(subject)) {
             Subject conflictingSubject = subjectConflictDetection.getConflictingExistingSubject();
             conflict.initialize(conflictingSubject, subject);
+            if (conflict.isDuplicate()) {
+                throw new ServiceException(
+                    "The imported subject is a duplicate of existing subject '" + conflictingSubject
+                        .getName() + "'.");
+            }
             return conflict;
         }
 
@@ -68,23 +104,31 @@ import java.util.zip.ZipInputStream;
         return null;
     }
 
+    @Override public void importTopic(Topic topic, Subject existingSubject) {
+
+    }
+
+    @Override public void importQuestion(ExportQuestion exportQuestion, Topic existingTopic) {
+
+    }
+
 
     private void unzipFile(String inputPath, String fileName) throws ServiceException {
         logger.debug("Unzipping exported file");
-
-        File destDir =
-            new File(OUTPUT_PATH + File.separator + fileName.substring(0, fileName.length() - 4));
-        unzippedDir = destDir.getAbsolutePath();
-
-        if (!destDir.exists()) {
-            destDir.mkdir();
-        }
 
         ZipInputStream zipIn = null;
         FileInputStream fileInputStream = null;
         ZipEntry zipEntry = null;
 
         try {
+            File destDir = new File(
+                OUTPUT_PATH + File.separator + fileName.substring(0, fileName.length() - 4));
+            unzippedDir = destDir.getAbsolutePath();
+
+            if (!destDir.exists()) {
+                destDir.mkdir();
+            }
+
             fileInputStream = new FileInputStream(inputPath);
             zipIn = new ZipInputStream(fileInputStream);
             zipEntry = zipIn.getNextEntry();
@@ -96,8 +140,8 @@ import java.util.zip.ZipInputStream;
                 zipEntry = zipIn.getNextEntry();
             }
         } catch (FileNotFoundException e) {
-            logger.error("Zip file does not exist", e);
-            throw new ServiceException("Zip file does not exist", e);
+            logger.error("Zip file \"" + fileName + "\" does not exist", e);
+            throw new ServiceException("Zip file \"" + fileName + "\" does not exist", e);
         } catch (IOException e) {
             logger.error("Could not get zip entry", e);
             throw new ServiceException("Could not get zip entry", e);
@@ -159,6 +203,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Filling database with values");
 
         if (exportSubject == null) {
+            logger.error("Could not read subject from import file. Subject is null");
             throw new ServiceException("Could not read subject from import file. Subject is null");
         }
 

@@ -134,7 +134,7 @@ import org.springframework.stereotype.Component;
         String defaultPath = "src/main/resources/export/zip";
         File defaultDirectory = new File(defaultPath);
         fileChooser.setInitialDirectory(defaultDirectory);
-        fileChooser.setInitialFileName("xms_" + subject.getName() + "_" + subject.getAuthor());
+        fileChooser.setInitialFileName(subject.getName() + "_" + subject.getAuthor());
 
         fileChooser.getExtensionFilters()
             .addAll(new FileChooser.ExtensionFilter("XMS FILES (.xms)", "*.xms"));

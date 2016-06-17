@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 
 import java.io.File;
 import java.util.List;
+import java.util.function.DoubleToIntFunction;
 import java.util.stream.Collectors;
 
 /**
@@ -58,9 +59,9 @@ public class DtoValidator {
         if (question.getQuestion() == null) {
             throw new DtoValidatorException("Question text must not be null");
         }
-        if (question.getQuestion().length() > 2000) {
+        if (question.getQuestion().length() > 600) {
             throw new DtoValidatorException(
-                "Question text must not be longer than 2000 characters");
+                "Question text must not be longer than 600 characters");
         }
         if (question.getQuestion().trim().isEmpty()) {
             throw new DtoValidatorException(
@@ -113,11 +114,18 @@ public class DtoValidator {
         if(answers.isEmpty()){
             throw new DtoValidatorException("There must be at least one answer.");
         }
+
+        for(Answer a: answers){
+            if(a.getAnswer().length() > 300) {
+                throw new DtoValidatorException("Answer text must not be longer than 300 characters");
+            }
+        }
         int correctAnswers = answers.stream().filter(Answer::isCorrect).collect(Collectors.toList()).size();
         if(correctAnswers < 1){
             throw new DtoValidatorException("There must be at least one correct answer.");
         }
     }
+
 
     public static void validate(Resource resource) throws DtoValidatorException {
         if (resource == null) {

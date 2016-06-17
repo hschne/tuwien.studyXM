@@ -1,7 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import org.junit.Before;
@@ -72,15 +71,29 @@ import static org.mockito.Mockito.when;
         assertTrue(topics.isEmpty());
     }
 
-    @Test public void test_resolve_resolveTopicConflictCalled() throws Exception{
+    @Test public void test_isResolved_trueReturned() throws Exception{
         TopicConflict conflict = Mockito.mock(TopicConflict.class);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.EXISTING);
         List<TopicConflict> topicConflicts = new ArrayList<>();
         topicConflicts.add(conflict);
         subjectConflict.setTopicConflicts(topicConflicts);
 
-        subjectConflict.resolve();
+        Boolean result = subjectConflict.isResolved();
 
-        verify(conflict).resolve();
+        assertTrue(result);
+    }
+
+
+    @Test public void test_isResolved_falseReturned() throws Exception{
+        TopicConflict conflict = Mockito.mock(TopicConflict.class);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.UNRESOLVED);
+        List<TopicConflict> topicConflicts = new ArrayList<>();
+        topicConflicts.add(conflict);
+        subjectConflict.setTopicConflicts(topicConflicts);
+
+        Boolean result = subjectConflict.isResolved();
+
+        assertFalse(result);
     }
 
 
