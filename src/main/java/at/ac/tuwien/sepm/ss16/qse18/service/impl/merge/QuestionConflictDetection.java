@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
@@ -53,6 +54,7 @@ import java.util.List;
                 checkForConflict(existingQuestion, importedQuestion);
             }
         }
+        logger.debug("Found " + questionConflicts.size() + " conflicts. Starting manual resolve.");
         return questionConflicts;
     }
 
