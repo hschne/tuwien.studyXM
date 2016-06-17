@@ -22,7 +22,8 @@ public class AnswerChoiceQuestionController extends AnswerQuestionController {
             else {
                 s = "(SINGLECHOICE)";
             }
-            questionLabel.setText(question.getQuestion() + " " + s);
+        String questionText = question.getQuestion().replaceAll("(.{120})", "$1\n");
+        questionLabel.setText(questionText + " " + s);
         }
 
 }

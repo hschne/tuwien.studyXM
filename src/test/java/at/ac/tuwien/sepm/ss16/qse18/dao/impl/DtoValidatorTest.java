@@ -253,6 +253,7 @@ public class DtoValidatorTest {
         List<Answer> answers = new LinkedList<>();
         Answer wrongAnswer = new Answer();
         wrongAnswer.setCorrect(false);
+        wrongAnswer.setAnswer("abc");
         answers.add(wrongAnswer);
         assertFalse("The should be one answer in the List.",answers.isEmpty());
         dtoValidator.validate(answers);
@@ -268,6 +269,7 @@ public class DtoValidatorTest {
 
         List<Answer> answers = new LinkedList<>();
         Answer wrongAnswer = new Answer();
+        wrongAnswer.setAnswer("abc");
         wrongAnswer.setCorrect(true);
         answers.add(wrongAnswer);
         assertFalse("The should be one answer in the List.",answers.isEmpty());

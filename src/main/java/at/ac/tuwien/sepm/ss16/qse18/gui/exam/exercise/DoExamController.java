@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.DoExerciseExamNavigation;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import at.ac.tuwien.sepm.ss16.qse18.service.SubjectTopicQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExerciseExamServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.QuestionServiceImpl;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.SubjectServiceImpl;
@@ -41,12 +42,14 @@ import java.util.List;
     @FXML private Button skipQuesitonButton;
     @FXML private Button showResultsButton;
     @FXML private Button pauseExamButton;
+    @FXML private Label topicsCoveredLabel;
 
-    @Autowired SubjectServiceImpl subjectService;
-    @Autowired ExerciseExamServiceImpl examService;
-    @Autowired QuestionServiceImpl questionService;
-    @Autowired DoExerciseExamNavigation doExerciseExamNavigation;
-    @Autowired ShowResultController showResultController;
+    @Autowired private SubjectServiceImpl subjectService;
+    @Autowired private ExerciseExamServiceImpl examService;
+    @Autowired private QuestionServiceImpl questionService;
+    @Autowired private DoExerciseExamNavigation doExerciseExamNavigation;
+    @Autowired private ShowResultController showResultController;
+    @Autowired private SubjectTopicQuestionService subjectTopicQuestionService;
 
     private int timeInMinutes;
     private int timeInSeconds;
@@ -66,6 +69,7 @@ import java.util.List;
         mainFrameController.getButtonHome().setDisable(true);
         mainFrameController.getButtonSubjects().setDisable(true);
         mainFrameController.getButtonResources().setDisable(true);
+        mainFrameController.getButtonStatistics().setDisable(true);
         this.exam = exam;
         timeInMinutes = (int) exam.getExamTime();
         timeInSeconds = 0;
@@ -130,6 +134,8 @@ import java.util.List;
         mainFrameController.getButtonHome().setDisable(false);
         mainFrameController.getButtonSubjects().setDisable(false);
         mainFrameController.getButtonResources().setDisable(false);
+        mainFrameController.getButtonStatistics().setDisable(false);
+
         timeline.stop();
         mainFrameController.handleShowExamResult();
         showResultController.initialize(this.exam);
@@ -146,8 +152,16 @@ import java.util.List;
         mainFrameController.getButtonHome().setDisable(false);
         mainFrameController.getButtonSubjects().setDisable(false);
         mainFrameController.getButtonResources().setDisable(false);
+        mainFrameController.getButtonStatistics().setDisable(false);
+
         try {
-            examService.update(exam.getExamid(), timeInSeconds < 30 ? timeInMinutes : timeInMinutes + 1);
+            if(timeInMinutes > 0) {
+                examService.update(exam.getExamid(),
+                    timeInSeconds < 30 ? timeInMinutes : timeInMinutes + 1);
+            }
+            else {
+                examService.update(exam.getExamid(), 1);
+            }
         }
         catch (ServiceException e){
             logger.error(e);
@@ -166,7 +180,14 @@ import java.util.List;
             showError(e);
         }
 
+
         answer1 = answers.get(0);
+
+        if(answers.size() == 1){
+            answer2 = null;
+            answer3 = null;
+            answer4 = null;
+        }
         if(answers.size() == 2){
             answer2 = answers.get(1);
             answer3 = null;
@@ -203,7 +224,7 @@ import java.util.List;
             } else {
                 timeInSeconds--;
                 if(timeInSeconds < 10){
-                timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + "min left");
+                timeLeftLabel.setText(timeInMinutes + ":0" + timeInSeconds + " min left");
                 }
                 else {
                     timeLeftLabel.setText(timeInMinutes + ":" + timeInSeconds + " min left");
@@ -246,6 +267,10 @@ import java.util.List;
         if (subject != null) {
             titleLabel.setText("Exam in " + subject.getName()); //set titelLabel with subject to exam
         }
+        int numberOfTopics = subjectTopicQuestionService.getTopicToSubjectWithNumberOfQuestions(subject).size();
+        topicsCoveredLabel.setText(numberOfTopics + " of the subject's topics are covered in this exam");
+
+
     }
 
 

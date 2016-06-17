@@ -129,10 +129,11 @@ abstract class NewExerciseExamBase extends BaseController {
             showError(
                 "No topic selected. You have to select the topic you want to create an exam to.");
         }
-
-        this.topicList.add(topicListView.getSelectionModel().getSelectedItem().getT());
-        secondTopicList.add(topicListView.getSelectionModel().getSelectedItem());
-        firstTopicList.remove(topicListView.getSelectionModel().getSelectedItem());
+        else {
+            this.topicList.add(topicListView.getSelectionModel().getSelectedItem().getT());
+            secondTopicList.add(topicListView.getSelectionModel().getSelectedItem());
+            firstTopicList.remove(topicListView.getSelectionModel().getSelectedItem());
+        }
     }
 
     public void addAll(){
