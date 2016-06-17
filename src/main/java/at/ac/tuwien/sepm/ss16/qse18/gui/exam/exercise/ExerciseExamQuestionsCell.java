@@ -32,7 +32,7 @@ import java.io.IOException;
     private void setControllerProperties(ObservableQuestion oq,
         PostExerciseExamItemController itemController) {
         itemController.initialize(oq);
-        if(oq.getAnsweredCorrectly() == true) {
+        if(oq.getAnsweredCorrectly()) {
             itemController.getRoot().setStyle("-fx-background-color: seagreen");
         }else {
             itemController.getRoot().setStyle("-fx-background-color: firebrick");

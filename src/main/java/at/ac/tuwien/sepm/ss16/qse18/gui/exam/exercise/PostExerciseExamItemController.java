@@ -1,10 +1,12 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableAnswer;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
+import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -15,11 +17,16 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,23 +34,27 @@ import java.util.stream.Collectors;
 /**
  * @author Zhang Haixiang on 15.06.2016.
  */
-@Component public class PostExerciseExamItemController extends BaseController{
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class PostExerciseExamItemController extends BaseController{
     @FXML private Node root;
-    @FXML protected ListView<String> answerListView;
-    @FXML protected Label questionLabel;
-    @FXML protected ImageView questionImageView;
-    @FXML protected Button showResourceButton;
+    @FXML private ListView<String> answerListView;
+    @FXML private Label questionLabel;
+    @FXML private ImageView questionImageView;
+    @FXML private Button showResourceButton;
 
     @Autowired private QuestionService questionService;
-    @Autowired ShowLargeImageViewController imageViewController;
+    @Autowired private ResourceQuestionService resourceQuestionService;
 
     private ObservableQuestion question;
     private ObservableList<String> answerList;
+    private Resource resource;
 
 
     @FXML public void initialize(ObservableQuestion question){
         try {
             this.question = question;
+
+             this.resource = this.resourceQuestionService.getResourceFromQuestion
+                (this.question.getQuestionInstance());
 
             List<ObservableAnswer> observableAnswers = questionService.
                 getCorrespondingAnswers(question.getQuestionInstance()).
@@ -59,14 +70,15 @@ import java.util.stream.Collectors;
         }
     }
 
-    public void onClick() throws Exception{
-        this.mainFrameController.handleShowLargeImageView();
-        imageViewController.initialize(this.question);
+    @FXML protected void onClick(){
+        showThings(this.question.getQuestion());
+    }
 
+    @FXML protected void showResource(){
+        showThings(this.resource.getReference());
     }
 
     public void loadFields() {
-        questionLabel.setVisible(true);
         questionLabel.setText(question.getQuestion());
 
 
@@ -78,18 +90,40 @@ import java.util.stream.Collectors;
 
         }
 
+        if(!this.question.getAnsweredCorrectly()){
+            questionLabel.setTextFill(Color.BISQUE);
+        }
+
+        if(this.resource == null){
+            showResourceButton.setVisible(false);
+        }
+
     }
 
-    public Node getRoot() {
+    protected Node getRoot() {
         return root;
     }
 
     private List<String> fillWithAnswerName(List<ObservableAnswer> observableAnswers){
         List <String> answers = new ArrayList<>();
         for(ObservableAnswer a: observableAnswers){
-            answers.add(a.getAnswer());
+            answers.add(a.getAnswer() + "       [" + a.correctProperty().getValue() + "]");
         }
         return answers;
+    }
+
+    private void showThings(String path){
+        if (Desktop.isDesktopSupported()) {
+            try {
+                File file = new File(path);
+                Desktop.getDesktop().open(file);
+
+            } catch (IOException e) {
+                showError("Unable to open file, " +
+                    "please select a standard program for this file type." +
+                    e.getMessage());
+            }
+        }
     }
 
 }

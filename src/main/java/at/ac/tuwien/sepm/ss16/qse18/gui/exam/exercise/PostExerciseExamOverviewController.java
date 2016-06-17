@@ -1,17 +1,13 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestion;
-import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExerciseExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
-import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExamServiceImpl;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import org.springframework.beans.factory.annotation.Autowired;

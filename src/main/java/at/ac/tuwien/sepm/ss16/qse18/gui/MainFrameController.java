@@ -3,15 +3,12 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.DoExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.navigation.Navigation;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableAnswer;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableExam;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableSubject;
 import at.ac.tuwien.sepm.ss16.qse18.gui.question.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceOverviewController;
@@ -143,16 +140,6 @@ import java.util.List;
         try{
             DoExamController controller = setSubView("/fxml/exam/doExam.fxml", DoExamController.class,paneContent);
             controller.initialize(exam);
-        }
-        catch (IOException e){
-            handleException(e);
-        }
-    }
-
-    public void handleShowLargeImageView(){
-        logger.debug("Loading doExam screen");
-        try{
-            setSubView("/fxml/exam/showLargeImageView.fxml", ShowLargeImageViewController.class,paneContent);
         }
         catch (IOException e){
             handleException(e);
