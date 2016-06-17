@@ -150,11 +150,13 @@ import java.util.zip.ZipInputStream;
                 zipIn.closeEntry();
                 zipEntry = zipIn.getNextEntry();
             }
-            File imageFiles = new File(unzippedDir + File.separator + "image/");
-            File resourceFiles = new File(unzippedDir + File.separator + "resource/");
+            if(unzippedDir != null) {
+                File imageFiles = new File(unzippedDir + File.separator + "image/");
+                File resourceFiles = new File(unzippedDir + File.separator + "resource/");
 
-            copyFile(imageFiles,IMAGE_PATH);
-            copyFile(resourceFiles,RESOURCE_PATH);
+                copyFile(imageFiles, IMAGE_PATH);
+                copyFile(resourceFiles, RESOURCE_PATH);
+            }
 
         } catch (FileNotFoundException e) {
             logger.error("Zip file \"" + fileName + "\" does not exist", e);
@@ -205,7 +207,6 @@ import java.util.zip.ZipInputStream;
                 dest.renameTo(new File(s + "_" + replace + "."  + extension));
             }
             copyFile(f, dest);
-
         }
     }
 
