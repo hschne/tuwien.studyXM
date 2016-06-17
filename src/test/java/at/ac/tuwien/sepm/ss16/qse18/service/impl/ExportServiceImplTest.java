@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
-import at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
@@ -17,8 +16,6 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -31,15 +28,8 @@ import static org.powermock.api.mockito.PowerMockito.whenNew;
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({FileOutputStream.class, File.class, ExportServiceImpl.class, ZipEntry.class,
     ZipOutputStream.class, ObjectOutputStream.class}) @PowerMockIgnore("javax.management.*")
-public class ExportServiceImplTest {
+public class ExportServiceImplTest extends ImportExportBaseTest {
     private ExportServiceImpl exportService;
-    private Subject testSubject;
-    private List<Topic> testTopics;
-    private List<Question> testQuestions1;
-    private List<Question> testQuestions2;
-    private Resource testResource;
-    private List<Answer> testAnswers1;
-    private List<Answer> testAnswers2;
     @Mock private ZipOutputStream mockZipOutputStream;
     @Mock private FileOutputStream mockFileOutputStream;
     @Mock private ZipEntry mockZipEntry;
@@ -71,35 +61,6 @@ public class ExportServiceImplTest {
             .thenReturn(testQuestions2);
         when(mockQuestionService.getCorrespondingAnswers(any(Question.class)))
             .thenReturn(testAnswers1).thenReturn(testAnswers2);
-    }
-
-    private void createDummySubjectWithDummyRelations() {
-        testSubject = DummyEntityFactory.createDummySubject();
-
-        testTopics = new ArrayList<>();
-        testTopics.add(new Topic(1, "TestTopic1"));
-        testTopics.add(new Topic(2, "TestTopic2"));
-
-        testQuestions1 = new ArrayList<>();
-        testQuestions1.add(new Question(1, "TestQuestion1", QuestionType.MULTIPLECHOICE, 1));
-
-        testQuestions2 = new ArrayList<>();
-        testQuestions2.add(new Question(2, "TestQuestion2", QuestionType.SINGLECHOICE, 2));
-
-        testResource =
-            new Resource(1, ResourceType.PDF, "TestResource", "src/main/resources/resources/dummy");
-
-        testAnswers1 = new ArrayList<>();
-        testAnswers1.add(new Answer(1, testQuestions1.get(0).getType(), "TestAnswer1", true,
-            testQuestions1.get(0)));
-        testAnswers1.add(new Answer(2, testQuestions1.get(0).getType(), "TestAnswer2", false,
-            testQuestions1.get(0)));
-
-        testAnswers2 = new ArrayList<>();
-        testAnswers2.add(new Answer(3, testQuestions2.get(0).getType(), "TestAnswer3", true,
-            testQuestions2.get(0)));
-        testAnswers2.add(new Answer(4, testQuestions2.get(0).getType(), "TestAnswer4", false,
-            testQuestions2.get(0)));
     }
 
     @Test(expected = ServiceException.class) public void test_export_withInvalidPath_Fail()
