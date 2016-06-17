@@ -1,6 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl.merge;
 
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportQuestion;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
@@ -26,6 +25,7 @@ import java.util.List;
     private Topic existingTopic;
     private ExportTopic importedTopic;
 
+
     public void setTopics(Topic existingTopic, ExportTopic importedTopic) {
         this.existingTopic = existingTopic;
         this.importedTopic = importedTopic;
@@ -47,14 +47,13 @@ import java.util.List;
 
 
     public List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
-        List<ExportQuestion> importedQuestions = importedTopic.getQuestions();
-        questionConflictDetection.initialize(existingTopic, importedQuestions);
+        questionConflictDetection.setTopics(existingTopic, importedTopic);
         setQuestionConflicts(questionConflictDetection.getConflictingQuestions());
         return questionConflicts;
     }
 
-    public List<Question> getNonConflictingImported() {
-        List<Question> imported = new ArrayList<>();
+    public List<ExportQuestion> getNonConflictingImported() {
+        List<ExportQuestion> imported = new ArrayList<>();
         for (QuestionConflict questionConflict : questionConflicts) {
             imported.remove(questionConflict.getImportedQuestion());
         }
@@ -69,5 +68,10 @@ import java.util.List;
 
     public ExportTopic getImportedTopic() {
         return importedTopic;
+    }
+
+
+    public Topic getExistingTopic() {
+        return existingTopic;
     }
 }

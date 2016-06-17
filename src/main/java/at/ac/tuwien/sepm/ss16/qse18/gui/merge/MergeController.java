@@ -4,6 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -12,6 +13,9 @@ import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Hans-Joerg Schroedl
@@ -23,20 +27,32 @@ import org.springframework.stereotype.Component;
     @FXML private Button cancelButton;
     @FXML private Button confirmButton;
     private ObservableList<ObservableTopicConflict> topicConflictList;
-    @Autowired private SubjectConflict subjectConflict;
+    private SubjectConflict subjectConflict;
     private Stage stage;
-
-    @FXML public void initialize() {
-//        List<ObservableTopicConflict> observableTopicConflicts =
-//            subjectConflict.getTopicConflicts().stream().map(ObservableTopicConflict::new)
-//                .collect(Collectors.toList());
-//        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
-//        listView.setItems(topicConflictList);
-//        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
-    }
 
     public void setStage(Stage stage) {
         this.stage = stage;
+    }
+
+    public void setSubjectConflict(SubjectConflict subjectConflict){
+        this.subjectConflict = subjectConflict;
+        try {
+            initializeListView(subjectConflict);
+        } catch (ServiceException e) {
+            logger.error(e);
+            showError(e);
+        }
+
+    }
+
+    private void initializeListView(SubjectConflict subjectConflict) throws ServiceException {
+        List<ObservableTopicConflict>
+            observableTopicConflicts = subjectConflict.getConflictingTopics().stream().map(
+            ObservableTopicConflict::new)
+            .collect(Collectors.toList());
+        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
+        listView.setItems(topicConflictList);
+        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
     }
 
     @FXML void handleConfirm() {

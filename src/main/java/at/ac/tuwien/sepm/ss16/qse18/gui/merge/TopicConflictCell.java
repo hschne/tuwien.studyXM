@@ -1,6 +1,7 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
+import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestionConflict;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
@@ -12,6 +13,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Hans-Joerg Schroedl
@@ -20,13 +23,29 @@ import java.io.IOException;
     extends ListCell<ObservableTopicConflict> {
 
     private static final Logger logger = LogManager.getLogger();
+
+
+    private static Map<ObservableTopicConflict, TopicConflictItemController>
+        existingControllers = new HashMap<>();
+
     @Autowired SpringFXMLLoader springFXMLLoader;
 
     @Override public void updateItem(ObservableTopicConflict topic, boolean empty) {
         super.updateItem(topic, empty);
         if (topic != null) {
+            createOrLoadController(topic);
+        }
+    }
+
+    private void createOrLoadController(ObservableTopicConflict topic) {
+        if(!existingControllers.containsKey(topic)){
             TopicConflictItemController itemController = getController();
             setControllerProperties(topic, itemController);
+            existingControllers.put(topic, itemController);
+        }
+        else{
+            TopicConflictItemController itemController = existingControllers.get(topic);
+            setGraphic(itemController.getRoot());
         }
     }
 

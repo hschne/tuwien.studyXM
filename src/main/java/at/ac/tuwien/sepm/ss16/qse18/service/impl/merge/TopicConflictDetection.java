@@ -4,13 +4,16 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Service;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +21,11 @@ import java.util.List;
 /**
  * @author Hans-Joerg Schroedl
  */
-@Service public class TopicConflictDetection {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public class TopicConflictDetection {
 
     private static final Logger logger = LogManager.getLogger();
-    private Subject subject;
-    private List<ExportTopic> importedTopics;
+    private Subject existingSubject;
+    private ExportSubject importedSubject;
 
     private SubjectTopicDao subjectTopicDao;
 
@@ -32,9 +35,9 @@ import java.util.List;
         this.applicationContext = applicationContext;
     }
 
-    public void initialize(Subject subject, List<ExportTopic> importedTopics) {
-        this.subject = subject;
-        this.importedTopics = importedTopics;
+    public void setSubjects(Subject existingSubject, ExportSubject importedSubject) {
+        this.existingSubject = existingSubject;
+        this.importedSubject = importedSubject;
     }
 
     @Autowired public void setSubjectTopicDao(SubjectTopicDao subjectTopicDao) {
@@ -45,25 +48,35 @@ import java.util.List;
         List<Topic> existingTopics = getExistingTopics();
         List<TopicConflict> duplicates = new ArrayList<>();
         for (Topic existingTopic : existingTopics)
-            for (ExportTopic importedTopic : importedTopics) {
-                if (checkIfDuplicate(duplicates, existingTopic, importedTopic)) {
-                    TopicConflict conflict = applicationContext.getBean(TopicConflict.class);
-                    conflict.setTopics(existingTopic, importedTopic);
-                    duplicates.add(conflict);
-                    break;
-                }
-            }
+            compareWithImportedTopics(duplicates, existingTopic);
         return duplicates;
     }
 
-    private boolean checkIfDuplicate(List<TopicConflict> duplicates, Topic existingTopic,
-        ExportTopic importedTopic) {
+    private void compareWithImportedTopics(List<TopicConflict> duplicates, Topic existingTopic)
+        throws ServiceException {
+        List<ExportTopic> importedTopics = importedSubject.getTopics();
+        for (ExportTopic importedTopic : importedTopics) {
+            if (checkIfDuplicate(existingTopic, importedTopic)) {
+                createTopicConflict(duplicates, existingTopic, importedTopic);
+                break;
+            }
+        }
+    }
+
+    private void createTopicConflict(List<TopicConflict> duplicates, Topic existingTopic,
+        ExportTopic importedTopic) throws ServiceException {
+        TopicConflict topicConflict = applicationContext.getBean(TopicConflict.class);
+        topicConflict.setTopics(existingTopic, importedTopic);
+        List<QuestionConflict> questionConflicts = topicConflict.initializeQuestionConflicts();
+        if (!questionConflicts.isEmpty()) {
+            duplicates.add(topicConflict);
+        }
+    }
+
+    private boolean checkIfDuplicate(Topic existingTopic, ExportTopic importedTopic) {
         String existingTopicName = existingTopic.getTopic();
         String importedTopicName = importedTopic.getTopic().getTopic();
         if (existingTopicName.equals(importedTopicName)) {
-            TopicConflict duplicate = new TopicConflict();
-            duplicate.setTopics(existingTopic, importedTopic);
-            duplicates.add(duplicate);
             return true;
         }
         return false;
@@ -71,10 +84,10 @@ import java.util.List;
 
     private List<Topic> getExistingTopics() throws ServiceException {
         try {
-            return subjectTopicDao.getTopicToSubject(subject);
+            return subjectTopicDao.getTopicToSubject(existingSubject);
         } catch (DaoException e) {
             logger.error(e);
-            throw new ServiceException("Could not read topics for subject.");
+            throw new ServiceException("Could not read topics for existingSubject.");
         }
     }
 

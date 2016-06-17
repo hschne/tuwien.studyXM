@@ -40,11 +40,12 @@ import java.util.stream.Collectors;
     public void setQuestionConflict(ObservableTopicConflict topicConflict) {
         this.topicConflict = topicConflict;
         List<ObservableQuestionConflict> observableTopicConflicts =
-            topicConflict.getTopicConflicts().stream().map(ObservableQuestionConflict::new)
+            topicConflict.getQuestionConflicts().stream().map(ObservableQuestionConflict::new)
                         .collect(Collectors.toList());
         questionConflictList = FXCollections.observableArrayList(observableTopicConflicts);
         questionConflictListView.setItems(questionConflictList);
         questionConflictListView.setCellFactory(listView -> applicationContext.getBean(QuestionConflictCell.class));
+        topicName.setText(topicConflict.getTopicName());
     }
 
     public Node getRoot() {
