@@ -1,7 +1,5 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.statistic;
 
-import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.StatisticService;
@@ -51,7 +49,7 @@ public class StatisticTopicCell extends ListCell<ObservableTopic>{
             topicLabel.setText(topic.getTopic());
 
             try {
-                double[] result = statisticService.getCorrectQuestionsForTopic(topic.getT());
+                double[] result = statisticService.getAnsweredQuestionsForTopic(topic.getT());
                 progressBar.setProgress(result[1] / result[2]);
 
                 if (progressBar.getProgress() > 0.66) {
