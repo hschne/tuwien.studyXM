@@ -89,4 +89,10 @@ public class DummyEntityFactory {
         resources.add(createDummyResource());
         return resources;
     }
+
+    public static ExerciseExam createDummyExerciseExam() {
+        ExerciseExam exerciseExam = new ExerciseExam();
+        return exerciseExam;
+    }
+
 }

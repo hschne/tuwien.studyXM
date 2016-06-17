@@ -13,7 +13,9 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.stream.Collectors;
 
 import javafx.scene.image.Image;
@@ -92,7 +94,6 @@ public class StatisticItemController extends
         double[] result = statisticService.gradeAllExamsForSubject(subject.getSubject());
         int estimated = (int) (subject.getEcts() * 25);
         int spent = subject.getTimeSpent() / 60;
-
         labelName.setText(subject.getName() + " (" + subject.getSemester() + ")");
         labelAvgExamResult.setText("average exercise exam result | " +
                 (result[0] == -1 ? "?" : result[0]) +
@@ -107,15 +108,26 @@ public class StatisticItemController extends
 
         labelHint.setText(statisticService.getHint(subject.getSubject()));
 
-        if (result[0] < 2.0 && result[0] != -1) {
-            achievement1.setImage(new Image("/icons/acbrain.png"));
+        Queue<String> achievements = new LinkedList<>();
+        if (result[0] <= 2.0 && result[1] >= 2) {
+            achievements.add("/icons/acbrain.png");
         }
-        if (spent - estimated <= 0) {
-            achievement3.setImage(new Image("/icons/actime.png"));
+
+        if (spent - estimated <= 0 && result[1] >= 2) {
+            achievements.add("/icons/actime.png");
         }
-        achievement2.setImage(new Image("/icons/acknow.png"));
+        if (statisticService.checkKnowItAllAchievement(subject.getSubject())) {
+            achievements.add("/icons/acknow.png");
+        }
+        setAchievements(achievements);
+
     }
 
+    private void setAchievements(Queue<String> achievements) {
+        achievement1.setImage(achievements.peek() != null ? new Image(achievements.poll()) : null);
+        achievement2.setImage(achievements.peek() != null ? new Image(achievements.poll()) : null);
+        achievement3.setImage(achievements.peek() != null ? new Image(achievements.poll()) : null);
+    }
 
     public void setSubject(ObservableSubject subject) {
         this.subject = subject;
