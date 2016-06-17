@@ -127,7 +127,7 @@ public class StatisticServiceImpl implements StatisticService {
             logger.debug("Unable to get all exercise exams for this subject", e);
             throw new ServiceException(e);
         }
-        return result[1] == 0 ? new double[]{-1, 0} : new double[]{result[0], result[1]};
+        return (int)result[1] == 0 ? new double[]{-1, 0} : new double[]{result[0], result[1]};
     }
 
     @Override
@@ -213,7 +213,7 @@ public class StatisticServiceImpl implements StatisticService {
         } else if (gradeSum / examCount >= 4) {
             hints.get(subject.getSubjectId()).offerFirst(HINT_EXAM_RESULT);
         }
-        return new double[]{examCount != 0 ? gradeSum / examCount : 0, examCount};
+        return new double[]{(int)examCount != 0 ? gradeSum / examCount : 0, examCount};
     }
 
     /**
