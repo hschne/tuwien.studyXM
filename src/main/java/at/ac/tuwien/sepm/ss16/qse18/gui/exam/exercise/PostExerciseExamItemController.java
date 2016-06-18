@@ -125,7 +125,7 @@ public class PostExerciseExamItemController extends BaseController {
     private void showFile(String path) {
         logger.debug("entering showFile()");
         String operatingSystem = System.getProperty("os.name");
-        if(operatingSystem.contains("Windows") || operatingSystem.contains("Mac")) {
+        if (operatingSystem.contains("Windows") || operatingSystem.contains("Mac")) {
 
             if (Desktop.isDesktopSupported()) {
                 try {
@@ -139,7 +139,7 @@ public class PostExerciseExamItemController extends BaseController {
                         e.getMessage());
                 }
             }
-        }else {
+        } else {
             logger.error("unsupported operating system");
             showError("Show files is only available on windows and mac.");
         }
