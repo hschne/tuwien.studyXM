@@ -71,7 +71,9 @@ import java.util.stream.Collectors;
     }
 
     @FXML protected void onClick(){
-        showThings(this.question.getQuestion());
+        if(this.question.getType() == 4) {
+            showThings(this.question.getQuestion());
+        }
     }
 
     @FXML protected void showResource(){
