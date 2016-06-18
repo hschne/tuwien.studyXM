@@ -8,7 +8,6 @@ import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,6 +26,9 @@ public class AnswerQuestionController extends BaseController {
     @FXML protected RadioButton answer2Button;
     @FXML protected RadioButton answer3Button;
     @FXML protected RadioButton answer4Button;
+
+    private static final String REPLACE_MATCH = "(.{100})";
+    private static final String REPLACE_LITERAL = "$1\n";
 
     @Autowired protected AnswerService answerService;
 
@@ -47,28 +49,28 @@ public class AnswerQuestionController extends BaseController {
         this.answer4 = answer4;
 
         if(answer1 != null) {
-            String answer1Text = answer1.getAnswer().replaceAll("(.{100})", "$1\n");
+            String answer1Text = answer1.getAnswer().replaceAll(REPLACE_MATCH, REPLACE_LITERAL);
             answer1Button.setText(answer1Text);
         }
         else {
             answer1Button.setVisible(false);
         }
         if(answer2 != null) {
-            String answer2Text = answer2.getAnswer().replaceAll("(.{100})", "$1\n");
+            String answer2Text = answer2.getAnswer().replaceAll(REPLACE_MATCH, REPLACE_LITERAL);
             answer2Button.setText(answer2Text);
         }
         else {
             answer2Button.setVisible(false);
         }
         if(answer3 != null) {
-            String answer3Text = answer3.getAnswer().replaceAll("(.{100})", "$1\n");
+            String answer3Text = answer3.getAnswer().replaceAll(REPLACE_MATCH, REPLACE_LITERAL);
             answer3Button.setText(answer3Text);
         }
         else {
             answer3Button.setVisible(false);
         }
         if(answer4 != null) {
-            String answer4Text = answer4.getAnswer().replaceAll("(.{100})", "$1\n");
+            String answer4Text = answer4.getAnswer().replaceAll(REPLACE_MATCH, REPLACE_LITERAL);
             answer4Button.setText(answer4Text);
         }
         else {

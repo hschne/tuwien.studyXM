@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 
 import java.io.File;
 import java.util.List;
-import java.util.function.DoubleToIntFunction;
 import java.util.stream.Collectors;
 
 /**
