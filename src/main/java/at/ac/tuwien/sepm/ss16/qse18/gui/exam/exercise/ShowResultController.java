@@ -101,7 +101,7 @@ import java.util.Map;
     public void showDetail(){
         logger.debug("entering showDetail()");
         mainFrameController.handleShowDetail();
-        if(this.exerciseExam.getExamQuestions().size() == 0) {
+        if(this.exerciseExam.getExamQuestions().isEmpty()) {
             setExamQuestions();
         }
 
