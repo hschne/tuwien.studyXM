@@ -9,7 +9,6 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowExamsController">
    <children>
@@ -23,13 +22,10 @@
           <RowConstraints maxHeight="61.0" minHeight="0.0" prefHeight="60.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="buttonNewExam" mnemonicParsing="false" onAction="#newExam" style="-fx-background-color: #22374A;" text="new exam" textFill="WHITE" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+            <Button fx:id="buttonNewExam" mnemonicParsing="false" onAction="#newExam" text="new exam" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin>
-               <font>
-                  <Font name="Arial" size="14.0" />
-               </font>
             </Button>
             <ListView fx:id="examListView" prefHeight="452.0" prefWidth="1008.0" styleClass="custom-list-view" GridPane.rowIndex="1">
                <GridPane.margin>

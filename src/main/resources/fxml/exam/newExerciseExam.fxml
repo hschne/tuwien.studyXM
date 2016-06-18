@@ -93,8 +93,8 @@
 
                         <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0" GridPane.rowIndex="1">
                             <children>
-                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" prefWidth="80.0" text="cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="20.0" />
-                        <SplitMenuButton fx:id="createButton" layoutX="856.0" layoutY="21.0" mnemonicParsing="false" onAction="#handleCreate" prefHeight="33.0" prefWidth="150.0" text="create" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" text="cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="20.0" />
+                        <SplitMenuButton fx:id="createButton" layoutX="856.0" layoutY="21.0" mnemonicParsing="false" onAction="#handleCreate" text="create" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
                           <items>
                             <MenuItem mnemonicParsing="false" onAction="#handleCreateAndContinue" text="create and continue" />
                               <MenuItem mnemonicParsing="false" onAction="#handleCreateAndStart" text="create and start" />

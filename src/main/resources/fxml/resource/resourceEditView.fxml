@@ -11,7 +11,6 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Line?>
-<?import javafx.scene.text.Font?>
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.resource.ResourceEditController">
     <children>
@@ -22,7 +21,7 @@
             <rowConstraints>
                 <RowConstraints maxHeight="295.0" minHeight="10.0" prefHeight="107.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="533.0" minHeight="10.0" prefHeight="495.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="533.0" minHeight="10.0" prefHeight="95.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="80.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
 
@@ -85,20 +84,12 @@
                       </columnConstraints>
                       <rowConstraints>
                           <RowConstraints maxHeight="38.0" minHeight="10.0" prefHeight="38.0" vgrow="SOMETIMES" />
-                          <RowConstraints maxHeight="24.0" minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                          <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                       </rowConstraints>
                       <children>
-                          <Button mnemonicParsing="false" onAction="#handleOk" text="create resource" GridPane.columnIndex="2" GridPane.halignment="LEFT">
-                              <font>
-                                  <Font size="18.0" />
-                              </font>
-                          </Button>
+                          <Button mnemonicParsing="false" onAction="#handleOk" text="create resource" GridPane.columnIndex="2" GridPane.halignment="LEFT" />
                           <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" text="create another resource" GridPane.columnIndex="2" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
-                  <Button mnemonicParsing="false" onAction="#handleCancel" text="cancel">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Button>
+                  <Button mnemonicParsing="false" onAction="#handleCancel" text="cancel" />
                       </children>
                   </GridPane>
             </children>
