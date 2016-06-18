@@ -62,7 +62,7 @@
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin></TextField>
-                                <Label text="Select time" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                                <Label text="Exam time" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                            <GridPane.margin>
                               <Insets right="20.0" />
                            </GridPane.margin></Label>

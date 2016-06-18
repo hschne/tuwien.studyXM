@@ -50,7 +50,7 @@ import java.util.Optional;
     @Override public void start(Stage primaryStage) throws IOException {
         logger.info("Starting Application");
         applicationContext = new AnnotationConfigApplicationContext(MainApplication.class);
-        primaryStage.setTitle("Study XM");
+        primaryStage.setTitle("study XM");
         SpringFXMLLoader springFXMLLoader = applicationContext.getBean(SpringFXMLLoader.class);
         SpringFXMLLoader.FXMLWrapper<Object, MainFrameController> mfWrapper =
             springFXMLLoader.loadAndWrap("/fxml/mainFrame.fxml", MainFrameController.class);

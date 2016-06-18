@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitMenuButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -17,7 +12,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Line?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectEditController">
     <children>
         <GridPane prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <columnConstraints>
@@ -63,7 +58,7 @@
                                     <padding>
                                         <Insets right="20.0" />
                                     </padding></Label>
-                                <TextField fx:id="name" maxWidth="420.0" prefColumnCount="0" promptText="Enter subject name here" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+                                <TextField fx:id="name" maxWidth="420.0" prefColumnCount="0" promptText="enter subject name here" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
                                     <GridPane.margin>
                                         <Insets />
                                     </GridPane.margin></TextField>
@@ -71,9 +66,9 @@
                                     <padding>
                                         <Insets right="20.0" />
                                     </padding></Label>
-                        <TextField fx:id="author" maxWidth="420.0" prefColumnCount="0" promptText="Enter author name here" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="semester" maxWidth="420.0" prefColumnCount="0" promptText="Enter credits here" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <TextField fx:id="ects" maxWidth="420.0" prefColumnCount="0" promptText="Enter credits here" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="TOP" />
+                        <TextField fx:id="author" maxWidth="420.0" prefColumnCount="0" promptText="enter author name here" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="semester" maxWidth="420.0" prefColumnCount="0" promptText="enter semester here" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="ects" maxWidth="420.0" prefColumnCount="0" promptText="enter credits here" GridPane.columnIndex="1" GridPane.rowIndex="6" GridPane.valignment="TOP" />
                         <Label text="ECTS" GridPane.rowIndex="6" GridPane.valignment="TOP">
                            <padding>
                               <Insets right="20.0" top="5.0" />

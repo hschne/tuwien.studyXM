@@ -26,7 +26,7 @@
                 <RowConstraints fillHeight="false" minHeight="10.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button mnemonicParsing="false" onAction="#handleOpen" text="Open" GridPane.columnIndex="2">
+                <Button mnemonicParsing="false" onAction="#handleOpen" text="open" GridPane.columnIndex="2">
                     <GridPane.margin>
                         <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                     </GridPane.margin>

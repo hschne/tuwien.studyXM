@@ -65,13 +65,13 @@
                   </Label>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <children>
-                                <TextField fx:id="filePath" disable="true" editable="false" prefHeight="25.0" prefWidth="474.0" promptText="Select a file " />
+                                <TextField fx:id="filePath" disable="true" editable="false" prefHeight="25.0" prefWidth="474.0" promptText="select a file " />
                         <Button mnemonicParsing="false" onAction="#handleSelectFile" text="Select" />
                      </children>
                   </HBox>
                   <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.columnIndex="1">
                      <children>
-                                <TextField fx:id="resourceName" prefHeight="25.0" prefWidth="239.0" promptText="Enter a resource name" />
+                                <TextField fx:id="resourceName" prefHeight="25.0" prefWidth="239.0" promptText="enter a resource name" />
                      </children>
                   </HBox>
                       </children>

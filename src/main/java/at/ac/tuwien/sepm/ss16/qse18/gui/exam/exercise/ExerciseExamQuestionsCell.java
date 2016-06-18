@@ -33,9 +33,9 @@ import java.io.IOException;
         PostExerciseExamItemController itemController) {
         itemController.initialize(oq);
         if (oq.getAnsweredCorrectly()) {
-            itemController.getRoot().setStyle("-fx-background-color: seagreen");
+            itemController.getRoot().setStyle("-fx-background-image: url('/icons/paperGreen.png')");
         } else {
-            itemController.getRoot().setStyle("-fx-background-color: firebrick");
+            itemController.getRoot().setStyle("-fx-background-image: url('/icons/paperRed.png')");
         }
         itemController.loadFields();
         setGraphic(itemController.getRoot());

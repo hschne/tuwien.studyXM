@@ -54,6 +54,8 @@
 !export.png
 !newExam.png
 !resume.png
+!paperGreen.png
+!paperRed.png
 
 log/
 target/
