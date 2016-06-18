@@ -123,17 +123,25 @@ public class PostExerciseExamItemController extends BaseController {
     }
 
     private void showFile(String path) {
-        logger.debug("entering showThings()");
-        if (Desktop.isDesktopSupported()) {
-            try {
-                File file = new File(path);
-                Desktop.getDesktop().open(file);
+        logger.debug("entering showFile()");
+        String operatingSystem = System.getProperty("os.name");
+        if(operatingSystem.contains("Windows") || operatingSystem.contains("Mac")) {
 
-            } catch (IOException e) {
-                showError("Unable to open file, " +
-                    "please select a standard program for this file type." +
-                    e.getMessage());
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    File file = new File(path);
+                    Desktop.getDesktop().open(file);
+
+                } catch (IOException e) {
+                    logger.error("no standard program for file type selected");
+                    showError("Unable to open file, " +
+                        "please select a standard program for this file type." +
+                        e.getMessage());
+                }
             }
+        }else {
+            logger.error("unsupported operating system");
+            showError("Show files is only available on windows and mac.");
         }
     }
 

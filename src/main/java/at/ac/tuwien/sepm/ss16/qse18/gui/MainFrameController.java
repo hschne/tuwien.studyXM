@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.DoExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
