@@ -133,7 +133,7 @@ public class PostExerciseExamItemController extends BaseController {
                     Desktop.getDesktop().open(file);
 
                 } catch (IOException e) {
-                    logger.error("no standard program for file type selected");
+                    logger.error("no standard program for file type selected", e);
                     showError("Unable to open file, " +
                         "please select a standard program for this file type." +
                         e.getMessage());
