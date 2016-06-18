@@ -20,10 +20,10 @@
       <RowConstraints maxHeight="233.0" minHeight="0.0" prefHeight="60.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <Label text="Post Exam Overview" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <Label styleClass="subview-header" text="Post Exam Overview" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
       <Line endX="400.0" startX="-400.0" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
          <GridPane.margin>
-            <Insets bottom="10.0" />
+            <Insets bottom="5.0" />
          </GridPane.margin>
       </Line>
       <ListView fx:id="questionListView" GridPane.rowIndex="2">

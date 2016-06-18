@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import java.io.IOException;
 
 /**
- * @author  Zhang Haixiang on 15.06.2016.
+ * @author Zhang Haixiang on 15.06.2016.
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class ExerciseExamQuestionsCell
     extends ListCell<ObservableQuestion> {
@@ -32,9 +32,9 @@ import java.io.IOException;
     private void setControllerProperties(ObservableQuestion oq,
         PostExerciseExamItemController itemController) {
         itemController.initialize(oq);
-        if(oq.getAnsweredCorrectly()) {
+        if (oq.getAnsweredCorrectly()) {
             itemController.getRoot().setStyle("-fx-background-color: seagreen");
-        }else {
+        } else {
             itemController.getRoot().setStyle("-fx-background-color: firebrick");
         }
         itemController.loadFields();
@@ -45,7 +45,8 @@ import java.io.IOException;
         SpringFXMLLoader.FXMLWrapper<Object, PostExerciseExamItemController> editQuestionWrapper;
         try {
             editQuestionWrapper = springFXMLLoader
-                .loadAndWrap("/fxml/exam/postExerciseExamItem.fxml", PostExerciseExamItemController.class);
+                .loadAndWrap("/fxml/exam/postExerciseExamItem.fxml",
+                    PostExerciseExamItemController.class);
             return editQuestionWrapper.getController();
         } catch (IOException e) {
             logger.error(e);

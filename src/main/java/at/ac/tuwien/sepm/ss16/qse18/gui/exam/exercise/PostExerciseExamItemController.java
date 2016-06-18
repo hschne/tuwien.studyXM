@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 
@@ -34,7 +35,8 @@ import java.util.stream.Collectors;
 /**
  * @author Zhang Haixiang on 15.06.2016.
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class PostExerciseExamItemController extends BaseController{
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
+public class PostExerciseExamItemController extends BaseController {
     @FXML private Node root;
     @FXML private ListView<String> answerListView;
     @FXML private Label questionLabel;
@@ -49,12 +51,12 @@ import java.util.stream.Collectors;
     private Resource resource;
 
 
-    @FXML public void initialize(ObservableQuestion question){
+    @FXML public void initialize(ObservableQuestion question) {
         try {
             this.question = question;
 
-             this.resource = this.resourceQuestionService.getResourceFromQuestion
-                (this.question.getQuestionInstance());
+            this.resource = this.resourceQuestionService
+                .getResourceFromQuestion(this.question.getQuestionInstance());
 
             List<ObservableAnswer> observableAnswers = questionService.
                 getCorrespondingAnswers(question.getQuestionInstance()).
@@ -64,39 +66,44 @@ import java.util.stream.Collectors;
             answerListView.setItems(answerList);
 
 
-        }catch (ServiceException e){
-            logger.error("Service Exception in PostExerciseExamItemController initialize with parameters", question);
+        } catch (ServiceException e) {
+            logger.error(
+                "Service Exception in PostExerciseExamItemController initialize with parameters",
+                question);
             showError(e);
         }
     }
 
-    @FXML protected void onClick(){
-        if(this.question.getType() == 4) {
-            showThings(this.question.getQuestion());
+    @FXML protected void onClick() {
+        logger.debug("entering onClick()");
+        if (this.question.getQuestionInstance().getType().equals(QuestionType.NOTECARD)) {
+            showFile(this.question.getQuestion());
         }
     }
 
-    @FXML protected void showResource(){
-        showThings(this.resource.getReference());
+    @FXML protected void showResource() {
+        logger.debug("entering showResource()");
+        showFile(this.resource.getReference());
     }
 
     public void loadFields() {
-        questionLabel.setText(question.getQuestion());
+        questionLabel.setText(question.getQuestion().replaceAll("(.{140})", "$1\n"));
 
 
-        if(question.getType() == 4) {
+        if (this.question.getQuestionInstance().getType().equals(QuestionType.NOTECARD)) {
             questionLabel.setVisible(false);
             FileChooser fileChooser = new FileChooser();
             fileChooser.setInitialDirectory(new File(question.getQuestion()));
-            questionImageView.setImage(new Image(fileChooser.getInitialDirectory().toURI().toString()));
+            questionImageView
+                .setImage(new Image(fileChooser.getInitialDirectory().toURI().toString()));
 
         }
 
-        if(!this.question.getAnsweredCorrectly()){
+        if (!this.question.getAnsweredCorrectly()) {
             questionLabel.setTextFill(Color.BISQUE);
         }
 
-        if(this.resource == null){
+        if (this.resource == null) {
             showResourceButton.setVisible(false);
         }
 
@@ -106,15 +113,17 @@ import java.util.stream.Collectors;
         return root;
     }
 
-    private List<String> fillWithAnswerName(List<ObservableAnswer> observableAnswers){
-        List <String> answers = new ArrayList<>();
-        for(ObservableAnswer a: observableAnswers){
-            answers.add(a.getAnswer() + "       [" + a.correctProperty().getValue() + "]");
+    private List<String> fillWithAnswerName(List<ObservableAnswer> observableAnswers) {
+        List<String> answers = new ArrayList<>();
+        for (ObservableAnswer a : observableAnswers) {
+            answers.add((a.getAnswer() + "       [" + a.correctProperty().getValue() + "]")
+                .replaceAll("(.{100})", "$1\n"));
         }
         return answers;
     }
 
-    private void showThings(String path){
+    private void showFile(String path) {
+        logger.debug("entering showThings()");
         if (Desktop.isDesktopSupported()) {
             try {
                 File file = new File(path);

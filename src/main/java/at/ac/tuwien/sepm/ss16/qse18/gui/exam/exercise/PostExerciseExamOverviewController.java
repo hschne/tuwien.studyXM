@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
- * @author  Zhang Haixiang on 15.06.2016.
+ * @author Zhang Haixiang on 15.06.2016.
  */
 @Component public class PostExerciseExamOverviewController extends BaseController {
     @Autowired ApplicationContext applicationContext;
@@ -33,48 +33,51 @@ import java.util.stream.Collectors;
     private ObservableList<ObservableQuestion> questionList;
 
 
-    @FXML public void initialize(ExerciseExam exerciseExam){
-        try{
-        List<ObservableQuestion> observableQuestions =
-            exerciseExam.getExamQuestions().stream().map(ObservableQuestion::new)
-                .collect(Collectors.toList());
+    @FXML public void initialize(ExerciseExam exerciseExam) {
+        try {
+            List<ObservableQuestion> observableQuestions =
+                exerciseExam.getExamQuestions().stream().map(ObservableQuestion::new)
+                    .collect(Collectors.toList());
 
 
             this.questionBooleans = exerciseExamService
-                .getQuestionBooleansOfExam(exerciseExam.getExamid(), generateQuestionIDList(observableQuestions));
+                .getQuestionBooleansOfExam(exerciseExam.getExamid(),
+                    generateQuestionIDList(observableQuestions));
 
 
             setRightValues(observableQuestions);
             questionList = FXCollections.observableArrayList(observableQuestions);
             questionListView.setItems(questionList);
-            questionListView.setCellFactory(listView -> applicationContext.getBean(ExerciseExamQuestionsCell.class));
+            questionListView.setCellFactory(
+                listView -> applicationContext.getBean(ExerciseExamQuestionsCell.class));
 
 
-        }catch (ServiceException e){
+        } catch (ServiceException e) {
             logger.error("ServiceException in initialize with parameters {}", exerciseExam, e);
             showError(e.getMessage());
         }
     }
 
-    public void finish(){
+    public void finish() {
         logger.debug("entering finish()");
         mainFrameController.handleHome();
     }
 
-    private List<Integer> generateQuestionIDList(List<ObservableQuestion> observableQuestions){
+    private List<Integer> generateQuestionIDList(List<ObservableQuestion> observableQuestions) {
         List<Integer> questionIDs = new ArrayList<>();
 
-        for(ObservableQuestion o: observableQuestions){
+        for (ObservableQuestion o : observableQuestions) {
             questionIDs.add(o.getQuestionInstance().getQuestionId());
         }
 
         return questionIDs;
     }
 
-    private void setRightValues(List<ObservableQuestion> observableQuestions){
-        for(ObservableQuestion o: observableQuestions){
-            if(questionBooleans.containsKey(o.getQuestionInstance().getQuestionId())){
-                o.setAnsweredCorrectly(questionBooleans.get(o.getQuestionInstance().getQuestionId()));
+    private void setRightValues(List<ObservableQuestion> observableQuestions) {
+        for (ObservableQuestion o : observableQuestions) {
+            if (questionBooleans.containsKey(o.getQuestionInstance().getQuestionId())) {
+                o.setAnsweredCorrectly(
+                    questionBooleans.get(o.getQuestionInstance().getQuestionId()));
             }
         }
     }
