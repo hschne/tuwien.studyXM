@@ -63,8 +63,8 @@ import java.util.Map;
             pieChart.setData(pieChartData);
             pieChart.setLegendVisible(false);
 
-            pieChartData.get(0).getNode().setStyle("-fx-pie-color: " + "limegreen");
-            pieChartData.get(1).getNode().setStyle("-fx-pie-color: " + "firebrick");
+            pieChartData.get(0).getNode().setStyle("-fx-pie-color: #A2E88B");
+            pieChartData.get(1).getNode().setStyle("-fx-pie-color: #F7A099");
 
 
             yAxis.setLabel("answered questions");

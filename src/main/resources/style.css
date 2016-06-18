@@ -111,6 +111,6 @@
     -fx-background-color: #192836;
 }
 
-.default-color0.chart-bar { -fx-bar-fill: firebrick }
-.default-color1.chart-bar { -fx-bar-fill: limegreen }
+.default-color0.chart-bar { -fx-bar-fill: #F7A099 }
+.default-color1.chart-bar { -fx-bar-fill: #A2E88B }
 
