@@ -63,5 +63,10 @@
          </image>
       </ImageView>
       <Line endX="830.0" startX="-100.0" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM" />
+      <Button fx:id="showDetailsButton" layoutX="925.0" layoutY="570.0" mnemonicParsing="false" onAction="#showDetail" text="show Detail" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets left="40.0" />
+         </GridPane.margin>
+      </Button>
    </children>
 </GridPane>

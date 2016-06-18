@@ -72,5 +72,16 @@ public interface ExerciseExamQuestionDao {
 
     List<Integer> getNotAnsweredQuestionsPerExam(int examID) throws DaoException;
 
+    /**
+     * getQuestionBooleansOfExam
+     * The Question ID and the Boolean whether a question has been answered correctly are retrieved
+     * for the given examID from the database and saved in a Map
+     * @param examID primary key of the exam the questions belong to
+     * @param questionList List of Question ID's of which the Booleans should be retrieved
+     * @return returns a Hashmap that contains the questionID and the Booleans
+     * @throws DaoException
+     *
+     * */
+    Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Integer> questionList) throws DaoException;
 
 }
