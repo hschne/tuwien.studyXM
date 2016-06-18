@@ -46,7 +46,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <Label fx:id="titleLabel" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+                        <Label fx:id="titleLabel" styleClass="subview-header" text="Label" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                            <font>
                               <Font name="System Bold" size="24.0" />
                            </font></Label>
@@ -93,21 +93,21 @@
                   <Insets bottom="50.0" left="100.0" right="100.0" />
                </GridPane.margin>
             </AnchorPane>
-            <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#handleNextQuestionButton" text="Next Question" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
+            <Button fx:id="nextQuestionButton" mnemonicParsing="false" onAction="#handleNextQuestionButton" text="next question" GridPane.halignment="RIGHT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin></Button>
-            <Label fx:id="topicsCoveredLabel" text="All topics are covered" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Label fx:id="topicsCoveredLabel" stylesheets="@../../style.css" text="all topics are covered" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>
             <Button fx:id="showResultsButton" mnemonicParsing="false" onAction="#handleShowResultsButton" text="Show results" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
-            <Button fx:id="skipQuesitonButton" mnemonicParsing="false" onAction="#handleSkipQuestionButton" text="Skip Question" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+            <Button fx:id="skipQuesitonButton" mnemonicParsing="false" onAction="#handleSkipQuestionButton" text="skip question" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin>
             </Button>
-            <Button fx:id="pauseExamButton" mnemonicParsing="false" onAction="#handlePauseExamButton" text="Pause Exam" GridPane.halignment="LEFT" GridPane.rowIndex="3">
+            <Button fx:id="pauseExamButton" mnemonicParsing="false" onAction="#handlePauseExamButton" text="pause exam" GridPane.halignment="LEFT" GridPane.rowIndex="3">
                <GridPane.margin>
                   <Insets left="20.0" />
                </GridPane.margin></Button>

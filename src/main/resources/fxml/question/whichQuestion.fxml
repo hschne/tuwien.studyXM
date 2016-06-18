@@ -24,7 +24,7 @@
             <RowConstraints maxHeight="600.0" minHeight="10.0" prefHeight="155.0" valignment="CENTER" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="What kind of question do you want to create?" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
+            <Label text="what kind of question do you want to create?" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="System Bold" size="24.0" />
                </font>

@@ -116,28 +116,28 @@
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets left="28.0" />
                            </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerTwo" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer two here..." GridPane.rowIndex="1">
                            <font>
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets left="28.0" />
                            </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerThree" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer three here..." GridPane.rowIndex="2">
                            <font>
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets left="28.0" />
                            </GridPane.margin></TextField>
                         <TextField fx:id="textFieldAnswerFour" maxWidth="-Infinity" prefWidth="400.0" promptText="add answer four here..." GridPane.rowIndex="3">
                            <font>
                               <Font size="13.0" />
                            </font>
                            <GridPane.margin>
-                              <Insets left="10.0" />
+                              <Insets left="28.0" />
                            </GridPane.margin></TextField>
                         <CheckBox fx:id="checkBoxAnswerOne" mnemonicParsing="false" text="correct answer" GridPane.columnIndex="1">
                            <font>
@@ -199,13 +199,16 @@
                                   </value>
 
                                  <GridPane.margin>
-                                    <Insets left="50.0" />
+                                    <Insets left="58.0" />
                                  </GridPane.margin>
                               </ChoiceBox>
                               <Label text="question time" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="13.0" />
                                  </font>
+                                 <GridPane.margin>
+                                    <Insets left="18.0" />
+                                 </GridPane.margin>
                               </Label>
                            </children>
                         </GridPane>
