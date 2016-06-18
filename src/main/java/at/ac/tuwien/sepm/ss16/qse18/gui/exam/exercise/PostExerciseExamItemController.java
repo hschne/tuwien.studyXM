@@ -99,10 +99,6 @@ public class PostExerciseExamItemController extends BaseController {
 
         }
 
-        if (!this.question.getAnsweredCorrectly()) {
-            questionLabel.setTextFill(Color.BISQUE);
-        }
-
         if (this.resource == null) {
             showResourceButton.setVisible(false);
         }
