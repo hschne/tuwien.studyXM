@@ -38,9 +38,13 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     @Override public Exam create(Exam exam) throws DaoException {
+        if(exam == null) {
+            logger.error("Can not create null exam");
+            throw new DaoException("Can not create null exam");
+        }
+
         logger.debug("entering method create with parameters {}", exam);
 
-        //TODO: validate
         PreparedStatement pstmt = null;
         ResultSet generatedKey = null;
         java.util.Date now = new java.util.Date();
@@ -77,6 +81,16 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     @Override public void delete(Exam exam) throws DaoException {
+        if(exam == null) {
+            logger.error("Can not delete null exam");
+            throw new DaoException("Can not delete nonexisting exam");
+        }
+
+        if(exam.getExamid() <= 0) {
+            logger.error("Exam not in database");
+            throw new DaoException("Exam not in Database");
+        }
+
         logger.debug("entering method delete with parameters {}", exam);
         deleteExerciseExams(exam);
         try {
@@ -120,6 +134,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
         } catch (SQLException e) {
             logger.error("SQL Exception in getExam with parameters {}", examID, e);
             throw new DaoException("Could not get List with of Exams with Exam ID" + examID);
+        } catch(IndexOutOfBoundsException e) {
+            logger.warn("No entry found for id " + examID, e);
+            return null;
         } finally {
             closeStatementsAndResultSets(new Statement[] {pstmt}, new ResultSet[] {rs});
         }
@@ -151,6 +168,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     private List<Exam> fillList(ResultSet rs) throws SQLException {
+        logger.debug("Entering fillList");
         Exam exam;
         List<Exam> examList = new ArrayList<>();
 
@@ -169,6 +187,16 @@ import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeSta
     }
 
     @Override public List<Exam> getAllExamsOfSubject(Subject subject) throws DaoException {
+        if(subject == null) {
+            logger.error("Subject is null");
+            throw new DaoException("Can not get exams of nonexistant subject");
+        }
+
+        if(subject.getSubjectId() <= 0) {
+            logger.error("Subject is not in the database");
+            throw new DaoException("Subject is not in the database");
+        }
+
         logger.debug("entering method getExamsFor {}", subject);
         try {
             PreparedStatement pstmt = this.database.getConnection()
