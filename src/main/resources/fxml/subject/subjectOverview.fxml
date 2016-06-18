@@ -38,7 +38,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="ALWAYS" />
               </rowConstraints>
                <children>
-                   <SplitMenuButton fx:id="createButton" layoutX="856.0" layoutY="21.0" mnemonicParsing="false" onAction="#handleNew" prefHeight="33.0" prefWidth="150.0" text="new" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
+                   <SplitMenuButton fx:id="createButton" layoutX="856.0" layoutY="21.0" mnemonicParsing="false" onAction="#handleNew" text="new" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="20.0">
                        <items>
                            <MenuItem mnemonicParsing="false" onAction="#handleImport" text="import subject" />
                        </items>
@@ -46,12 +46,12 @@
                         <Insets left="10.0" />
                      </GridPane.margin>
                    </SplitMenuButton>
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" prefHeight="33.0" prefWidth="80.0" text="delete" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
+                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#handleDelete" text="delete" GridPane.columnIndex="2" GridPane.halignment="RIGHT">
                      <GridPane.margin>
                         <Insets right="10.0" />
                      </GridPane.margin>
                   </Button>
-                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEdit" prefHeight="33.0" prefWidth="80.0" text="edit" GridPane.columnIndex="1" />
+                  <Button fx:id="editButton" mnemonicParsing="false" onAction="#handleEdit" text="edit" GridPane.columnIndex="1" />
                </children>
             </GridPane>
             <GridPane prefHeight="76.0" prefWidth="1018.0">
