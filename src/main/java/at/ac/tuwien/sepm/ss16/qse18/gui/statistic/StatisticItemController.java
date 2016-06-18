@@ -80,9 +80,9 @@ public class StatisticItemController extends
                             .stream().map(ObservableTopic::new).collect(Collectors.toList());
             ObservableList<ObservableTopic> topicList = FXCollections.observableList(observableTopics);
             topicListView.setItems(topicList);
-            topicListView.setCellFactory(listView -> {
-                return applicationContext.getBean(StatisticTopicCell.class);
-            });
+            topicListView.setCellFactory(listView ->
+                applicationContext.getBean(StatisticTopicCell.class)
+            );
         } catch (ServiceException e) {
             showError(e);
         }
