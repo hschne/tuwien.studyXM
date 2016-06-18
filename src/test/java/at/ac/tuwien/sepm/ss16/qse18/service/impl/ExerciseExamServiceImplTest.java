@@ -676,6 +676,31 @@ import static org.mockito.Mockito.*;
     }
     //----------------------------------------------------------------------------------------------
 
+    //Testing getQuestionBooleansOfExam(int, List<Question>)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_getQuestionBooleansOfExamCallsRightMethodInDAO_should_persist() throws Exception{
+        List<Integer> questionList = new ArrayList<>();
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+        questionBooleans.put(1, false);
+        questionList.add(1);
+
+        when(this.mockExerciseExamQuestionDaoJdbc.getQuestionBooleansOfExam(this.exerciseExam.getExamid(),
+            questionList)).thenReturn(questionBooleans);
+
+        this.exerciseExamService.getQuestionBooleansOfExam(this.exerciseExam.getExamid(), questionList);
+        verify(this.mockExerciseExamQuestionDaoJdbc).getQuestionBooleansOfExam(this.exerciseExam.getExamid(), questionList);
+    }
+
+    @Test (expected = ServiceException.class)
+    public void test_getQuestionBooleansOfExamWithInvalidExamID_should_fail() throws Exception{
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(1);
+        this.exerciseExamService.getQuestionBooleansOfExam(0, questionList);
+
+    }
+
+    //----------------------------------------------------------------------------------------------
+
 
     @After public void tearDown() throws Exception {
         //nothing to tear down
