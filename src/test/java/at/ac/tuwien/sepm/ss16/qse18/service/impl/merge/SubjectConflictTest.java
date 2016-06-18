@@ -39,7 +39,7 @@ import static org.mockito.Mockito.when;
         List<TopicConflict> topicConflicts = new ArrayList<>();
         when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(topicConflicts);
         Subject existingSubject = createDummySubject();
-        subjectConflict.initialize(existingSubject,new ExportSubject(createDummySubject(),null));
+        subjectConflict.setSubjects(existingSubject,new ExportSubject(createDummySubject(),null));
 
         List<TopicConflict> result = subjectConflict.getConflictingTopics();
         assertTrue(result.isEmpty());
@@ -52,7 +52,7 @@ import static org.mockito.Mockito.when;
         topicConflicts.add(conflict);
         when(topicConflictDetectionMock.getConflictingTopics()).thenReturn(topicConflicts);
         Subject existingSubject = createDummySubject();
-        subjectConflict.initialize(existingSubject,new ExportSubject(createDummySubject(),null));
+        subjectConflict.setSubjects(existingSubject,new ExportSubject(createDummySubject(),null));
 
         subjectConflict.getConflictingTopics();
         List<TopicConflict> result = subjectConflict.getConflictingTopics();

@@ -68,7 +68,7 @@ public class ObservableTopic {
         this.t = t;
     }
 
-    public String toString(){
+    @Override public String toString(){
         return this.getTopic();
     }
 }

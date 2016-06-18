@@ -485,6 +485,31 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         }
     }
 
+    @Override
+    public Map<Integer, Boolean> getQuestionBooleansOfExam(int examID, List<Integer> questionList)
+        throws ServiceException{
+        logger.debug("entering getQuestionBooleansOfExam with parameters {}", examID, questionList);
+
+        Map<Integer, Boolean> examQuestions = new HashMap<>();
+
+        if(examID <= 0){
+            logger.error("Service Exception in getQuestionBooleans with parameters {}", examID);
+            throw new ServiceException("Invalid Exam ID");
+        }
+
+        try {
+            for(Map.Entry<Integer, Boolean> m:
+                this.exerciseExamQuestionDao.getQuestionBooleansOfExam(examID, questionList).entrySet()){
+                examQuestions.put(m.getKey(), m.getValue());
+            }
+        }catch (DaoException e){
+            logger.error("Service Exception in getQuestionBooleansOfExam with parameters {}", examID, questionList, e);
+            throw new ServiceException(e.getMessage());
+        }
+
+        return examQuestions;
+    }
+
 
 }
 

@@ -12,6 +12,7 @@ public class ObservableQuestion {
     private IntegerProperty type;
     private LongProperty questionTime;
     private Question q;
+    private BooleanProperty answeredCorrectly = new SimpleBooleanProperty(true);
 
     public ObservableQuestion(Question q) {
         this.q = q;
@@ -63,4 +64,15 @@ public class ObservableQuestion {
         return this.questionTime;
     }
 
+    public boolean getAnsweredCorrectly() {
+        return answeredCorrectly.get();
+    }
+
+    public BooleanProperty answeredCorrectlyProperty() {
+        return answeredCorrectly;
+    }
+
+    public void setAnsweredCorrectly(boolean answeredCorrectly) {
+        this.answeredCorrectly.set(answeredCorrectly);
+    }
 }

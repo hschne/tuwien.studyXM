@@ -13,6 +13,8 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.text.DecimalFormat;
+
 
 /**
  * A controller for the subject detail view, in order to edit details or
@@ -137,7 +139,7 @@ import org.springframework.stereotype.Component;
     private void initalizeFields() {
         name.setText(this.subject.getName());
         semester.setText(this.subject.getSemester());
-        ects.setText(Double.toString(this.subject.getEcts()));
+        ects.setText(new DecimalFormat("#.#").format(this.subject.getEcts()).replace(',', '.'));
         author.setText(this.subject.getAuthor());
     }
 }

@@ -2,8 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.gui;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-
-import at.ac.tuwien.sepm.ss16.qse18.gui.GuiController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.DoExamController;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.*;
 import at.ac.tuwien.sepm.ss16.qse18.gui.exam.ShowQuestionsController;
@@ -65,6 +63,16 @@ import java.util.List;
         try {
             setSubView("/fxml/subject/subjectOverview.fxml", SubjectOverviewController.class,paneContent);
         } catch (IOException e) {
+            handleException(e);
+        }
+    }
+
+    @FXML public void handleShowDetail(){
+        logger.debug("Loading details");
+        try{
+            setSubView("/fxml/exam/postExerciseExamOverview.fxml", PostExerciseExamOverviewController.class, paneContent);
+
+        }catch (IOException e){
             handleException(e);
         }
     }

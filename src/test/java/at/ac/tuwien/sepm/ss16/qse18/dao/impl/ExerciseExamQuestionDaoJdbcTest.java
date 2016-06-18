@@ -136,7 +136,7 @@ public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
         questionIDList.add(2);
         questionIDList.add(3);
 
-        when(this.mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true);
+        when(this.mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
         when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(2).thenReturn(3);
         when(this.mockResultSet.getBoolean(anyString())).thenReturn(true).thenReturn(true)
             .thenReturn(false);
@@ -204,6 +204,62 @@ public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
         PowerMockito.verifyStatic();
         this.mockConnectionH2.getConnection();
     }
+    //----------------------------------------------------------------------------------------------
+
+    //Testing getQuestionBooleansOfExam(int, List<Integer>)
+    //----------------------------------------------------------------------------------------------
+    @Test public void test_geQuestionBooleansOfExamWith3ElementsInDatabase_should_persist()
+        throws Exception {
+        List<Integer> questionList = new ArrayList<>();
+        Map<Integer, Boolean> questionBooleans = new HashMap<>();
+
+        questionList.add(1);
+        questionList.add(2);
+        questionList.add(3);
+
+        when(this.mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        when(this.mockResultSet.getInt(anyString())).thenReturn(1).thenReturn(2).thenReturn(3);
+        when(this.mockResultSet.getBoolean(anyString())).thenReturn(true).thenReturn(true)
+            .thenReturn(false);
+
+        questionBooleans = this.examQuestionDaoJdbc.getQuestionBooleansOfExam(this.testExerciseExam.getExamid(),
+            questionList);
+
+        assertTrue("One Element should have ID 1", questionBooleans.containsKey(1));
+        assertTrue("One Element should have ID 2", questionBooleans.containsKey(2));
+        assertTrue("One Element should have ID 3", questionBooleans.containsKey(3));
+        assertTrue("Value of Element with ID 1 should be true", questionBooleans.get(1) == true);
+        assertTrue("Value of Element with ID 2 should be true", questionBooleans.get(2) == true);
+        assertTrue("Value of Element with ID 3 should be false", questionBooleans.get(3) == false);
+
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_getQuestionBooleansOfExamWithInvalidExamID_should_fail() throws Exception{
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(1);
+        this.examQuestionDaoJdbc.getQuestionBooleansOfExam(0, questionList);
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_getQuestionBooleansOfExamWithInvalidQuestionID_should_fail() throws Exception{
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(-1);
+        this.examQuestionDaoJdbc.getQuestionBooleansOfExam(this.testExerciseExam.getExamid(), questionList);
+    }
+
+    @Test(expected = DaoException.class)
+    public void test_getQuestionBooleansOfExamWithoutDatabaseConnection_should_fail()
+        throws Exception {
+        List<Integer> questionList = new ArrayList<>();
+        questionList.add(1);
+        when(this.mockConnectionH2.getConnection()).thenThrow(SQLException.class);
+        this.examQuestionDaoJdbc.getQuestionBooleansOfExam(this.testExerciseExam.getExamid(), questionList);
+        PowerMockito.verifyStatic();
+        this.mockConnectionH2.getConnection();
+    }
+
+    //----------------------------------------------------------------------------------------------
 
     @After public void tearDown() throws Exception {
 

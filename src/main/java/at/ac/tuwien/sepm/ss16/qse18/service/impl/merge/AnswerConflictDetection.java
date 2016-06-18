@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
+ * This class provides methods to detect, if answers between
+ * an existing and imported question are equal
+ *
  * @author Hans-Joerg Schroedl
  */
 @Service public class AnswerConflictDetection {
@@ -24,7 +27,7 @@ import java.util.List;
     private ExportQuestion importedQuestion;
     private QuestionDao questionDao;
 
-    public void setQuestions(Question question, ExportQuestion importedQuestion) {
+    void setQuestions(Question question, ExportQuestion importedQuestion) {
         this.question = question;
         this.importedQuestion = importedQuestion;
 
@@ -34,11 +37,12 @@ import java.util.List;
         this.questionDao = questionDao;
     }
 
-    public boolean areAnswersEqual() throws ServiceException {
+    boolean areAnswersEqual() throws ServiceException {
+        logger.debug("Check if answers are equal for {}", question);
         List<Answer> existingAnswers = getExistingAnswers();
         List<Answer> importedAnswers = importedQuestion.getAnswers();
         if (existingAnswers.size() != importedAnswers.size()) {
-            logger.debug("Not the same number of answers.");
+            logger.debug("Not the same number of answers, returning false");
             return false;
         }
 
@@ -46,11 +50,12 @@ import java.util.List;
     }
 
     private boolean answerTextsEqual(List<Answer> existingAnswers) {
+        logger.debug("Check if answers texts are equal for {}", question);
         for (Answer existingAnswer : existingAnswers) {
             if(matchingImportedExists(existingAnswer)){
                 continue;
             }
-            //No exact matching imported answer has been found, so not identical.
+            logger.debug("No exact matching answer found for {}", existingAnswer);
             return false;
         }
         return true;
@@ -62,6 +67,7 @@ import java.util.List;
             if (answerTextEqual(existingAnswer, importedAnswer) &&
                 answerCorrectEqual(existingAnswer, importedAnswer) &&
                 answerSameType(existingAnswer, importedAnswer)) {
+                logger.debug("Matching answer for {} found", existingAnswer);
                 return true;
             }
         }
@@ -86,6 +92,7 @@ import java.util.List;
     }
 
     private List<Answer> getExistingAnswers() throws ServiceException {
+        logger.debug("Getting existing answers for {} ", question);
         try {
             return questionDao.getRelatedAnswers(question);
         } catch (DaoException e) {

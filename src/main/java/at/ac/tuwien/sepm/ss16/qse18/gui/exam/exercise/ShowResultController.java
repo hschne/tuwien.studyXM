@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
+import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.ExerciseExamServiceImpl;
 import javafx.collections.FXCollections;
@@ -23,15 +24,20 @@ import java.util.Map;
  */
 @Component public class ShowResultController extends BaseController{
     @Autowired private ExerciseExamServiceImpl exerciseExamService;
-    @FXML public PieChart pieChart;
-    @FXML public BarChart barChart;
+    @Autowired private QuestionService questionService;
+    @Autowired PostExerciseExamOverviewController postExerciseExamOverviewController;
+    @FXML private PieChart pieChart;
+    @FXML private BarChart barChart;
 
-    @FXML public Button buttonFinish;
+    @FXML private Button buttonFinish;
+    @FXML private Button showDetailsButton;
 
-    @FXML public Label labelGrade;
+    @FXML private Label labelGrade;
 
-    @FXML public CategoryAxis xAxis = new CategoryAxis();
-    @FXML public NumberAxis yAxis = new NumberAxis();
+    @FXML private CategoryAxis xAxis = new CategoryAxis();
+    @FXML private NumberAxis yAxis = new NumberAxis();
+
+    private ExerciseExam exerciseExam;
 
 
 
@@ -39,6 +45,7 @@ import java.util.Map;
 
     @FXML public void initialize(ExerciseExam exerciseExam){
         logger.debug("entering initialize with parameters {}", exerciseExam);
+        this.exerciseExam = exerciseExam;
         pieChart.getData().clear();
         pieChartData.clear();
 
@@ -91,9 +98,31 @@ import java.util.Map;
         }
     }
 
+    public void showDetail(){
+        logger.debug("entering showDetail()");
+        mainFrameController.handleShowDetail();
+        if(this.exerciseExam.getExamQuestions().size() == 0) {
+            setExamQuestions();
+        }
+
+        postExerciseExamOverviewController.initialize(this.exerciseExam);
+
+    }
+
     public void finish(){
         logger.debug("entering finish()");
         mainFrameController.handleHome();
+    }
+
+    private void setExamQuestions(){
+        try {
+            for (int i : exerciseExamService.getAllQuestionsOfExam(this.exerciseExam.getExamid())) {
+                this.exerciseExam.getExamQuestions().add(questionService.getQuestion(i));
+            }
+        }catch (ServiceException e){
+            logger.error("Service Exception setExamQuestions()", e);
+            showError(e.getMessage());
+        }
     }
 
 }
