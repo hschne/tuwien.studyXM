@@ -45,6 +45,9 @@
             <Insets left="150.0" />
          </GridPane.margin>
       </RadioButton>
-      <ImageView fx:id="image" fitHeight="218.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+      <ImageView fx:id="image" fitHeight="218.0" fitWidth="328.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets bottom="20.0" />
+         </GridPane.margin></ImageView>
    </children>
 </GridPane>
