@@ -14,6 +14,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import java.awt.*;
 import java.util.List;
 
 import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyResource;
@@ -25,6 +26,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 /**
  * @author Hans-Joerg Schroedl
  */
+@PrepareForTest({System.class, Desktop.class, DtoValidator.class, ResourceServiceImpl.class})
 @RunWith(PowerMockRunner.class) public class ResourceServiceImplTest {
 
     @Mock private ResourceDao mockDaoJdbc;
@@ -69,8 +71,7 @@ import static org.powermock.api.mockito.PowerMockito.when;
 
     }
 
-    @PrepareForTest(DtoValidator.class) @Test
-    public void test_createResource_createdResourceReturned() throws Exception {
+    @Test public void test_createResource_createdResourceReturned() throws Exception {
         PowerMockito.mockStatic(DtoValidator.class);
         Resource expectedResource = createDummyResource();
         when(mockDaoJdbc.createResource(any(Resource.class))).thenReturn(expectedResource);
@@ -80,15 +81,34 @@ import static org.powermock.api.mockito.PowerMockito.when;
         assertEquals(expectedResource, resource);
     }
 
-    @PrepareForTest(DtoValidator.class) @Test(expected = ServiceException.class)
-    public void test_createResource_exceptionThrown() throws Exception {
+    @Test(expected = ServiceException.class) public void test_createResource_exceptionThrown()
+        throws Exception {
         PowerMockito.mockStatic(DtoValidator.class);
-        when(mockDaoJdbc.createResource(any(Resource.class))).thenThrow(DaoException.class);
+        when(mockDaoJdbc.createResource(any(Resource.class))).thenThrow(new DaoException(""));
 
         resourceService.createResource(new Resource());
 
     }
 
+    @Test public void test_openResource_resourceOpenedUsingDesktop() throws Exception {
+        PowerMockito.mockStatic(Desktop.class);
+        PowerMockito.mockStatic(System.class);
+        PowerMockito.when(System.getProperty("os.name")).thenReturn("Windows");
+        PowerMockito.when(Desktop.isDesktopSupported()).thenReturn(true);
 
+        resourceService.openResource(createDummyResource());
+
+        PowerMockito.verifyStatic();
+    }
+
+    @Test(expected = ServiceException.class) public void test_openResource_notWorkingOnLinux()
+        throws Exception {
+        PowerMockito.mockStatic(Desktop.class);
+        PowerMockito.mockStatic(System.class);
+        PowerMockito.when(System.getProperty("os.name")).thenReturn("Linux");
+        PowerMockito.when(Desktop.isDesktopSupported()).thenReturn(true);
+
+        resourceService.openResource(createDummyResource());
+    }
 
 }
