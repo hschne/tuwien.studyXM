@@ -19,6 +19,7 @@ public class DummyEntityFactory {
         s.setName("TESTING");
         s.setEcts(1.0f);
         s.setSemester("WS10");
+        s.setAuthor("Author");
         return s;
     }
 

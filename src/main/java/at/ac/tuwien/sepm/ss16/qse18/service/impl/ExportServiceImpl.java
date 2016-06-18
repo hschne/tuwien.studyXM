@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -82,19 +82,19 @@ import java.util.zip.ZipOutputStream;
         logger.debug("Exporting subject: {}", this.subject);
     }
 
+    @Override public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
     private void cleanUpStream(ZipOutputStream z) throws ServiceException {
         try {
-            if(z != null) {
+            if (z != null) {
                 z.close();
             }
-        } catch(IOException e) {
+        } catch (IOException e) {
             logger.error(e.getMessage(), e);
             throw new ServiceException("Could not close stream while writing to file", e);
         }
-    }
-
-    @Override public void setSubject(Subject subject) {
-        this.subject = subject;
     }
 
     private void addImagesAndResourcesToZip(ZipOutputStream zipOutputStream)
@@ -121,7 +121,8 @@ import java.util.zip.ZipOutputStream;
         logger.debug("Writing to zip file: " + fileName);
         try {
             FileInputStream fis = new FileInputStream(new File(fileName));
-            zipOutputStream.putNextEntry(new ZipEntry(zipPath == null ? fileName : zipPath));
+            ZipEntry entry = new ZipEntry(zipPath == null ? fileName : zipPath);
+            zipOutputStream.putNextEntry(entry);
             byte[] bytes = new byte[1024];
             int length;
             while ((length = fis.read(bytes)) >= 0) {
@@ -134,6 +135,10 @@ import java.util.zip.ZipOutputStream;
                 File file = new File(fileName);
                 file.delete();
             }
+
+        } catch (ZipException e) {
+            //This means that a duplicate file is present, we ignore this and continue
+            logger.error(e);
         } catch (FileNotFoundException e) {
             logger.error("File " + fileName + " not found", e);
             throw new ServiceException("File " + fileName + " not found", e);

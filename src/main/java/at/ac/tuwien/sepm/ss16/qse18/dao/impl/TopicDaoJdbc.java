@@ -32,7 +32,6 @@ import java.util.List;
     private DataBaseConnection database;
     private SubjectTopicDao subjectTopicDaoJdbc;
     private QuestionTopicDaoJdbc questionTopicDao;
-    private ResourceTopicDaoJdbc resourceTopicDao;
 
 
     @Autowired public TopicDaoJdbc(DataBaseConnection database) {
@@ -46,11 +45,6 @@ import java.util.List;
     @Autowired public void setQuestionTopicDao(QuestionTopicDaoJdbc questionTopicDao) {
         this.questionTopicDao = questionTopicDao;
     }
-
-    @Autowired public void setTopicResourceDao(ResourceTopicDaoJdbc resourceTopicDao) {
-        this.resourceTopicDao = resourceTopicDao;
-    }
-
 
     @Override public Topic getTopic(int topicId) throws DaoException {
         logger.debug("Entering getTopic with parameters {}", topicId);
@@ -144,7 +138,6 @@ import java.util.List;
             throw new DaoException(e.getMessage());
         }
         questionTopicDao.removeTopic(topic);
-        resourceTopicDao.removeResourceTopic(topic);
         PreparedStatement pstmt = null;
         try {
             pstmt = database.getConnection().prepareStatement(DELETE_SQL);

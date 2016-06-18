@@ -75,7 +75,7 @@
                         <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="300.0" GridPane.rowIndex="1">
                             <children>
                                 <Button layoutX="420.0" layoutY="14.0" mnemonicParsing="false" onAction="#handleOk" prefHeight="33.0" prefWidth="95.0" text="proceed" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="10.0" />
-                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" prefWidth="89.0" text="cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="10.0" />
+                                <Button layoutX="131.0" mnemonicParsing="false" onAction="#handleCancel" prefHeight="33.0" text="cancel" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="30.0" AnchorPane.topAnchor="10.0" />
                             </children>
                         </AnchorPane>
                     </children>

@@ -67,8 +67,8 @@
               </columnConstraints>
               <rowConstraints>
                 <RowConstraints maxHeight="297.0" minHeight="10.0" prefHeight="215.0" valignment="CENTER" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="279.0" minHeight="10.0" prefHeight="222.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="65.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="279.0" minHeight="10.0" prefHeight="239.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="173.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <GridPane prefHeight="24.0" prefWidth="1002.0" GridPane.rowIndex="2">
@@ -78,14 +78,10 @@
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="39.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="23.0" minHeight="10.0" prefHeight="16.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="45.0" minHeight="10.0" prefHeight="31.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                         <Button mnemonicParsing="false" onAction="#handleCreateQuestion" text="create question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP">
-                             <font>
-                                 <Font size="18.0" />
-                             </font>
-                         </Button>
+                         <Button mnemonicParsing="false" onAction="#handleCreateQuestion" text="create question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP" />
                         <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="false" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
                      </children>
                   </GridPane>

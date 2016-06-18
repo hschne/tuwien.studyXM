@@ -5,14 +5,17 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import java.util.List;
 
 /**
- * Implementors provide functionality for resources
+ * Implementors provide functionality for resources.
+ *
+ * Supported functions are adding, updating, retrieving and deleting resources. Additionally,
+ * provides function for opening the resource.
  *
  * @author Hans-Joerg Schroedl
  */
 public interface ResourceService {
 
     /**
-     * Returns a resource with resourceid {@param id.
+     * Returns a resource with id {@param id}
      *
      * @param id The id of the resource
      * @return A resource with the given parameter
@@ -21,7 +24,7 @@ public interface ResourceService {
     Resource getResource(int id) throws ServiceException;
 
     /**
-     * Gets all available resources
+     * Gets all available resources.
      *
      * @return A list of all resources
      * @throws ServiceException If no resources could be retrieved
@@ -29,7 +32,7 @@ public interface ResourceService {
     List<Resource> getResources() throws ServiceException;
 
     /**
-     * Creates a new resource
+     * Creates a new resource.
      *
      * @param resource The {@link Resource} to be saved to the database
      * @return A resource with a set resourceid
@@ -38,7 +41,7 @@ public interface ResourceService {
     Resource createResource(Resource resource) throws ServiceException;
 
     /**
-     * Deletes the given resource
+     * Deletes the given resource.
      *
      * @param resource The resource to be deleted
      * @return The deleted resource
@@ -48,7 +51,7 @@ public interface ResourceService {
 
 
     /**
-     * Updates the given resources
+     * Updates the given resource.
      *
      * @param resource The resource to be updated
      * @return The resource with updated fields
@@ -57,7 +60,7 @@ public interface ResourceService {
     Resource updateResource(Resource resource) throws ServiceException;
 
     /**
-     * Displays a given resource with the standard program selected by the user.
+     * Displays a given resource.
      * @param resource resource to open
      * @throws ServiceException
      */
