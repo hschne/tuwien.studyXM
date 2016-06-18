@@ -5,7 +5,6 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.powermock.api.mockito.PowerMockito;
@@ -13,9 +12,13 @@ import org.powermock.api.mockito.PowerMockito;
 import java.sql.SQLException;
 import java.util.List;
 
+import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyQuestion;
+import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopic;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
@@ -23,7 +26,7 @@ import static org.mockito.Mockito.when;
  * Tests for the JDBC implementation in QuestonTopicDaoJdbc. In order to be isolated while testing, this
  * test class uses mocks primarily to bypass the database connection procedure.
  *
- * @author Philipp Ganiu, Bicer Cem
+ * @author Philipp Ganiu, Bicer Cem, Hans-Jörg Schrödl
  */
 public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
     private QuestionTopicDao dao;
@@ -33,8 +36,7 @@ public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
         dao = new QuestionTopicDaoJdbc(mockConnectionH2);
     }
 
-    //Testing getQuestionToTopic(Topic)
-    //----------------------------------------------------------------------------------------------
+
     @Test(expected = DaoException.class)
     public void test_getQuestionToTopic_withNoDataBaseConnection_Fail() throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
@@ -48,7 +50,7 @@ public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
         dao.getQuestionToTopic(null);
     }
 
-    @Test public void test_getQuestionToTopic_withValidTopid() throws Exception {
+    @Test public void test_getQuestionToTopic_withValidTopic() throws Exception {
         when(mockResultSet.next()).thenReturn(true).thenReturn(false);
         when(mockResultSet.getInt(1)).thenReturn(1);
         when(mockResultSet.getString(2)).thenReturn("TestQuestion");
@@ -56,18 +58,14 @@ public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
         when(mockResultSet.getLong(4)).thenReturn(5000L);
 
 
-        List<Question> questions = dao.getQuestionToTopic(new Topic());
+        List<Question> questions = dao.getQuestionToTopic(createDummyTopic());
         assertTrue("There should be one question in the list", questions.size() == 1);
         assertTrue("QuestionID should be 1", questions.get(0).getQuestionId() == 1);
         assertTrue("Question should be of type 2", questions.get(0).getType().getValue() == 2);
         assertTrue("Question content should be TestQuestion",
             questions.get(0).getQuestion().equals("TestQuestion"));
     }
-    //----------------------------------------------------------------------------------------------
 
-
-    //Testing getTopicsFromQuestion(Question)
-    //----------------------------------------------------------------------------------------------
     @Test(expected = DaoException.class) public void test_getTopicsFromQuestion_withNull_Fail()
         throws Exception {
         dao.getTopicsFromQuestion(null);
@@ -97,10 +95,51 @@ public class QuestionTopicDaoJdbcTest extends DaoBaseTest {
         assertEquals("The second topic's name should be \"TestTopic2\"", topics.get(1).getTopic(),
             "TestTopic2");
     }
-    //----------------------------------------------------------------------------------------------
 
-    @After public void tearDown() throws Exception {
+    @Test public void test_removeTopic_withValidTopic() throws Exception {
+        Topic topic = createDummyTopic();
 
+        dao.removeTopic(topic);
+
+        verify(mockPreparedStatement).setInt(1, topic.getTopicId());
+        verify(mockPreparedStatement).executeUpdate();
     }
+
+    @Test(expected = DaoException.class) public void test_removeTopic_errorInDatabase() throws Exception {
+        when(mockConnectionH2.getConnection()).thenThrow(new SQLException());
+        Topic topic = createDummyTopic();
+
+        dao.removeTopic(topic);
+    }
+
+    @Test public void test_removeQuestion_withValidQuestion() throws Exception{
+        Question question = createDummyQuestion();
+
+        dao.removeQuestion(question);
+
+        verify(mockPreparedStatement).setInt(1, question.getQuestionId());
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+
+    @Test(expected = DaoException.class) public void test_removeQuestion_errorInDatabase() throws Exception {
+        when(mockConnectionH2.getConnection()).thenThrow(new SQLException());
+        Question question = createDummyQuestion();
+
+        dao.removeQuestion(question);
+    }
+
+    @Test public void test_createQuestionInTopic_addValidQuestionToTopic() throws Exception{
+        Question question = createDummyQuestion();
+        Topic topic = createDummyTopic();
+
+        dao.createQuestionInTopic(question, topic);
+
+        verify(mockPreparedStatement).setInt(1, question.getQuestionId());
+        verify(mockPreparedStatement).setInt(2, topic.getTopicId());
+        verify(mockPreparedStatement).executeUpdate();
+    }
+
+
 
 }

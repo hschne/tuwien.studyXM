@@ -75,6 +75,18 @@ public class DtoValidator {
         }
     }
 
+    public static void validate(Topic topic) throws DtoValidatorException {
+        if(topic == null){
+            throw new DtoValidatorException("Topic must not be null.");
+        }
+        if(topic.getTopic().trim().isEmpty()){
+            throw new DtoValidatorException("Topic name must not be empty");
+        }
+        if(topic.getTopic().length() > 100){
+            throw new DtoValidatorException("Topic name must not be longer than 100 characters");
+        }
+    }
+
     /**
      * Checks if an exerciseExam is valid. This means the exerciseExam is not null, the author is not empty and shorter than 80 chars.
      *

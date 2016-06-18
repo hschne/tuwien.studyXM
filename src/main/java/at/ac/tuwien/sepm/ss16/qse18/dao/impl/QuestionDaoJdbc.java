@@ -132,7 +132,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             generatedKey = ps.getGeneratedKeys();
             if (generatedKey.next()) {
                 question.setQuestionId(generatedKey.getInt(1));
-                questionTopicDao.createQuestionTopic(question, topic);
+                questionTopicDao.createQuestionInTopic(question, topic);
                 return question;
             } else {
                 logger.error("Primary Key for question could not be created");

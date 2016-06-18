@@ -42,5 +42,5 @@ public interface QuestionTopicDao {
      * @param topic the topic for which the relation is inserted
      * @throws DaoException if there is no connection to the resource
      * */
-    void createQuestionTopic(Question question, Topic topic) throws DaoException;
+    void createQuestionInTopic(Question question, Topic topic) throws DaoException;
 }
