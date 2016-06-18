@@ -34,6 +34,7 @@ import java.util.zip.ZipInputStream;
     @Autowired private SubjectConflictDetection subjectConflictDetection;
     @Autowired private SubjectConflict conflict;
     @Autowired private SubjectDao subjectDao;
+    @Autowired private SubjectTopicDao subjectTopicDao;
     @Autowired private TopicDao topicDao;
     @Autowired private QuestionDao questionDao;
     @Autowired private ResourceDao resourceDao;
@@ -53,12 +54,16 @@ import java.util.zip.ZipInputStream;
 
         if (subjectConflictDetection.conflictExists(subject)) {
             Subject conflictingSubject = subjectConflictDetection.getConflictingExistingSubject();
-            conflict.initialize(conflictingSubject, subject);
-            if (conflict.isDuplicate()) {
-                throw new ServiceException(
-                    "The imported subject is a duplicate of existing subject '" + conflictingSubject
-                        .getName() + "'.");
+            if (existingSubjectEmpty(conflictingSubject)) {
+                logger.debug("Existing subject {} is empty, importing all topics", conflictingSubject);
+                List<ExportTopic> topics = subject.getTopics();
+                for (ExportTopic topic : topics) {
+                    importTopic(topic, conflictingSubject);
+                }
+                return null;
             }
+            conflict.setSubjects(conflictingSubject, subject);
+            checkIfImportedDuplicate(conflictingSubject);
             return conflict;
         }
 
@@ -109,6 +114,29 @@ import java.util.zip.ZipInputStream;
         }
     }
 
+    private void checkIfImportedDuplicate(Subject conflictingSubject) throws ServiceException {
+        if (conflict.isDuplicate()) {
+            throw new ServiceException(
+                "The imported subject is a duplicate of existing subject '" + conflictingSubject
+                    .getName() + "'.");
+        }
+    }
+
+    private void importTopicsIfExistingEmpty(ExportSubject subject, Subject conflictingSubject)
+        throws ServiceException {
+
+    }
+
+    private boolean existingSubjectEmpty(Subject existingSubject) throws ServiceException {
+        try {
+            List<Topic> existingTopics = subjectTopicDao.getTopicToSubject(existingSubject);
+            return existingTopics.isEmpty();
+        } catch (DaoException e) {
+            logger.error(e);
+            throw new ServiceException(e.getMessage(), e);
+        }
+    }
+
     private void unzipFile(String inputPath, String fileName) throws ServiceException {
         logger.debug("Unzipping exported file");
 
@@ -155,15 +183,15 @@ import java.util.zip.ZipInputStream;
         }
     }
 
-    private void cleanUpUnzipping(FileInputStream f, ZipInputStream z) throws ServiceException{
+    private void cleanUpUnzipping(FileInputStream f, ZipInputStream z) throws ServiceException {
         try {
-            if(f == null || z == null) {
+            if (f == null || z == null) {
                 return;
             }
 
             f.close();
             z.close();
-        } catch(IOException e) {
+        } catch (IOException e) {
             logger.error("Could not close stream", e);
             throw new ServiceException("Could not close stream", e);
         }

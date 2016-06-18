@@ -4,6 +4,8 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportSubject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.export.ExportTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +17,14 @@ import java.util.List;
  */
 @Service public class SubjectConflict {
 
+    private static final Logger logger = LogManager.getLogger();
+
     private Subject existingSubject;
     private ExportSubject importedSubject;
     private TopicConflictDetection topicConflictDetection;
     private List<TopicConflict> topicConflicts;
 
-    public String getSubjectName(){
+    public String getSubjectName() {
         return existingSubject.getName();
     }
 
@@ -29,7 +33,13 @@ import java.util.List;
         this.topicConflictDetection = topicConflictDetection;
     }
 
-    public void initialize(Subject existingSubject, ExportSubject importedSubject)
+    /**
+     * Populates subject conflict
+     * @param existingSubject The existing subject causing a conflict
+     * @param importedSubject The imported subject causing a conflict
+     * @throws ServiceException
+     */
+    public void setSubjects(Subject existingSubject, ExportSubject importedSubject)
         throws ServiceException {
         this.existingSubject = existingSubject;
         this.importedSubject = importedSubject;
@@ -37,7 +47,7 @@ import java.util.List;
     }
 
     public List<TopicConflict> getConflictingTopics() throws ServiceException {
-
+        logger.debug("Returning topic conflicts {}", topicConflicts);
         return topicConflicts;
     }
 
@@ -56,7 +66,7 @@ import java.util.List;
     }
 
     boolean isResolved() {
-        // If no more topics are unresolved, the subject conflict is resolved
+        logger.debug("Checking resolution for {}", existingSubject);
         return !topicConflicts.stream()
             .anyMatch(p -> p.getResolution() == ConflictResolution.UNRESOLVED);
     }
