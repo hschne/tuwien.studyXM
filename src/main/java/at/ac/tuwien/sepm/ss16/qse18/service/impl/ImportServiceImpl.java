@@ -113,7 +113,7 @@ import java.util.zip.ZipInputStream;
         logger.debug("Unzipping exported file");
 
         ZipInputStream zipIn = null;
-        FileInputStream fileInputStream;
+        FileInputStream fileInputStream = null;
         ZipEntry zipEntry;
 
         try {
@@ -151,14 +151,21 @@ import java.util.zip.ZipInputStream;
             logger.error("Could not get zip entry", e);
             throw new ServiceException("Could not get zip entry", e);
         } finally {
-            if (zipIn != null) {
-                try {
-                    zipIn.close();
-                } catch (IOException e) {
-                    logger.error("Could not close zipInputStream", e);
-                    throw new ServiceException("Could not close zipInputStream", e);
-                }
+            cleanUpUnzipping(fileInputStream, zipIn);
+        }
+    }
+
+    private void cleanUpUnzipping(FileInputStream f, ZipInputStream z) throws ServiceException{
+        try {
+            if(f == null || z == null) {
+                return;
             }
+
+            f.close();
+            z.close();
+        } catch(IOException e) {
+            logger.error("Could not close stream", e);
+            throw new ServiceException("Could not close stream", e);
         }
     }
 

@@ -96,7 +96,7 @@ public class StatisticItemController extends
         int spent = subject.getTimeSpent() / 60;
         labelName.setText(subject.getName() + " (" + subject.getSemester() + ")");
         labelAvgExamResult.setText("average exercise exam result | " +
-                (result[0] == -1 ? "?" : result[0]) +
+                ((int)(result[0]) == -1 ? "?" : result[0]) +
                 " (" + (int) result[1] +
                 ((int) result[1] == 1 ? " exam)" : " exams)"));
 

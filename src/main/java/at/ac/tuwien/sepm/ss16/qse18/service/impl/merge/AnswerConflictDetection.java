@@ -60,11 +60,17 @@ import java.util.List;
         List<Answer> importedAnswers = importedQuestion.getAnswers();
         for (Answer importedAnswer : importedAnswers) {
             if (answerTextEqual(existingAnswer, importedAnswer) &&
-                answerCorrectEqual(existingAnswer, importedAnswer)){
+                answerCorrectEqual(existingAnswer, importedAnswer) &&
+                answerSameType(existingAnswer, importedAnswer)) {
                 return true;
             }
         }
         return false;
+    }
+
+    private boolean answerSameType(Answer existingAnswer, Answer importedAnswer) {
+        logger.debug("Answer types: " + existingAnswer.getType() + " " + importedAnswer.getType());
+        return existingAnswer.getType().equals(importedAnswer.getType());
     }
 
     private boolean answerTextEqual(Answer existingAnswer, Answer importedAnswer){
