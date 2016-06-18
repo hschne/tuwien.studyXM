@@ -17,7 +17,8 @@ public class AnswerOpenQuestionController extends AnswerQuestionController {
     @Override public void initialize(ExerciseExam exam, Question question, Answer answer1, Answer answer2,
         Answer answer3, Answer answer4) {
         super.initialize(exam, question, answer1, answer2, answer3, answer4);
-        questionLabel.setText(question.getQuestion());
+        String questionText = question.getQuestion().replaceAll("(.{120})", "$1\n");
+        questionLabel.setText(questionText);
     }
 
     @Override public boolean isCorrect() {

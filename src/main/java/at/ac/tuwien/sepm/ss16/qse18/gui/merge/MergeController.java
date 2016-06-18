@@ -1,11 +1,14 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopicConflict;
+import at.ac.tuwien.sepm.ss16.qse18.gui.subject.SubjectOverviewController;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.SubjectMerge;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.TopicConflict;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
@@ -15,7 +18,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Hans-Joerg Schroedl
@@ -23,10 +25,12 @@ import java.util.stream.Collectors;
 @Component public class MergeController extends BaseController {
 
     @Autowired ApplicationContext applicationContext;
-    @FXML private ListView<ObservableTopicConflict> listView;
+
+    @Autowired SubjectOverviewController subjectOverviewController;
+
+    @FXML private ListView<TopicConflict> listView;
     @FXML private Button cancelButton;
     @FXML private Button confirmButton;
-    private ObservableList<ObservableTopicConflict> topicConflictList;
     private SubjectConflict subjectConflict;
     private Stage stage;
 
@@ -34,7 +38,7 @@ import java.util.stream.Collectors;
         this.stage = stage;
     }
 
-    public void setSubjectConflict(SubjectConflict subjectConflict){
+    public void setSubjectConflict(SubjectConflict subjectConflict) {
         this.subjectConflict = subjectConflict;
         try {
             initializeListView(subjectConflict);
@@ -46,25 +50,33 @@ import java.util.stream.Collectors;
     }
 
     private void initializeListView(SubjectConflict subjectConflict) throws ServiceException {
-        List<ObservableTopicConflict>
-            observableTopicConflicts = subjectConflict.getConflictingTopics().stream().map(
-            ObservableTopicConflict::new)
-            .collect(Collectors.toList());
-        topicConflictList = FXCollections.observableArrayList(observableTopicConflicts);
+        List<TopicConflict> observableTopicConflicts = subjectConflict.getConflictingTopics();
+        ObservableList<TopicConflict> topicConflictList =
+            FXCollections.observableArrayList(observableTopicConflicts);
         listView.setItems(topicConflictList);
-        listView.setCellFactory(listView -> applicationContext.getBean(TopicConflictCell.class));
+        listView.setCellFactory(lv -> applicationContext.getBean(TopicConflictCell.class));
     }
 
     @FXML void handleConfirm() {
         try {
-            subjectConflict.resolve();
+            SubjectMerge merge = applicationContext.getBean(SubjectMerge.class);
+            merge.merge(subjectConflict);
+            showFeedback();
+            subjectOverviewController.initialize();
+            stage.close();
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
         }
     }
 
-    @FXML void handleCancel() {
+    private void showFeedback(){
+        //TODO: Detailliertes Feedback einführen
+        showSuccess("Subject "+subjectConflict.getSubjectName() +" has successfully been imported.\n"
+            + "Duplicates have been ignored and new/selected topics have been added.");
+    }
+
+    @FXML public void handleCancel(Event e) {
         boolean shouldCancel = showConfirmation(
             "This will cancel the import. Resolved conflicts will be lost. Are you sure?");
         if (shouldCancel) {

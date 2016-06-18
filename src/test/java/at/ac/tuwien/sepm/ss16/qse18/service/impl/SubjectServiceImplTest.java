@@ -10,7 +10,11 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * Class ExerciseExamServiceImplTest
@@ -46,6 +50,14 @@ import static org.mockito.Mockito.verify;
         Subject subject = createDummySubject();
         subjectService.createSubject(subject);
         verify(mockDaoJdbc).createSubject(subject);
+    }
+
+    @Test(expected = ServiceException.class) public void testIf_createSubject_duplicateSubject() throws Exception {
+        Subject subject = createDummySubject();
+        List<Subject> existingSubjects = new ArrayList<>();
+        existingSubjects.add(subject);
+        when(mockDaoJdbc.getSubjects()).thenReturn(existingSubjects);
+        subjectService.createSubject(subject);
     }
 
     @Test(expected = ServiceException.class)

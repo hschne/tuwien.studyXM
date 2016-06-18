@@ -15,6 +15,7 @@ import java.util.List;
 
 import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyTopic;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -23,7 +24,7 @@ import static org.mockito.Mockito.when;
  */
 @RunWith(MockitoJUnitRunner.class) public class TopicConflictTest {
 
-@Mock QuestionConflictDetection questionConflictDetectionMock;
+    @Mock QuestionConflictDetection questionConflictDetectionMock;
 
     private TopicConflict topicConflict;
 
@@ -42,8 +43,17 @@ import static org.mockito.Mockito.when;
         assertEquals(conflicts, result);
     }
 
-    @Test public void test_getNonConflictingImported_nonConflictingReturned() throws Exception{
+    @Test public void test_getNonConflictingImported_importedHaveConflicts() throws Exception{
+        ExportQuestion exportQuestion = new ExportQuestion(null, null,null);
+        ExportTopic importedTopic = mock(ExportTopic.class);
+        List<ExportQuestion> importedQuestions = new ArrayList<>();
+        importedQuestions.add(exportQuestion);
+        when(importedTopic.getQuestions()).thenReturn(importedQuestions);
+        topicConflict.setTopics(createDummyTopic(), importedTopic);
         List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict questionConflict = mock(QuestionConflict.class);
+        when(questionConflict.getImportedQuestion()).thenReturn(exportQuestion);
+        conflicts.add(questionConflict);
         topicConflict.setQuestionConflicts(conflicts);
 
         List<ExportQuestion> result = topicConflict.getNonConflictingImported();
@@ -51,16 +61,59 @@ import static org.mockito.Mockito.when;
         assertTrue(result.isEmpty());
     }
 
+    @Test public void test_getNonConflictingImported_importedHaveNoConflicts() throws Exception{
+        ExportQuestion exportQuestion = new ExportQuestion(null, null,null);
+        ExportTopic importedTopic = mock(ExportTopic.class);
+        List<ExportQuestion> importedQuestions = new ArrayList<>();
+        importedQuestions.add(exportQuestion);
+        when(importedTopic.getQuestions()).thenReturn(importedQuestions);
+        topicConflict.setTopics(createDummyTopic(), importedTopic);
+        List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict questionConflict = mock(QuestionConflict.class);
+        when(questionConflict.getImportedQuestion()).thenReturn(new ExportQuestion(null, null,null));
+        conflicts.add(questionConflict);
+        topicConflict.setQuestionConflicts(conflicts);
 
-    @Test public void test_resolve_questionConflictResolveCalled() throws Exception{
+        List<ExportQuestion> result = topicConflict.getNonConflictingImported();
+
+        assertFalse(result.isEmpty());
+    }
+
+
+    @Test public void test_isResolved_conflictNotResolved() throws Exception{
         List<QuestionConflict> conflicts = new ArrayList<>();
         QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.UNRESOLVED);
         conflicts.add(conflict);
         topicConflict.setQuestionConflicts(conflicts);
 
-        topicConflict.resolve();
+        ConflictResolution result = topicConflict.getResolution();
 
-        verify(conflict).resolve();
+        assertEquals(ConflictResolution.UNRESOLVED, result);
+    }
+
+    @Test public void test_isResolved_topicIsDuplicate() throws Exception{
+        List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.DUPLICATE);
+        conflicts.add(conflict);
+        topicConflict.setQuestionConflicts(conflicts);
+
+        ConflictResolution result = topicConflict.getResolution();
+
+        assertEquals(ConflictResolution.DUPLICATE, result);
+    }
+
+    @Test public void test_isResolved_topicIsResolved() throws Exception{
+        List<QuestionConflict> conflicts = new ArrayList<>();
+        QuestionConflict conflict = Mockito.mock(QuestionConflict.class);
+        when(conflict.getResolution()).thenReturn(ConflictResolution.IMPORTED);
+        conflicts.add(conflict);
+        topicConflict.setQuestionConflicts(conflicts);
+
+        ConflictResolution result = topicConflict.getResolution();
+
+        assertEquals(ConflictResolution.EXISTING, result);
     }
 
 

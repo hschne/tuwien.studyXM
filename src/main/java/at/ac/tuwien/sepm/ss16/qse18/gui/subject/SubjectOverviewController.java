@@ -151,6 +151,7 @@ import java.util.stream.Collectors;
         String css = this.getClass().getResource("/style.css").toExternalForm();
         scene.getStylesheets().add(css);
         stage.setScene(scene);
+        stage.setOnCloseRequest(controller::handleCancel);
         controller.setStage(stage);
 
         stage.show();

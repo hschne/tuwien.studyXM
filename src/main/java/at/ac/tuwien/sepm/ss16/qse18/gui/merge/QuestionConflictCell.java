@@ -1,7 +1,8 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.merge;
 
 import at.ac.tuwien.sepm.ss16.qse18.gui.FxmlLoadException;
-import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableQuestionConflict;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.ConflictResolution;
+import at.ac.tuwien.sepm.ss16.qse18.service.impl.merge.QuestionConflict;
 import at.ac.tuwien.sepm.util.SpringFXMLLoader;
 import javafx.scene.control.ListCell;
 import org.apache.logging.log4j.LogManager;
@@ -18,36 +19,38 @@ import java.util.Map;
 /**
  * @author Hans-Joerg Schroedl
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class QuestionConflictCell
-    extends ListCell<ObservableQuestionConflict> {
+@Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) class QuestionConflictCell
+    extends ListCell<QuestionConflict> {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private static Map<ObservableQuestionConflict, QuestionConflictItemController>
-        existingControllers = new HashMap<>();
+    private static Map<QuestionConflict, QuestionConflictItemController> existingControllers =
+        new HashMap<>();
 
     @Autowired SpringFXMLLoader springFXMLLoader;
 
-    @Override public void updateItem(ObservableQuestionConflict question, boolean empty) {
+    @Override public void updateItem(QuestionConflict question, boolean empty) {
         super.updateItem(question, empty);
         if (question != null) {
-            createOrLoadController(question);
+            boolean isDuplicate = question.getResolution() == ConflictResolution.DUPLICATE;
+            if (!isDuplicate) {
+                createOrLoadController(question);
+            }
         }
     }
 
-    private void createOrLoadController(ObservableQuestionConflict question) {
-        if(!existingControllers.containsKey(question)){
+    private void createOrLoadController(QuestionConflict question) {
+        if (!existingControllers.containsKey(question)) {
             QuestionConflictItemController itemController = getController();
             setControllerProperties(question, itemController);
             existingControllers.put(question, itemController);
-        }
-        else{
+        } else {
             QuestionConflictItemController itemController = existingControllers.get(question);
             setGraphic(itemController.getRoot());
         }
     }
 
-    private void setControllerProperties(ObservableQuestionConflict questionConflict,
+    private void setControllerProperties(QuestionConflict questionConflict,
         QuestionConflictItemController itemController) {
         itemController.setQuestionConflict(questionConflict);
         setGraphic(itemController.getRoot());

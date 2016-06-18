@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextArea;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,25 +47,29 @@ public class AnswerQuestionController extends BaseController {
         this.answer4 = answer4;
 
         if(answer1 != null) {
-            answer1Button.setText(answer1.getAnswer());
+            String answer1Text = answer1.getAnswer().replaceAll("(.{100})", "$1\n");
+            answer1Button.setText(answer1Text);
         }
         else {
             answer1Button.setVisible(false);
         }
         if(answer2 != null) {
-            answer2Button.setText(answer2.getAnswer());
+            String answer2Text = answer2.getAnswer().replaceAll("(.{100})", "$1\n");
+            answer2Button.setText(answer2Text);
         }
         else {
             answer2Button.setVisible(false);
         }
         if(answer3 != null) {
-            answer3Button.setText(answer3.getAnswer());
+            String answer3Text = answer3.getAnswer().replaceAll("(.{100})", "$1\n");
+            answer3Button.setText(answer3Text);
         }
         else {
             answer3Button.setVisible(false);
         }
         if(answer4 != null) {
-            answer4Button.setText(answer4.getAnswer());
+            String answer4Text = answer4.getAnswer().replaceAll("(.{100})", "$1\n");
+            answer4Button.setText(answer4Text);
         }
         else {
             answer4Button.setVisible(false);

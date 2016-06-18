@@ -26,6 +26,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     private static final Logger logger = LogManager.getLogger();
     private SubjectDao sd;
 
+    /**
+     * Creates a new subject service implementation object
+     *
+     * @param sd The subject DAO
+     */
     @Autowired public SubjectServiceImpl(SubjectDaoJdbc sd) {
         this.sd = sd;
     }
@@ -51,12 +56,12 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     @Override public Subject createSubject(Subject subject) throws ServiceException {
         try {
             validateSubject(subject);
+            checkIfDuplicate(subject);
             return sd.createSubject(subject);
         } catch (DtoValidatorException | DaoException e) {
             logger.error("Could not create Subject", e);
             throw new ServiceException(e.getMessage());
         }
-
     }
 
     @Override public boolean deleteSubject(Subject subject) throws ServiceException {
@@ -77,6 +82,16 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             logger.error("Could not update Subject", e);
             throw new ServiceException(e.getMessage());
         }
+    }
+
+    private void checkIfDuplicate(Subject subject) throws ServiceException {
+        boolean duplicateExists =
+            getSubjects().stream().anyMatch(p -> p.getName().equalsIgnoreCase(subject.getName()));
+        if (duplicateExists) {
+            throw new ServiceException("Could not create subject '" + subject.getName() +
+                "'. Another subject with the same name already exists.");
+        }
+
     }
 
 

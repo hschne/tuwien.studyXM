@@ -51,6 +51,12 @@ public class DummyEntityFactory {
         return question;
     }
 
+    public static List<Question> createDummyQuestions(){
+        List<Question> questions = new ArrayList<>();
+        questions.add(createDummyQuestion());
+        return questions;
+    }
+
     public static Answer createDummyAnswer(){
         Answer answer = new Answer();
         answer.setAnswer("Answer");
@@ -89,4 +95,10 @@ public class DummyEntityFactory {
         resources.add(createDummyResource());
         return resources;
     }
+
+    public static ExerciseExam createDummyExerciseExam() {
+        ExerciseExam exerciseExam = new ExerciseExam();
+        return exerciseExam;
+    }
+
 }

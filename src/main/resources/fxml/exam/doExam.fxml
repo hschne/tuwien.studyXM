@@ -97,7 +97,7 @@
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin></Button>
-            <Label text="All subjects are covered" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+            <Label fx:id="topicsCoveredLabel" text="All topics are covered" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
                <font>
                   <Font name="System Bold" size="18.0" />
                </font></Label>

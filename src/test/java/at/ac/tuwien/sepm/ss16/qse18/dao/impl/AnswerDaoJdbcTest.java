@@ -166,10 +166,11 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
         verify(mockPreparedStatement).executeUpdate();
     }
 
-    @Test public void test_deleteAnswer_withInvalidAnswer() throws Exception {
+    @Test(expected = DaoException.class) public void test_deleteAnswer_withInvalidAnswer() throws Exception {
         Answer a = new Answer(QuestionType.MULTIPLECHOICE, "Testanswer", true);
+
         adao.deleteAnswer(a);
-        verify(mockPreparedStatement, never()).executeUpdate();
+
     }
     //----------------------------------------------------------------------------------------------
 

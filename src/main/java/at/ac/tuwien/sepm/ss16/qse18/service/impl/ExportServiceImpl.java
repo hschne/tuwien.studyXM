@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -75,17 +76,21 @@ import java.util.zip.ZipOutputStream;
             throw new ServiceException(
                 "Couldn't create image or resource directory or could not write meta file", e);
         } finally {
-            if (zipOutputStream != null) {
-                try {
-                    zipOutputStream.close();
-                } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
-                    throw new ServiceException("Could not close stream while writing to file", e);
-                }
-            }
+            cleanUpStream(zipOutputStream);
         }
 
         logger.debug("Exporting subject: {}", this.subject);
+    }
+
+    private void cleanUpStream(ZipOutputStream z) throws ServiceException {
+        try {
+            if(z != null) {
+                z.close();
+            }
+        } catch(IOException e) {
+            logger.error(e.getMessage(), e);
+            throw new ServiceException("Could not close stream while writing to file", e);
+        }
     }
 
     @Override public void setSubject(Subject subject) {

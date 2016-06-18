@@ -9,13 +9,10 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
-import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-
-import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
-import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,6 +20,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 /**
  * Class QuestionDaoJdbc
@@ -32,10 +32,7 @@ import java.util.List;
  * @author Philipp Ganiu, Felix Almer
  */
 @Repository public class QuestionDaoJdbc implements QuestionDao {
-    private DataBaseConnection con;
     private static final Logger logger = LogManager.getLogger(QuestionDaoJdbc.class);
-    private QuestionTopicDao questionTopicDao;
-
     private static final String GET_SINGLE_QUESTION =
         "SELECT * FROM ENTITY_QUESTION WHERE QUESTIONID=?";
     private static final String GET_ALL_QUESTIONS = "SELECT * FROM ENTITY_QUESTION";
@@ -46,9 +43,16 @@ import java.util.List;
     private static final String DELETE_QUESTION = "DELETE FROM ENTITY_QUESTION WHERE QUESTIONID=?";
     private static final String GET_ANSWERS_TO_QUESTION = "SELECT a.* FROM ENTITY_ANSWER a "
         + "JOIN ENTITY_QUESTION q ON a.QUESTION =  q.QUESTIONID WHERE q.QUESTIONID = ?";
+    private DataBaseConnection con;
+    private QuestionTopicDao questionTopicDao;
+    private AnswerDaoJdbc answerDao;
 
     @Autowired public QuestionDaoJdbc(DataBaseConnection database) {
         this.con = database;
+    }
+
+    @Autowired public void setAnswerDaoJdbc(AnswerDaoJdbc answerDao) {
+        this.answerDao = answerDao;
     }
 
     @Autowired public void setQuestionTopicDao(QuestionTopicDao questionTopicDao) {
@@ -150,10 +154,12 @@ import java.util.List;
             logger.info("Question not in database, aborting");
             throw new DaoException("Question not in database");
         }
-
         PreparedStatement ps = null;
 
         try {
+            deleteQuestionFromExams(question);
+            deleteRelatedAnswers(question);
+            removeLinksToTopics(question);
             ps = con.getConnection().prepareStatement(DELETE_QUESTION);
             ps.setInt(1, question.getQuestionId());
             ps.executeUpdate();
@@ -224,6 +230,24 @@ import java.util.List;
             closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
         }
         return result;
+    }
+
+    private void removeLinksToTopics(Question question) throws DaoException {
+        questionTopicDao.removeQuestion(question);
+    }
+
+    private void deleteQuestionFromExams(Question question) throws SQLException {
+        PreparedStatement statement = con.getConnection()
+            .prepareStatement("DELETE FROM REL_EXAM_QUESTION WHERE QUESTIONID = ?");
+        statement.setInt(1, question.getQuestionId());
+        statement.executeUpdate();
+    }
+
+    private void deleteRelatedAnswers(Question question) throws DaoException {
+        List<Answer> relatedAnswers = getRelatedAnswers(question);
+        for (Answer relatedAnswer : relatedAnswers) {
+            answerDao.deleteAnswer(relatedAnswer);
+        }
     }
 
     private void isQuestionNull(Question q) throws DaoException {

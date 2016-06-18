@@ -25,18 +25,11 @@ import java.util.List;
     private Topic existingTopic;
     private ExportTopic importedTopic;
 
-
-    public void setTopics(Topic existingTopic, ExportTopic importedTopic) {
-        this.existingTopic = existingTopic;
-        this.importedTopic = importedTopic;
-        questionConflicts = new ArrayList<>();
-    }
-
     public List<QuestionConflict> getQuestionConflicts() {
         return questionConflicts;
     }
 
-    public void setQuestionConflicts(List<QuestionConflict> questionConflicts) {
+    void setQuestionConflicts(List<QuestionConflict> questionConflicts) {
         this.questionConflicts = questionConflicts;
     }
 
@@ -45,33 +38,45 @@ import java.util.List;
         this.questionConflictDetection = questionConflictDetection;
     }
 
+    public Topic getExistingTopic() {
+        return existingTopic;
+    }
 
-    public List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
+    public ConflictResolution getResolution() {
+        boolean allDuplicates = questionConflicts.stream()
+            .allMatch(p -> p.getResolution() == ConflictResolution.DUPLICATE);
+        if (allDuplicates) {
+            return ConflictResolution.DUPLICATE;
+        }
+        boolean unresolvedExist = questionConflicts.stream()
+            .anyMatch(p -> p.getResolution() == ConflictResolution.UNRESOLVED);
+        if (unresolvedExist) {
+            return ConflictResolution.UNRESOLVED;
+        } else
+            return ConflictResolution.EXISTING;
+    }
+
+    void setTopics(Topic existingTopic, ExportTopic importedTopic) {
+        this.existingTopic = existingTopic;
+        this.importedTopic = importedTopic;
+        questionConflicts = new ArrayList<>();
+    }
+
+    List<QuestionConflict> initializeQuestionConflicts() throws ServiceException {
         questionConflictDetection.setTopics(existingTopic, importedTopic);
         setQuestionConflicts(questionConflictDetection.getConflictingQuestions());
         return questionConflicts;
     }
 
-    public List<ExportQuestion> getNonConflictingImported() {
-        List<ExportQuestion> imported = new ArrayList<>();
+    List<ExportQuestion> getNonConflictingImported() {
+        List<ExportQuestion> imported = importedTopic.getQuestions();
         for (QuestionConflict questionConflict : questionConflicts) {
             imported.remove(questionConflict.getImportedQuestion());
         }
         return imported;
     }
 
-    public void resolve() throws ServiceException {
-        for (QuestionConflict questionConflict : questionConflicts) {
-            questionConflict.resolve();
-        }
-    }
-
-    public ExportTopic getImportedTopic() {
+    ExportTopic getImportedTopic() {
         return importedTopic;
-    }
-
-
-    public Topic getExistingTopic() {
-        return existingTopic;
     }
 }
