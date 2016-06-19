@@ -19,7 +19,10 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -29,6 +32,7 @@ import java.util.zip.ZipInputStream;
     private static final String OUTPUT_PATH = "src/main/resources/import";
     private static final String IMAGE_PATH = "src/main/resources/images";
     private static final String RESOURCE_PATH = "src/main/resources/resources";
+    private Map<String,String> resources = new HashMap<>();
     @Autowired ApplicationContext applicationContext;
     private String unzippedDir = "";
     @Autowired private SubjectConflictDetection subjectConflictDetection;
@@ -65,6 +69,13 @@ import java.util.zip.ZipInputStream;
             conflict.setSubjects(conflictingSubject, subject);
             checkIfImportedDuplicate(conflictingSubject);
             return conflict;
+        }
+        else if(unzippedDir != null){
+            File imageFiles = new File(unzippedDir + File.separator + "image/");
+            File resourceFiles = new File(unzippedDir + File.separator + "resource/");
+
+            copyFile(imageFiles, IMAGE_PATH);
+            copyFile(resourceFiles, RESOURCE_PATH);
         }
 
         setDatabaseAutocommit(false);
@@ -104,6 +115,10 @@ import java.util.zip.ZipInputStream;
         throws ServiceException {
         try {
             exportQuestion.getQuestion().setQuestionId(-1);
+            String oldQuestion = exportQuestion.getQuestion().getQuestion();
+            if(getNewReference(oldQuestion)  != null){
+                exportQuestion.getQuestion().setQuestion(getNewReference(oldQuestion));
+            }
             Question question =
                 questionDao.createQuestion(exportQuestion.getQuestion(), existingTopic);
             createAnswersFor(question, exportQuestion.getAnswers());
@@ -164,14 +179,6 @@ import java.util.zip.ZipInputStream;
                 zipIn.closeEntry();
                 zipEntry = zipIn.getNextEntry();
             }
-            if (unzippedDir != null) {
-                File imageFiles = new File(unzippedDir + File.separator + "image/");
-                File resourceFiles = new File(unzippedDir + File.separator + "resource/");
-
-                copyFile(imageFiles, IMAGE_PATH);
-                copyFile(resourceFiles, RESOURCE_PATH);
-            }
-
         } catch (FileNotFoundException e) {
             logger.error("Zip file \"" + fileName + "\" does not exist", e);
             throw new ServiceException("Zip file \"" + fileName + "\" does not exist", e);
@@ -225,8 +232,11 @@ import java.util.zip.ZipInputStream;
                 replace++;
                 String s = FilenameUtils.removeExtension(dest.toString());
                 String extension = FilenameUtils.getExtension(dest.toString());
-                dest.renameTo(new File(s + "_" + replace + "." + extension));
+                String newName = s + "_" + replace + "." + extension;
+                dest.renameTo(new File(newName));
+                resources.put(dest.toString(),newName);
             }
+
             copyFile(f, dest);
         }
     }
@@ -311,6 +321,10 @@ import java.util.zip.ZipInputStream;
         logger.debug("Creating questions");
         try {
             Resource resource = question.getResource().getResource();
+            String oldReference = resource.getReference();
+            if(getNewReference(oldReference)  != null){
+                resource.setReference(getNewReference(oldReference));
+            }
             if (resource != null) {
                 resourceDao.createResource(resource);
             }
@@ -353,5 +367,19 @@ import java.util.zip.ZipInputStream;
     // is needed for unit testing
     void setSubjectConflict(SubjectConflict conflict) {
         this.conflict = conflict;
+    }
+
+
+    private String getNewReference(String reference){
+
+        String s = reference.replaceAll("/","\\\\");
+        if(resources.containsKey(reference)){
+            return resources.get(reference);
+        }
+        if(resources.containsKey(s)){
+            return resources.get(s);
+        }
+
+        return null;
     }
 }
