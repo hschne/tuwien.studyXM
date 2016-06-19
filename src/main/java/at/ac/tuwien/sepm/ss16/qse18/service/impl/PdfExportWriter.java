@@ -42,70 +42,6 @@ import java.io.*;
 
     private String outPath;
 
-    void setOutPath(String outPath) throws ServiceException {
-        this.outPath = outPath;
-        try {
-            initialize();
-        } catch (FileNotFoundException | DocumentException e) {
-            logger.error(e);
-            throw new ServiceException(e.getMessage());
-        }
-    }
-
-
-    void write(String string) throws ServiceException {
-        try {
-            xmlParser.parse(new ByteArrayInputStream(string.getBytes()));
-        } catch (IOException e) {
-            logger.error(e);
-            throw new ServiceException("Could not write text");
-        }
-    }
-
-    void close() throws ServiceException {
-        try {
-            String tempDocument = "src/main/resources/temporary/tmp.html";
-            XMLWorkerHelper.getInstance()
-                .parseXHtml(pdfWriter, document, new FileInputStream(tempDocument));
-        } catch (IOException e) {
-            logger.error(e);
-            throw new ServiceException("Could not close pdf document.");
-        }
-        document.close();
-    }
-
-    /**
-     * Converts an image to base64 string in HTML-Format.
-     *
-     * @param imgPath image location as path
-     * @param width   with of the image
-     * @param height  height of the image
-     * @return The image converted to a base 64 string
-     */
-    String imageToBase64(String imgPath, int width, int height) throws ServiceException {
-        logger.debug("Generating base64 code.");
-        try {
-            FileInputStream inputStream = new FileInputStream(imgPath);
-            InputStream bis = new BufferedInputStream(inputStream);
-
-            byte[] imageBytes = new byte[0];
-            for (byte[] ba = new byte[bis.available()]; bis.read(ba) != -1; ) {
-                byte[] baTmp = new byte[imageBytes.length + ba.length];
-                System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
-                System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
-                imageBytes = baTmp;
-            }
-            inputStream.close();
-            return "<img src=\"data:image/png;base64," +
-                DatatypeConverter.printBase64Binary(imageBytes) +
-                "\" width=\"" + width + "\" height=\"" + height + "\"/>";
-        } catch (IOException e) {
-            logger.error(e);
-            throw new ServiceException("Could not convert image to base 64", e);
-        }
-
-    }
-
     private void initialize() throws FileNotFoundException, DocumentException {
         document = new Document();
         pdfWriter = PdfWriter.getInstance(document, new FileOutputStream(outPath));
@@ -158,6 +94,83 @@ import java.io.*;
         @Override public String getImageRootPath() {
             return null;
         }
+    }
+
+    /**
+     * Sets the path where the PDF should be located.
+     *
+     * @param outPath The path where the PDF should be located.
+     * @throws ServiceException Thrown if the path is not valid.
+     */
+    void setOutPath(String outPath) throws ServiceException {
+        this.outPath = outPath;
+        try {
+            initialize();
+        } catch (FileNotFoundException | DocumentException e) {
+            logger.error(e);
+            throw new ServiceException(e.getMessage());
+        }
+    }
+
+    /**
+     * Write the specified string into the PDF
+     * @param string The string to write. May contain html tags.
+     * @throws ServiceException Thrown if the document can not be written to.
+     */
+    void write(String string) throws ServiceException {
+        try {
+            xmlParser.parse(new ByteArrayInputStream(string.getBytes()));
+        } catch (IOException e) {
+            logger.error(e);
+            throw new ServiceException("Could not write text");
+        }
+    }
+
+    /**
+     * Close the document.
+     *
+     * @throws ServiceException
+     */
+    void close() throws ServiceException {
+        try {
+            String tempDocument = "src/main/resources/temporary/tmp.html";
+            XMLWorkerHelper.getInstance()
+                .parseXHtml(pdfWriter, document, new FileInputStream(tempDocument));
+        } catch (IOException e) {
+            logger.error(e);
+            throw new ServiceException("Could not close pdf document.");
+        }
+        document.close();
+    }
+
+    /**
+     * Converts an image to base64 string in HTML-Format.
+     *
+     * @param imgPath image location as path
+     * @param width   with of the image
+     * @param height  height of the image
+     * @return The image converted to a base 64 string
+     */
+    String imageToBase64(String imgPath, int width, int height) throws ServiceException {
+        logger.debug("Generating base64 code.");
+        try (FileInputStream inputStream = new FileInputStream(imgPath);
+            InputStream bis = new BufferedInputStream(inputStream)) {
+            byte[] imageBytes = new byte[0];
+            for (byte[] ba = new byte[bis.available()]; bis.read(ba) != -1; ) {
+                byte[] baTmp = new byte[imageBytes.length + ba.length];
+                System.arraycopy(imageBytes, 0, baTmp, 0, imageBytes.length);
+                System.arraycopy(ba, 0, baTmp, imageBytes.length, ba.length);
+                imageBytes = baTmp;
+            }
+            inputStream.close();
+            return "<img src=\"data:image/png;base64," +
+                DatatypeConverter.printBase64Binary(imageBytes) +
+                "\" width=\"" + width + "\" height=\"" + height + "\"/>";
+        } catch (IOException e) {
+            logger.error(e);
+            throw new ServiceException("Could not convert image to base 64", e);
+        }
+
     }
 
 

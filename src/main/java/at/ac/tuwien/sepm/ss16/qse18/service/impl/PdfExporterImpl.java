@@ -34,6 +34,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.service.impl.PdfExporterImpl.HtmlCons
 
     private PdfExportWriter pdfExportWriter;
 
+    /**
+     * Default constructor. Takes the question service used for retrieving questions for an exam.
+     *
+     * @param questionService The question service to use.
+     */
     @Autowired public PdfExporterImpl(QuestionService questionService) {
         logger.debug("Creating new PDfExporter");
         this.questionService = questionService;
