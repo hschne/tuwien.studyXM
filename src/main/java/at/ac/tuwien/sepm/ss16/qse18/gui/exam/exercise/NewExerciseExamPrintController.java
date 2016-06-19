@@ -42,7 +42,7 @@ import java.io.File;
             this.initializeTopicList();
             if (file != null) {
                 tryPrint(exam, file);
-                showSuccess("exercise was saved as " + file.getName());
+                showSuccess("Exercise was saved as '" + file.getName() +"'.");
                 mainFrameController.handleExams();
             }
         } catch (ServiceException e) {
@@ -58,7 +58,7 @@ import java.io.File;
         fileChooser.setInitialDirectory(defaultDirectory);
         fileChooser.getExtensionFilters()
             .addAll(new FileChooser.ExtensionFilter("PDF FILES (.pdf)", "*.pdf"));
-        fileChooser.setTitle("Add image");
+        fileChooser.setTitle("Choose pdf destination");
         Stage mainStage = mainApplication.getPrimaryStage();
         return fileChooser.showSaveDialog(mainStage);
     }

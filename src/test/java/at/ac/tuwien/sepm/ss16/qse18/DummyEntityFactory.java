@@ -68,6 +68,11 @@ public class DummyEntityFactory {
         return answer;
     }
 
+    public static List<Answer> createDummyAnswers(){
+        List<Answer> answers = new ArrayList<>();
+        answers.add(createDummyAnswer());
+        return answers;
+    }
 
     public static List<ExerciseExam> createDummyExcerciseExams() {
         List<ExerciseExam> exerciseExams = new ArrayList<>();
