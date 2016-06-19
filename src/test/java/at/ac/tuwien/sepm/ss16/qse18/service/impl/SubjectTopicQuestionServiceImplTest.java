@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.SubjectTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.QuestionTopicDaoJdbc;
@@ -18,7 +19,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 /**
  * Class SubjectTopicQuestionServiceImplTest
@@ -29,12 +32,12 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SubjectTopicQuestionServiceImplTest {
-    @Mock private SubjectTopicDaoJdbc mockDaoJdbc;
-    @Mock private QuestionTopicDaoJdbc mockDaoJdbc2;
+    @Mock private SubjectTopicDaoJdbc subjectTopicMockDaoJdbc;
+    @Mock private QuestionTopicDaoJdbc questionTopicMockDaoJdbc;
     private SubjectTopicQuestionService service;
 
     @Before public void setUp() throws Exception {
-        service = new SubjectTopicQuestionServiceImpl(mockDaoJdbc,mockDaoJdbc2);
+        service = new SubjectTopicQuestionServiceImpl(subjectTopicMockDaoJdbc,questionTopicMockDaoJdbc);
     }
 
     //Testing getTopicToSubject(Subject)
@@ -44,12 +47,19 @@ public class SubjectTopicQuestionServiceImplTest {
         Subject s = new Subject();
         Topic t = new Topic();
         service.getTopicToSubjectWithNumberOfQuestions(s);
-        verify(mockDaoJdbc).getTopicToSubject(s);
+        verify(subjectTopicMockDaoJdbc).getTopicToSubject(s);
     }
 
     @Test (expected = ServiceException.class)
     public void testIf_getTopicToSubjectWithNumberOfQuestion_SubjectNullThrowsException() throws Exception{
         service.getTopicToSubjectWithNumberOfQuestions(null);
+    }
+
+    @Test (expected =  ServiceException.class)
+    public void test_getTopicToSubjectWithNumberOfQuestion_withDaoException_fail() throws Exception{
+        when(subjectTopicMockDaoJdbc.getTopicToSubject(any(Subject.class))).thenThrow(DaoException.class);
+        service.getTopicToSubjectWithNumberOfQuestions(new Subject());
+
     }
     //----------------------------------------------------------------------------------------------
 
