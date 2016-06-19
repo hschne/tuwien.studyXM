@@ -5,6 +5,8 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.impl.TopicDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import at.ac.tuwien.sepm.ss16.qse18.service.TopicService;
 import org.apache.logging.log4j.LogManager;
@@ -62,9 +64,10 @@ import java.util.List;
 
     @Override public Topic createTopic(Topic topic, Subject subject) throws ServiceException {
         try{
-            verifyTopic(topic);
+            DtoValidator.validate(topic);
+            DtoValidator.validateSubject(subject);
         }
-        catch (ServiceException e){
+        catch (DtoValidatorException e){
             logger.error(e);
             throw new ServiceException(e.getMessage());
         }
@@ -79,9 +82,9 @@ import java.util.List;
 
     @Override public boolean deleteTopic(Topic topic) throws ServiceException {
         try{
-            verifyTopic(topic);
+            DtoValidator.validate(topic);
         }
-        catch (ServiceException e){
+        catch (DtoValidatorException e){
             logger.error(e);
             throw new ServiceException(e.getMessage(),e);
         }
@@ -96,9 +99,9 @@ import java.util.List;
 
     @Override public Topic updateTopic(Topic topic) throws ServiceException {
         try{
-            verifyTopic(topic);
+            DtoValidator.validate(topic);
         }
-        catch (ServiceException e){
+        catch (DtoValidatorException e){
             logger.error(e);
             throw new ServiceException(e.getMessage(),e);
         }
@@ -112,17 +115,6 @@ import java.util.List;
         }
     }
 
-    private void verifyTopic(Topic t) throws ServiceException {
-        if (t == null) {
-            return;
-        }
-        if(t.getTopic().trim().isEmpty()){
-            throw new ServiceException("Topic cannot be empty");
-        }
-        if(t.getTopic().length() > 200){
-            throw new ServiceException("Topic cannot be longer then 200 characters");
-        }
-    }
 
     @Override public List<Topic> getTopicsFromSubject(Subject subject) throws ServiceException {
         logger.debug("Entering getTopicsFromSubject()");
@@ -130,6 +122,13 @@ import java.util.List;
         if(subject == null) {
             logger.error("Subject must not be null in getTopicsFromSubject()");
             throw new ServiceException("Subject is null in getTopicsFromSubject()");
+        }
+        try{
+            DtoValidator.validateSubject(subject);
+        }
+        catch (DtoValidatorException e){
+            logger.error(e.getMessage(),e);
+            throw new ServiceException(e.getMessage(),e);
         }
 
         return getTopicsFromId('s', subject.getSubjectId());
@@ -142,6 +141,15 @@ import java.util.List;
             logger.error("Question must not be null in getTopicsFromQuestion()");
             throw new ServiceException("Question is null in getTopicsFromQuestion()");
         }
+
+        try{
+            DtoValidator.validate(question);
+        }
+        catch (DtoValidatorException e){
+            logger.error(e.getMessage(),e);
+            throw new ServiceException(e.getMessage(),e);
+        }
+
 
         return getTopicsFromId('q', question.getQuestionId());
     }

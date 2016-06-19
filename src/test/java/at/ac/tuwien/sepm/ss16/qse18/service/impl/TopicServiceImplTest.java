@@ -1,9 +1,13 @@
 package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
+import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.*;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.junit.After;
 import org.junit.Assert;
@@ -37,9 +41,16 @@ import static org.mockito.Mockito.when;
     @Mock private SubjectTopicDaoJdbc mockSubjectTopicDao;
     @Mock private QuestionTopicDaoJdbc mockQuestionTopicDao;
     private TopicServiceImpl topicService;
+    private Subject subject;
 
     @Before public void setUp() throws Exception {
         topicService = new TopicServiceImpl(mockTopicDao);
+        subject = new Subject();
+        subject.setName("Test");
+        subject.setSubjectId(1);
+        subject.setAuthor("abc");
+        subject.setEcts(10);
+        subject.setSemester("ss16");
     }
 
     //Testing getTopic(int)
@@ -60,13 +71,25 @@ import static org.mockito.Mockito.when;
     @Test public void testIf_createTopic_callsRightMethodInDao() throws Exception {
         Topic t = new Topic(1, "x");
         Subject s = new Subject();
-        topicService.createTopic(t, s);
-        verify(mockTopicDao).createTopic(t, s);
+        topicService.createTopic(t, subject);
+        verify(mockTopicDao).createTopic(t, subject);
     }
 
     @Test(expected = ServiceException.class)
     public void test_createTopic_invalidTopicThrowsException() throws Exception {
         topicService.createTopic(new Topic(), new Subject());
+    }
+    @Test(expected = ServiceException.class)
+    public void test_createTopic_TopicIsNullThrowsException() throws Exception {
+        topicService.createTopic(null, new Subject());
+    }
+
+
+
+    @Test(expected = ServiceException.class)
+    public void test_createTopic_catchDaoException_fail() throws Exception {
+        when(mockTopicDao.createTopic(any(Topic.class),any(Subject.class))).thenThrow(DaoException.class);
+        topicService.createTopic(new Topic(1,"Test"),subject);
     }
 
 
@@ -87,6 +110,12 @@ import static org.mockito.Mockito.when;
     }
 
 
+    @Test(expected = ServiceException.class)
+    public void test_updateTopic_catchDaoException_fail() throws Exception {
+        when(mockTopicDao.updateTopic(any(Topic.class))).thenThrow(DaoException.class);
+        topicService.updateTopic(new Topic(1,"Test"));
+    }
+
     //----------------------------------------------------------------------------------------------
 
 
@@ -101,6 +130,12 @@ import static org.mockito.Mockito.when;
     @Test(expected = ServiceException.class)
     public void test_deleteTopic_invalidTopicThrowsException() throws Exception {
         topicService.deleteTopic(new Topic());
+    }
+
+    @Test(expected = ServiceException.class)
+    public void test_deleteTopic_catchDaoException_fail() throws Exception {
+        when(mockTopicDao.deleteTopic(any(Topic.class))).thenThrow(DaoException.class);
+        topicService.deleteTopic(new Topic(1,"Test"));
     }
 
 
@@ -119,8 +154,6 @@ import static org.mockito.Mockito.when;
             new TopicServiceImpl(mockSubjectTopicDao, mockSubjectDao, mockTopicDao, mockQuestionDao,
                 mockQuestionTopicDao);
 
-        Subject testSubject = new Subject();
-        testSubject.setSubjectId(1);
 
         List<Topic> testTopics = new LinkedList<>();
 
@@ -137,7 +170,7 @@ import static org.mockito.Mockito.when;
 
         when(mockSubjectTopicDao.getTopicToSubject(any())).thenReturn(testTopics);
 
-        List<Topic> test = topicService.getTopicsFromSubject(testSubject);
+        List<Topic> test = topicService.getTopicsFromSubject(subject);
 
         assertTrue("Both topics should have different IDs",
             test.get(0).getTopicId() != test.get(1).getTopicId());
@@ -153,12 +186,13 @@ import static org.mockito.Mockito.when;
         topicService.getTopicsFromQuestion(null);
     }
 
+
     @Test public void test_getTopicsFromQuestion_withValidQuestion() throws Exception {
         topicService =
             new TopicServiceImpl(mockSubjectTopicDao, mockSubjectDao, mockTopicDao, mockQuestionDao,
                 mockQuestionTopicDao);
 
-        Question testQuestion = new Question();
+        Question testQuestion = new Question(1,"testquestion",QuestionType.MULTIPLECHOICE,20);
         testQuestion.setQuestionId(1);
 
         List<Topic> testTopics = new LinkedList<>();

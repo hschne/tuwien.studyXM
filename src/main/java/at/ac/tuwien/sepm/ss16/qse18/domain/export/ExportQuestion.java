@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.domain.export;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 
 import java.io.Serializable;
 import java.util.List;

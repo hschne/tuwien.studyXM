@@ -122,8 +122,29 @@ public class SubjectTopicDaoJdbcTest extends DaoBaseTest {
         assertEquals("The size of the resulting list should be 100", topics.size(), 100);
     }
     //----------------------------------------------------------------------------------------------
+    @Test(expected = DaoException.class)
+    public void test_getSubjectsFromTopic_withNoDataBaseConnection_Fail() throws Exception{
+        when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
+        dao.getSubjectsFromTopic(new Topic());
+        PowerMockito.verifyStatic();
+        mockConnectionH2.getConnection();
+    }
 
-    @After public void tearDown() throws Exception {
+    @Test public void test_getSubjectsFromTopic_withEmptyDatabase() throws Exception {
+        when(mockResultSet.next()).thenReturn(false);
+        List<Subject> subjects = dao.getSubjectsFromTopic(new Topic());
+        assertTrue("No subjects should be returned", subjects.isEmpty());
+    }
+
+    @Test public void test_getSubjectsFromTopic_withThreeElementsInDatabase() throws Exception {
+        when(mockResultSet.next()).thenReturn(true).thenReturn(true).thenReturn(true).thenReturn(false);
+        List<Subject> subjects = dao.getSubjectsFromTopic(new Topic());
+        assertTrue("No subjects should be returned", subjects.size() == 3);
+    }
+
+
+
+        @After public void tearDown() throws Exception {
 
     }
 

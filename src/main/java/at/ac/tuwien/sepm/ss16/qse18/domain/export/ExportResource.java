@@ -2,7 +2,6 @@ package at.ac.tuwien.sepm.ss16.qse18.domain.export;
 
 import at.ac.tuwien.sepm.ss16.qse18.domain.Note;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 
 import java.io.Serializable;
 import java.util.List;
@@ -13,6 +12,11 @@ import java.util.List;
 public class ExportResource implements Serializable {
     private Resource resource;
     private List<Note> notes;
+
+    public ExportResource(Resource resource, List<Note> notes) {
+        this.resource = resource;
+        this.notes = notes;
+    }
 
     public Resource getResource() {
         return resource;
@@ -30,9 +34,4 @@ public class ExportResource implements Serializable {
         this.notes = notes;
     }
 
-    public ExportResource(Resource resource, List<Note> notes) {
-
-        this.resource = resource;
-        this.notes = notes;
-    }
 }

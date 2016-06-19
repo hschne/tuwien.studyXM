@@ -2,7 +2,9 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamDao;
+import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
+import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -14,6 +16,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyExam;
@@ -21,6 +24,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.DummyEntityFactory.createDummyExams;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -32,9 +36,10 @@ import static org.mockito.Mockito.when;
 
     private ExamService examService;
     @Mock private ExamDao mockExamDao;
+    @Mock private ExerciseExamDao mockExerciseExamDao;
 
     @Before public void setUp() throws Exception {
-        examService = new ExamServiceImpl(mockExamDao);
+        examService = new ExamServiceImpl(mockExamDao, mockExerciseExamDao);
     }
 
     @Test public void getExam_withValidId_examReturned() throws Exception {
@@ -49,7 +54,11 @@ import static org.mockito.Mockito.when;
     @Test(expected = ServiceException.class) public void getExam_invalidId_serviceExceptionThrown()
         throws Exception {
         examService.getExam(-1);
+    }
 
+    @Test (expected = ServiceException.class) public void getExam_DaoException() throws Exception {
+        when(mockExamDao.getExam(anyInt())).thenThrow(DaoException.class);
+        examService.getExam(1);
     }
 
     @Test public void getExams_examsReturned() throws Exception {
@@ -72,6 +81,11 @@ import static org.mockito.Mockito.when;
         examService.createExam(exam);
 
         verify(mockExamDao).create(exam);
+    }
+
+    @Test (expected = ServiceException.class) public void createExam_DaoException() throws Exception {
+        when(mockExamDao.create(anyObject())).thenThrow(DaoException.class);
+        examService.createExam(new Exam());
     }
 
     @Test (expected = DtoValidatorException.class) public void validate_invalidName_exceptionThrown() throws Exception {
@@ -99,12 +113,20 @@ import static org.mockito.Mockito.when;
         examService.validate(exam);
     }
 
+    @Test (expected = DtoValidatorException.class) public void validate_emptyName() throws Exception {
+        Exam e = new Exam();
+        e.setName(null);
+        examService.validate(e);
+    }
 
+    @Test (expected = ServiceException.class) public void getAllExerciseExamsOfExam_getExamsFail()
+        throws Exception {
+        when(mockExerciseExamDao.getExams()).thenThrow(DaoException.class);
+        examService.getAllExerciseExamsOfExam(new Exam());
+    }
 
-
-
-
-
-
-
+    @Test public void getAllExerciseExamsOfExam_success() throws Exception {
+        when(mockExerciseExamDao.getExams()).thenReturn(new ArrayList<>());
+        examService.getAllExerciseExamsOfExam(new Exam());
+    }
 }

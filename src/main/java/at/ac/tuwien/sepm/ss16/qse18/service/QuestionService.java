@@ -72,39 +72,6 @@ public interface QuestionService {
      */
     public List<Answer> getCorrespondingAnswers(Question q) throws ServiceException;
 
-    /**
-     * setCorrespondingTopic
-     * Relates a question to a topic.
-     * @param q The question which shall relate to the given topic.
-     * @param t The topic of the question.
-     * @return Returns true if successful, false otherwise
-     */
-    public boolean setCorrespondingTopic(Question q, Topic t) throws ServiceException;
-
-    /**
-     * getCorrespondingTopic
-     * Retrieves the corresponding topics of a given answer
-     * @param q The question to which all relating topics shall be found
-     * @return Returns a list of all corresponding topics
-     */
-    public List<Topic> getCorrespondingTopic(Question q) throws ServiceException;
-
-    /**
-     * setCorrespondingResource
-     * Relates a question to a given resource.
-     * @param q The question which shall be related to a given resource
-     * @param r The resource which shall be related to a given question
-     * @return Returns true if the operation was successful, false otherwise
-     */
-    public boolean setCorrespondingResource(Question q, Resource r) throws ServiceException;
-
-    /**
-     * getCorrespondingResources
-     * Receives a list of all resources corresponding to a given question.
-     * @param q The given question to which a list of resources shall be returned
-     * @return Returns a list of resources related to a given question
-     */
-    public List<Resource> getCorrespondingResources(Question q) throws ServiceException;
 
     /**
      * getQuestionFromTopic

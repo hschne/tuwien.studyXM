@@ -8,10 +8,8 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExamDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamDao;
-import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ExamService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -24,15 +22,15 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Service public class ExamServiceImpl implements ExamService {
     private static final Logger logger = LogManager.getLogger(ExamServiceImpl.class);
     private ExamDao examDao;
-    @Autowired ExerciseExamDao exerciseExamDao;
+    private ExerciseExamDao exerciseExamDao;
 
-    @Autowired public ExamServiceImpl(ExamDao examDao) {
+    @Autowired public ExamServiceImpl(ExamDao examDao, ExerciseExamDao exerciseExamDao) {
         this.examDao = examDao;
+        this.exerciseExamDao = exerciseExamDao;
     }
 
     @Override public Exam getExam(int examID) throws ServiceException {

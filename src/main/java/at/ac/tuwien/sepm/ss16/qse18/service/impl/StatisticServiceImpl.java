@@ -5,11 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
@@ -57,7 +53,7 @@ public class StatisticServiceImpl implements StatisticService {
 
 
     @Autowired
-    StatisticServiceImpl(ExamService examService,
+    public StatisticServiceImpl(ExamService examService,
                          ExerciseExamService exerciseExamService,
                          ExamDaoJdbc examDaoJdbc,
                          ExerciseExamDaoJdbc exerciseExamDaoJdbc,
@@ -213,7 +209,8 @@ public class StatisticServiceImpl implements StatisticService {
         } else if (gradeSum / examCount >= 4) {
             hints.get(subject.getSubjectId()).offerFirst(HINT_EXAM_RESULT);
         }
-        return new double[]{(int)examCount != 0 ? gradeSum / examCount : 0, examCount};
+        double gradeRounded =  Double.parseDouble(String.format(Locale.ENGLISH, "%1.1f", gradeSum /examCount));
+        return new double[]{(int)examCount != 0 ? gradeRounded : 0, examCount};
     }
 
     /**

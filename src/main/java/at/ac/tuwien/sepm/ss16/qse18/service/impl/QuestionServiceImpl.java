@@ -6,7 +6,6 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -15,8 +14,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -105,26 +102,6 @@ import java.util.List;
         }
     }
 
-    @Override public boolean setCorrespondingTopic(Question q, Topic t) throws ServiceException {
-        //TODO
-        return false;
-    }
-
-    @Override public List<Topic> getCorrespondingTopic(Question q) throws ServiceException {
-        //TODO
-        return new ArrayList<>();
-    }
-
-    @Override public boolean setCorrespondingResource(Question q, Resource r)
-        throws ServiceException {
-        //TODO
-        return false;
-    }
-
-    @Override public List<Resource> getCorrespondingResources(Question q) throws ServiceException {
-        //TODO
-        return new ArrayList<>();
-    }
 
     @Override public List<Question> getQuestionsFromTopic(Topic topic) throws ServiceException {
         logger.debug("Entering getQuestionsFromTopic");
