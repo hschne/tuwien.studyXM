@@ -38,6 +38,11 @@ import java.util.List;
         showSuccess("Question is now in the database");
     }
 
+    @Override @FXML public void handleAddImage() {
+        super.handleAddImage();
+        this.textFieldAnswerOne.setText(textFieldImagePath.getText());
+    }
+
     @Override protected void fillFieldsAndCheckboxes() {
         this.questionTextArea.setText(inputs == null ? "" : (String) inputs.get(0));
         this.textFieldImagePath.setText(inputs == null ? "" : (String) inputs.get(1));
