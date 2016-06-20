@@ -3,6 +3,7 @@ package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
+import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
 import at.ac.tuwien.sepm.ss16.qse18.service.AnswerService;
 import javafx.fxml.FXML;
@@ -48,7 +49,7 @@ public class AnswerQuestionController extends BaseController {
         this.answer3 = answer3;
         this.answer4 = answer4;
 
-        if(answer1 != null) {
+        if(answer1 != null && question.getType() != QuestionType.SELF_EVALUATION) {
             String answer1Text = answer1.getAnswer().replaceAll(REPLACE_MATCH, REPLACE_LITERAL);
             answer1Button.setText(answer1Text);
         }
@@ -92,5 +93,9 @@ public class AnswerQuestionController extends BaseController {
     public boolean noButtonSelected(){
         return !answer1Button.isSelected() && !answer2Button.isSelected() && !answer3Button.isSelected()
             && !answer4Button.isSelected();
+    }
+
+    public boolean bothButtonsSelected(){
+        return false;
     }
 }

@@ -49,6 +49,9 @@ public class DoExerciseExamNavigation extends SubviewNavigation {
         else if(type == QuestionType.OPENQUESTION){
             controller = handleOpenQuestion();
         }
+        else if(type == QuestionType.SELF_EVALUATION){
+            controller = handleSelfEvalQuestion();
+        }
         return controller;
     }
 
@@ -86,6 +89,19 @@ public class DoExerciseExamNavigation extends SubviewNavigation {
         try{
             controller = setSubView("/fxml/exam/answerOpenQuestion.fxml",
                 AnswerOpenQuestionController.class);
+        }
+        catch (IOException e){
+            logger.error(e.getMessage());
+            handleException(e);
+        }
+        return controller;
+    }
+
+    private  <T extends GuiController> T handleSelfEvalQuestion(){
+        T controller = null;
+        try{
+            controller = setSubView("/fxml/exam/answerSelfEvalQuestion.fxml",
+                AnswerSelfEvalQuestionController.class);
         }
         catch (IOException e){
             logger.error(e.getMessage());

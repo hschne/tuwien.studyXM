@@ -130,6 +130,10 @@ import java.util.List;
             showInformation("You have not selected an answer.");
             return;
         }
+        if(controller.bothButtonsSelected()){
+            showInformation("You have to select only one answer");
+            return;
+        }
         update();
         mainFrameController.getButtonHome().setDisable(false);
         mainFrameController.getButtonSubjects().setDisable(false);
