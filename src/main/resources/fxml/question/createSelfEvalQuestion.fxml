@@ -87,9 +87,8 @@
                   </GridPane>
                   <GridPane GridPane.rowIndex="1">
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="574.0" minWidth="10.0" prefWidth="501.0" />
-                      <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="403.0" minWidth="10.0" prefWidth="137.0" />
-                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="373.0" minWidth="10.0" prefWidth="362.0" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="574.0" minWidth="10.0" prefWidth="520.0" />
+                        <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="427.0" minWidth="10.0" prefWidth="427.0" />
                     </columnConstraints>
                     <rowConstraints>
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -97,24 +96,30 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextField fx:id="textFieldImagePath" disable="true" editable="false" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="400.0" promptText="/images/imagePlaceholder.png">
+                        <TextField fx:id="textFieldImagePath" disable="true" editable="false" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="25.0" prefWidth="204.0" promptText="/images/imagePlaceholder.png" GridPane.halignment="LEFT">
                            <font>
                               <Font size="13.0" />
                            </font>
-                        </TextField>
-                        <Button fx:id="buttonAddImage" mnemonicParsing="false" onAction="#handleAddImage" text="add image" GridPane.columnIndex="2" GridPane.halignment="CENTER">
                            <GridPane.margin>
-                              <Insets />
+                              <Insets left="55.0" />
+                           </GridPane.margin>
+                        </TextField>
+                        <Button fx:id="buttonAddImage" mnemonicParsing="false" onAction="#handleAddImage" text="add image" GridPane.halignment="CENTER">
+                           <GridPane.margin>
+                              <Insets left="80.0" />
                            </GridPane.margin></Button>
                         <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddResource" text="add resource" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                            <GridPane.margin>
                               <Insets left="55.0" />
                            </GridPane.margin>
                         </Button>
-                        <ImageView fx:id="imageViewFile" fitHeight="31.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true" GridPane.rowIndex="1">
+                        <ImageView fx:id="imageViewFile" fitHeight="31.0" fitWidth="27.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="LEFT" GridPane.rowIndex="1">
                            <image>
                               <Image url="/icons/cross.png" />
                            </image>
+                           <GridPane.margin>
+                              <Insets left="160.0" />
+                           </GridPane.margin>
                         </ImageView>
                         <GridPane GridPane.rowIndex="2">
                           <columnConstraints>
@@ -147,31 +152,37 @@
                               <TextField fx:id="textFieldAnswerOne" disable="true" visible="false" GridPane.columnIndex="1" />
                            </children>
                         </GridPane>
-                        <Label fx:id="resourceLabel" text="none" GridPane.halignment="RIGHT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                        <Label fx:id="resourceLabel" text="none" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="CENTER">
                            <font>
                               <Font name="System Bold" size="13.0" />
                            </font>
+                           <GridPane.margin>
+                              <Insets left="200.0" />
+                           </GridPane.margin>
                         </Label>
                      </children>
                   </GridPane>
                   <GridPane>
                     <columnConstraints>
-                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="684.6666564941406" minWidth="10.0" prefWidth="643.3333435058594" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="495.33331298828125" minWidth="10.0" prefWidth="356.6666564941406" />
+                      <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="684.6666564941406" minWidth="10.0" prefWidth="381.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="758.3333435058594" minWidth="10.0" prefWidth="619.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <TextArea fx:id="questionTextArea" prefHeight="200.0" prefWidth="200.0">
+                        <TextArea fx:id="questionTextArea" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1">
                            <GridPane.margin>
-                              <Insets left="50.0" />
+                              <Insets left="20.0" right="20.0" />
                            </GridPane.margin>
                         </TextArea>
-                        <ImageView fx:id="imageViewSelectedImage" fitHeight="252.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <ImageView fx:id="imageViewSelectedImage" fitHeight="252.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
                            <image>
                               <Image url="/images/imagePlaceholder.png" />
                            </image>
+                           <GridPane.margin>
+                              <Insets left="50.0" right="20.0" />
+                           </GridPane.margin>
                         </ImageView>
                      </children>
                   </GridPane>
