@@ -11,10 +11,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,7 +124,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
             ps.setLong(3, question.getQuestionTime());
-            ps.setInt(4, question.getTag().getValue());
+            if (question.getTag() == null) {
+                ps.setNull(4, Types.INTEGER);
+            } else {
+                ps.setInt(4, question.getTag().getValue());
+            }
             ps.executeUpdate();
             generatedKey = ps.getGeneratedKeys();
             if (generatedKey.next()) {
