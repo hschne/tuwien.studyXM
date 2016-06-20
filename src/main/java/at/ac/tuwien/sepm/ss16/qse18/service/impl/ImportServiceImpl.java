@@ -309,6 +309,9 @@ import java.util.zip.ZipInputStream;
         try {
             for (Answer answer : answers) {
                 answer.setQuestion(question);
+                if(getNewReference(answer.getAnswer()) != null){
+                    answer.setAnswer(getNewReference(answer.getAnswer()));
+                }
                 answerDao.createAnswer(answer);
             }
         } catch (DaoException e) {

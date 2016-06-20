@@ -103,6 +103,10 @@ import java.util.List;
             showInformation("If you don't want to answer the question right away click on skip question");
             return;
         }
+        if(controller.bothButtonsSelected()){
+            showInformation("You have to select only one answer");
+            return;
+        }
         update();
         progress.setValue(progress.intValue() + 1);
         currentQuestionNumber++;
@@ -128,6 +132,10 @@ import java.util.List;
     public void handleShowResultsButton(){
         if(controller.noButtonSelected()){
             showInformation("You have not selected an answer.");
+            return;
+        }
+        if(controller.bothButtonsSelected()){
+            showInformation("You have to select only one answer");
             return;
         }
         update();

@@ -20,7 +20,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateImageQuestionController">
+<AnchorPane style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateNotecardQuestionController">
    <children>
       <GridPane layoutX="146.0" layoutY="132.0" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -262,7 +262,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ImageView fx:id="imageViewQuestionImage" fitHeight="252.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageViewSelectedImage" fitHeight="252.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="/images/imagePlaceholder.png" />
                            </image>

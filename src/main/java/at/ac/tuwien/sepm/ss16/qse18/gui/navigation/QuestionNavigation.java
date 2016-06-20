@@ -129,6 +129,21 @@ import java.util.List;
         }
     }
 
+
+    public void handleSelfEvalQuestion(ObservableTopic topic, List inputs){
+        logger.debug("Loading Self eval question screen ");
+        try {
+           CreateSelfEvalQuestionController createSelfEvalQuestionController =
+                setSubView("/fxml/question/createSelfEvalQuestion.fxml",
+                    CreateSelfEvalQuestionController.class);
+            createSelfEvalQuestionController.setTopic(topic);
+            createSelfEvalQuestionController.setInput(inputs);
+        } catch (Exception e) {
+            handleException(e);
+        }
+    }
+
+
     public void handleCreateQuestion(ObservableTopic topic) {
         logger.debug("Loading create question screen");
         try {
@@ -139,4 +154,5 @@ import java.util.List;
             handleException(e);
         }
     }
+
 }

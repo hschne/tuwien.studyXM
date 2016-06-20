@@ -1,5 +1,6 @@
 package at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise;
 
+import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
 import at.ac.tuwien.sepm.ss16.qse18.gui.BaseController;
@@ -41,6 +42,7 @@ public class PostExerciseExamItemController extends BaseController {
     @FXML private Label questionLabel;
     @FXML private ImageView questionImageView;
     @FXML private Button showResourceButton;
+    @FXML private Button showAnswerButton;
 
     @Autowired private QuestionService questionService;
     @Autowired private ResourceQuestionService resourceQuestionService;
@@ -48,6 +50,7 @@ public class PostExerciseExamItemController extends BaseController {
     private ObservableQuestion question;
     private ObservableList<String> answerList;
     private Resource resource;
+    private Answer selfEvalAnswer;
 
 
     @FXML public void initialize(ObservableQuestion question) {
@@ -85,6 +88,11 @@ public class PostExerciseExamItemController extends BaseController {
         showFile(this.resource.getReference());
     }
 
+    @FXML protected void showAnswer(){
+        logger.debug("entering showAnswer()");
+        showFile(this.selfEvalAnswer.getAnswer());
+    }
+
     public void loadFields() {
         questionLabel.setText(question.getQuestion().replaceAll("(.{140})", "$1\n"));
 
@@ -110,6 +118,12 @@ public class PostExerciseExamItemController extends BaseController {
 
     private List<String> fillWithAnswerName(List<ObservableAnswer> observableAnswers) {
         List<String> answers = new ArrayList<>();
+        if(question.getQuestionInstance().getType() == QuestionType.SELF_EVALUATION){
+            answers.add("This is a self eval Question");
+            selfEvalAnswer = observableAnswers.get(0).getAnswerInstance();
+            this.showAnswerButton.setVisible(true);
+            return answers;
+        }
         for (ObservableAnswer a : observableAnswers) {
             answers.add((a.getAnswer() + "       [" + a.correctProperty().getValue() + "]")
                 .replaceAll("(.{100})", "$1\n"));

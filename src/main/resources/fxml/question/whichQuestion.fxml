@@ -41,6 +41,7 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <RadioButton fx:id="radioButtonMultipleChoice" mnemonicParsing="false" text="Multiple Choice" textAlignment="CENTER" GridPane.columnIndex="1">
@@ -74,6 +75,11 @@
                      <GridPane.margin>
                         <Insets />
                      </GridPane.margin>
+                  </RadioButton>
+                  <RadioButton fx:id="radioButtonSelfEval" layoutX="448.0" layoutY="158.0" mnemonicParsing="false" text="Self Evaluation" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                     <font>
+                        <Font name="Arial Bold" size="13.0" />
+                     </font>
                   </RadioButton>
                </children>
             </GridPane>
