@@ -92,7 +92,7 @@
                         </Button>
                         <Label fx:id="tagLabel" text="no tag selected" GridPane.halignment="CENTER" GridPane.valignment="BASELINE">
                            <GridPane.margin>
-                              <Insets right="31.0" />
+                              <Insets right="37.0" />
                            </GridPane.margin>
                         </Label>
                      </children>
