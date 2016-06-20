@@ -109,6 +109,11 @@ public class DtoValidatorTest {
         dtoValidator.validate(new Question("question", null, -1, Tag.EASY));
     }
 
+    @Test(expected = DtoValidatorException.class) public void test_validate_withQuestionWithoutTag()
+        throws Exception {
+        dtoValidator.validate(new Question("question", QuestionType.MULTIPLECHOICE, 1, null));
+    }
+
     /**
      * This Test calls validate(Question) with a valid question.
      * This shouldn't throw an Exception.

@@ -49,6 +49,7 @@ public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
         question.setQuestionId(1);
         question.setType(QuestionType.valueOf(1));
         question.setQuestionTime(1);
+        question.setTag(Tag.EASY);
         al.add(question);
 
 

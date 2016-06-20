@@ -124,11 +124,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
             ps.setLong(3, question.getQuestionTime());
-            if (question.getTag() == null) {
-                ps.setNull(4, Types.INTEGER);
-            } else {
-                ps.setInt(4, question.getTag().getValue());
-            }
+            ps.setInt(4, question.getTag().getValue());
             ps.executeUpdate();
             generatedKey = ps.getGeneratedKeys();
             if (generatedKey.next()) {

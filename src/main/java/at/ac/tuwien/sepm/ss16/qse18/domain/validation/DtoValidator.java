@@ -72,6 +72,9 @@ public class DtoValidator {
         if (question.getType() == null) {
             throw new DtoValidatorException("Question must have an questiontype");
         }
+        if (question.getTag() == null) {
+            throw new DtoValidatorException("Question has to have a tag");
+        }
     }
 
     public static void validate(Topic topic) throws DtoValidatorException {
