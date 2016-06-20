@@ -82,7 +82,7 @@ import java.util.List;
     @Override protected Question newQuestionFromFields() {
         logger.debug("Creating new question");
         return new Question(questionTextArea.getText() , getQuestionType(),
-            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)));
+            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)),getSelectedTag());
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {
