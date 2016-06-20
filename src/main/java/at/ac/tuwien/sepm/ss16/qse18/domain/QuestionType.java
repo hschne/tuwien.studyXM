@@ -12,10 +12,13 @@ import java.util.Map;
  *                   is determined by matching the given answer to the user input
  * - Notecard:       Learning by notecard principle: mainly used for offline learning -> printouts
  *
+ * - Self_evaluation: This type has a text as a question and an image as an answer. The user has to
+ *                    evaluate on his own if the answer is correct.
+ *
  * @author Felix Almer on 06.05.2016.
  */
 public enum QuestionType {
-    MULTIPLECHOICE(1), SINGLECHOICE(2), OPENQUESTION(3), NOTECARD(4);
+    MULTIPLECHOICE(1), SINGLECHOICE(2), OPENQUESTION(3), NOTECARD(4),SELF_EVALUATION(4);
 
     private int value;
     private static Map<Integer, QuestionType> hm = new HashMap<>();

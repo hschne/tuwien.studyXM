@@ -203,7 +203,7 @@
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                      <children>
-                        <ImageView fx:id="imageViewQuestionImage" fitHeight="252.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="imageViewSelectedImage" fitHeight="252.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true">
                            <image>
                               <Image url="/images/imagePlaceholder.png" />
                            </image>

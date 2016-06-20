@@ -36,7 +36,7 @@ public class CreateImageQuestionController extends QuestionController {
 
     @FXML public Button buttonAddImage;
 
-    @FXML public ImageView imageViewQuestionImage;
+    @FXML public ImageView imageViewSelectedImage;
     @FXML public ImageView imageViewIcon;
 
     @FXML public TextField textFieldImagePath;
@@ -92,7 +92,7 @@ public class CreateImageQuestionController extends QuestionController {
         if (selectedFile != null) {
             logger.debug("A File was selected");
             Image img = new Image(selectedFile.toURI().toString());
-            imageViewQuestionImage.setImage(img);
+            imageViewSelectedImage.setImage(img);
             out = new File(defaultPath + generateFileName(selectedFile.getName()));
             textFieldImagePath.setText(defaultPath + selectedFile.getName());
         }
@@ -151,7 +151,7 @@ public class CreateImageQuestionController extends QuestionController {
     private void copySelectedImage() throws IOException {
         logger.debug("tying to copy image to src/main/resources/images/");
         ImageIO
-            .write(SwingFXUtils.fromFXImage(imageViewQuestionImage.getImage(), null), "png", out);
+            .write(SwingFXUtils.fromFXImage(imageViewSelectedImage.getImage(), null), "png", out);
     }
 
     /**
@@ -177,7 +177,7 @@ public class CreateImageQuestionController extends QuestionController {
     }
 
     @Override protected void fillFieldsAndCheckboxes() {
-        this.imageViewQuestionImage.setImage(
+        this.imageViewSelectedImage.setImage(
             inputs == null ? new Image("/images/imagePlaceholder.png") : (Image) inputs.get(0));
         this.textFieldImagePath.setText(inputs == null ? "" : (String) inputs.get(1));
 
@@ -198,7 +198,7 @@ public class CreateImageQuestionController extends QuestionController {
     }
 
     @Override protected void saveQuestionInput(List inputs) {
-        inputs.add(imageViewQuestionImage.getImage());
+        inputs.add(imageViewSelectedImage.getImage());
 
         if (textFieldImagePath != null) {
             inputs.add(textFieldImagePath.getText());
