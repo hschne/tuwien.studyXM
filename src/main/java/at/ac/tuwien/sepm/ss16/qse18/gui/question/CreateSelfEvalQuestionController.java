@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Component public class CreateSelfEvalQuestionController extends CreateImageQuestionController {
     @FXML private TextArea questionTextArea;
-
+    @FXML private ToggleGroup tagToggleGroupSelf;
 
     @Autowired public CreateSelfEvalQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
@@ -31,11 +32,24 @@ import java.util.List;
             return;
         }
         if (checkBoxContinue.isSelected()) {
-            questionNavigation.handleSelfEvalQuestion(this.topic,null);
+            questionNavigation.handleSelfEvalQuestion(this.topic, null);
         } else {
             mainFrameController.handleSubjects();
         }
         showSuccess("Question is now in the database");
+    }
+
+    @Override protected void initializeToggleGroup() {
+        tagToggleGroupSelf.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                oldValue.setSelected(true);
+            }
+        });
+        setColorOfOtherButtonsToGrey(tagToggleGroupSelf);
+    }
+
+    @Override @FXML public void toggleSelected() {
+        setColorOfOtherButtonsToGrey(tagToggleGroupSelf);
     }
 
     @Override @FXML public void handleAddImage() {
@@ -47,8 +61,8 @@ import java.util.List;
         this.questionTextArea.setText(inputs == null ? "" : (String) inputs.get(0));
         this.textFieldImagePath.setText(inputs == null ? "" : (String) inputs.get(1));
         fillAnswerFields(textFieldImagePath.getText());
-        this.imageViewSelectedImage.setImage(inputs == null
-            ? new Image("/images/imagePlaceholder.png") :(Image)inputs.get(2));
+        this.imageViewSelectedImage.setImage(
+            inputs == null ? new Image("/images/imagePlaceholder.png") : (Image) inputs.get(2));
 
         this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(7));
 
@@ -65,7 +79,7 @@ import java.util.List;
 
 
     @Override protected void saveQuestionInput(List inputs) {
-        inputs.add(questionTextArea.getText().isEmpty() ? "" : questionTextArea.getText() );
+        inputs.add(questionTextArea.getText().isEmpty() ? "" : questionTextArea.getText());
     }
 
     @Override protected void saveAnswerFields(List listForInputs) {
@@ -81,8 +95,8 @@ import java.util.List;
 
     @Override protected Question newQuestionFromFields() {
         logger.debug("Creating new question");
-        return new Question(questionTextArea.getText() , getQuestionType(),
-            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)),getSelectedTag());
+        return new Question(questionTextArea.getText(), getQuestionType(),
+            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)), getSelectedTag());
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {
