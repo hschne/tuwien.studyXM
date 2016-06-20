@@ -65,7 +65,7 @@ import java.util.List;
     @Override public Topic createTopic(Topic topic, Subject subject) throws ServiceException {
         try{
             DtoValidator.validate(topic);
-            DtoValidator.validateSubject(subject);
+            DtoValidator.validate(subject);
         }
         catch (DtoValidatorException e){
             logger.error(e);
@@ -124,7 +124,7 @@ import java.util.List;
             throw new ServiceException("Subject is null in getTopicsFromSubject()");
         }
         try{
-            DtoValidator.validateSubject(subject);
+            DtoValidator.validate(subject);
         }
         catch (DtoValidatorException e){
             logger.error(e.getMessage(),e);

@@ -21,7 +21,7 @@ public class DtoValidator {
      * @throws ServiceException
      *
      * */
-    public static void validateSubject(Subject subject) throws DtoValidatorException{
+    public static void validate(Subject subject) throws DtoValidatorException{
         if(subject.getName().trim().isEmpty()) {
             throw new DtoValidatorException("Subject name must not be empty.");
         }
@@ -135,6 +135,28 @@ public class DtoValidator {
         if(correctAnswers < 1){
             throw new DtoValidatorException("There must be at least one correct answer.");
         }
+    }
+
+    public static void validate(Exam exam)throws DtoValidatorException {
+        if(exam == null){
+            throw new DtoValidatorException("Exams must not be null");
+        }
+        if(exam.getCreated() == null){
+            throw new DtoValidatorException("Exam creation date must not be null");
+        }
+        if(exam.getDueDate() == null){
+            throw new DtoValidatorException("Exam due to date must not be null");
+        }
+        if(exam.getSubject() <= 0){
+            throw new DtoValidatorException("Subject ID must not be smaller than 1");
+        }
+        if(exam.getName().trim().isEmpty()){
+            throw new DtoValidatorException("exam name must not be empty.");
+        }
+        if (exam.getName().length() > 80) {
+            throw new DtoValidatorException("exam name must not be longer than 80 characters");
+        }
+
     }
 
 

@@ -8,6 +8,7 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Exam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
+import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -95,6 +96,11 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     @Override public void update(int examid, long examTime) throws DaoException {
         logger.debug("entering method update with parameters {}", examid, examTime);
 
+        if (examid <= 0 || examTime <= 0) {
+            logger.error("Dao Exception update with parameters {}", examid, examTime);
+            throw new DaoException("Invalid exam ID/exam time");
+        }
+
         PreparedStatement pstmt = null;
 
         try {
@@ -147,6 +153,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             logger.error("DaoException getAllExamsOfSubject with parameters {}", subjectId);
             throw new DaoException("Invalid subject ID, please check your input");
         }
+
+        tryValidateSubject(subject);
 
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -236,6 +244,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     @Override public List<ExerciseExam> getExerciseExamsFrom(Exam exam) throws DaoException {
         logger.debug("entering method getExams()");
 
+        tryValidateExam(exam);
+
         try {
             PreparedStatement preparedStatement = this.database.getConnection()
                 .prepareStatement("SELECT * FROM ENTITY_EXERCISE_EXAM WHERE EXAM = ?");
@@ -276,6 +286,24 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         } catch (DtoValidatorException e) {
             logger.error("exercise [" + exerciseExam + "] is invalid", e);
             throw new DaoException("exercise [" + exerciseExam + "] is invalid: " + e);
+        }
+    }
+
+    private void tryValidateSubject(Subject subject) throws DaoException {
+        try {
+            validate(subject);
+        } catch (DtoValidatorException e) {
+            logger.error("subject [" + subject + "] is invalid", e);
+            throw new DaoException("subject [" + subject + "] is invalid: " + e);
+        }
+    }
+
+    private void tryValidateExam(Exam exam) throws DaoException {
+        try {
+            validate(exam);
+        } catch (DtoValidatorException e) {
+            logger.error("exam [" + exam + "] is invalid", e);
+            throw new DaoException("exam [" + exam + "] is invalid: " + e);
         }
     }
 

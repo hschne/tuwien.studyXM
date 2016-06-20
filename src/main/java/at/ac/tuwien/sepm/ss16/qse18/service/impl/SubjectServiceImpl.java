@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validateSubject;
+import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 /**
  * Class SubjectServiceImpl
@@ -55,7 +55,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     @Override public Subject createSubject(Subject subject) throws ServiceException {
         try {
-            validateSubject(subject);
+            validate(subject);
             checkIfDuplicate(subject);
             return sd.createSubject(subject);
         } catch (DtoValidatorException | DaoException e) {
@@ -76,7 +76,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     @Override public Subject updateSubject(Subject subject) throws ServiceException {
         try {
-            validateSubject(subject);
+            validate(subject);
             return sd.updateSubject(subject);
         } catch (DtoValidatorException | DaoException e) {
             logger.error("Could not update Subject", e);
