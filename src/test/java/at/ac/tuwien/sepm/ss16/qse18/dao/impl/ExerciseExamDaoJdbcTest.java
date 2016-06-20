@@ -366,11 +366,6 @@ public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
 
         exerciseExamList = this.examDaoJdbc.getAllExamsOfSubject(this.s);
 
-        exerciseExamList.get(0).setExamQuestions(testExerciseExam.getExamQuestions());
-        exerciseExamList.get(1).setExamQuestions(testExerciseExam.getExamQuestions());
-        exerciseExamList.get(2).setExamQuestions(testExerciseExam.getExamQuestions());
-
-        System.out.println(exerciseExamList.get(0).equals(this.testExerciseExam));
 
         assertTrue("List should contain 3 exercise exams", exerciseExamList.size() == 3);
         assertTrue("First Elements ID should be the 1", this.testExerciseExam.getExamid() == 1);
@@ -432,10 +427,6 @@ public class ExerciseExamDaoJdbcTest extends DaoBaseTest {
 
 
         exerciseExamList = this.examDaoJdbc.getExerciseExamsFrom(this.exam);
-
-        exerciseExamList.get(0).setExamQuestions(testExerciseExam.getExamQuestions());
-        exerciseExamList.get(1).setExamQuestions(testExerciseExam.getExamQuestions());
-        exerciseExamList.get(2).setExamQuestions(testExerciseExam.getExamQuestions());
 
 
         assertTrue("List should contain 3 exercise exams", exerciseExamList.size() == 3);
