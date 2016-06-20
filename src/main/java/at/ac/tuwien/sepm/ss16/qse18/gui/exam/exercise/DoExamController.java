@@ -103,6 +103,10 @@ import java.util.List;
             showInformation("If you don't want to answer the question right away click on skip question");
             return;
         }
+        if(controller.bothButtonsSelected()){
+            showInformation("You have to select only one answer");
+            return;
+        }
         update();
         progress.setValue(progress.intValue() + 1);
         currentQuestionNumber++;
