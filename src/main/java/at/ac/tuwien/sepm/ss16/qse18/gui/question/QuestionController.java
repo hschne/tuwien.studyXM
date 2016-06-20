@@ -36,36 +36,26 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
  * @author Hans-Joerg Schroedl
  */
 
-@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
-public abstract class QuestionController
-        extends BaseController {
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON) public abstract class QuestionController
+    extends BaseController {
 
     private final QuestionService questionService;
     private final ResourceQuestionService resourceQuestionService;
     protected ObservableTopic topic;
     protected ObservableResource resource;
-    @FXML
-    protected TextField textFieldAnswerOne;
-    @FXML
-    protected TextField textFieldAnswerTwo;
-    @FXML
-    protected TextField textFieldAnswerThree;
-    @FXML
-    protected TextField textFieldAnswerFour;
-    @FXML
-    protected CheckBox checkBoxContinue;
-    @FXML
-    protected Label resourceLabel;
-    @FXML
-    protected ImageView imageViewFile;
-    @FXML
-    protected ChoiceBox choiceBoxQuestionTime;
+    @FXML protected TextField textFieldAnswerOne;
+    @FXML protected TextField textFieldAnswerTwo;
+    @FXML protected TextField textFieldAnswerThree;
+    @FXML protected TextField textFieldAnswerFour;
+    @FXML protected CheckBox checkBoxContinue;
+    @FXML protected Label resourceLabel;
+    @FXML protected ImageView imageViewFile;
+    @FXML protected ChoiceBox choiceBoxQuestionTime;
     List inputs;
 
     @Autowired QuestionNavigation questionNavigation;
 
-    @Autowired
-    public QuestionController(QuestionService questionService,
+    @Autowired public QuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
         this.questionService = questionService;
         this.resourceQuestionService = resourceQuestionService;
@@ -73,6 +63,10 @@ public abstract class QuestionController
 
     @FXML public void intialize() {
         questionNavigation.refreshMainPane();
+    }
+
+    @FXML public void cancel() {
+        questionNavigation.handleCreateQuestion(topic);
     }
 
     /**
@@ -176,8 +170,7 @@ public abstract class QuestionController
         }
     }
 
-    @FXML
-    public void handleAddResource() {
+    @FXML public void handleAddResource() {
         // saving input from user to be able to recover later
         inputs = getUserInput();
         mainFrameController.handleChooseResource(inputs, resourceLabel, getQuestionType());
@@ -252,19 +245,19 @@ public abstract class QuestionController
         QuestionType questionType = getQuestionType();
         if (!textFieldAnswerOne.getText().isEmpty()) {
             answers.add(
-                    new Answer(questionType, textFieldAnswerOne.getText(), checkBoxResults.get(0)));
+                new Answer(questionType, textFieldAnswerOne.getText(), checkBoxResults.get(0)));
         }
         if (!textFieldAnswerTwo.getText().isEmpty()) {
             answers.add(
-                    new Answer(questionType, textFieldAnswerTwo.getText(), checkBoxResults.get(1)));
+                new Answer(questionType, textFieldAnswerTwo.getText(), checkBoxResults.get(1)));
         }
         if (!textFieldAnswerThree.getText().isEmpty()) {
             answers.add(
-                    new Answer(questionType, textFieldAnswerThree.getText(), checkBoxResults.get(2)));
+                new Answer(questionType, textFieldAnswerThree.getText(), checkBoxResults.get(2)));
         }
         if (!textFieldAnswerFour.getText().isEmpty()) {
             answers.add(
-                    new Answer(questionType, textFieldAnswerFour.getText(), checkBoxResults.get(3)));
+                new Answer(questionType, textFieldAnswerFour.getText(), checkBoxResults.get(3)));
         }
         return answers;
     }
