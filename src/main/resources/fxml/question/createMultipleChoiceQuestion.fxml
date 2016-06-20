@@ -91,11 +91,6 @@
                               <Insets left="58.0" />
                            </GridPane.margin>
                         </Button>
-                        <Label fx:id="tagLabel" text="no tag selected" GridPane.halignment="CENTER" GridPane.valignment="BASELINE">
-                           <GridPane.margin>
-                              <Insets right="20.0" top="-7.0" />
-                           </GridPane.margin>
-                        </Label>
                      </children>
                   </GridPane>
                   <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." GridPane.valignment="CENTER">
@@ -219,7 +214,7 @@
                                     <Insets left="18.0" />
                                  </GridPane.margin>
                               </Label>
-                              <ToggleButton fx:id="toggleEasy" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #b3ffb3;" text="✓" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                              <ToggleButton fx:id="toggleEasy" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#toggleSelected" prefWidth="35.0" style="-fx-base: #b3ffb3;" text="✓" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                                  <tooltip>
                                     <Tooltip text="this question is easy to answer" />
                                  </tooltip>
@@ -233,7 +228,7 @@
                                     <ToggleGroup fx:id="tagToggleGroupMultiple" />
                                  </toggleGroup>
                               </ToggleButton>
-                              <ToggleButton fx:id="toggleImportant" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #ff9980;" text="!!!" toggleGroup="$tagToggleGroupMultiple" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                              <ToggleButton fx:id="toggleImportant" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#toggleSelected" prefWidth="35.0" style="-fx-base: #ff9980;" text="!!!" toggleGroup="$tagToggleGroupMultiple" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                                  <tooltip>
                                     <Tooltip text="this question will come to the upcoming exam for sure" />
                                  </tooltip>
@@ -244,7 +239,7 @@
                                     <Insets right="30.0" />
                                  </GridPane.margin>
                               </ToggleButton>
-                              <ToggleButton fx:id="toggleHard" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #ffb84d;" text="!" toggleGroup="$tagToggleGroupMultiple" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                              <ToggleButton fx:id="toggleHard" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#toggleSelected" prefWidth="35.0" style="-fx-base: #ffb84d;" text="!" toggleGroup="$tagToggleGroupMultiple" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                                  <tooltip>
                                     <Tooltip text="this question is hard to answer" />
                                  </tooltip>
@@ -255,7 +250,7 @@
                                     <Insets right="65.0" />
                                  </GridPane.margin>
                               </ToggleButton>
-                              <ToggleButton fx:id="toggleNormal" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #ffff99;" text="~" toggleGroup="$tagToggleGroupMultiple" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                              <ToggleButton fx:id="toggleNormal" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#toggleSelected" prefWidth="35.0" style="-fx-base: #ffff99;" text="~" toggleGroup="$tagToggleGroupMultiple" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
                                  <tooltip>
                                     <Tooltip text="this question is neither easy nor hard to answer" />
                                  </tooltip>

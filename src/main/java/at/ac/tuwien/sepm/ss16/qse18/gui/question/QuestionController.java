@@ -9,6 +9,8 @@ import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableTopic;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -49,7 +51,6 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     @FXML protected ToggleButton toggleNormal;
     @FXML protected ToggleButton toggleHard;
     @FXML protected ToggleButton toggleImportant;
-    @FXML protected Label tagLabel;
 
     List inputs;
 
@@ -61,20 +62,43 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         this.resourceQuestionService = resourceQuestionService;
     }
 
-    @FXML public void intialize() {
+    @FXML public void initialize() {
         questionNavigation.refreshMainPane();
+        toggleNormal.setSelected(true);
+        initializeToggleGroup();
     }
 
     @FXML public void cancel() {
         questionNavigation.handleCreateQuestion(topic);
     }
 
-    @FXML public void setTagLabelText() {
-        Tag selected = getSelectedTag();
-        if (selected != null) {
-            tagLabel.setText(selected.toString());
-        } else {
-            tagLabel.setText("no tag selected");
+    protected abstract void initializeToggleGroup();
+
+    protected void setColorOfToggleButton(ToggleButton toggleButton, String color) {
+        toggleButton.setStyle("-fx-base: " + color);
+    }
+
+    protected void setColorOfOtherButtonsToGrey(ToggleGroup toggleGroup) {
+        if (toggleGroup.getSelectedToggle().equals(this.toggleEasy)) {
+            setColorOfToggleButton(toggleEasy, "#b3ffb3");
+            setColorOfToggleButton(toggleNormal, "lightgray");
+            setColorOfToggleButton(toggleHard, "lightgray");
+            setColorOfToggleButton(toggleImportant, "lightgray");
+        } else if (toggleGroup.getSelectedToggle().equals(this.toggleNormal)) {
+            setColorOfToggleButton(toggleEasy, "lightgray");
+            setColorOfToggleButton(toggleNormal, "#ffff99");
+            setColorOfToggleButton(toggleHard, "lightgray");
+            setColorOfToggleButton(toggleImportant, "lightgray");
+        } else if (toggleGroup.getSelectedToggle().equals(this.toggleHard)) {
+            setColorOfToggleButton(toggleEasy, "lightgray");
+            setColorOfToggleButton(toggleNormal, "lightgray");
+            setColorOfToggleButton(toggleHard, "#ffb84d");
+            setColorOfToggleButton(toggleImportant, "lightgray");
+        } else if (toggleGroup.getSelectedToggle().equals(this.toggleImportant)) {
+            setColorOfToggleButton(toggleEasy, "lightgray");
+            setColorOfToggleButton(toggleNormal, "lightgray");
+            setColorOfToggleButton(toggleHard, "lightgray");
+            setColorOfToggleButton(toggleImportant, "#ff9980");
         }
     }
 

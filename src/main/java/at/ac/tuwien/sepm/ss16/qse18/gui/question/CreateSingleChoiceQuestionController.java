@@ -12,6 +12,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextArea;
 
+import javafx.scene.control.ToggleGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +32,7 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     @FXML private RadioButton radioButtonAnswerThree;
     @FXML private RadioButton radioButtonAnswerFour;
     @FXML private ChoiceBox<String> choiceBoxQuestionTime;
+    @FXML private ToggleGroup tagToggleGroupSingle;
 
     /**
      * Creates a controller for the single choice question creation.
@@ -41,7 +43,19 @@ public class CreateSingleChoiceQuestionController extends QuestionController {
     @Autowired public CreateSingleChoiceQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
+    }
 
+    @Override protected void initializeToggleGroup() {
+        tagToggleGroupSingle.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                oldValue.setSelected(true);
+            }
+        });
+        setColorOfOtherButtonsToGrey(tagToggleGroupSingle);
+    }
+
+    @FXML public void toggleSelected() {
+        setColorOfOtherButtonsToGrey(tagToggleGroupSingle);
     }
 
     @FXML public void handleCreateQuestion() {

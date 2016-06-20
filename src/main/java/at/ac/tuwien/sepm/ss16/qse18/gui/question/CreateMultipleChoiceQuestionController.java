@@ -12,6 +12,7 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 
+import javafx.scene.control.ToggleGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -29,10 +30,20 @@ import java.util.List;
     @FXML private CheckBox checkBoxAnswerThree;
     @FXML private CheckBox checkBoxAnswerFour;
     @FXML private ChoiceBox<String> choiceBoxQuestionTime;
+    @FXML private ToggleGroup tagToggleGroupMultiple;
 
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
+    }
+
+    @Override protected void initializeToggleGroup() {
+        tagToggleGroupMultiple.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                oldValue.setSelected(true);
+            }
+        });
+        setColorOfOtherButtonsToGrey(tagToggleGroupMultiple);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -45,6 +56,10 @@ import java.util.List;
             mainFrameController.handleSubjects();
         }
         showSuccess("Inserted new question into database.");
+    }
+
+    @FXML public void toggleSelected() {
+        setColorOfOtherButtonsToGrey(tagToggleGroupMultiple);
     }
 
     @Override protected void fillFieldsAndCheckboxes() {

@@ -9,10 +9,7 @@ import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
@@ -46,6 +43,7 @@ public class CreateImageQuestionController extends QuestionController {
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
     @FXML private ChoiceBox<String> choiceBoxQuestionTime;
+    @FXML private ToggleGroup tagToggleGroupNotecard;
 
     private File out;
 
@@ -53,6 +51,19 @@ public class CreateImageQuestionController extends QuestionController {
         ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
 
+    }
+
+    @Override protected void initializeToggleGroup() {
+        tagToggleGroupNotecard.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                oldValue.setSelected(true);
+            }
+        });
+        setColorOfOtherButtonsToGrey(tagToggleGroupNotecard);
+    }
+
+    @FXML public void toggleSelected() {
+        setColorOfOtherButtonsToGrey(tagToggleGroupNotecard);
     }
 
     /**

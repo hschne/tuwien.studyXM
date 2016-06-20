@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextArea;
 
+import javafx.scene.control.ToggleGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,10 +25,20 @@ import java.util.List;
 
     @FXML private TextArea textAreaQuestion;
     @FXML private ChoiceBox<String> choiceBoxQuestionTime;
+    @FXML private ToggleGroup tagToggleGroupOpen;
 
     @Autowired public CreateOpenQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
+    }
+
+    @Override protected void initializeToggleGroup() {
+        tagToggleGroupOpen.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                oldValue.setSelected(true);
+            }
+        });
+        setColorOfOtherButtonsToGrey(tagToggleGroupOpen);
     }
 
     /**
@@ -43,6 +54,10 @@ import java.util.List;
             mainFrameController.handleSubjects();
         }
         showSuccess("Inserted new question into database.");
+    }
+
+    @FXML public void toggleSelected() {
+        setColorOfOtherButtonsToGrey(tagToggleGroupOpen);
     }
 
     /**
