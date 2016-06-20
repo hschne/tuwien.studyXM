@@ -111,65 +111,65 @@ INSERT INTO entity_question VALUES
 (DEFAULT,'Was ist die Philosophie des V-Modell XT?',2,3,2), -- sw. etw. prozesse
 (DEFAULT,'Wie ist ein SCRUM Prozess aufgebaut?',2,1,3), -- sw. etw. prozesse
 (DEFAULT,'Was sind die Vorteile einer File Persistence?',1,2,3), -- persistenz
-(DEFAULT,'Für was steht die Abkürzung CRUD?',2,1, NULL), -- persistenz
-(DEFAULT,'Was ist die besondere Eigenschaft des Design Patterns SINGLETON?',2,2, NULL), -- design patterns
-(DEFAULT,'Welche Arten von Anforderungen kann es in der Software Entwicklungsphase geben? Geben Sie zu jeder Art eine kurze Erklärung! (Lösung: Auto, rot, hallo, Welt)',3,7, NULL), -- sw. etw. phasen
-(DEFAULT,'Wer definierte software design folgendermaßen: the process of defining the architecture, components, interfaces, and other characteristics of a system or component and the result of it?',2,2, NULL), -- sw. etw. phasen
-(DEFAULT,'Nennen Sie die wesentlichen 2 Komponenten von Entwurf und Design in der Software Entwicklungsphase! (Lösung: Flugzeug, Fahrrad, Geld, waschen)',3,3, NULL), -- sw. entw. phasen
+(DEFAULT,'Für was steht die Abkürzung CRUD?',2,1, 2), -- persistenz
+(DEFAULT,'Was ist die besondere Eigenschaft des Design Patterns SINGLETON?',2,2, 2), -- design patterns
+(DEFAULT,'Welche Arten von Anforderungen kann es in der Software Entwicklungsphase geben? Geben Sie zu jeder Art eine kurze Erklärung! (Lösung: Auto, rot, hallo, Welt)',3,7, 2), -- sw. etw. phasen
+(DEFAULT,'Wer definierte software design folgendermaßen: the process of defining the architecture, components, interfaces, and other characteristics of a system or component and the result of it?',2,2, 2), -- sw. etw. phasen
+(DEFAULT,'Nennen Sie die wesentlichen 2 Komponenten von Entwurf und Design in der Software Entwicklungsphase! (Lösung: Flugzeug, Fahrrad, Geld, waschen)',3,3, 2), -- sw. entw. phasen
 (DEFAULT,'Welche der unten angeführten Patterns gehören in die Kategorie BEHAVIORAL PATTERNS?',1,2,4), -- design patterns
-(DEFAULT,'Welche Schicht der 3-Schichten-Architektur hat direkten Zugriff auf die Datenbank?',2,1, NULL), -- persistenz
-(DEFAULT,'src/main/resources/images/decorator_pattern.png',4,3, NULL), -- design patterns
-(DEFAULT,'Für was steht die Abkürzung SCM im Sinne des Software Engineerings?',2,2, NULL), -- techn. u. werkz.
+(DEFAULT,'Welche Schicht der 3-Schichten-Architektur hat direkten Zugriff auf die Datenbank?',2,1, 2), -- persistenz
+(DEFAULT,'src/main/resources/images/decorator_pattern.png',4,3, 2), -- design patterns
+(DEFAULT,'Für was steht die Abkürzung SCM im Sinne des Software Engineerings?',2,2, 2), -- techn. u. werkz.
 (DEFAULT,'Was ist Maven?',2,1,1), -- techn. u. werkz.
 -- end SEPM
-(DEFAULT,'src/main/resources/images/mikroprozessor.png',4,1, NULL), -- speicherman. 1
-(DEFAULT,'Sie haben die Tasks WASCHEN, TROCKNEN, FALTEN, EINRÄUMEN in dieser Reihenfolge zu erledigen, wenn Sie Ihre Wäsche waschen wollen. Wie sieht die entsprechende Pipeline aus, wenn Sie pro Arbeitsschritt keine 2 gleichen Tasks gleichzeitig durchführen können? Skizzieren Sie die Pipeline in einem Koordinatensystem und beschriften Sie die Achsen entsprechend! (Lösung: ich, weiß, es, nicht)',3,10, NULL), -- pipe
+(DEFAULT,'src/main/resources/images/mikroprozessor.png',4,1, 2), -- speicherman. 1
+(DEFAULT,'Sie haben die Tasks WASCHEN, TROCKNEN, FALTEN, EINRÄUMEN in dieser Reihenfolge zu erledigen, wenn Sie Ihre Wäsche waschen wollen. Wie sieht die entsprechende Pipeline aus, wenn Sie pro Arbeitsschritt keine 2 gleichen Tasks gleichzeitig durchführen können? Skizzieren Sie die Pipeline in einem Koordinatensystem und beschriften Sie die Achsen entsprechend! (Lösung: ich, weiß, es, nicht)',3,10, 2), -- pipe
 (DEFAULT,'Welche Typen von Data-Hazards gibt es?',1,1,2), -- pipe
 (DEFAULT,'Welche Aufgabe erfüllt die Arbitration-Einheit bei einem Bus?',2,2,1), -- speicherman.1
-(DEFAULT,'Wie ist die richtige Reihenfolge des OSI Modells, wenn man mit der physikalischen Verbindung anfängt?',2,3, NULL), -- netz
+(DEFAULT,'Wie ist die richtige Reihenfolge des OSI Modells, wenn man mit der physikalischen Verbindung anfängt?',2,3, 2), -- netz
 (DEFAULT,'Die Begriffe FTP, Telnet, SMTP und NFS gehören in welche Schicht des OSI Modells?',2,1,4), -- netz
 (DEFAULT,'Wer hat den Algorithmus des Shortest Path Routing erfunden?',2,1,3), -- netz
-(DEFAULT,'Welche von den unten angeführten Aktivitäten geschieht im Transport Layer des OSI Modells?',2,3, NULL), -- netz
+(DEFAULT,'Welche von den unten angeführten Aktivitäten geschieht im Transport Layer des OSI Modells?',2,3, 2), -- netz
 -- end TGI
-(DEFAULT,'Welche der folgenden Aussagen sind korrekt?',1,4, NULL), -- klassen
+(DEFAULT,'Welche der folgenden Aussagen sind korrekt?',1,4, 2), -- klassen
 (DEFAULT,'src/main/resources/images/klassendiagramm_1.png',4,4,1), -- klassen
 (DEFAULT,'src/main/resource/images/mietvertrag_ternaer.png',4,3,3), -- klassen
 (DEFAULT,'Assoziationen ...',1,3,3), -- klassen
-(DEFAULT,'Welche Sichtbarkeit können Attribute und Methoden in Klassen NICHT haben?',2,1, NULL), -- klassen
-(DEFAULT,'src/main/resources/images/mietvertrag_binaer.png',4,2, NULL), -- klassen
-(DEFAULT,'src/main/resources/images/starke_aggregation.png',4,4, NULL), -- klassen
+(DEFAULT,'Welche Sichtbarkeit können Attribute und Methoden in Klassen NICHT haben?',2,1, 2), -- klassen
+(DEFAULT,'src/main/resources/images/mietvertrag_binaer.png',4,2, 2), -- klassen
+(DEFAULT,'src/main/resources/images/starke_aggregation.png',4,4, 2), -- klassen
 (DEFAULT,'Ein Klassendiagramm beschreibt ...',2,3,3), -- klassen
-(DEFAULT,'Aufzählungstypen ...',1,3, NULL), -- klassen
-(DEFAULT,'Nennen Sie alle Sichtbarkeiten, die ein Attribut oder eine Methode in einem Klassendiagramm haben kann! (Lösung: public, private, protected)',3,1, NULL), -- klassen
+(DEFAULT,'Aufzählungstypen ...',1,3, 2), -- klassen
+(DEFAULT,'Nennen Sie alle Sichtbarkeiten, die ein Attribut oder eine Methode in einem Klassendiagramm haben kann! (Lösung: public, private, protected)',3,1, 2), -- klassen
 (DEFAULT,'src/main/resources/images/sequenzdiagramm_traces.png',4,5,1), -- seq
 (DEFAULT,'src/main/resources/images/sequenzdiagrmm_traces_1.png',4,5,1), -- seq
 (DEFAULT,'Aktive Objekte in einem Sequenzdiagramm ...',1,4,1), -- seq
-(DEFAULT,'Welche speziellen Arten der Nachrichtenübermittlung gibt es im Sequenzdiagramm?',1,2, NULL), -- seq
-(DEFAULT,'Ein Sequenzdiagramm besteht aus zwei Darstellungsdimensionen. Diese sind ...',2,1, NULL), -- seq
-(DEFAULT,'Welche Arten der Ausführung einer Aktivität gibt es im Sequenzdiagramm?',1,2, NULL), -- seq
-(DEFAULT,'In Sequenzdiagrammen ...',2,2, NULL), -- seq
+(DEFAULT,'Welche speziellen Arten der Nachrichtenübermittlung gibt es im Sequenzdiagramm?',1,2, 2), -- seq
+(DEFAULT,'Ein Sequenzdiagramm besteht aus zwei Darstellungsdimensionen. Diese sind ...',2,1, 2), -- seq
+(DEFAULT,'Welche Arten der Ausführung einer Aktivität gibt es im Sequenzdiagramm?',1,2, 2), -- seq
+(DEFAULT,'In Sequenzdiagrammen ...',2,2, 2), -- seq
 (DEFAULT,'Bei der ODER-Verfeinerung von Subzuständen, ...',2,2,4), -- zustand
 (DEFAULT,'src/main/resources/images/zustandsdiagramm_1.png',4,2,2), -- zustand
-(DEFAULT,'In einem UML-Zustandsdiagramm können folgende Elemente modelliert werden:',1,1, NULL), --zustand
-(DEFAULT,'Es soll folgender Sachverhalt modelliert werden: Ein Lieferservice kann die zwei Zustände Warten und Auslieferung annehmen. Zunächst befindet es sich im Zustand Warten. Sobald ein Kunde eine Ware bestellt hat, erfolgt eine Transition in den Zustand Auslieferung. Im Zuge dieser Transition wird die Bestellung bearbeitet. Der Lieferservice befindet sich so lange im Zustand Auslieferung, bis das Produkt geliefert wurde, und geht anschließend wieder in den Zustand Warten, bis erneut eine Bestellung eintrifft. Wie muss die Transition vom Zustand Warten in den Zustand Auslieferung beschriftet sein?',2,6, NULL), -- zustand
+(DEFAULT,'In einem UML-Zustandsdiagramm können folgende Elemente modelliert werden:',1,1, 2), --zustand
+(DEFAULT,'Es soll folgender Sachverhalt modelliert werden: Ein Lieferservice kann die zwei Zustände Warten und Auslieferung annehmen. Zunächst befindet es sich im Zustand Warten. Sobald ein Kunde eine Ware bestellt hat, erfolgt eine Transition in den Zustand Auslieferung. Im Zuge dieser Transition wird die Bestellung bearbeitet. Der Lieferservice befindet sich so lange im Zustand Auslieferung, bis das Produkt geliefert wurde, und geht anschließend wieder in den Zustand Warten, bis erneut eine Bestellung eintrifft. Wie muss die Transition vom Zustand Warten in den Zustand Auslieferung beschriftet sein?',2,6, 2), -- zustand
 (DEFAULT,'src/main/resources/images/aktivitaetsdiagramm_1.png',4,4,1), -- aktiv
 (DEFAULT,'src/main/resources/images/aktivitaetsdiagramm_2.png',4,4,1), -- aktiv
 (DEFAULT,'Welche der folgenden Aussagen über das UML2-Aktivitätsdiagramm sind korrekt?',1, 3,3), -- aktiv
-(DEFAULT,'Ein Entscheidungsknoten in einem UML2-Aktivitätsdiagramm ...',1,2, NULL), -- aktiv
+(DEFAULT,'Ein Entscheidungsknoten in einem UML2-Aktivitätsdiagramm ...',1,2, 2), -- aktiv
 (DEFAULT,'Welche der folgenden Aussagen treffen auf das Konzept der Partitionen in einem UML2-Aktivitätsdiagramm zu?',1,4,3), -- aktiv
-(DEFAULT,'Welches der unten angeführten Begriffe ist KEINE Art von Knoten eines UML2-Aktivitätsdiagramms?',2,1, NULL), -- aktiv
-(DEFAULT,'Ein Synchronisierungsknoten in einem UML2-Aktivitätsdiagramm ...',1,2, NULL), -- aktiv
-(DEFAULT,'Welches der folgenden ist KEIN Kontrollknoten in einem UML2-Aktivitätsdiagramm?',2, 2, NULL), -- aktiv
+(DEFAULT,'Welches der unten angeführten Begriffe ist KEINE Art von Knoten eines UML2-Aktivitätsdiagramms?',2,1, 2), -- aktiv
+(DEFAULT,'Ein Synchronisierungsknoten in einem UML2-Aktivitätsdiagramm ...',1,2, 2), -- aktiv
+(DEFAULT,'Welches der folgenden ist KEIN Kontrollknoten in einem UML2-Aktivitätsdiagramm?',2, 2, 2), -- aktiv
 (DEFAULT,'Welche der folgenden Aussagen über Erweiterungsstellen (extension points) sind korrekt?',1,3,1), -- anwendung
-(DEFAULT,'src/main/resources/images/use_case_generalisierung.png',4,3, NULL), -- anwendung
-(DEFAULT,'Welche der folgenden Anwendungsfälle sind korrekte Anwendungsfälle beim Entwurf eines Anwendungsfalldiagramms für einen Online-Buchhandel?',1,1, NULL), -- anwendung
+(DEFAULT,'src/main/resources/images/use_case_generalisierung.png',4,3, 2), -- anwendung
+(DEFAULT,'Welche der folgenden Anwendungsfälle sind korrekte Anwendungsfälle beim Entwurf eines Anwendungsfalldiagramms für einen Online-Buchhandel?',1,1, 2), -- anwendung
 (DEFAULT,'Welche der folgenden Aussagen charakterisieren Anwendungsfälle?',1,2,1), -- anwendung
-(DEFAULT,'Akteure in einem Anwendungsfalldiagramm ...',1,4, NULL), -- anwendung
+(DEFAULT,'Akteure in einem Anwendungsfalldiagramm ...',1,4, 2), -- anwendung
 -- end OOM
 (DEFAULT,'src/main/resources/images/mosaikplot.png',4,1,3), -- desk. exp. stat.
 (DEFAULT,'src/main/resources/images/tortendiagramm.png',4,1,4), -- desk. exp. stat.
 (DEFAULT,'Bestimmen und zeichnen Sie für die folgenden Daten 40,52,55,60,70,75,85,85,90,90,92,94,94,95,98,100,115,125,125 (a) den Median und die Hinges, (b) auf Basis der Hinges die Fences, (c) den Boxplot. Gibt es Ausreißer? (Lösung: 42, lol, yolo, 12)',3,10,3), -- desk. exp. stat.
-(DEFAULT,'Die Dichte einer sG X lautet wie folgt: f(x) = 2(1-x) für 0 < x < 1 sonst 0. (a) Bestimmen Sie den Erwartungswert von X, (b) Bestimmen Sie die Varianz von X, (c) Bestimmen Sie die Verteilungsfunktion von X (plus Skizze), (d) Wie kann man auf Basis von U~u(0,1) Beobachtungen von X generieren? (Lösung: sonne, mond, sterne, himmel)',3,15, NULL), -- stoch. gr.
+(DEFAULT,'Die Dichte einer sG X lautet wie folgt: f(x) = 2(1-x) für 0 < x < 1 sonst 0. (a) Bestimmen Sie den Erwartungswert von X, (b) Bestimmen Sie die Varianz von X, (c) Bestimmen Sie die Verteilungsfunktion von X (plus Skizze), (d) Wie kann man auf Basis von U~u(0,1) Beobachtungen von X generieren? (Lösung: sonne, mond, sterne, himmel)',3,15, 2), -- stoch. gr.
 (DEFAULT,'Die Lebensdauer eines Gerätes sei exponentialverteilt mit Mittelwert 10.000 Stunden. Wenn das Gerät 8 Stunden pro Tag in Betrieb ist, mit welcher Wahrscheinlichkeit gibt es innerhalb von 5 Jahren keinen Ausfall? (1 Jahr = 365 Tage) (Lösung: bla, blub)',3,7,4), -- wahrsch.
 -- end Statistik
 (DEFAULT,'Man finde ein Bildungsgesetz für die unendlichen Folgen. Wie groß ist dann jeweils das zwölfte Folgenglied? 0,3;  0,09;  0,027; ... (Lösung: ich, bin, so, cool)',3,4,2), -- folg. reih. funk.
