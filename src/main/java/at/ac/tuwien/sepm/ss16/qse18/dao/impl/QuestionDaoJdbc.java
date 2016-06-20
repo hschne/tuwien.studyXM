@@ -4,10 +4,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -37,9 +34,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         "SELECT * FROM ENTITY_QUESTION WHERE QUESTIONID=?";
     private static final String GET_ALL_QUESTIONS = "SELECT * FROM ENTITY_QUESTION";
     private static final String UPDATE_QUESTION =
-        "UPDATE ENTITY_QUESTION SET TYPE=?, QUESTION=?, " + "QUESTION_TIME WHERE QUESTIONID=?";
-    private static final String CREATE_QUESTION = "INSERT INTO ENTITY_QUESTION " +
-        "(TYPE, QUESTION, QUESTION_TIME) " + "VALUES (?, ?, ?)";
+        "UPDATE ENTITY_QUESTION SET TYPE=?, QUESTION=?, QUESTION_TIME=?, TAG=? WHERE QUESTIONID=?";
+    private static final String CREATE_QUESTION =
+        "INSERT INTO ENTITY_QUESTION (TYPE, QUESTION, QUESTION_TIME, TAG) VALUES (?, ?, ?, ?)";
     private static final String DELETE_QUESTION = "DELETE FROM ENTITY_QUESTION WHERE QUESTIONID=?";
     private static final String GET_ANSWERS_TO_QUESTION = "SELECT a.* FROM ENTITY_ANSWER a "
         + "JOIN ENTITY_QUESTION q ON a.QUESTION =  q.QUESTIONID WHERE q.QUESTIONID = ?";
@@ -72,7 +69,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             ResultSet result = ps.executeQuery();
             if (result.next()) {
                 Question q = new Question(result.getInt(1), result.getString(2),
-                    QuestionType.valueOf(result.getInt(3)), result.getLong(4));
+                    QuestionType.valueOf(result.getInt(3)), result.getLong(4),
+                    Tag.valueOf(result.getInt(5)));
                 logger.debug("Found entry of question: " + q.toString());
                 return q;
             } else {
@@ -97,7 +95,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
             while (rs.next()) {
                 Question q = new Question(rs.getInt("QUESTIONID"), rs.getString("QUESTION"),
-                    QuestionType.valueOf(rs.getInt("TYPE")), rs.getLong("QUESTION_TIME"));
+                    QuestionType.valueOf(rs.getInt("TYPE")), rs.getLong("QUESTION_TIME"),
+                    Tag.valueOf(rs.getInt("TAG")));
                 logger.debug("Found question: " + q.toString());
                 questions.add(q);
             }
@@ -128,6 +127,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
             ps.setLong(3, question.getQuestionTime());
+            ps.setInt(4, question.getTag().getValue());
             ps.executeUpdate();
             generatedKey = ps.getGeneratedKeys();
             if (generatedKey.next()) {
@@ -188,6 +188,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             ps.setInt(1, question.getType().getValue());
             ps.setString(2, question.getQuestion());
             ps.setLong(3, question.getQuestionTime());
+            ps.setInt(4, question.getTag().getValue());
+            ps.setInt(5, question.getQuestionId());
             ps.executeUpdate();
             return question;
         } catch (Exception e) {

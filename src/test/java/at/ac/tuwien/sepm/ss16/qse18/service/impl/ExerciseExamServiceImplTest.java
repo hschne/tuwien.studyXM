@@ -57,10 +57,10 @@ import static org.mockito.Mockito.*;
         when(mockStatement.executeQuery(anyString())).thenReturn(mockResultSet);
         when(mockConnection.createStatement()).thenReturn(mockStatement);
 
-        this.exerciseExamService =
-            new ExerciseExamServiceImpl(this.mockExerciseExamDaoJdbc, this.mockSubjectQuestionDaoJdbc,
-                this.mockExerciseExamQuestionDaoJdbc, this.mockQuestionDaoJdbc, this.mockSubjectTopicDaoJdbc,
-                this.mockQuestionTopicDaoJdbc, this.mockSubjectDaoJdbc);
+        this.exerciseExamService = new ExerciseExamServiceImpl(this.mockExerciseExamDaoJdbc,
+            this.mockSubjectQuestionDaoJdbc, this.mockExerciseExamQuestionDaoJdbc,
+            this.mockQuestionDaoJdbc, this.mockSubjectTopicDaoJdbc, this.mockQuestionTopicDaoJdbc,
+            this.mockSubjectDaoJdbc);
 
         ArrayList<Question> al = new ArrayList<Question>();
         Question question = new Question();
@@ -118,7 +118,8 @@ import static org.mockito.Mockito.*;
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2);
 
         this.exerciseExamService.createExam(this.exerciseExam, topicList, 1000);
-        verify(this.mockExerciseExamDaoJdbc).create(this.exerciseExam, this.exerciseExam.getExamQuestions());
+        verify(this.mockExerciseExamDaoJdbc)
+            .create(this.exerciseExam, this.exerciseExam.getExamQuestions());
     }
 
     @Test(expected = ServiceException.class)
@@ -265,7 +266,8 @@ import static org.mockito.Mockito.*;
         assertTrue("Should only contain one Element", test.size() == 1);
     }
 
-    @Test public void test_getRightQuestionsOnlyTheFirst2OutOf4QuestionsShouldBeInTheList()throws Exception{
+    @Test public void test_getRightQuestionsOnlyTheFirst2OutOf4QuestionsShouldBeInTheList()
+        throws Exception {
         List<Integer> questionIDList = new ArrayList<>();
         Question q1 = createDummyQuestion(1, "question1");
         Question q2 = createDummyQuestion(2, "question2");
@@ -305,12 +307,14 @@ import static org.mockito.Mockito.*;
         this.mockQuestionDaoJdbc.getQuestion(questionIDList.get(3));
 
         assertTrue("List should only contain 2 Elements", test.size() == 2);
-        assertTrue("First Element should be in the List", test.get(0).equals(q1) || test.get(0).equals(q2));
-        assertTrue("Second Question should be in the List", test.get(1).equals(q2)|| test.get(1).equals(q1));
+        assertTrue("First Element should be in the List",
+            test.get(0).equals(q1) || test.get(0).equals(q2));
+        assertTrue("Second Question should be in the List",
+            test.get(1).equals(q2) || test.get(1).equals(q1));
 
     }
 
-    @Test public void test_getRightQuestionsWith3Topics_should_persist() throws Exception{
+    @Test public void test_getRightQuestionsWith3Topics_should_persist() throws Exception {
         List<Topic> topicList = new ArrayList<>();
         topicList.add(new Topic(1, "topic1"));
         topicList.add(new Topic(2, "topic2"));
@@ -347,9 +351,12 @@ import static org.mockito.Mockito.*;
 
         List<Question> test;
 
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1)).thenReturn(questionIDList1);
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 2)).thenReturn(questionIDList2);
-        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 3)).thenReturn(questionIDList3);
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 1))
+            .thenReturn(questionIDList1);
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 2))
+            .thenReturn(questionIDList2);
+        when(this.mockSubjectQuestionDaoJdbc.getAllQuestionsOfSubject(this.exerciseExam, 3))
+            .thenReturn(questionIDList3);
         when(this.mockQuestionDaoJdbc.getQuestion(anyInt())).thenReturn(q1).thenReturn(q2)
             .thenReturn(q3).thenReturn(q4).thenReturn(q5).thenReturn(q6);
 
@@ -373,7 +380,7 @@ import static org.mockito.Mockito.*;
     }
 
     @Test(expected = ServiceException.class)
-    public void test_getRightQuestionsWithTooSmallExamTime_should_fail() throws Exception{
+    public void test_getRightQuestionsWithTooSmallExamTime_should_fail() throws Exception {
         List<Integer> questionIDList = new ArrayList<>();
         Question q1 = createDummyQuestion(1, "question1");
         questionIDList.add(1);
@@ -413,7 +420,8 @@ import static org.mockito.Mockito.*;
 
     @Test(expected = ServiceException.class)
     public void test_getAllQuestionsWithoutDatabaseConnection_should_fail() throws Exception {
-        when(mockExerciseExamQuestionDaoJdbc.getAllQuestionsOfExam(anyInt())).thenThrow(DaoException.class);
+        when(mockExerciseExamQuestionDaoJdbc.getAllQuestionsOfExam(anyInt()))
+            .thenThrow(DaoException.class);
 
         exerciseExamService.getAllQuestionsOfExam(exerciseExam.getExamid());
 
@@ -424,7 +432,7 @@ import static org.mockito.Mockito.*;
 
     //Testing gradeExam(Exam)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_gradeExamCallsRightMethodInDao_should_persist()throws Exception{
+    @Test public void test_gradeExamCallsRightMethodInDao_should_persist() throws Exception {
         List<Integer> questionID = new ArrayList<>();
         questionID.add(1);
         questionID.add(2);
@@ -433,15 +441,19 @@ import static org.mockito.Mockito.*;
         questionBooleans.put(1, true);
         questionBooleans.put(2, false);
 
-        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionsOfExam(this.exerciseExam.getExamid())).thenReturn(questionID);
-        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(questionID)).thenReturn(questionBooleans);
+        when(this.mockExerciseExamQuestionDaoJdbc
+            .getAllQuestionsOfExam(this.exerciseExam.getExamid())).thenReturn(questionID);
+        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(questionID))
+            .thenReturn(questionBooleans);
 
         this.exerciseExamService.gradeExam(this.exerciseExam);
-        verify(mockExerciseExamQuestionDaoJdbc).getAllQuestionsOfExam(this.exerciseExam.getExamid());
+        verify(mockExerciseExamQuestionDaoJdbc)
+            .getAllQuestionsOfExam(this.exerciseExam.getExamid());
         verify(mockExerciseExamQuestionDaoJdbc).getAllQuestionBooleans(questionID);
     }
 
-    @Test public void test_gradeExamWith3CorrectAnd2IncorrectQuestions_should_persist() throws Exception{
+    @Test public void test_gradeExamWith3CorrectAnd2IncorrectQuestions_should_persist()
+        throws Exception {
         String[] test;
         List<Integer> questionID = new ArrayList<>();
         questionID.add(1);
@@ -457,8 +469,10 @@ import static org.mockito.Mockito.*;
         questionBooleans.put(4, false);
         questionBooleans.put(5, false);
 
-        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionsOfExam(this.exerciseExam.getExamid())).thenReturn(questionID);
-        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(questionID)).thenReturn(questionBooleans);
+        when(this.mockExerciseExamQuestionDaoJdbc
+            .getAllQuestionsOfExam(this.exerciseExam.getExamid())).thenReturn(questionID);
+        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(questionID))
+            .thenReturn(questionBooleans);
 
         test = this.exerciseExamService.gradeExam(this.exerciseExam);
 
@@ -467,13 +481,13 @@ import static org.mockito.Mockito.*;
         assertTrue("Grade should be D", test[2].equals("D"));
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_gradeExamWithNull_should_fail() throws Exception{
+    @Test(expected = ServiceException.class) public void test_gradeExamWithNull_should_fail()
+        throws Exception {
         this.exerciseExamService.gradeExam(null);
     }
 
     @Test(expected = ServiceException.class)
-    public void test_gradeExamWithInvalidExamID_should_fail()throws Exception{
+    public void test_gradeExamWithInvalidExamID_should_fail() throws Exception {
         this.exerciseExam.setExamid(0);
         this.exerciseExamService.gradeExam(this.exerciseExam);
     }
@@ -482,16 +496,16 @@ import static org.mockito.Mockito.*;
 
     //Testing topicGrade(Exam)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_gradeExamCallsRightMethodsInDao_should_persist()throws Exception{
+    @Test public void test_gradeExamCallsRightMethodsInDao_should_persist() throws Exception {
         List<Topic> topicList = new ArrayList<>();
         topicList.add(new Topic(1, "topic1"));
         topicList.add(new Topic(2, "topic2"));
 
         List<Question> questionList1 = new ArrayList<>();
-        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6));
+        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6, Tag.IMPORTANT));
 
         List<Question> questionList2 = new ArrayList<>();
-        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5));
+        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5, Tag.NORMAL));
 
         Subject subject = createDummySubject("subject1", 1);
 
@@ -503,11 +517,15 @@ import static org.mockito.Mockito.*;
         questionBooleans.put(1, false);
         questionBooleans.put(2, true);
 
-        when(this.mockSubjectDaoJdbc.getSubject(this.exerciseExam.getSubjectID())).thenReturn(subject);
+        when(this.mockSubjectDaoJdbc.getSubject(this.exerciseExam.getSubjectID()))
+            .thenReturn(subject);
         when(this.mockSubjectTopicDaoJdbc.getTopicToSubject(subject)).thenReturn(topicList);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0))).thenReturn(questionList1);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1))).thenReturn(questionList2);
-        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(anyList())).thenReturn(questionBooleans).
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0)))
+            .thenReturn(questionList1);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1)))
+            .thenReturn(questionList2);
+        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(anyList()))
+            .thenReturn(questionBooleans).
             thenReturn(questionBooleans2);
 
         this.exerciseExamService.topicGrade(this.exerciseExam);
@@ -518,7 +536,7 @@ import static org.mockito.Mockito.*;
         verify(mockExerciseExamQuestionDaoJdbc, times(2)).getAllQuestionBooleans(anyList());
     }
 
-    @Test public void test_gradeExamWith3Topics_should_persist() throws Exception{
+    @Test public void test_gradeExamWith3Topics_should_persist() throws Exception {
         Map<Topic, String[]> test = new HashMap<>();
         List<Topic> topicList = new ArrayList<>();
         topicList.add(new Topic(1, "topic1"));
@@ -526,13 +544,13 @@ import static org.mockito.Mockito.*;
         topicList.add(new Topic(3, "topic3"));
 
         List<Question> questionList1 = new ArrayList<>();
-        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6));
+        questionList1.add(new Question(1, "question1", QuestionType.valueOf(1), 6, Tag.HARD));
 
         List<Question> questionList2 = new ArrayList<>();
-        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5));
+        questionList2.add(new Question(2, "question2", QuestionType.valueOf(2), 5, Tag.EASY));
 
         List<Question> questionList3 = new ArrayList<>();
-        questionList3.add(new Question(3, "question3", QuestionType.valueOf(1), 4));
+        questionList3.add(new Question(3, "question3", QuestionType.valueOf(1), 4, Tag.IMPORTANT));
 
         Subject subject = createDummySubject("subject1", 1);
 
@@ -551,12 +569,17 @@ import static org.mockito.Mockito.*;
         questionBooleans.put(6, true);
 
 
-        when(this.mockSubjectDaoJdbc.getSubject(this.exerciseExam.getSubjectID())).thenReturn(subject);
+        when(this.mockSubjectDaoJdbc.getSubject(this.exerciseExam.getSubjectID()))
+            .thenReturn(subject);
         when(this.mockSubjectTopicDaoJdbc.getTopicToSubject(subject)).thenReturn(topicList);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0))).thenReturn(questionList1);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1))).thenReturn(questionList2);
-        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(2))).thenReturn(questionList3);
-        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(anyList())).thenReturn(questionBooleans).
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(0)))
+            .thenReturn(questionList1);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(1)))
+            .thenReturn(questionList2);
+        when(this.mockQuestionTopicDaoJdbc.getQuestionToTopic(topicList.get(2)))
+            .thenReturn(questionList3);
+        when(this.mockExerciseExamQuestionDaoJdbc.getAllQuestionBooleans(anyList()))
+            .thenReturn(questionBooleans).
             thenReturn(questionBooleans2).thenReturn(questionBooleans3);
 
         test = this.exerciseExamService.topicGrade(this.exerciseExam);
@@ -567,23 +590,27 @@ import static org.mockito.Mockito.*;
 
     }
 
-    @Test(expected = ServiceException.class) public void test_topicGradeWithNull_should_fail()throws Exception{
+    @Test(expected = ServiceException.class) public void test_topicGradeWithNull_should_fail()
+        throws Exception {
         this.exerciseExamService.topicGrade(null);
     }
     //----------------------------------------------------------------------------------------------
 
     //Testing getAnsweredQuestionsOfExam(int)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_getAnsweredQuestionsOfExamCallsRightMethodsInDao_should_persist() throws Exception{
+    @Test public void test_getAnsweredQuestionsOfExamCallsRightMethodsInDao_should_persist()
+        throws Exception {
         List<Integer> answeredQuestions = new ArrayList<>();
         answeredQuestions.add(1);
 
-        when(this.mockExerciseExamQuestionDaoJdbc.getAnsweredQuestionsPerExam(1)).thenReturn(answeredQuestions);
+        when(this.mockExerciseExamQuestionDaoJdbc.getAnsweredQuestionsPerExam(1))
+            .thenReturn(answeredQuestions);
         this.exerciseExamService.getAnsweredQuestionsOfExam(1);
         verify(this.mockExerciseExamQuestionDaoJdbc).getAnsweredQuestionsPerExam(1);
     }
 
-    @Test public void test_getAnsweredQuestionsOfExamWith3AnsweredQuestions_should_persist() throws Exception{
+    @Test public void test_getAnsweredQuestionsOfExamWith3AnsweredQuestions_should_persist()
+        throws Exception {
         List<Integer> answeredQuestions = new ArrayList<>();
         answeredQuestions.add(1);
         answeredQuestions.add(2);
@@ -591,7 +618,8 @@ import static org.mockito.Mockito.*;
 
         List<Integer> test;
 
-        when(this.mockExerciseExamQuestionDaoJdbc.getAnsweredQuestionsPerExam(1)).thenReturn(answeredQuestions);
+        when(this.mockExerciseExamQuestionDaoJdbc.getAnsweredQuestionsPerExam(1))
+            .thenReturn(answeredQuestions);
         test = this.exerciseExamService.getAnsweredQuestionsOfExam(1);
 
         assertTrue("List should contain 3 question ID's", test.size() == 3);
@@ -601,42 +629,42 @@ import static org.mockito.Mockito.*;
     }
 
     @Test(expected = ServiceException.class)
-    public void test_getAnsweredQuestionsOfExamWithInvalidExamID_should_fail() throws Exception{
+    public void test_getAnsweredQuestionsOfExamWithInvalidExamID_should_fail() throws Exception {
         this.exerciseExamService.getAnsweredQuestionsOfExam(0);
     }
 
     //Testing update(int, int, boolean, boolean)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_updateCallsRightMethodInDAO_should_persist() throws Exception{
+    @Test public void test_updateCallsRightMethodInDAO_should_persist() throws Exception {
         this.exerciseExamService.update(1, 1, false, false);
         verify(this.mockExerciseExamQuestionDaoJdbc).update(1, 1, false, false);
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_updateWithInvalidExamID_should_fail()throws Exception{
+    @Test(expected = ServiceException.class) public void test_updateWithInvalidExamID_should_fail()
+        throws Exception {
         this.exerciseExamService.update(-1, 1, false, true);
     }
 
     @Test(expected = ServiceException.class)
-    public void test_updateWithInvalidQuestionID_should_fail()throws Exception{
+    public void test_updateWithInvalidQuestionID_should_fail() throws Exception {
         this.exerciseExamService.update(1, 0, true, true);
     }
     //----------------------------------------------------------------------------------------------
 
     //Testing update(int, long)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_update2CallsRightMethodInDao_should_persist() throws Exception{
+    @Test public void test_update2CallsRightMethodInDao_should_persist() throws Exception {
         this.exerciseExamService.update(1, 200);
         verify(this.mockExerciseExamDaoJdbc).update(1, 200);
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_update2WithInvalidExamID_should_fail()throws Exception{
+    @Test(expected = ServiceException.class) public void test_update2WithInvalidExamID_should_fail()
+        throws Exception {
         this.exerciseExamService.update(-1, 200);
     }
 
     @Test(expected = ServiceException.class)
-    public void test_updateWithInvalidExamTime_should_fail()throws Exception{
+    public void test_updateWithInvalidExamTime_should_fail() throws Exception {
         this.exerciseExamService.update(1, 0);
     }
     //----------------------------------------------------------------------------------------------
@@ -644,16 +672,19 @@ import static org.mockito.Mockito.*;
 
     //Testing getNotAnsweredQuestionsOfExam(int)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_getNotAnsweredQuestionsOfExamCallsRightMethodsInDao_should_persist() throws Exception{
+    @Test public void test_getNotAnsweredQuestionsOfExamCallsRightMethodsInDao_should_persist()
+        throws Exception {
         List<Integer> notAnsweredQuestions = new ArrayList<>();
         notAnsweredQuestions.add(1);
 
-        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1)).thenReturn(notAnsweredQuestions);
+        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1))
+            .thenReturn(notAnsweredQuestions);
         this.exerciseExamService.getNotAnsweredQuestionsOfExam(1);
         verify(this.mockExerciseExamQuestionDaoJdbc).getNotAnsweredQuestionsPerExam(1);
     }
 
-    @Test public void test_getNotAnsweredQuestionsOfExamWith3AnsweredQuestions_should_persist() throws Exception{
+    @Test public void test_getNotAnsweredQuestionsOfExamWith3AnsweredQuestions_should_persist()
+        throws Exception {
         List<Integer> notAnsweredQuestions = new ArrayList<>();
         notAnsweredQuestions.add(1);
         notAnsweredQuestions.add(2);
@@ -661,7 +692,8 @@ import static org.mockito.Mockito.*;
 
         List<Integer> test;
 
-        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1)).thenReturn(notAnsweredQuestions);
+        when(this.mockExerciseExamQuestionDaoJdbc.getNotAnsweredQuestionsPerExam(1))
+            .thenReturn(notAnsweredQuestions);
         test = this.exerciseExamService.getNotAnsweredQuestionsOfExam(1);
 
         assertTrue("List should contain 3 question ID's", test.size() == 3);
@@ -671,28 +703,32 @@ import static org.mockito.Mockito.*;
     }
 
     @Test(expected = ServiceException.class)
-    public void test_getNotAnsweredQuestionsOfExamWithInvalidExamID_should_fail() throws Exception{
+    public void test_getNotAnsweredQuestionsOfExamWithInvalidExamID_should_fail() throws Exception {
         this.exerciseExamService.getNotAnsweredQuestionsOfExam(0);
     }
     //----------------------------------------------------------------------------------------------
 
     //Testing getQuestionBooleansOfExam(int, List<Question>)
     //----------------------------------------------------------------------------------------------
-    @Test public void test_getQuestionBooleansOfExamCallsRightMethodInDAO_should_persist() throws Exception{
+    @Test public void test_getQuestionBooleansOfExamCallsRightMethodInDAO_should_persist()
+        throws Exception {
         List<Integer> questionList = new ArrayList<>();
         Map<Integer, Boolean> questionBooleans = new HashMap<>();
         questionBooleans.put(1, false);
         questionList.add(1);
 
-        when(this.mockExerciseExamQuestionDaoJdbc.getQuestionBooleansOfExam(this.exerciseExam.getExamid(),
-            questionList)).thenReturn(questionBooleans);
+        when(this.mockExerciseExamQuestionDaoJdbc
+            .getQuestionBooleansOfExam(this.exerciseExam.getExamid(), questionList))
+            .thenReturn(questionBooleans);
 
-        this.exerciseExamService.getQuestionBooleansOfExam(this.exerciseExam.getExamid(), questionList);
-        verify(this.mockExerciseExamQuestionDaoJdbc).getQuestionBooleansOfExam(this.exerciseExam.getExamid(), questionList);
+        this.exerciseExamService
+            .getQuestionBooleansOfExam(this.exerciseExam.getExamid(), questionList);
+        verify(this.mockExerciseExamQuestionDaoJdbc)
+            .getQuestionBooleansOfExam(this.exerciseExam.getExamid(), questionList);
     }
 
-    @Test (expected = ServiceException.class)
-    public void test_getQuestionBooleansOfExamWithInvalidExamID_should_fail() throws Exception{
+    @Test(expected = ServiceException.class)
+    public void test_getQuestionBooleansOfExamWithInvalidExamID_should_fail() throws Exception {
         List<Integer> questionList = new ArrayList<>();
         questionList.add(1);
         this.exerciseExamService.getQuestionBooleansOfExam(0, questionList);

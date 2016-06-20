@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Tag;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.junit.After;
 import org.junit.Before;
@@ -42,7 +43,7 @@ import static org.mockito.Mockito.*;
 
     @Test public void test_getAnswer_withValidId() throws Exception {
         Answer test = new Answer(1, QuestionType.MULTIPLECHOICE, "TestAnswer", true,
-            new Question("TestQuestion", QuestionType.MULTIPLECHOICE, 1));
+            new Question("TestQuestion", QuestionType.MULTIPLECHOICE, 1, Tag.HARD));
 
         when(mockAnswerDao.getAnswer(anyInt())).thenReturn(test);
 

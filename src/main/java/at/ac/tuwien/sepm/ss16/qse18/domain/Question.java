@@ -9,6 +9,7 @@ import java.io.Serializable;
  * @parameter questionString content of question(the actual question)
  * @parameter type indicated the type of question
  * @parameter questionTime indicates the estimated time needed to answer the question
+ * @parameter tag specifies the difficulty/importance of question
  *
  * @author Felix Almer
  *
@@ -18,25 +19,27 @@ public class Question implements Serializable {
     private String questionString;
     private QuestionType type;
     private long questionTime;
+    private Tag tag;
 
     public Question() {
         //Only needed for unit testing!
     }
 
-    public Question(int questionId, String question, QuestionType type, long questionTime) {
+    public Question(int questionId, String question, QuestionType type, long questionTime, Tag tag) {
         this.questionId = questionId;
         this.questionString = question;
         this.type = type;
         this.questionTime = questionTime;
+        this.tag = tag;
     }
 
-    public Question(String question, QuestionType type, long questionTime) {
+    public Question(String question, QuestionType type, long questionTime, Tag tag) {
         // -1 specifies a question which is not yet persistent
         this.questionId = -1;
         this.questionString = question;
         this.type = type;
         this.questionTime = questionTime;
-
+        this.tag = tag;
     }
 
     public long getQuestionTime() {
@@ -71,12 +74,21 @@ public class Question implements Serializable {
         this.type = type;
     }
 
+    public Tag getTag() {
+        return tag;
+    }
+
+    public void setTag(Tag tag) {
+        this.tag = tag;
+    }
+
     @Override public String toString() {
         return "Question{" +
             "questionId=" + questionId +
             ", question='" + questionString + '\'' +
             ", type=" + type +
             ", questionTime=" + questionTime +
+            ", tag=" + tag +
             '}';
     }
 
@@ -96,6 +108,9 @@ public class Question implements Serializable {
 
         Question question1 = (Question) o;
 
+        if (tag != ((Question) o).tag) {
+            return false;
+        }
         if (questionId != question1.questionId)
             return false;
         if (questionString != null ?

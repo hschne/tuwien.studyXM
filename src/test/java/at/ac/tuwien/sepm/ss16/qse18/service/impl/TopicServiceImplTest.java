@@ -2,10 +2,7 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl;
 
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.impl.*;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Subject;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
@@ -79,6 +76,7 @@ import static org.mockito.Mockito.when;
     public void test_createTopic_invalidTopicThrowsException() throws Exception {
         topicService.createTopic(new Topic(), new Subject());
     }
+
     @Test(expected = ServiceException.class)
     public void test_createTopic_TopicIsNullThrowsException() throws Exception {
         topicService.createTopic(null, new Subject());
@@ -86,10 +84,11 @@ import static org.mockito.Mockito.when;
 
 
 
-    @Test(expected = ServiceException.class)
-    public void test_createTopic_catchDaoException_fail() throws Exception {
-        when(mockTopicDao.createTopic(any(Topic.class),any(Subject.class))).thenThrow(DaoException.class);
-        topicService.createTopic(new Topic(1,"Test"),subject);
+    @Test(expected = ServiceException.class) public void test_createTopic_catchDaoException_fail()
+        throws Exception {
+        when(mockTopicDao.createTopic(any(Topic.class), any(Subject.class)))
+            .thenThrow(DaoException.class);
+        topicService.createTopic(new Topic(1, "Test"), subject);
     }
 
 
@@ -110,10 +109,10 @@ import static org.mockito.Mockito.when;
     }
 
 
-    @Test(expected = ServiceException.class)
-    public void test_updateTopic_catchDaoException_fail() throws Exception {
+    @Test(expected = ServiceException.class) public void test_updateTopic_catchDaoException_fail()
+        throws Exception {
         when(mockTopicDao.updateTopic(any(Topic.class))).thenThrow(DaoException.class);
-        topicService.updateTopic(new Topic(1,"Test"));
+        topicService.updateTopic(new Topic(1, "Test"));
     }
 
     //----------------------------------------------------------------------------------------------
@@ -132,10 +131,10 @@ import static org.mockito.Mockito.when;
         topicService.deleteTopic(new Topic());
     }
 
-    @Test(expected = ServiceException.class)
-    public void test_deleteTopic_catchDaoException_fail() throws Exception {
+    @Test(expected = ServiceException.class) public void test_deleteTopic_catchDaoException_fail()
+        throws Exception {
         when(mockTopicDao.deleteTopic(any(Topic.class))).thenThrow(DaoException.class);
-        topicService.deleteTopic(new Topic(1,"Test"));
+        topicService.deleteTopic(new Topic(1, "Test"));
     }
 
 
@@ -192,7 +191,8 @@ import static org.mockito.Mockito.when;
             new TopicServiceImpl(mockSubjectTopicDao, mockSubjectDao, mockTopicDao, mockQuestionDao,
                 mockQuestionTopicDao);
 
-        Question testQuestion = new Question(1,"testquestion",QuestionType.MULTIPLECHOICE,20);
+        Question testQuestion =
+            new Question(1, "testquestion", QuestionType.MULTIPLECHOICE, 20, Tag.EASY);
         testQuestion.setQuestionId(1);
 
         List<Topic> testTopics = new LinkedList<>();

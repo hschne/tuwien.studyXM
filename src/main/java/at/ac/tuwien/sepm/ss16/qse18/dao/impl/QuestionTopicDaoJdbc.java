@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DataBaseConnection;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Tag;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import org.apache.logging.log4j.LogManager;
@@ -94,8 +95,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
                 int id = resultSet.getInt(1);
                 String questionText = resultSet.getString(2);
                 QuestionType type = QuestionType.valueOf(resultSet.getInt(3));
-                Long questionTime = resultSet.getLong(4);
-                Question q = new Question(id, questionText, type, questionTime);
+                long questionTime = resultSet.getLong(4);
+                Tag questionTag = Tag.valueOf(resultSet.getInt(5));
+                Question q = new Question(id, questionText, type, questionTime, questionTag);
                 questions.add(q);
             }
         } catch (SQLException e) {
@@ -160,7 +162,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
     private PreparedStatement prepareGetQuestionsForTopicStatement(Topic topic)
         throws SQLException {
         String getQuestionForTopicStatment =
-            "SELECT Q.QUESTIONID,Q.QUESTION,Q.TYPE,Q.QUESTION_TIME "
+            "SELECT Q.QUESTIONID,Q.QUESTION,Q.TYPE,Q.QUESTION_TIME,Q.TAG "
                 + "FROM ENTITY_QUESTION Q JOIN REL_QUESTION_TOPIC R "
                 + "ON Q.QUESTIONID = R.QUESTIONID WHERE R.TOPICID = ?";
         PreparedStatement statement =

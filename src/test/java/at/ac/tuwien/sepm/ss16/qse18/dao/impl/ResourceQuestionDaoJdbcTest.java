@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ResourceDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Tag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class ResourceQuestionDaoJdbcTest extends DaoBaseTest {
 
         dummyResource = createDummyResource();
         dummyResource.setReference("src/main/resources/resources/dummy");
-        dummyQuestion = new Question(1, "Frage?", QuestionType.MULTIPLECHOICE, 2);
+        dummyQuestion = new Question(1, "Frage?", QuestionType.MULTIPLECHOICE, 2, Tag.EASY);
     }
 
     @Test(expected = DaoException.class)

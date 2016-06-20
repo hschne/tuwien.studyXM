@@ -5,10 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.AnswerDao;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoBaseTest;
 import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.dao.QuestionTopicDao;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
-import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
-import at.ac.tuwien.sepm.ss16.qse18.domain.Topic;
+import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -126,14 +123,16 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
     @Test(expected = DaoException.class) public void test_createQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L), new Topic());
+        qdao.createQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L, Tag.EASY),
+            new Topic());
         PowerMockito.verifyStatic();
         mockPreparedStatement.executeUpdate();
     }
 
     @Test(expected = DaoException.class)
     public void test_createQuestion_withAlreadyExistingId_fail() throws Exception {
-        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L), new Topic());
+        qdao.createQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L, Tag.IMPORTANT),
+            new Topic());
     }
 
     @Test(expected = DaoException.class) public void test_createAnswer_null_fail()
@@ -149,7 +148,8 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
         when(mockResultSet.getInt(1)).thenReturn(1);
-        Question input = new Question("TestQuestion", QuestionType.MULTIPLECHOICE, 0L);
+        Question input =
+            new Question("TestQuestion", QuestionType.MULTIPLECHOICE, 0L, Tag.IMPORTANT);
         Question q = qdao.createQuestion(input, new Topic(2, "abc"));
         assertTrue("Question should have received primary key", q.getQuestionId() == 1);
     }
@@ -160,12 +160,14 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
     @Test(expected = DaoException.class) public void test_updateQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L), new Topic());
+        qdao.updateQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L, Tag.EASY),
+            new Topic());
     }
 
     @Test(expected = DaoException.class) public void test_updateQuestion_invalidId_fail()
         throws Exception {
-        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L), new Topic());
+        qdao.updateQuestion(new Question(-1, "", QuestionType.MULTIPLECHOICE, 0L, Tag.NORMAL),
+            new Topic());
     }
 
     @Test(expected = DaoException.class) public void test_updateQuestion_null_fail()
@@ -179,18 +181,19 @@ public class QuestionDaoJdbcTest extends DaoBaseTest {
     @Test(expected = DaoException.class) public void test_deleteQuestion_noDatabaseConnection_fail()
         throws Exception {
         when(mockConnectionH2.getConnection()).thenThrow(SQLException.class);
-        qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.deleteQuestion(new Question(1, "", QuestionType.MULTIPLECHOICE, 0L, Tag.EASY));
     }
 
     @Test public void test_deleteQuestion_valid() throws Exception {
-        qdao.deleteQuestion(new Question(1, "Test", QuestionType.MULTIPLECHOICE, 1L));
+        qdao.deleteQuestion(
+            new Question(1, "Test", QuestionType.MULTIPLECHOICE, 1L, Tag.IMPORTANT));
 
         verify(mockPreparedStatement, times(2)).executeUpdate();
     }
 
     @Test(expected = DaoException.class) public void test_deleteQuestion_invalid()
         throws Exception {
-        qdao.deleteQuestion(new Question("", QuestionType.MULTIPLECHOICE, 0L));
+        qdao.deleteQuestion(new Question("", QuestionType.MULTIPLECHOICE, 0L, Tag.NORMAL));
     }
     //----------------------------------------------------------------------------------------------
 
