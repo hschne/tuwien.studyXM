@@ -31,7 +31,8 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         logger.debug("Entering createReference with params [{}] and [{}]", resource, question);
 
         try {
-            tryValidateInput(resource, question);
+            validate(resource);
+            validate(question);
 
             resourceQuestionDao.createResourceQuestion(resource, question);
         } catch (DaoException e) {
@@ -62,11 +63,5 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             throw new ServiceException("Could not get resource from question [" + question + "]",
                 e);
         }
-    }
-
-    private void tryValidateInput(Resource resource, Question question)
-        throws DtoValidatorException {
-        validate(resource);
-        validate(question);
     }
 }

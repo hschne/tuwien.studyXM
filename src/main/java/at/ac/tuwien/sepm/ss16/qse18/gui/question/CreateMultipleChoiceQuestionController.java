@@ -22,29 +22,20 @@ import java.util.List;
  * Controller for managing creation of multiple choice questions <p> Created by Julian on
  * 15.05.2016.
  */
-@Component
-public class CreateMultipleChoiceQuestionController extends QuestionController {
-    @FXML
-    private TextArea textAreaQuestion;
-    @FXML
-    private CheckBox checkBoxAnswerOne;
-    @FXML
-    private CheckBox checkBoxAnswerTwo;
-    @FXML
-    private CheckBox checkBoxAnswerThree;
-    @FXML
-    private CheckBox checkBoxAnswerFour;
-    @FXML
-    private ChoiceBox<String> choiceBoxQuestionTime;
+@Component public class CreateMultipleChoiceQuestionController extends QuestionController {
+    @FXML private TextArea textAreaQuestion;
+    @FXML private CheckBox checkBoxAnswerOne;
+    @FXML private CheckBox checkBoxAnswerTwo;
+    @FXML private CheckBox checkBoxAnswerThree;
+    @FXML private CheckBox checkBoxAnswerFour;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
-    @Autowired
-    public CreateMultipleChoiceQuestionController(QuestionService questionService,
+    @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
     }
 
-    @FXML
-    public void handleCreateQuestion() {
+    @FXML public void handleCreateQuestion() {
         if (createQuestion()) {
             return;
         }
@@ -56,8 +47,7 @@ public class CreateMultipleChoiceQuestionController extends QuestionController {
         showSuccess("Inserted new question into database.");
     }
 
-    @Override
-    protected void fillFieldsAndCheckboxes() {
+    @Override protected void fillFieldsAndCheckboxes() {
         this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
         fillAnswerFields(1);
@@ -77,8 +67,7 @@ public class CreateMultipleChoiceQuestionController extends QuestionController {
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
-    @Override
-    protected void saveQuestionInput(List inputs) {
+    @Override protected void saveQuestionInput(List inputs) {
         if (textAreaQuestion != null) {
             inputs.add(textAreaQuestion.getText());
         } else {
@@ -86,19 +75,16 @@ public class CreateMultipleChoiceQuestionController extends QuestionController {
         }
     }
 
-    @Override
-    protected void saveCheckboxesAndRadiobuttons(List inputs) {
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
         inputs.addAll(createCheckBoxResults());
         inputs.add(checkBoxContinue.isSelected());
     }
 
-    @Override
-    protected void saveChoiceBoxQuestionTime(List inputs) {
+    @Override protected void saveChoiceBoxQuestionTime(List inputs) {
         inputs.add(choiceBoxQuestionTime.getValue());
     }
 
-    @Override
-    protected QuestionType getQuestionType() {
+    @Override protected QuestionType getQuestionType() {
         return QuestionType.MULTIPLECHOICE;
     }
 
@@ -113,8 +99,7 @@ public class CreateMultipleChoiceQuestionController extends QuestionController {
         return false;
     }
 
-    @Override
-    protected List<Boolean> createCheckBoxResults() {
+    @Override protected List<Boolean> createCheckBoxResults() {
         List<Boolean> result = new ArrayList<>();
         result.add(checkBoxAnswerOne.isSelected());
         result.add(checkBoxAnswerTwo.isSelected());
@@ -123,10 +108,9 @@ public class CreateMultipleChoiceQuestionController extends QuestionController {
         return result;
     }
 
-    @Override
-    protected Question newQuestionFromFields() {
+    @Override protected Question newQuestionFromFields() {
         logger.debug("Collecting question from field.");
-        return new Question(textAreaQuestion.getText(), getQuestionType()
-                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)));
+        return new Question(textAreaQuestion.getText(), getQuestionType(),
+            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)), getSelectedTag());
     }
 }

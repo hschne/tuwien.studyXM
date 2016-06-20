@@ -58,7 +58,7 @@ abstract class NewExerciseExamBase extends BaseController {
      * Returns to the exams view
      */
     @FXML public void handleCancel() {
-        mainFrameController.handleExams();
+        mainFrameController.handleStudy(exam);
     }
 
     public void setExam(ObservableExam exam) throws ServiceException {

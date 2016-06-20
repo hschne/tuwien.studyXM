@@ -207,8 +207,7 @@ public class CreateImageQuestionController extends QuestionController {
         }
     }
 
-    @Override
-    protected void saveChoiceBoxQuestionTime(List inputs) {
+    @Override protected void saveChoiceBoxQuestionTime(List inputs) {
         inputs.add(choiceBoxQuestionTime.getValue());
     }
 
@@ -229,7 +228,7 @@ public class CreateImageQuestionController extends QuestionController {
     @Override protected Question newQuestionFromFields() {
         logger.debug("Creating new question");
         return new Question(textFieldImagePath.getText(), getQuestionType(),
-            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)));
+            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)), getSelectedTag());
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {

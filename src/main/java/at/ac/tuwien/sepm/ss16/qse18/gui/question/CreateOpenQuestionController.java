@@ -20,16 +20,12 @@ import java.util.List;
 /**
  * Controller for managing the creation of open questions <p> Created by Julian on 15.05.2016.
  */
-@Component
-public class CreateOpenQuestionController extends QuestionController {
+@Component public class CreateOpenQuestionController extends QuestionController {
 
-    @FXML
-    private TextArea textAreaQuestion;
-    @FXML
-    private ChoiceBox<String> choiceBoxQuestionTime;
+    @FXML private TextArea textAreaQuestion;
+    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
 
-    @Autowired
-    public CreateOpenQuestionController(QuestionService questionService,
+    @Autowired public CreateOpenQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
     }
@@ -37,8 +33,7 @@ public class CreateOpenQuestionController extends QuestionController {
     /**
      * Handles the button event of the "create question" button.
      */
-    @FXML
-    public void handleCreateQuestion() {
+    @FXML public void handleCreateQuestion() {
         if (!createQuestion()) {
             return;
         }
@@ -66,8 +61,7 @@ public class CreateOpenQuestionController extends QuestionController {
         return true;
     }
 
-    @Override
-    protected void fillFieldsAndCheckboxes() {
+    @Override protected void fillFieldsAndCheckboxes() {
         this.textAreaQuestion.setText(inputs == null ? "" : (String) inputs.get(0));
 
         fillAnswerFields(1);
@@ -82,8 +76,7 @@ public class CreateOpenQuestionController extends QuestionController {
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
-    @Override
-    protected void saveQuestionInput(List inputs) {
+    @Override protected void saveQuestionInput(List inputs) {
         if (textAreaQuestion != null) {
             inputs.add(textAreaQuestion.getText());
         } else {
@@ -91,25 +84,21 @@ public class CreateOpenQuestionController extends QuestionController {
         }
     }
 
-    @Override
-    protected void saveChoiceBoxQuestionTime(List inputs) {
+    @Override protected void saveChoiceBoxQuestionTime(List inputs) {
         inputs.add(choiceBoxQuestionTime.getValue());
     }
 
-    @Override
-    protected void saveCheckboxesAndRadiobuttons(List inputs) {
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
         // There are no correct or incorrect answers given for this
         // type of question therefore there are no other checkboxes to save.
         inputs.add(checkBoxContinue.isSelected());
     }
 
-    @Override
-    protected QuestionType getQuestionType() {
+    @Override protected QuestionType getQuestionType() {
         return QuestionType.OPENQUESTION;
     }
 
-    @Override
-    protected List<Boolean> createCheckBoxResults() {
+    @Override protected List<Boolean> createCheckBoxResults() {
         List<Boolean> result = new ArrayList<>();
         result.add(true);
         result.add(true);
@@ -118,11 +107,10 @@ public class CreateOpenQuestionController extends QuestionController {
         return result;
     }
 
-    @Override
-    protected Question newQuestionFromFields() {
+    @Override protected Question newQuestionFromFields() {
         logger.debug("Collecting question from field.");
-        return new Question(textAreaQuestion.getText(), getQuestionType()
-                , Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)));
+        return new Question(textAreaQuestion.getText(), getQuestionType(),
+            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)), getSelectedTag());
     }
 
 

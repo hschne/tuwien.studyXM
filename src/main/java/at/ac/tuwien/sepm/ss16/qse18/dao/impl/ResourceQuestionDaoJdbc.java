@@ -14,6 +14,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import static at.ac.tuwien.sepm.ss16.qse18.dao.StatementResultsetCloser.closeStatementsAndResultSets;
 import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.validate;
 
 /**
@@ -45,7 +46,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
         try {
             ps = database.getConnection()
-                .prepareStatement("INSERT INTO rel_resource_question VALUES (?,?)");
+                .prepareStatement("INSERT INTO REL_RESOURCE_QUESTION VALUES (?,?)");
             ps.setInt(1, resource.getResourceId());
             ps.setInt(2, question.getQuestionId());
 
@@ -83,8 +84,7 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
             logger.error("Could not get the resource of question {}", question, e);
             throw new DaoException("Could not get resource of question " + question + ": " + e);
         } finally {
-            StatementResultsetCloser
-                .closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
+            closeStatementsAndResultSets(new Statement[] {ps}, new ResultSet[] {rs});
         }
         return res;
     }

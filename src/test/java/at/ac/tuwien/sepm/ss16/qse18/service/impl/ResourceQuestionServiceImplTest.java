@@ -7,6 +7,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.impl.ResourceQuestionDaoJdbc;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Resource;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Tag;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import org.junit.After;
@@ -35,7 +36,7 @@ public class ResourceQuestionServiceImplTest {
         dummyResource = DummyEntityFactory.createDummyResource();
         dummyResource.setReference("src/main/resources/resources/dummy");
 
-        dummyQuestion = new Question(1, "Frage?", QuestionType.MULTIPLECHOICE, 2);
+        dummyQuestion = new Question(1, "Frage?", QuestionType.MULTIPLECHOICE, 2, Tag.NORMAL);
 
         resourceQuestionService = new ResourceQuestionServiceImpl(mockResourceQuestionDao);
     }

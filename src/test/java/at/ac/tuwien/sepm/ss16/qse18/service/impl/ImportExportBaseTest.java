@@ -6,6 +6,9 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author Bicer Cem
+ */
 public abstract class ImportExportBaseTest {
     protected Subject testSubject;
     protected List<Topic> testTopics;
@@ -23,10 +26,12 @@ public abstract class ImportExportBaseTest {
         testTopics.add(new Topic(2, "TestTopic2"));
 
         testQuestions1 = new ArrayList<>();
-        testQuestions1.add(new Question(1, "TestQuestion1", QuestionType.MULTIPLECHOICE, 1));
+        testQuestions1
+            .add(new Question(1, "TestQuestion1", QuestionType.MULTIPLECHOICE, 1, Tag.EASY));
 
         testQuestions2 = new ArrayList<>();
-        testQuestions2.add(new Question(2, "TestQuestion2", QuestionType.SINGLECHOICE, 2));
+        testQuestions2
+            .add(new Question(2, "TestQuestion2", QuestionType.SINGLECHOICE, 2, Tag.IMPORTANT));
 
         testResource =
             new Resource(1, ResourceType.PDF, "TestResource", "src/main/resources/resources/dummy");

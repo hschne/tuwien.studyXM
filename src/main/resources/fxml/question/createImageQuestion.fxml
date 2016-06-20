@@ -8,6 +8,9 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -82,6 +85,16 @@
                      <children>
                          <Button mnemonicParsing="false" onAction="#handleCreateQuestion" text="create question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="TOP" />
                         <CheckBox fx:id="checkBoxContinue" mnemonicParsing="false" selected="false" text="create another question" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" />
+                        <Button mnemonicParsing="false" onAction="#cancel" text="cancel">
+                           <GridPane.margin>
+                              <Insets left="54.0" />
+                           </GridPane.margin>
+                        </Button>
+                        <Label fx:id="tagLabel" text="no tag selected" GridPane.halignment="CENTER" GridPane.valignment="BASELINE">
+                           <GridPane.margin>
+                              <Insets right="37.0" />
+                           </GridPane.margin>
+                        </Label>
                      </children>
                   </GridPane>
                   <GridPane GridPane.rowIndex="1">
@@ -171,7 +184,7 @@
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <ChoiceBox fx:id="choiceBoxQuestionTime" prefHeight="25.0" prefWidth="97.0" value="1 minute">
+                              <ChoiceBox fx:id="choiceBoxQuestionTime" prefHeight="25.0" prefWidth="90.0" value="1 minute">
                                  <items>
                                     <FXCollections fx:factory="observableArrayList">
                                        <String fx:value="1 minute" />
@@ -185,10 +198,61 @@
                                     <Insets left="55.0" />
                                  </GridPane.margin>
                               </ChoiceBox>
-                              <Label text="question time" GridPane.columnIndex="1">
+                              <Label text="time" GridPane.columnIndex="1">
                                  <font>
                                     <Font size="13.0" />
                                  </font>
+                              </Label>
+                              <ToggleButton fx:id="toggleEasy" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #b3ffb3;" text="✓" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets right="158.0" />
+                                 </GridPane.margin>
+                                 <tooltip>
+                                    <Tooltip text="this question is easy to answer" />
+                                 </tooltip>
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="tagToggleGroupNotecard" />
+                                 </toggleGroup>
+                              </ToggleButton>
+                              <ToggleButton fx:id="toggleImportant" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #ff9980;" text="!!!" toggleGroup="$tagToggleGroupNotecard" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                                 <tooltip>
+                                    <Tooltip text="this question will come to the upcoming exam for sure" />
+                                 </tooltip>
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <GridPane.margin>
+                                    <Insets right="53.0" />
+                                 </GridPane.margin></ToggleButton>
+                              <ToggleButton fx:id="toggleHard" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #ffb84d;" text="!" toggleGroup="$tagToggleGroupNotecard" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets right="88.0" />
+                                 </GridPane.margin>
+                                 <tooltip>
+                                    <Tooltip text="this question is hard to answer" />
+                                 </tooltip>
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </ToggleButton>
+                              <ToggleButton fx:id="toggleNormal" maxWidth="35.0" minWidth="35.0" mnemonicParsing="false" onAction="#setTagLabelText" prefWidth="35.0" style="-fx-base: #ffff99;" text="~" toggleGroup="$tagToggleGroupNotecard" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets right="123.0" />
+                                 </GridPane.margin>
+                                 <tooltip>
+                                    <Tooltip text="this question is neither easy nor hard to answer" />
+                                 </tooltip>
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                              </ToggleButton>
+                              <Label text="tag: " GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.valignment="CENTER">
+                                 <GridPane.margin>
+                                    <Insets right="198.0" />
+                                 </GridPane.margin>
                               </Label>
                            </children>
                         </GridPane>

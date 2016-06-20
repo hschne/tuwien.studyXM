@@ -5,6 +5,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.DaoException;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Answer;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Tag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -112,7 +113,7 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
     @Test(expected = DaoException.class) public void test_createAnswer_withAlreadyExistingId_Fail()
         throws Exception {
         when(mockPreparedStatement.executeUpdate()).thenThrow(SQLException.class);
-        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE, 0L);
+        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE, 0L, Tag.EASY);
         Answer a = new Answer(1, QuestionType.MULTIPLECHOICE, "Testanswer", true, q);
         adao.createAnswer(a);
         PowerMockito.verifyStatic();
@@ -125,7 +126,7 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
     }
 
     @Test public void test_createAnswer_withValidAnswer() throws Exception {
-        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE, 0L);
+        Question q = new Question(1, "", QuestionType.MULTIPLECHOICE, 0L, Tag.HARD);
         Answer a = new Answer(-1, QuestionType.MULTIPLECHOICE, "Testanswer", true, q);
         when(mockPreparedStatement.getGeneratedKeys()).thenReturn(mockResultSet);
         when(mockResultSet.next()).thenReturn(true);
@@ -166,7 +167,8 @@ public class AnswerDaoJdbcTest extends DaoBaseTest {
         verify(mockPreparedStatement).executeUpdate();
     }
 
-    @Test(expected = DaoException.class) public void test_deleteAnswer_withInvalidAnswer() throws Exception {
+    @Test(expected = DaoException.class) public void test_deleteAnswer_withInvalidAnswer()
+        throws Exception {
         Answer a = new Answer(QuestionType.MULTIPLECHOICE, "Testanswer", true);
 
         adao.deleteAnswer(a);

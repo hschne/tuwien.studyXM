@@ -52,6 +52,10 @@ import java.util.stream.Collectors;
         }
     }
 
+    @FXML public void cancel() {
+        mainFrameController.handleStudy(exam);
+    }
+
     private void initializeListView() throws ServiceException {
         List<ObservableExerciseExam> examList =
             exerciseExamService.getExams().stream().map(ObservableExerciseExam::new).collect(

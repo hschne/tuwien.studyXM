@@ -6,6 +6,7 @@ import at.ac.tuwien.sepm.ss16.qse18.dao.ExerciseExamQuestionDao;
 import at.ac.tuwien.sepm.ss16.qse18.domain.ExerciseExam;
 import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
+import at.ac.tuwien.sepm.ss16.qse18.domain.Tag;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -101,7 +102,7 @@ public class ExerciseExamQuestionDaoJdbcTest extends DaoBaseTest {
 
     @Test(expected = DaoException.class)
     public void test_createExamWithInvalidQuestion_should_fail() throws Exception {
-        Question q1 = new Question(2, "      ", QuestionType.valueOf(1), 3);
+        Question q1 = new Question(2, "      ", QuestionType.valueOf(1), 3, Tag.HARD);
         this.examQuestionDaoJdbc.create(this.testExerciseExam, q1);
         verify(mockPreparedStatement).executeUpdate();
     }
