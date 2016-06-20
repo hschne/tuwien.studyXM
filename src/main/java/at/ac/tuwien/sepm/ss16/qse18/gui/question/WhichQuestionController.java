@@ -29,6 +29,7 @@ import java.io.IOException;
     @FXML public RadioButton radioButtonSingleChoice;
     @FXML public RadioButton radioButtonOpenQuestion;
     @FXML public RadioButton radioButtonNotecard;
+    @FXML public RadioButton radioButtonSelfEval;
 
     private ObservableTopic topic;
 
@@ -41,6 +42,7 @@ import java.io.IOException;
         radioButtonSingleChoice.setToggleGroup(tg);
         radioButtonOpenQuestion.setToggleGroup(tg);
         radioButtonNotecard.setToggleGroup(tg);
+        radioButtonSelfEval.setToggleGroup(tg);
         radioButtonMultipleChoice.setSelected(true);
         questionNavigation.refreshMainPane();
 
@@ -55,8 +57,11 @@ import java.io.IOException;
             questionNavigation.handleSingleChoiceQuestion(this.topic);
         } else if(radioButtonOpenQuestion.isSelected()) {
             questionNavigation.handleOpenQuestion(this.topic);
-        } else {
+        } else if(radioButtonNotecard.isSelected()) {
             questionNavigation.handleImageQuestion(topic);
+        }
+        else {
+            questionNavigation.handleSelfEvalQuestion(topic, null);
         }
 
     }

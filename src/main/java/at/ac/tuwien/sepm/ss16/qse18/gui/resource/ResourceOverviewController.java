@@ -105,6 +105,9 @@ import java.util.stream.Collectors;
                         case NOTECARD:
                             questionNavigation.handleImageQuestion(null, inputs);
                             break;
+                        case SELF_EVALUATION:
+                            questionNavigation.handleSelfEvalQuestion(null,inputs);
+                            break;
                         default:
                             throw new InputMismatchException("Can not determine type of resource");
                     }

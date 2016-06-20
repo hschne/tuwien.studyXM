@@ -142,6 +142,11 @@ public abstract class QuestionController
         this.textFieldAnswerFour.setText(inputs == null ? "" : (String) inputs.get(++counter));
     }
 
+    protected void fillAnswerFields(String text) {
+        textFieldAnswerOne.setText(text);
+    }
+
+
     /**
      * Saves the answerfield texts. If a textfield is empty it saves null instead of nothing to be
      * consistent.
@@ -157,20 +162,26 @@ public abstract class QuestionController
             listForInputs.add(null);
         }
 
-        if (textFieldAnswerTwo.getText() != null) {
-            listForInputs.add(textFieldAnswerTwo.getText());
+        if (textFieldAnswerTwo != null){
+            if(textFieldAnswerTwo.getText() != null) {
+                listForInputs.add(textFieldAnswerTwo.getText());
+            }
         } else {
             listForInputs.add(null);
         }
 
-        if (textFieldAnswerThree.getText() != null) {
-            listForInputs.add(textFieldAnswerThree.getText());
+        if (textFieldAnswerThree != null){
+            if(textFieldAnswerThree.getText() != null) {
+                listForInputs.add(textFieldAnswerThree.getText());
+            }
         } else {
             listForInputs.add(null);
         }
 
-        if (textFieldAnswerFour.getText() != null) {
-            listForInputs.add(textFieldAnswerFour.getText());
+        if (textFieldAnswerFour != null){
+            if(textFieldAnswerFour.getText() != null) {
+                listForInputs.add(textFieldAnswerFour.getText());
+            }
         } else {
             listForInputs.add(null);
         }
@@ -254,19 +265,28 @@ public abstract class QuestionController
             answers.add(
                     new Answer(questionType, textFieldAnswerOne.getText(), checkBoxResults.get(0)));
         }
-        if (!textFieldAnswerTwo.getText().isEmpty()) {
-            answers.add(
+        if(textFieldAnswerTwo != null) {
+            if (!textFieldAnswerTwo.getText().isEmpty()) {
+                answers.add(
                     new Answer(questionType, textFieldAnswerTwo.getText(), checkBoxResults.get(1)));
+            }
         }
-        if (!textFieldAnswerThree.getText().isEmpty()) {
-            answers.add(
-                    new Answer(questionType, textFieldAnswerThree.getText(), checkBoxResults.get(2)));
+        if(textFieldAnswerThree != null) {
+            if (!textFieldAnswerThree.getText().isEmpty()) {
+                answers.add(new Answer(questionType, textFieldAnswerThree.getText(), checkBoxResults.get(2)));
+            }
         }
-        if (!textFieldAnswerFour.getText().isEmpty()) {
-            answers.add(
-                    new Answer(questionType, textFieldAnswerFour.getText(), checkBoxResults.get(3)));
+
+        if(textFieldAnswerFour != null) {
+            if (!textFieldAnswerFour.getText().isEmpty()) {
+                answers.add(new Answer(questionType, textFieldAnswerFour.getText(), checkBoxResults.get(3)));
+            }
         }
+
         return answers;
     }
+
+
+
 
 }

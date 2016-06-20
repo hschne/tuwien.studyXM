@@ -31,7 +31,7 @@ import java.util.*;
  *
  * @author Julian on 14.05.2016.
  */
-@Component @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class CreateImageQuestionController extends QuestionController {
 
     @FXML public Button buttonAddImage;
@@ -45,7 +45,7 @@ public class CreateImageQuestionController extends QuestionController {
     @FXML public CheckBox checkBoxAnswerTwo;
     @FXML public CheckBox checkBoxAnswerThree;
     @FXML public CheckBox checkBoxAnswerFour;
-    @FXML private ChoiceBox<String> choiceBoxQuestionTime;
+    @FXML protected ChoiceBox<String> choiceBoxQuestionTime;
 
     private File out;
 
@@ -98,7 +98,7 @@ public class CreateImageQuestionController extends QuestionController {
         }
     }
 
-    private boolean createQuestion() {
+    protected boolean createQuestion() {
         if (!validateImageSelected()) {
             logger.debug("User input is not valid, can't create question.");
             return true;

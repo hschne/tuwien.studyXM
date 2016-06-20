@@ -18,7 +18,7 @@ import java.util.Map;
  * @author Felix Almer on 06.05.2016.
  */
 public enum QuestionType {
-    MULTIPLECHOICE(1), SINGLECHOICE(2), OPENQUESTION(3), NOTECARD(4),SELF_EVALUATION(4);
+    MULTIPLECHOICE(1), SINGLECHOICE(2), OPENQUESTION(3), NOTECARD(4),SELF_EVALUATION(5);
 
     private int value;
     private static Map<Integer, QuestionType> hm = new HashMap<>();
