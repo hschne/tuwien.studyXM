@@ -2,10 +2,14 @@ package at.ac.tuwien.sepm.ss16.qse18.service.impl.latex;
 
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import net.sourceforge.jeuclid.MathMLParserSupport;
+import net.sourceforge.jeuclid.MutableLayoutContext;
 import net.sourceforge.jeuclid.context.LayoutContextImpl;
+import net.sourceforge.jeuclid.context.Parameter;
 import net.sourceforge.jeuclid.converter.Converter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -19,7 +23,7 @@ import java.io.IOException;
  *
  * @author Hans-Joerg Schroedl
  */
-public class JEuclidServiceImpl {
+@Service public class JEuclidServiceImpl {
 
     private Logger logger = LogManager.getLogger();
 
@@ -45,7 +49,11 @@ public class JEuclidServiceImpl {
     public BufferedImage createBufferedImageFrom(String xmlString) throws ServiceException {
         try {
             Document document = MathMLParserSupport.parseString(xmlString);
-            return converter.render(document, LayoutContextImpl.getDefaultLayoutContext());
+            MutableLayoutContext params = new LayoutContextImpl(
+                LayoutContextImpl.getDefaultLayoutContext());
+            params.setParameter(Parameter.ANTIALIAS, true);
+            params.setParameter(Parameter.MATHSIZE, 50f);
+            return converter.render(document, params);
         } catch (SAXException | ParserConfigurationException e) {
             logger.error(e);
             throw new ServiceException(

@@ -4,20 +4,22 @@ import at.ac.tuwien.sepm.ss16.qse18.domain.Question;
 import at.ac.tuwien.sepm.ss16.qse18.domain.QuestionType;
 import at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidatorException;
 import at.ac.tuwien.sepm.ss16.qse18.gui.observable.ObservableResource;
+import at.ac.tuwien.sepm.ss16.qse18.service.LatexRenderService;
 import at.ac.tuwien.sepm.ss16.qse18.service.QuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ResourceQuestionService;
 import at.ac.tuwien.sepm.ss16.qse18.service.ServiceException;
 import javafx.fxml.FXML;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TextArea;
-
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Controller for managing creation of multiple choice questions <p> Created by Julian on
@@ -32,18 +34,13 @@ import java.util.List;
     @FXML private ChoiceBox<String> choiceBoxQuestionTime;
     @FXML private ToggleGroup tagToggleGroupMultiple;
 
+    @FXML private ToggleButton texSyntaxButton;
+
+    @Autowired private LatexRenderService latexRenderService;
+
     @Autowired public CreateMultipleChoiceQuestionController(QuestionService questionService,
         ResourceQuestionService resourceQuestionService) {
         super(questionService, resourceQuestionService);
-    }
-
-    @Override protected void initializeToggleGroup() {
-        tagToggleGroupMultiple.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
-            if (newValue == null) {
-                oldValue.setSelected(true);
-            }
-        });
-        setColorOfOtherButtonsToGrey(tagToggleGroupMultiple);
     }
 
     @FXML public void handleCreateQuestion() {
@@ -59,6 +56,59 @@ import java.util.List;
     }
 
     @FXML public void toggleSelected() {
+        setColorOfOtherButtonsToGrey(tagToggleGroupMultiple);
+    }
+
+    private boolean createQuestion() {
+        logger.info("Now creating new question");
+        try {
+            if (texSyntaxButton.isSelected()) {
+                createLatexQuestion();
+            } else {
+                createQuestionAndAnswers();
+            }
+        } catch (ServiceException | DtoValidatorException e) {
+            showError(e);
+            return true;
+        }
+        return false;
+    }
+
+    private void createLatexQuestion() throws ServiceException, DtoValidatorException {
+        logger.debug("Collecting question from field.");
+        BufferedImage image = latexRenderService.createImageFrom(textAreaQuestion.getText());
+        String filePath = trySaveImage(image);
+        Question question = new Question(filePath, QuestionType.NOTECARD,
+            Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)), getSelectedTag());
+        createQuestionAndAnswers(question);
+    }
+
+    private String trySaveImage(BufferedImage image) throws ServiceException {
+        String filePath = generateFileName();
+        File outputfile = new File(filePath);
+        try {
+            ImageIO.write(image, "png", outputfile);
+        } catch (IOException e) {
+            logger.error(e);
+            throw new ServiceException("Could not save file.", e);
+        }
+        return filePath;
+    }
+
+    private String generateFileName() {
+        logger.debug("Checking for duplicate image files");
+        String dir = "src/main/resources/images/";
+        logger.debug("Duplicate found, generating new file name");
+        return dir + UUID.randomUUID().toString() + ".png";
+
+    }
+
+    @Override protected void initializeToggleGroup() {
+        tagToggleGroupMultiple.selectedToggleProperty().addListener((ov, oldValue, newValue) -> {
+            if (newValue == null) {
+                oldValue.setSelected(true);
+            }
+        });
         setColorOfOtherButtonsToGrey(tagToggleGroupMultiple);
     }
 
@@ -101,17 +151,6 @@ import java.util.List;
 
     @Override protected QuestionType getQuestionType() {
         return QuestionType.MULTIPLECHOICE;
-    }
-
-    private boolean createQuestion() {
-        logger.info("Now creating new question");
-        try {
-            createQuestionAndAnswers();
-        } catch (ServiceException | DtoValidatorException e) {
-            showError(e);
-            return true;
-        }
-        return false;
     }
 
     @Override protected List<Boolean> createCheckBoxResults() {

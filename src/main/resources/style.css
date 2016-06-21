@@ -5,6 +5,17 @@
     -fx-text-fill: white;
 }
 
+.tex-button {
+    -fx-base: "lightgray";
+    -fx-text-fill: white;
+}
+
+.tex-button:selected {
+    -fx-base: #192836;
+    -fx-text-fill: white;
+}
+
+
 .menu-button {
     -fx-background-color: #192836;
     -fx-text-fill: white;

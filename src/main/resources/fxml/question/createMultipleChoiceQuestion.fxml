@@ -1,5 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 <?import java.lang.String?>
 <?import javafx.collections.FXCollections?>
 <?import javafx.geometry.Insets?>
@@ -21,7 +29,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane fx:id="anchorPaneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController">
+<AnchorPane fx:id="anchorPaneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.question.CreateMultipleChoiceQuestionController">
    <children>
       <GridPane layoutX="146.0" layoutY="132.0" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
         <columnConstraints>
@@ -93,14 +101,16 @@
                         </Button>
                      </children>
                   </GridPane>
-                  <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." GridPane.valignment="CENTER">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                     <GridPane.margin>
-                        <Insets />
-                     </GridPane.margin>
-                  </TextArea>
+                  <StackPane maxWidth="900.0" prefHeight="150.0" prefWidth="900.0" GridPane.halignment="CENTER" GridPane.hgrow="NEVER" GridPane.valignment="CENTER" GridPane.vgrow="NEVER">
+                     <children>
+                        <TextArea fx:id="textAreaQuestion" maxWidth="-Infinity" prefHeight="203.0" prefWidth="900.0" promptText="add your question text here.." StackPane.alignment="CENTER">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextArea>
+                        <ToggleButton fx:id="texSyntaxButton" mnemonicParsing="false" styleClass="tex-button" text="Tex Syntax" StackPane.alignment="TOP_RIGHT" />
+                     </children>
+                  </StackPane>
                   <GridPane GridPane.rowIndex="1">
                     <columnConstraints>
                       <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="487.0" minWidth="10.0" prefWidth="487.0" />

@@ -10,7 +10,6 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.awt.image.BufferedImage;
-import java.nio.Buffer;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyString;

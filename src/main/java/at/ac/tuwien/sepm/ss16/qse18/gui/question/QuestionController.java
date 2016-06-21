@@ -262,12 +262,16 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
 
     void createQuestionAndAnswers() throws DtoValidatorException, ServiceException {
         Question question = newQuestionFromFields();
+        createQuestionAndAnswers(question);
+    }
+
+    void createQuestionAndAnswers(Question question) throws DtoValidatorException,
+        ServiceException {
         validate(question);
         List<Answer> answers = newAnswersFromFields(createCheckBoxResults());
         validate(answers);
         Question createdQuestion = questionService.createQuestion(question, topic.getT());
         questionService.setCorrespondingAnswers(createdQuestion, answers);
-
         if (resource != null) {
             resourceQuestionService.createReference(resource.getResource(), createdQuestion);
         }
