@@ -20,7 +20,7 @@ import java.io.IOException;
 
     private final Logger logger = LogManager.getLogger();
 
-    private SnuggleSession session;
+    private SnuggleEngine snuggleEngine;
 
     /**
      * Default constructor.
@@ -28,8 +28,7 @@ import java.io.IOException;
      * Initializes snuggle engine and session.
      */
     public SnuggleServiceImpl() {
-        SnuggleEngine snuggleEngine = new SnuggleEngine();
-        session = snuggleEngine.createSession();
+        snuggleEngine = new SnuggleEngine();
     }
 
     /**
@@ -42,6 +41,7 @@ import java.io.IOException;
     public String createMathMlFrom(String latexString) throws ServiceException {
         SnuggleInput input = new SnuggleInput("$" + latexString + "$");
         try {
+            SnuggleSession session = snuggleEngine.createSession();
             session.parseInput(input);
             return session.buildXMLString();
         } catch (IOException e) {
