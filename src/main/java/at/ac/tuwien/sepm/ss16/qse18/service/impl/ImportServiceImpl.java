@@ -19,13 +19,17 @@ import org.springframework.stereotype.Service;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+/**
+ * Implementation of {@link ImportService}. This implementation reads from a zip file and
+ * imports the contained subject into the database.
+ *
+ */
 @Service public class ImportServiceImpl implements ImportService {
 
     private static final Logger logger = LogManager.getLogger();
@@ -135,11 +139,6 @@ import java.util.zip.ZipInputStream;
                 "The imported subject is a duplicate of existing subject '" + conflictingSubject
                     .getName() + "'.");
         }
-    }
-
-    private void importTopicsIfExistingEmpty(ExportSubject subject, Subject conflictingSubject)
-        throws ServiceException {
-
     }
 
     private boolean existingSubjectEmpty(Subject existingSubject) throws ServiceException {
@@ -328,9 +327,7 @@ import java.util.zip.ZipInputStream;
             if(getNewReference(oldReference)  != null){
                 resource.setReference(getNewReference(oldReference));
             }
-            if (resource != null) {
-                resourceDao.createResource(resource);
-            }
+            resourceDao.createResource(resource);
         } catch (DaoException e) {
             logger.error("Could not import resource", e);
             throw new ServiceException(e.getMessage(), e);
