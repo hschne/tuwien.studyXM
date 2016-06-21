@@ -52,20 +52,27 @@ import org.springframework.stereotype.Component;
         showAlert("Error", "An error occurred.", e.getMessage());
     }
 
-    protected void showInformation(String contentMsg){
+    protected void showInformation(String contentMsg, boolean showAndWait){
         Alert alert =
             alertBuilder.alertType(Alert.AlertType.INFORMATION).title("INFO").headerText("")
                 .contentText(contentMsg).setResizable(true).build();
-        alert.show();
+        if(showAndWait) {
+            alert.showAndWait();
+        }
+        else {
+            alert.show();
+        }
     }
 
     protected boolean showConfirmation(String contentMsg) {
         Alert alert = alertBuilder.alertType(Alert.AlertType.CONFIRMATION).title("Confirmation")
             .setResizable(true).headerText("Are you sure?").contentText(contentMsg)
             .modality(Modality.APPLICATION_MODAL).build();
+
         alert.showAndWait();
         ButtonType result = alert.getResult();
         return result == ButtonType.OK;
     }
+
 
 }

@@ -54,7 +54,7 @@
           <RowConstraints maxHeight="141.0" minHeight="10.0" prefHeight="59.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="showAnswerButton" mnemonicParsing="false" onAction="#handleShowAnswerButton" text="Show answer" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+            <Button fx:id="showAnswerButton" mnemonicParsing="false" onAction="#handleShowAnswerButton" text="show answer" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
             <Text fx:id="infoText" strokeType="OUTSIDE" strokeWidth="0.0" text="This is a self evaluation Question! If you are done answering click the button below" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                <font>
                   <Font name="System Bold Italic" size="12.0" />

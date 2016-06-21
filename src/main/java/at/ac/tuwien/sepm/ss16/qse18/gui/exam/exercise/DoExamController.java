@@ -29,6 +29,8 @@ import java.util.List;
 
 
 /**
+ * This is a controller for doing an exercise_exam
+ *
  * @author Philipp Ganiu
  */
 @Component @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) public class DoExamController extends
@@ -42,7 +44,6 @@ import java.util.List;
     @FXML private Button skipQuesitonButton;
     @FXML private Button showResultsButton;
     @FXML private Button pauseExamButton;
-    @FXML private Label topicsCoveredLabel;
 
     @Autowired private SubjectServiceImpl subjectService;
     @Autowired private ExerciseExamServiceImpl examService;
@@ -66,10 +67,8 @@ import java.util.List;
 
 
     @FXML public void initialize(ExerciseExam exam){
-        mainFrameController.getButtonHome().setDisable(true);
-        mainFrameController.getButtonSubjects().setDisable(true);
-        mainFrameController.getButtonResources().setDisable(true);
-        mainFrameController.getButtonStatistics().setDisable(true);
+        disableMainFrameButtons();
+
         this.exam = exam;
         timeInMinutes = (int) exam.getExamTime();
         timeInSeconds = 0;
@@ -100,11 +99,11 @@ import java.util.List;
 
     public void handleNextQuestionButton(){
         if(controller.noButtonSelected()){
-            showInformation("If you don't want to answer the question right away click on skip question");
+            showInformation("If you don't want to answer the question right away click on skip question",true);
             return;
         }
         if(controller.bothButtonsSelected()){
-            showInformation("You have to select only one answer");
+            showInformation("You have to select only one answer",true);
             return;
         }
         update();
@@ -131,18 +130,15 @@ import java.util.List;
 
     public void handleShowResultsButton(){
         if(controller.noButtonSelected()){
-            showInformation("You have not selected an answer.");
+            showInformation("You have not selected an answer.",true);
             return;
         }
         if(controller.bothButtonsSelected()){
-            showInformation("You have to select only one answer");
+            showInformation("You have to select only one answer",true);
             return;
         }
         update();
-        mainFrameController.getButtonHome().setDisable(false);
-        mainFrameController.getButtonSubjects().setDisable(false);
-        mainFrameController.getButtonResources().setDisable(false);
-        mainFrameController.getButtonStatistics().setDisable(false);
+        enableMainFrameButtons();
 
         timeline.stop();
         mainFrameController.handleShowExamResult();
@@ -157,10 +153,8 @@ import java.util.List;
             return;
         }
         timeline.stop();
-        mainFrameController.getButtonHome().setDisable(false);
-        mainFrameController.getButtonSubjects().setDisable(false);
-        mainFrameController.getButtonResources().setDisable(false);
-        mainFrameController.getButtonStatistics().setDisable(false);
+
+        enableMainFrameButtons();
 
         try {
             if(timeInMinutes > 0) {
@@ -222,7 +216,7 @@ import java.util.List;
         timeline.getKeyFrames().add(new KeyFrame(Duration.seconds(1), e -> {
             if(timeInMinutes <= 0 && timeInSeconds <= 0){
                 timeline.stop();
-                showInformation("Unfortunatly you are out of time!");
+                showInformation("Unfortunatly you are out of time!",false);
                 return;
             }
             if(timeInSeconds == 0){
@@ -275,10 +269,20 @@ import java.util.List;
         if (subject != null) {
             titleLabel.setText("Exam in " + subject.getName()); //set titelLabel with subject to exam
         }
-        int numberOfTopics = subjectTopicQuestionService.getTopicToSubjectWithNumberOfQuestions(subject).size();
-        topicsCoveredLabel.setText(numberOfTopics + " of the subject's topics are covered in this exam");
+    }
 
+    private void disableMainFrameButtons(){
+        mainFrameController.getButtonHome().setDisable(true);
+        mainFrameController.getButtonSubjects().setDisable(true);
+        mainFrameController.getButtonResources().setDisable(true);
+        mainFrameController.getButtonStatistics().setDisable(true);
+    }
 
+    private void enableMainFrameButtons(){
+        mainFrameController.getButtonHome().setDisable(false);
+        mainFrameController.getButtonSubjects().setDisable(false);
+        mainFrameController.getButtonResources().setDisable(false);
+        mainFrameController.getButtonStatistics().setDisable(false);
     }
 
 

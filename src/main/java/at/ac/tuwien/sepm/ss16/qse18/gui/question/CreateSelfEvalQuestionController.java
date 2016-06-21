@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * This is a controller for creating a  new Self Evalution Question.
+ *
  * @author Philipp Ganiu
  */
 @Component public class CreateSelfEvalQuestionController extends CreateImageQuestionController {
@@ -55,6 +57,8 @@ import java.util.List;
     @Override @FXML public void handleAddImage() {
         super.handleAddImage();
         this.textFieldAnswerOne.setText(textFieldImagePath.getText());
+        // testFieldAnswerOne is not visible therefore it has to be filled manually (is not filled
+        // by the user like in other question types)
     }
 
     @Override protected void fillFieldsAndCheckboxes() {
@@ -64,12 +68,12 @@ import java.util.List;
         this.imageViewSelectedImage.setImage(
             inputs == null ? new Image("/images/imagePlaceholder.png") : (Image) inputs.get(2));
 
-        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(7));
+        this.checkBoxContinue.setSelected(inputs != null && (boolean) inputs.get(3));
 
         if (inputs != null) {
-            this.choiceBoxQuestionTime.setValue(inputs.get(8).toString());
+            this.choiceBoxQuestionTime.setValue(inputs.get(4).toString());
         }
-        this.resource = inputs == null ? null : (ObservableResource) inputs.get(9);
+        this.resource = inputs == null ? null : (ObservableResource) inputs.get(5);
         this.resourceLabel.setText(resource == null ? "none" : resource.getName());
     }
 
@@ -88,10 +92,18 @@ import java.util.List;
             listForInputs.add(textFieldImagePath.getText());
             listForInputs.add(imageViewSelectedImage.getImage());
         } else {
-            inputs.add(null);
+            listForInputs.add(null);
         }
 
     }
+
+    /**
+     * since there is no radiobuttons this method only saves the checkbox 'create and continue'
+     * */
+    @Override protected void saveCheckboxesAndRadiobuttons(List inputs) {
+        inputs.add(checkBoxContinue.isSelected());
+    }
+
 
     @Override protected Question newQuestionFromFields() {
         logger.debug("Creating new question");
@@ -99,13 +111,14 @@ import java.util.List;
             Integer.parseInt(choiceBoxQuestionTime.getValue().substring(0, 1)), getSelectedTag());
     }
 
+
+    /**
+     * Since this controller has no checkboxes/radiobuttons this method returns null
+     *
+     * @return null
+     * */
     @Override protected List<Boolean> createCheckBoxResults() {
-        List<Boolean> result = new ArrayList<>();
-        result.add(true);
-        result.add(true);
-        result.add(true);
-        result.add(true);
-        return result;
+        return null;
     }
 
 
