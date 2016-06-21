@@ -18,6 +18,7 @@ import java.util.Map;
 /**
  * This is a controller for answering questions that have multiple or single choice answers
  * and an image or a question as a question
+ *
  * @author Philipp Ganiu
  */
 @Component
@@ -40,6 +41,10 @@ public class AnswerQuestionController extends BaseController {
     protected Answer answer3;
     protected Answer answer4;
 
+
+    /**
+     * initializes all fields
+     * */
     @FXML public void initialize(ExerciseExam exam, Question question, Answer answer1, Answer answer2,
         Answer answer3, Answer answer4){
         this.exam = exam;
@@ -79,6 +84,9 @@ public class AnswerQuestionController extends BaseController {
         }
     }
 
+    /**
+     * checks whether the user answered the question correctly
+     * */
     public boolean isCorrect() {
         Map<Answer, Boolean> answerBooleanMap = new HashMap<>();
         answerBooleanMap.put(answer1, answer1Button.isSelected());
@@ -89,12 +97,22 @@ public class AnswerQuestionController extends BaseController {
 
     }
 
-
+    /**
+     * checks if not button/answer was selected.
+     *
+     * @return true if no button/answer was selected, else false
+     * */
     public boolean noButtonSelected(){
         return !answer1Button.isSelected() && !answer2Button.isSelected() && !answer3Button.isSelected()
             && !answer4Button.isSelected();
     }
 
+    /**
+     * checks if bothButtons were selected. Only relevant in AnswerSelfEvalQuestionController. Returns
+     * false in all other controllers since selected all answers is not an issue
+     *
+     * @return false
+     * */
     public boolean bothButtonsSelected(){
         return false;
     }

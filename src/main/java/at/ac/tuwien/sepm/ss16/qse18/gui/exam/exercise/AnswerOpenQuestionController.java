@@ -8,6 +8,8 @@ import javafx.scene.control.TextArea;
 import org.springframework.stereotype.Component;
 
 /**
+ * This is a controller for answering open questions
+ *
  * @author Philipp Ganiu
  */
 @Component

@@ -57,7 +57,8 @@
 !paperGreen.png
 !paperRed.png
 !resolver.png
-
+!goodProgress.png
+!badProgress.png
 log/
 target/
 out/

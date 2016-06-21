@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 
 /**
+ * This is a controller for answering notecard questions
+ *
  * @author Philipp Ganiu
  */
 @Component

@@ -13,7 +13,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1"  fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.DoExamController">
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.ac.tuwien.sepm.ss16.qse18.gui.exam.exercise.DoExamController">
    <children>
       <GridPane layoutY="-7.0" prefHeight="600.0" prefWidth="1000.0" AnchorPane.bottomAnchor="7.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="-7.0">
         <columnConstraints>
@@ -97,10 +97,6 @@
                <GridPane.margin>
                   <Insets right="20.0" />
                </GridPane.margin></Button>
-            <Label fx:id="topicsCoveredLabel" stylesheets="@../../style.css" text="all topics are covered" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
-               <font>
-                  <Font name="System Bold" size="18.0" />
-               </font></Label>
             <Button fx:id="showResultsButton" mnemonicParsing="false" onAction="#handleShowResultsButton" text="Show results" visible="false" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
             <Button fx:id="skipQuesitonButton" mnemonicParsing="false" onAction="#handleSkipQuestionButton" text="skip question" GridPane.halignment="CENTER" GridPane.rowIndex="3">
                <GridPane.margin>

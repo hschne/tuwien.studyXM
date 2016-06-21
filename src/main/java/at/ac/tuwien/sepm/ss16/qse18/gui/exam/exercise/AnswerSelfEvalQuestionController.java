@@ -14,13 +14,14 @@ import org.springframework.stereotype.Component;
 import java.io.File;
 
 /**
+ * This is a controller for answering self evaluation questions
+ *
  * @author Philipp Ganiu
  */
 @Component public class AnswerSelfEvalQuestionController extends AnswerQuestionController {
     @FXML private Text infoText;
     @FXML private Button showAnswerButton;
     @FXML private ImageView answerImage;
-    private boolean answered = false;
 
     @Override
     public void initialize(ExerciseExam exam, Question question, Answer answer1, Answer answer2,
@@ -30,6 +31,11 @@ import java.io.File;
         questionLabel.setText(questionText);
     }
 
+    /**
+     * This method handles the show answer button. It sets the infoText and the showAnswerButton
+     * not visible and instead shows as the answer (an image) and two radiobuttons (answer is correct
+     * and answer is incorrect)
+     * */
     @FXML public void handleShowAnswerButton(){
         this.infoText.setVisible(false);
         this.showAnswerButton.setVisible(false);
@@ -50,6 +56,11 @@ import java.io.File;
         return answer1Button.isSelected();
     }
 
+    /**
+     * checks if the user selected both buttons/answers
+     *
+     * @return true if both buttons/answers were selected
+     * */
     @Override public boolean bothButtonsSelected(){
         return answer1Button.isSelected() && answer2Button.isSelected();
     }

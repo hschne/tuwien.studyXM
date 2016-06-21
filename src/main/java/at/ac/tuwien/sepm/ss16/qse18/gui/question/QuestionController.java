@@ -307,7 +307,9 @@ import static at.ac.tuwien.sepm.ss16.qse18.domain.validation.DtoValidator.valida
         QuestionType questionType = getQuestionType();
         if (!textFieldAnswerOne.getText().isEmpty()) {
             answers.add(
-                new Answer(questionType, textFieldAnswerOne.getText(), checkBoxResults.get(0)));
+                new Answer(questionType, textFieldAnswerOne.getText(),
+                    getQuestionType() == QuestionType.SELF_EVALUATION ? true : checkBoxResults.get(0)));
+            //for QuestionType Self_evaluation the answer is set true by default
         }
         if(textFieldAnswerTwo != null) {
             if (!textFieldAnswerTwo.getText().isEmpty()) {
