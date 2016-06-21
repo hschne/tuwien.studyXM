@@ -59,6 +59,7 @@
 !resolver.png
 !goodProgress.png
 !badProgress.png
+!overProgress.png
 log/
 target/
 out/

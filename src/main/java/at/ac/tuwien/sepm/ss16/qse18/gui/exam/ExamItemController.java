@@ -131,6 +131,10 @@ public class ExamItemController extends BaseController {
                         differenceHours + (differenceHours!=1?" hours ":"hour ")+
                         "till the exam.");
             }
+            else if(differenceDays < 0){
+                imageViewProgress.setImage(new Image("/icons/overProgress.png"));
+                labelProgress.setText("the due date for this exam is already surpassed.");
+            }
 
         } catch (ParseException e) {
             logger.error("Unable to calculate time difference", e);
