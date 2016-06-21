@@ -108,7 +108,9 @@ import java.util.List;
     public void handleQuestionOverview(ObservableSubject subject) {
         logger.debug("Loading question overview for " + subject.getName());
         try {
-            setSubView("/fxml/question/questionOverview.fxml", QuestionOverviewController.class,paneContent);
+            QuestionOverviewController controller = setSubView("/fxml/question/questionOverview.fxml",
+                QuestionOverviewController.class,paneContent);
+            controller.setSubject(subject.getSubject());
         } catch (Exception e) {
             handleException(e);
         }
