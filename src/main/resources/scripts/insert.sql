@@ -10,7 +10,6 @@ DELETE FROM entity_subject;
 DELETE FROM entity_topic;
 DELETE FROM entity_answer;
 DELETE FROM entity_question;
-DELETE FROM entity_note;
 DELETE FROM entity_resource;
 ALTER TABLE entity_subject ALTER COLUMN subjectid RESTART WITH 1;
 ALTER TABLE entity_exercise_exam ALTER COLUMN examid RESTART WITH 1;
@@ -18,7 +17,6 @@ ALTER TABLE entity_topic ALTER COLUMN topicid RESTART WITH 1;
 ALTER TABLE entity_question ALTER COLUMN questionid RESTART WITH 1;
 ALTER TABLE entity_answer ALTER COLUMN answerid RESTART WITH 1;
 ALTER TABLE entity_resource ALTER COLUMN resourceid RESTART WITH 1;
-ALTER TABLE entity_note ALTER COLUMN noteid RESTART WITH 1;
 ALTER TABLE entity_exam ALTER COLUMN examid RESTART WITH 1;
 COMMIT;
 
@@ -637,6 +635,3 @@ INSERT INTO rel_resource_question VALUES
 (11,4),
 (11,5),
 (15,20);
---Insert for note
-INSERT INTO entity_note VALUES(DEFAULT, 'Das ist Notiz 1','Author1',CURRENT_TIMESTAMP,1,'reference1'),(DEFAULT, 'Das ist Notiz 2','Author2',CURRENT_TIMESTAMP,2,'reference2'),(DEFAULT, 'Das ist Notiz 3','Author3',CURRENT_TIMESTAMP,3,'reference3'),(DEFAULT, 'Das ist Notiz 4','Author4',CURRENT_TIMESTAMP,4,'reference4'),(DEFAULT, 'Das ist Notiz 5','Author5',CURRENT_TIMESTAMP,5,'reference5'),(DEFAULT, 'Das ist Notiz 6','Author6',CURRENT_TIMESTAMP,1,'reference6');
-

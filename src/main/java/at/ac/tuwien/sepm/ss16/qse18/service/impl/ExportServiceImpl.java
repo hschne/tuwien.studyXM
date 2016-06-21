@@ -165,10 +165,6 @@ import java.util.zip.ZipOutputStream;
         return questionService.getCorrespondingAnswers(question);
     }
 
-    private List<Note> getNotesFromResource(Resource resource) {
-        return new ArrayList<>(); //TODO
-    }
-
     private Resource getResourcesFromQuestion(Question question) throws ServiceException {
         return resourceQuestionService.getResourceFromQuestion(question);
     }
@@ -190,7 +186,7 @@ import java.util.zip.ZipOutputStream;
                 List<Answer> al = getAnswersFromQuestion(q);
                 Resource r = getResourcesFromQuestion(q);
                 addIfNotAlreadyAdded(r);
-                ExportResource er = new ExportResource(r, getNotesFromResource(r));
+                ExportResource er = new ExportResource(r);
                 eql.add(new ExportQuestion(q, er, al));
             }
             exportTopics.add(new ExportTopic(t, eql));

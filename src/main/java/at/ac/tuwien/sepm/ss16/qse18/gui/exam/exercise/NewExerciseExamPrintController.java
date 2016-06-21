@@ -63,12 +63,13 @@ import java.io.File;
         return fileChooser.showSaveDialog(mainStage);
     }
 
-    private void tryPrint(ExerciseExam exam, File file) {
+    private void tryPrint(ExerciseExam exam, File file) throws ServiceException {
         try {
             pdfExporter.exportPdf(file.getPath(),exam);
         } catch (ServiceException e) {
             logger.error(e);
             showError(e);
+            throw new ServiceException(e);
         }
     }
 }

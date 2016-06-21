@@ -175,7 +175,7 @@ public class ImportServiceImplTest extends ImportExportBaseTest {
         List<ExportTopic> topics = new ArrayList<>();
         List<ExportQuestion> questions1 = new ArrayList<>();
         List<ExportQuestion> questions2 = new ArrayList<>();
-        ExportResource resource = new ExportResource(testResource, null);
+        ExportResource resource = new ExportResource(testResource);
 
         questions1.add(new ExportQuestion(testQuestions1.get(0), resource, testAnswers1));
         questions2.add(new ExportQuestion(testQuestions2.get(0), resource, testAnswers2));
