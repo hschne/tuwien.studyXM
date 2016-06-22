@@ -31,9 +31,9 @@ INSERT INTO entity_subject VALUES
 --Inserts for exam
 INSERT INTO entity_exam VALUES
 (DEFAULT, 1,  CURRENT_TIMESTAMP, '2016-11-11 17:00:00.0', 'SEPM Vorlesungsprüfung'), 
-(DEFAULT, 5, '2016-06-09 11:56:25.764', '2016-06-21 18:30:00.0', 'Analysis Vorlesungsprüfung'),
+(DEFAULT, 5, '2016-06-09 11:56:25.764', '2016-06-30 18:30:00.0', 'Analysis Vorlesungsprüfung'),
 (DEFAULT, 3, '2016-03-09 13:36:45.454', '2016-03-21 19:00:00.0', 'OOM Test 1'),
-(DEFAULT, 3, '2016-04-22 15:06:24.55', '2016-05-16 19:00:00.0', 'OOM Test 2'),
+(DEFAULT, 3, '2016-04-22 15:06:24.55', '2016-06-29 19:00:00.0', 'OOM Test 2'),
 (DEFAULT, 3, '2016-04-22 15:08:41.71', '2016-06-03 19:00:00.0', 'OOM Test 3'),
 (DEFAULT, 4, '2016-06-02 09:11:44.12', '2016-07-30 12:00:00.0', 'Statistik Vorlesungsprüfung'),
 (DEFAULT, 2, '2016-05-02 21:35:31.12', '2016-06-17 16:00:00.0', 'TGI Test 3');

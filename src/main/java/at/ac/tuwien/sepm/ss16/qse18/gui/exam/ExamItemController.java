@@ -107,15 +107,16 @@ public class ExamItemController extends BaseController {
     }
 
     /**
-     * This method calculates the time difference in days between the current date and the
-     * exam due date. When the progress is critical a hint will be displayed in the GUI.
+     * This method calculates the time difference in days between the current date and the exam due
+     * date. When the progress is critical a hint will be displayed in the GUI.
+     *
      * @param progress amount of answered questions
      */
-    private void checkProgress(double progress){
+    private void checkProgress(double progress) {
         logger.debug("calculating time difference ");
         SimpleDateFormat format = new SimpleDateFormat("dd-mm-yyyy");
-        Date d1 = null;
-        Date d2 = null;
+        Date d1;
+        Date d2;
         try {
             d1 = format.parse(format.format(new Date()));
             d2 = format.parse(exam.getDueDate());
@@ -124,14 +125,13 @@ public class ExamItemController extends BaseController {
             long differenceHours = difference / (60 * 60 * 1000) % 24;
             long differenceDays = difference / (24 * 60 * 60 * 1000);
 
-            if (progress < 0.5d && differenceDays < 7L && differenceDays >= 0) {
+            if (progress < 0.5D && differenceDays < 7L && differenceDays >= 0L) {
                 imageViewProgress.setImage(new Image("/icons/badProgress.png"));
                 labelProgress.setText("your progress is critical, " +
                         differenceDays + (differenceDays != 1 ? " days " : " day ") +
-                        differenceHours + (differenceHours!=1?" hours ":"hour ")+
+                        differenceHours + (differenceHours != 1 ? " hours " : "hour ") +
                         "till the exam.");
-            }
-            else if(differenceDays < 0){
+            } else if (differenceDays < 0L) {
                 imageViewProgress.setImage(new Image("/icons/overProgress.png"));
                 labelProgress.setText("the due date for this exam is already surpassed.");
             }
